@@ -1,0 +1,99 @@
+#screen {
+    margin-top: 45px;
+}
+
+.row {
+    padding-top: 10px;
+}
+
+body {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.description_and_text {
+    display: table;
+    width: 100%;
+}
+
+.description_of_text {
+    display: table-cell;
+}
+
+.text_span {
+    display: table-cell;
+    width: 100%;
+}
+
+.text_with_description {
+    width: 100%;
+}
+
+#job_search {
+    padding-top: 40px;
+}
+
+#main_table {
+    top: 10px;
+    bottom: 30px;
+
+}
+
+.table td {
+    border: none !important;
+}
+
+#job_button {
+    position: relative;
+}
+
+#filter {
+    margin-top: 30px;
+}
+
+input[type="text"] {
+    opacity: 0.5;
+}
+
+ul {
+    list-style-type: none;
+}
+
+#radius {
+    margin-top: 10px;
+}
+
+#create_your_own_metric_text {
+ margin-top: 100px;
+}
+
+
+#Google_Map {
+    overflow: hidden;
+    height: 250px;
+    width: 250px;
+}
+
+html, body {
+  height: 100%;
+}
+
+#map-canvas {
+  min-width: 100px;
+  width: 100%;
+  min-height: 200px;
+  height: 100%;
+}
+
+#gmap_canvas img{
+    max-width: none!important;
+    background: none!important
+}
+
+#main_table {
+    display: block;
+    position: relative;
+    overflow: auto;
+    height: 350px;
+}
+

@@ -1,0 +1,207 @@
+{% extends 'jobList_Pledge/base.html' %}
+
+{% block body %}
+
+<script>
+    $('document').ready(function() {
+        $(':text').focusin(function() {
+            $(this).attr('value', '').css('opacity', 1);
+        });
+
+        $(':text').blur(function() {
+            var org = this.getAttribute("value");
+            $(this).attr('value', "org" ).css('opacity', 0.5);
+        });
+    });
+</script>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Defines #hashtag logic -->
+            <form action="#">
+                <div class="row">
+                    <div class="description_and_text col-md-12">
+                        <span class="description_of_text"> Basic&nbsp;hashtags&nbsp;form:&nbsp;&nbsp;</span>
+                        <span class="text_span">
+                            <input class="text_with_description" type="text" />
+                        </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4"> Advanced options: </div>
+                    <div class="col-md-3">
+                        ANDs of ORs
+                        <input type="radio" id="hashtag_ANDs_of_ORs_logic" name="hashtag_logic" value="ANDs_of_ORs" />
+                    </div>
+                    <div class="col-md-3">
+                        ORs of ANDs
+                        <input type="radio" id="hashtag_ORs_of_ANDs_logic" name="hashtag_logic" value="ORs_of_ANDs" />
+                    </div>
+                    <div class="col-md-2">
+                        Custom
+                        <input type="radio" id="hashtag_custom_logic" name="hashtag_logic" value="custom" />
+                    </div>
+                </div>
+            </form>
+            <!-- End #hashtag logic -->
+            <div id="job_search" class="row">
+                <form>
+                    <input id="search_bar" class="col-md-8" type="text" />
+                    <div class="col-md-4 col-md-push-2">
+                        X jobs found
+                    </div>
+                </form>
+            </div>
+            <!-- Job table -->
+            <div class="row">
+                {% if all_jobs %}
+                <table id="main_table" class="table">
+                    {% for job in all_jobs %}
+                    <tr>
+                        <td class="col-md-3"><a href="{% url 'detail' job.id %}">{{ job.name }}</a></td>
+                        <td class="col-md-2">$ Pledged: ${{ job.money_pledged }}</td>
+                        <td class="col-md-2">Workers: {{ job.num_people_doing_job }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% else %}
+                <h3>There are no jobs</h3>h
+                {% endif %}
+            </div>
+            <!-- End job table -->
+
+            <!-- Add Job button -->
+            <div id="job_button" class="row">
+                <form action="#">
+                    <input id="add_job" class="col-md-12" type="button" value="Add job" />
+                </form>
+            </div>
+            <!-- End Add Job button -->
+        </div>
+
+        <div class="col-md-5 col-md-push-1">
+
+            <!-- Location -->
+            <div class="row">
+                <form action="#">
+                    <div class="description_and_text col-md-12">
+                        <span class="description_of_text"> Location:&nbsp;&nbsp; </span>
+                        <span class="text_span">
+                            <input class="text_with_description" type="text" />
+                        </span>
+                    </div>
+                </form>
+            </div>
+            <!-- End Location -->
+
+            <!-- Radius -->
+            <div class="row">
+                <form action="#">
+                    <div class="col-md-4">
+                        Radius:
+                        <input type="text" size="1" />
+                    </div>
+                </form>
+                <form action="#">
+                    <div class="col-md-4">
+                        mi:
+                        <input type="radio" name="radius_unit" value="mi" />
+                        km:
+                        <input type="radio"name="radius_unit" value="km" />
+                    </div>
+                </form>
+            </div>
+            <!-- End Radius -->
+
+            <!-- Google Map -->
+            <div class="row">
+                <div class="col-md-12">
+                    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&dummy=.js"></script>
+                    <div id="map-canvas"></div>
+                    <script type="text/javascript">
+                        $(function() {
+                            var mapOptions = {
+                                zoom: 8,
+                                center: new google.maps.LatLng(-34.397, 150.644)
+                            };
+                            var map = new google.maps.Map($("#map-canvas")[0], mapOptions);
+                            // listen for the window resize event & trigger Google Maps to update too
+                            $(window).resize(function() {
+                                // (the 'map' here is the result of the created 'var map = ...' above)
+                                google.maps.event.trigger(map, "resize");
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+            <!-- End Google Map -->
+
+            <!-- Filter -->
+            <div class="row">
+                <div id="filter" class="col-md-12">
+                    <form action="#">
+                        Apply <input type="text" />&nbsp;'s filter metric.
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Remove any potential worker who has:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-10 col-md-push-2">
+                    <form id="recently_active">
+                        - not been active on the website for &nbsp; <input type="text" size="2">
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-md-8 col-md-push-8">
+                    days: <input type="radio" name="unit_of_time" checked="checked">
+                </div>
+
+                <!-- Weeks
+                <div class="col-md-3 col-md-push-3">
+                    weeks: <input type="radio" name="unit_of_time">
+                </div>
+                End weeks -->
+
+                <!-- Months
+                <div class="col-md-3 col-md-push-2">
+                    months: <input type="radio" name="unit_of_time">
+                </div>
+                End months -->
+
+                <!-- Years
+                <div class="col-md-3 col-md-push-1">
+                    years: <input type="radio" name="unit_of_time">
+                </div>
+                End Years -->
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-10 col-md-push-2">
+                    <form action="#">
+                        - completed less than &nbsp;<input type="text" size="1" />&nbsp; job/s.
+                    </form>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-10 col-md-push-2">
+                    <form action="#">
+                        - failed to complete more than &nbsp;<input type="text" size="1" />&nbsp; job/s.
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <!-- End Filter -->
+    </div>
+</div>
+</div>
+{% endblock %}
