@@ -12,3 +12,23 @@ class Job(models.Model):
     def __str__(self):
         return self.name
 
+    def find_jobs_through_search_bar(self, query):
+        jobs = None
+        if query.isdigit():
+            jobs = Job.objects.get(pk=id)
+        else:
+            jobs = Job.objects.filter(name__startswith=query)
+        return jobs
+
+
+
+
+
+class Hashtag(models.Model):
+    hashtag = models.CharField(max_length=30)
+    jobs = models.ManyToManyField(Job)
+
+    def __str__(self):
+        return self.hashtag
+
+

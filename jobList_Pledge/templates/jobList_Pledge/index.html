@@ -2,17 +2,20 @@
 
 {% block body %}
 
-<script>
-    $('document').ready(function() {
-        $(':text').focusin(function() {
-            $(this).attr('value', '').css('opacity', 1);
-        });
-
-        $(':text').blur(function() {
-            var org = this.getAttribute("value");
-            $(this).attr('value', "org" ).css('opacity', 0.5);
-        });
-    });
+<script type="text/javascript">
+//    $('document').ready(function() {
+//
+//        // Text bar opacity
+//        $(':text').focusin(function() {
+//            $(this).attr('value', '').css('opacity', 1);
+//        });
+//
+//        $(':text').blur(function() {
+//            var org = this.getAttribute("value");
+//            $(this).attr('value', "org" ).css('opacity', 0.5);
+//        });
+//        // End text bar opacity
+//    });
 </script>
 
 <div class="container">
@@ -24,7 +27,7 @@
                     <div class="description_and_text col-md-12">
                         <span class="description_of_text"> Basic&nbsp;hashtags&nbsp;form:&nbsp;&nbsp;</span>
                         <span class="text_span">
-                            <input class="text_with_description" type="text" />
+                            <input id="basic_hashtags_form" class="text_with_description" type="text" />
                         </span>
                     </div>
                 </div>
@@ -45,14 +48,27 @@
                 </div>
             </form>
             <!-- End #hashtag logic -->
+
+            <!-- Or -->
+            <div id="or" class="row">
+                <div class="col-md-1 col-md-push-6">
+                    Or
+                </div>
+            </div>
+            <!-- End or -->
+
+            <!-- Job search bar -->
             <div id="job_search" class="row">
-                <form>
-                    <input id="search_bar" class="col-md-8" type="text" />
-                    <div class="col-md-4 col-md-push-2">
-                        X jobs found
-                    </div>
+                <form action="#" method="post">
+                    {% csrf_token %}
+                    <span class="description_of_text"> Search&nbsp;jobs&nbsp;for&nbsp;name&nbsp;or&nbsp;ID&nbsp;</span>
+                    <span class="text_span">
+                        <input id="search_bar" class="text_with_description" type="text" />
+                    </span>
                 </form>
             </div>
+            <!-- End job search bar -->
+
             <!-- Job table -->
             <div class="row">
                 {% if all_jobs %}
@@ -72,15 +88,26 @@
             <!-- End job table -->
 
             <!-- Add Job button -->
-            <div id="job_button" class="row">
-                <form action="#">
-                    <input id="add_job" class="col-md-12" type="button" value="Add job" />
+            <div class="row">
+                <form action="{% url 'add_job' %}">
+                    <input id="add_job" class="col-md-12" type="submit" value="Add job" />
                 </form>
             </div>
             <!-- End Add Job button -->
         </div>
 
+
         <div class="col-md-5 col-md-push-1">
+            <!-- Include location? -->
+            <div class="row">
+                <div class="col-md-11">
+                    Only include jobs without a location or near a specified location?
+                </div>
+                <form action="#">
+                    <input type="checkbox">
+                </form>
+            </div>
+            <!-- End include location? -->
 
             <!-- Location -->
             <div class="row">
@@ -106,7 +133,7 @@
                 <form action="#">
                     <div class="col-md-4">
                         mi:
-                        <input type="radio" name="radius_unit" value="mi" />
+                        <input type="radio" name="radius_unit" value="mi" checked="checked" />
                         km:
                         <input type="radio"name="radius_unit" value="km" />
                     </div>

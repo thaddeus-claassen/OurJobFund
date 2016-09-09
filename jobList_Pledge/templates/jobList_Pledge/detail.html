@@ -1,0 +1,83 @@
+{% extends 'jobList_Pledge/base.html' %}
+
+{% block body %}
+
+
+<div id="detail_header"> {{ job.name }} </div>
+{% if all_hashtags %}
+<div id="display_hashtags">
+    {% for hashtag in all_hashtags %}
+    {{ hashtag.hashtag }}
+    {% endfor %}
+</div>
+{% else %}
+There are no hashtags
+{% endif %}
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Pledge money, job description -->
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    Main editor:
+                    <a href="#">
+                        Main editor's username
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    Total money pledged:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="button" value="Will you pledge money?">
+                </div>
+            </div>
+        </div>
+        <!-- End pledge money, job description -->
+
+        <!-- Will do update and anything below it, which will include any worker saying job is done or requesting specific amount of money -->
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <h1>Workers</h1>
+                    <table class="table">
+                        <tr>
+                            <td class="col-md-3">
+                                Most recent update:
+                            </td>
+                            <td class="col-md-3">
+                                By:
+                            </td>
+                            <td class="col-md-3">
+                                Updated on
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <!-- End update job table -->
+
+            <!-- Anyone worker who finished or is requesting specific amount of money -->
+            <div class="row">
+                <h1>Anyone who asks for money</h1>
+                <table class="table">
+                    <tr>
+                        <td class="col-md-3">
+                            Username
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!-- End workers who finished or requesting money table -->
+
+        </div>
+        <!-- End of job update and workers requesting money -->
+
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'jobList_Pledge/base.html' %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 col-md-push-1">
+            Job Title:
+        </div>
+        <form action="#">
+            <input class="col-md-6 col-md-push-1" type="text" />
+        </form>
+        <div class="col-md-2 col-md-push-1">
+            If accepted, the job ID will be
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-md-push-1">
+            Location (optional):
+        </div>
+        <form action="#">
+            <input class="col-md-6 col-md-push-1" type="text" />
+        </form>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-md-push-1">
+            Hashtags (Max 10):
+        </div>
+        <form action="#">
+            <input class="col-md-6 col-md-push-1" type="text" value="(ex. #manufacturing, #southeasternfrance, #possums, #asdf)" />
+        </form>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-md-push-1">
+            Description:
+        </div>
+        <form class="col-md-8" action="#">
+            <textarea class="col-md-4" name="editor1"></textarea>
+            <script>
+                CKEDITOR.replace( 'editor1' );
+            </script>
+        </form>
+    </div>
+    <div class="row">
+        <form action="#" class="col-md-2 col-md-push-6">
+            <input type="submit" value="I don't know">
+        </form>
+    </div>
+</div>
+{% endblock %}
