@@ -1,33 +1,27 @@
 {% extends 'jobList_Pledge/base.html' %}
 
+
+{% load staticfiles %}
+{% block import %}
+    <script type="text/javascript" src="{% static 'jobList_Pledge/JavaScript/text_logic.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'jobList_Pledge/JavaScript/job_search_bar.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'jobList_Pledge/JavaScript/hashtag_logic.js' %}" ></script>
+{% endblock %}
+
+
+
 {% block body %}
-
-<script type="text/javascript">
-//    $('document').ready(function() {
-//
-//        // Text bar opacity
-//        $(':text').focusin(function() {
-//            $(this).attr('value', '').css('opacity', 1);
-//        });
-//
-//        $(':text').blur(function() {
-//            var org = this.getAttribute("value");
-//            $(this).attr('value', "org" ).css('opacity', 0.5);
-//        });
-//        // End text bar opacity
-//    });
-</script>
-
 <div class="container">
     <div class="row">
         <div class="col-md-6">
             <!-- Defines #hashtag logic -->
-            <form action="#">
+            <form class="text_form" id="hashtag_logic" method="POST">
+                {% csrf_token %}
                 <div class="row">
-                    <div class="description_and_text col-md-12">
-                        <span class="description_of_text"> Basic&nbsp;hashtags&nbsp;form:&nbsp;&nbsp;</span>
+                    <div class="col-md-12">
+                        <label class="text_label" for="basic_hashtags_input"> Basic hashtags form:&nbsp;</label>
                         <span class="text_span">
-                            <input id="basic_hashtags_form" class="text_with_description" type="text" />
+                            <input type="text" id="basic_hashtags_input" class="wide_text" />
                         </span>
                     </div>
                 </div>
@@ -35,15 +29,15 @@
                     <div class="col-md-4"> Advanced options: </div>
                     <div class="col-md-3">
                         ANDs of ORs
-                        <input type="radio" id="hashtag_ANDs_of_ORs_logic" name="hashtag_logic" value="ANDs_of_ORs" />
+                        <input type="radio" id="hashtag_ANDs_of_ORs_logic" name="hashtag_logic" />
                     </div>
                     <div class="col-md-3">
                         ORs of ANDs
-                        <input type="radio" id="hashtag_ORs_of_ANDs_logic" name="hashtag_logic" value="ORs_of_ANDs" />
+                        <input type="radio" id="hashtag_ORs_of_ANDs_logic" name="hashtag_logic" />
                     </div>
                     <div class="col-md-2">
                         Custom
-                        <input type="radio" id="hashtag_custom_logic" name="hashtag_logic" value="custom" />
+                        <input type="radio" id="hashtag_custom_logic" name="hashtag_logic" />
                     </div>
                 </div>
             </form>
@@ -58,32 +52,24 @@
             <!-- End or -->
 
             <!-- Job search bar -->
-            <div id="job_search" class="row">
-                <form action="#" method="post">
-                    {% csrf_token %}
-                    <span class="description_of_text"> Search&nbsp;jobs&nbsp;for&nbsp;name&nbsp;or&nbsp;ID&nbsp;</span>
-                    <span class="text_span">
-                        <input id="search_bar" class="text_with_description" type="text" />
-                    </span>
-                </form>
-            </div>
+            <form id="search_jobs" class="text_form" name="search_jobs" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="text_label" for="search_bar" >Search job by name or ID:&nbsp;</label>
+                        <span class="text_span"><input class="wide_text" id="search_bar" type="text" /></span>    
+                    </div>
+                </div>
+            </form>
             <!-- End job search bar -->
 
             <!-- Job table -->
             <div class="row">
-                {% if all_jobs %}
-                <table id="main_table" class="table">
-                    {% for job in all_jobs %}
-                    <tr>
-                        <td class="col-md-3"><a href="{% url 'detail' job.id %}">{{ job.name }}</a></td>
-                        <td class="col-md-2">$ Pledged: ${{ job.money_pledged }}</td>
-                        <td class="col-md-2">Workers: {{ job.num_people_doing_job }}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
-                {% else %}
-                <h3>There are no jobs</h3>h
-                {% endif %}
+                <div class="col-md-12">
+                    <table id="main_table" class="table">
+
+                    </table>
+                </div>
             </div>
             <!-- End job table -->
 
@@ -110,16 +96,16 @@
             <!-- End include location? -->
 
             <!-- Location -->
-            <div class="row">
-                <form action="#">
-                    <div class="description_and_text col-md-12">
-                        <span class="description_of_text"> Location:&nbsp;&nbsp; </span>
+            <form class="text_form" action="#">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="text_label" for="location_text" >Location:&nbsp;</label>
                         <span class="text_span">
-                            <input class="text_with_description" type="text" />
+                            <input id="location_text" class="wide_text" type="text" />
                         </span>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
             <!-- End Location -->
 
             <!-- Radius -->
@@ -146,19 +132,8 @@
                 <div class="col-md-12">
                     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&dummy=.js"></script>
                     <div id="map-canvas"></div>
-                    <script type="text/javascript">
-                        $(function() {
-                            var mapOptions = {
-                                zoom: 8,
-                                center: new google.maps.LatLng(-34.397, 150.644)
-                            };
-                            var map = new google.maps.Map($("#map-canvas")[0], mapOptions);
-                            // listen for the window resize event & trigger Google Maps to update too
-                            $(window).resize(function() {
-                                // (the 'map' here is the result of the created 'var map = ...' above)
-                                google.maps.event.trigger(map, "resize");
-                            });
-                        });
+                    <script type="text/javascript" src="{% static 'jobList_Pledge/JavaScript/GoogleMaps.js' %}">
+
                     </script>
                 </div>
             </div>

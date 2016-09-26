@@ -20,3 +20,4 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^jobList_Pledge/', include('jobList_Pledge.urls')),
 ]
+

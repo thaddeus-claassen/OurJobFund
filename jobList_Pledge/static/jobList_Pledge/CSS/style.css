@@ -11,29 +11,29 @@ body {
     padding-bottom: 30px;
 }
 
-.description_and_text {
-    display: table;
-    width: 100%;
+.text_form {
+    overflow: hidden;
 }
 
-.description_of_text {
-    display: table-cell;
+.text_label {
+    float: left;
 }
 
 .text_span {
-    display: table-cell;
-    width: 100%;
+    display: block;
+    overflow: hidden;
 }
 
-.text_with_description {
+.wide_text {
     width: 100%;
 }
 
 #or {
     padding-top:20px;
+    font-weight: bold;
 }
 
-#job_search {
+#job_search_div {
     padding-top: 20px;
 }
 
@@ -91,7 +91,7 @@ html, body {
 
 #gmap_canvas img{
     max-width: none!important;
-    background: none!important
+    background: none!important;
 }
 
 #main_table {

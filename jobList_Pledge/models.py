@@ -3,32 +3,21 @@ from django.db import models
 # class Table(models.Model):
 
 class Job(models.Model):
-    name = models.CharField(max_length=100)
-    creation_date = models.DateTimeField(auto_now_add='True')
-    last_time_worked_on = models.DateTimeField(auto_now_add='True')
-    money_pledged = models.FloatField(default = '0.0')
-    num_people_doing_job = models.IntegerField(default = '0')
+    name = models.CharField(max_length=100);
+    creation_date = models.DateTimeField(auto_now_add='True');
+    last_time_worked_on = models.DateTimeField(auto_now_add='True');
+    money_pledged = models.FloatField(default = '0.0');
+    num_people_doing_job = models.IntegerField(default = '0');
 
     def __str__(self):
-        return self.name
-
-    def find_jobs_through_search_bar(self, query):
-        jobs = None
-        if query.isdigit():
-            jobs = Job.objects.get(pk=id)
-        else:
-            jobs = Job.objects.filter(name__startswith=query)
-        return jobs
-
-
-
+        return self.name;
 
 
 class Hashtag(models.Model):
-    hashtag = models.CharField(max_length=30)
-    jobs = models.ManyToManyField(Job)
+    hashtag = models.CharField(max_length=30);
+    jobs = models.ManyToManyField(Job);
 
     def __str__(self):
-        return self.hashtag
+        return self.hashtag;
 
 
