@@ -3,9 +3,8 @@
 
 {% load staticfiles %}
 {% block import %}
-    <script type="text/javascript" src="{% static 'jobList_Pledge/JavaScript/text_logic.js' %}" ></script>
-    <script type="text/javascript" src="{% static 'jobList_Pledge/JavaScript/job_search_bar.js' %}" ></script>
-    <script type="text/javascript" src="{% static 'jobList_Pledge/JavaScript/hashtag_logic.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'jobList_Pledge/JavaScript/index.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'jobList_Pledge/CSS/index.css' %}" />
 {% endblock %}
 
 
@@ -86,22 +85,22 @@
         <div class="col-md-5 col-md-push-1">
             <!-- Include location? -->
             <div class="row">
-                <div class="col-md-11">
-                    Only include jobs without a location or near a specified location?
+                <div class="col-md-12">
+                    <label for="location-checkbox">
+                        View only jobs with location?&nbsp;&nbsp;
+                    </label>
+                    <input id="location-checkbox" name="location-checkbox" type="checkbox">
                 </div>
-                <form action="#">
-                    <input type="checkbox">
-                </form>
             </div>
             <!-- End include location? -->
 
             <!-- Location -->
-            <form class="text_form" action="#">
+            <form class="text_form" action="">
                 <div class="row">
                     <div class="col-md-12">
-                        <label class="text_label" for="location_text" >Location:&nbsp;</label>
+                        <label class="text_label change-label" for="location_text" >Location:&nbsp;</label>
                         <span class="text_span">
-                            <input id="location_text" class="wide_text" type="text" />
+                            <input id="location-text" class="wide_text location-hide" type="text" />
                         </span>
                     </div>
                 </div>
@@ -112,16 +111,18 @@
             <div class="row">
                 <form action="#">
                     <div class="col-md-4">
-                        Radius:
-                        <input type="text" size="1" />
+                        <label for="radius" class="change-label" value="10" >Radius:</label>
+                        <input id="location-radius" class="location-hide" type="text" size="1" name="radius" />                            
                     </div>
                 </form>
                 <form action="#">
-                    <div class="col-md-4">
-                        mi:
-                        <input type="radio" name="radius_unit" value="mi" checked="checked" />
-                        km:
-                        <input type="radio"name="radius_unit" value="km" />
+                    <div class="col-md-2">
+                        <label class="location-hide change-label" for="mi">mi:</label>
+                        <input class="location-hide" type="radio" name="radius_unit" value="mi" checked="checked" />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="location-hide change-label" for="km">km:</label>
+                        <input class="location-hide" type="radio" name="radius_unit" value="km" />
                     </div>
                 </form>
             </div>
@@ -130,80 +131,74 @@
             <!-- Google Map -->
             <div class="row">
                 <div class="col-md-12">
-                    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&dummy=.js"></script>
-                    <div id="map-canvas"></div>
-                    <script type="text/javascript" src="{% static 'jobList_Pledge/JavaScript/GoogleMaps.js' %}">
-
-                    </script>
+                    <div class="location-hide">
+                        <div id="map-canvas"></div>
+                    </div>
+                    <div id="empty-space"></div>
                 </div>
             </div>
             <!-- End Google Map -->
 
             <!-- Filter -->
             <div class="row">
-                <div id="filter" class="col-md-12">
-                    <form action="#">
-                        Apply <input type="text" />&nbsp;'s filter metric.
-                    </form>
-                </div>
-            </div>
-            <div class="row">
                 <div class="col-md-12">
-                    Remove any potential worker who has:
+                    <input id="view_metrics_pledge" type="submit" value="View All Metrics"/>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-10 col-md-push-2">
-                    <form id="recently_active">
+            <form action="#">
+                <div class="row">
+                    <div id="filter" class="col-md-12">
+                        Apply <input type="text" />&nbsp;'s filter metric?
+                        <input type="button" value="Apply" action="#" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        Remove any potential worker who has:
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-2">
                         - not been active on the website for &nbsp; <input type="text" size="2">
-                    </form>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-8">
+                        days: <input type="radio" name="unit_of_time" checked="checked">
+                    </div>
+                    <!-- Weeks
+                    <div class="col-md-3 col-md-offset-3">
+                        weeks: <input type="radio" name="unit_of_time">
+                    </div>
+                    End weeks -->
 
-                <div class="col-md-8 col-md-push-8">
-                    days: <input type="radio" name="unit_of_time" checked="checked">
+                    <!-- Months
+                    <div class="col-md-3 col-md-offset-2">
+                        months: <input type="radio" name="unit_of_time">
+                    </div>
+                    End months -->
+
+                    <!-- Years
+                    <div class="col-md-3 col-md-offset-1">
+                        years: <input type="radio" name="unit_of_time">
+                    </div>
+                    End Years -->
                 </div>
 
-                <!-- Weeks
-                <div class="col-md-3 col-md-push-3">
-                    weeks: <input type="radio" name="unit_of_time">
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-2">
+                        - completed fewer than &nbsp;<input type="text" size="1" />&nbsp; job/s.
+                    </div>
                 </div>
-                End weeks -->
 
-                <!-- Months
-                <div class="col-md-3 col-md-push-2">
-                    months: <input type="radio" name="unit_of_time">
-                </div>
-                End months -->
-
-                <!-- Years
-                <div class="col-md-3 col-md-push-1">
-                    years: <input type="radio" name="unit_of_time">
-                </div>
-                End Years -->
-
-            </div>
-
-            <div class="row">
-                <div class="col-md-10 col-md-push-2">
-                    <form action="#">
-                        - completed less than &nbsp;<input type="text" size="1" />&nbsp; job/s.
-                    </form>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-10 col-md-push-2">
-                    <form action="#">
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-2">
                         - failed to complete more than &nbsp;<input type="text" size="1" />&nbsp; job/s.
-                    </form>
+                    </div>
                 </div>
-            </div>
-
+            </form>
+            <!-- End Filter -->
         </div>
-        <!-- End Filter -->
     </div>
-</div>
 </div>
 {% endblock %}

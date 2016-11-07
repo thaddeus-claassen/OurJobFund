@@ -1,0 +1,18 @@
+{% extends 'jobList_Pledge/base.html' %}
+
+{% load staticfiles %}
+{% block import %}
+    <script type="text/javascript" src="{% static 'jobList_Pledge/JavaScript/logic_base.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" src="{% static 'jobList_Pledge/CSS/logic_base.css' %}" /> 
+    {% block import_to_logic_base %}{% endblock %}
+{% endblock %}
+
+{% block body %}
+<form id="logic_base_form" method="POST">
+    {% csrf_token %}
+    <div id="logic_screen">
+        <input type="button" id="apply_metric" value="Apply Metric" />
+        <input type="button" id="cancel_metric" value="X" />
+    </div>
+</form>
+{% endblock %}

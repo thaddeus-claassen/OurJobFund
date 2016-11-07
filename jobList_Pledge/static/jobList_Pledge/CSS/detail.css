@@ -1,0 +1,36 @@
+
+#detail_id {
+    text-align:center;
+    font-size: 30px;
+}
+
+#detail_header {
+    text-align: center;
+    font-size: 50px;
+}
+
+#display_hashtags {
+    text-align: center;
+    font-size: 30px;
+}
+
+#detail_job_description {
+    
+}
+
+#detail-description-box {
+    outline: thin solid;
+    position: relative;
+}
+
+#view-description {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+#detail_work_on_job {
+    height: 30px;
+}
+
+

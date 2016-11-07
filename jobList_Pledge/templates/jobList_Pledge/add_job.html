@@ -1,49 +1,58 @@
 {% extends 'jobList_Pledge/base.html' %}
 
+{% load staticfiles %}
+{% block import %}
+    <script type="text/javascript" src="{% static 'jobList_Pledge/JavaScript/add_job.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'jobList_Pledge/CSS/add_job.css' %}" />
+{% endblock %}
+
+
 {% block body %}
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-2 col-md-push-1">
-            Job Title:
+    <form id="create-job-form" action="create_job" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <label for="job_title" class="text_label col-md-2 col-md-offset-1">
+                Job Title:
+            </label>
+            <span class="text_span">
+                <input id="job_title" class="col-md-9" type="text" name="job_title" />
+            </span>
         </div>
-        <form action="#">
-            <input class="col-md-6 col-md-push-1" type="text" />
-        </form>
-        <div class="col-md-2 col-md-push-1">
-            If accepted, the job ID will be
+        <div class="row">
+            <label for="location" class="text_label col-md-2 col-md-offset-1">
+                Location (optional):
+            </label>
+            <span class="text_span">
+                <input id="location" class="col-md-7" type="text" name="location" />
+            </span>
+            <div id="locaiton-validation"></div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-2 col-md-push-1">
-            Location (optional):
+        <input id="latitude"></input>
+        <input id="longitude"></input>
+        
+        <div class="row">
+            <label for="hashtags" class="text_label col-md-2 col-md-offset-1">
+                Hashtags (max 10):
+            </label>
+            <span class="text_span">
+                <input id="hashtags" class="col-md-9" type="text" value="(ex: manufacturing, surfing, possums, asdf)" name="create_tags" />
+            </span>
         </div>
-        <form action="#">
-            <input class="col-md-6 col-md-push-1" type="text" />
-        </form>
-    </div>
-    <div class="row">
-        <div class="col-md-2 col-md-push-1">
-            Hashtags (Max 10):
+        <div class="row">
+            <label for="description" class="text_label col-md-2 col-md-offset-1">
+                Description:
+            </label>
+            <span class="text_span">
+                <input id="description" class="col-md-9" type="text" name="description" />
+                <!-- <textarea id="description" name="editor1"></textarea> -->
+            </span>
         </div>
-        <form action="#">
-            <input class="col-md-6 col-md-push-1" type="text" value="(ex. #manufacturing, #southeasternfrance, #possums, #asdf)" />
-        </form>
-    </div>
-    <div class="row">
-        <div class="col-md-2 col-md-push-1">
-            Description:
+        <div class="row">
+            <div class="col-md-6 col-md-offset-2">
+                <input type="submit" value="Create Job">
+            </div>
         </div>
-        <form class="col-md-8" action="#">
-            <textarea class="col-md-4" name="editor1"></textarea>
-            <script>
-                CKEDITOR.replace( 'editor1' );
-            </script>
-        </form>
-    </div>
-    <div class="row">
-        <form action="#" class="col-md-2 col-md-push-6">
-            <input type="submit" value="I don't know">
-        </form>
-    </div>
+    </form>
 </div>
 {% endblock %}

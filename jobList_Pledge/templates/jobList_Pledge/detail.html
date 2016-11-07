@@ -1,49 +1,71 @@
 {% extends 'jobList_Pledge/base.html' %}
 
+{% load staticfiles %}
+{% block import %}
+    <link rel="stylesheet" type="text/css" href="{% static 'jobList_Pledge/CSS/detail.css' %}" />
+    <script type="text/javascript" src="{% static 'jobList_Pledge/JavaScript/detail.js' %}" ></script>
+{% endblock %}
+
 {% block body %}
-
-
-<div id="detail_header"> {{ job.name }} </div>
-{% if all_hashtags %}
-<div id="display_hashtags">
-    {% for hashtag in all_hashtags %}
-    {{ hashtag.hashtag }}
-    {% endfor %}
-</div>
-{% else %}
-There are no hashtags
-{% endif %}
-
-<div class="container-fluid">
-    <div class="row">
-
+<div id="detail_screen" class="container-fluid">
+    <div class="main-row row">
+        <div id="detail_id" class="col-md-12">
+            ID: {{ job.pk }}
+        </div>
+    </div>
+    <div class="main-row row">
+        <div id="detail_header" class="col-md-12">
+            {{ job.name }}
+        </div>
+    </div>
+    <div class="main-row row">
+        <div id="detail_hashtags" class="col-md-12">
+            {% if all_hashtags %}
+                {% for hashtag in all_hashtags %}
+                    {{ hashtag.hashtag }}
+                {% endfor %}
+            {% else %}
+                There are no hashtags
+            {% endif %}
+        </div>
+    </div>
+    <div class="main-row detail_job_information row">
         <!-- Pledge money, job description -->
-        <div class="col-md-6">
-            <div class="row">
-                <div class="col-md-6">
+        <div class="detail_job_information col-md-6">
+            <div id="detail_main_editor" class="row">
+                <div class="col-md-12">
                     Main editor:
                     <a href="#">
                         Main editor's username
                     </a>
                 </div>
+            </div>
+            <div id="detail_money_pledged" class="row">
                 <div class="col-md-6">
                     Total money pledged:
+                    {{ job.money_pledged }}
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <input type="button" value="Will you pledge money?">
                 </div>
             </div>
+            <div id="detail_job_description" class="row">
+                <div id="detail-description-box" class="col-md-12">
+                    {{ job.description }}
+                    <a id="view-description" href="#" class={{ job.pk }}>View Fullscreen</a>
+                </div>
+            </div>
+            <div id="detail_work_on_job" class="row">
+                <div class="col-md-12">
+                    <input type="button" value="Decide to work on job?" align="right">
+                </div>
+            </div>
         </div>
-        <!-- End pledge money, job description -->
-
-        <!-- Will do update and anything below it, which will include any worker saying job is done or requesting specific amount of money -->
-        <div class="col-md-6">
-            <div class="row">
-                <div class="col-md-6">
-                    <h1>Workers</h1>
-                    <table class="table">
+        <div class="table-width col-md-6">
+            <div class="table-width row">
+                <div class="table-width col-md-12">
+                    <h4>Workers</h4>
+                    <table id="worker-table" class="table-bordered">
                         <tr>
                             <td class="col-md-3">
                                 Most recent update:
@@ -58,24 +80,19 @@ There are no hashtags
                     </table>
                 </div>
             </div>
-            <!-- End update job table -->
-
-            <!-- Anyone worker who finished or is requesting specific amount of money -->
             <div class="row">
-                <h1>Anyone who asks for money</h1>
-                <table class="table">
-                    <tr>
-                        <td class="col-md-3">
-                            Username
-                        </td>
-                    </tr>
-                </table>
+                <div class="col-md-12">
+                    <h4>Anyone who asks for money</h4>
+                    <table id="money-table" class="table-bordered">
+                        <tr>
+                            <td class="col-md-3">
+                                Username
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
-            <!-- End workers who finished or requesting money table -->
-
         </div>
-        <!-- End of job update and workers requesting money -->
-
     </div>
 </div>
 
