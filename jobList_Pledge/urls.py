@@ -4,37 +4,40 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    # /jobList_Pledge/
+    # /JobList/
     url(r'^$', views.index, name='index'),
 
-    # /jobList_Pledge/<Job ID>
+    # /JobList/<Job ID>
     url(r'^(?P<job_id>[0-9]+)$', views.detail, name='detail'),
 
-    # /jobList_Pledge/add_job
+    # /JobLsit/add_job
     url(r'^add_job$', views.add_job, name='add_job'),
     
-    # /jobList_Pledge/create_job
+    # /JobList/create_job
     url(r'^create_job$', views.create_job, name='create_job'),
     
-    # /jobList_Pledge/search_jobs
+    # /JobList/search_jobs
     url(r'^search_jobs$', views.search_jobs, name='search_jobs'),
     
-    # /jobList_Pledge/search_jobs_by_radius
+    # /JobList/search_jobs_by_radius
     url(r'^search_jobs_by_radius$', views.search_jobs_by_radius, name='search_jobs_by_radius'),
     
-    # /jobList_Pledge/apply_basic_hashtags
+    # /JobList/apply_basic_hashtags
     url(r'^apply_basic_hashtags$', views.apply_basic_hashtags, name='apply_basic_tags'),
     
-    # /jobList_Pledge/ANDs_of_ORs
+    # /JobList/ANDs_of_ORs
     url(r'^ANDs_of_ORs$', views.ANDs_of_ORs, name='ANDs_of_ORs'),
     
-    # /jobList_Pledge/view_all_metrics_pledge
+    # /JobList/custom_logic
+    url(r'^custom_logic$', views.custom_logic, name='custom_logic'),
+    
+    # /JobList/view_all_metrics_pledge
     url(r'^view_all_metrics_pledge$', views.view_all_metrics_pledge, name='view_all_metrics_pledge'),
     
-    # /jobList_Pledge/apply_metrics
+    # /JobList/apply_metrics
     url(r'^apply_metrics$', views.apply_metrics, name='apply_metrics'),
     
-    # /jobList_Pledge/<Job ID>/description
+    # /JobList/<Job ID>/description
     url(r'^(?P<job_id>[0-9]+)/description$', views.description, name='description'),
 ]
 

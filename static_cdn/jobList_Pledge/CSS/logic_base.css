@@ -1,12 +1,20 @@
 #logic_screen {
     white-space: nowrap;
     margin-left: 30px;
+    background: blue;
 }
 
-.logic_group, .outside_clause {
+.logic_text, .outside_clause {
     display: inline;
 }
 
 .inside_clause {
     text-align: center;
+}
+
+#apply-metric, #cancel-metric {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    background-color: blue;
 }

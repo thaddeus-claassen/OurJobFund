@@ -1,4 +1,23 @@
+var basicHashtagInput = "";
 $('document').ready(function() {
+    $('[name=hashtag-radio]').change(function() {
+        if ($('#hashtag_basic_logic').prop('checked')) {
+            $('#basic_hashtags_input').val(basicHashtagInput);
+            $('#basic_hashtags_input').prop('disabled', false);
+        } else if ($('#hashtag_ANDs_of_ORs_logic').prop('checked')) {
+            basicHashtagInput = $('#basic_hashtags_input').val();
+            $('#basic_hashtags_input').val("");
+            $('#basic_hashtags_input').prop('disabled', true);
+        } else if ($('#hashtag_ORs_of_ANDs_logic').prop('checked')) {
+            basicHashtagInput = $('#basic_hashtags_input').val();
+            $('#basic_hashtags_input').val("");
+            $('#basic_hashtags_input').prop('disabled', true);
+        } else if ($('#hashtag_custom_logic').prop('checked')) {
+            basicHashtagInput = $('#basic_hashtags_input').val();
+            $('#basic_hashtags_input').val("");
+            $('#basic_hashtags_input').prop('disabled', true);   
+        }// end if
+    });
     $('#search_jobs').keydown(function(event) {
         if (event.which == 13) {
             event.preventDefault();
@@ -17,8 +36,11 @@ $('document').ready(function() {
             applyHashtags();                                // Call applyBasicHashtags() function to do all the hashtag logic
         }// end if
     });
-    $('#hashtag_ANDs_of_ORs_logic').click(function(event) { // If someone wanted the ANDs_of_ORs hashtag template rather than the basic one
+    $('#ANDs_of_ORs').click(function(event) { // If someone wanted the ANDs_of_ORs hashtag template rather than the basic one
         window.open("/jobList_Pledge/ANDs_of_ORs");         // Open /jobList_Pledge/ANDs_of_ORs/ in a NEW tab
+    });
+    $('#custom').click(function(event) {
+        window.open("/jobList_Pledge/custom_logic");
     });
     $('#view_metrics_pledge').click(function() {
         window.open("/jobList_Pledge/view_all_metrics_pledge");
@@ -36,8 +58,7 @@ $('document').ready(function() {
     $('#location-text').keydown(function(event) {
         if (event.which == 13) {
             event.preventDefault();
-            applyLocation(map, $(this).val());
-            
+            applyLocation(map, $(this).val());   
         }// end if
     });
 });
@@ -68,14 +89,14 @@ function applyLocation(map, address) {
 }// end applyLocation()
 
 function addRadiusAndJobs(map, center) {
-    var radius = $('#location-radius').val();
+    var radius = Number($('#location-radius').val());
     var unit = $("input[type='radio'][name='radius_unit']:checked").val();
     if (unit == "km") {
         radius = 0.621371 * radius;
     }// end if
     var pi = 3.14159265;
-    var lat = center.latitude * pi / 180;
-    var lon = center.longitude * pi / 180;
+    var lat = center.lat() * pi / 180;
+    var lon = center.lng() * pi / 180;
     var radius = (radius / 69) * (pi / 180);
     search_jobs_by_radius(lat, lon, radius);
 }// end addRadiusAndJobs()
@@ -108,9 +129,10 @@ function search_jobs() {
     });
 }// end search_jobs()
 
-function searchSuccess(json) {
+function searchSuccess(json) {    
     $('#main_table').empty();
-    if (Object.keys(json).length > 0) {
+    var numJobs = Object.keys(json).length; 
+    if (numJobs > 0) {
         for (var index = 0; index < json.length; index++) {
             var job = json[index];
             var pk = job["pk"];
@@ -122,9 +144,15 @@ function searchSuccess(json) {
             $(jobID).append("<td class='col-md-3'> Workers: " + fields["num_people_doing_job"] + "</td>");
         }// end for
     }// end if
+    addNumJobsToSpan(numJobs);
 }// end searchSuccess()
 
+function addNumJobsToSpan(numJobs) {
+    $('#found-x-jobs').text(numJobs);
+}
+
 function searchFailure(xhr,errmsg,err) {
+    alert("Search failure");
     console.warn(xhr.responseText)
 }// end searchFailure()
 
@@ -133,7 +161,7 @@ function searchFailure(xhr,errmsg,err) {
 function applyHashtags() {
     $.ajax({                                                                    // Creates new AJAX function with JQuery?                                               
         type : "POST",                                                          // Hashtag form is done with POST. Chose that only because I could get it to work
-        url : "apply_basic_hashtags",                                           // Defines which URL to send the form to. (I think this is how the hashtags are sent to Django, but I am not 100% sure)
+        url : "apply_basic_hashtags",                                           // Defines which URL to send the form to. (I think this is where the hashtags are sent to Django, but I am not 100% sure)
         data : {                                                                // Defines what the data is, which Django will use
             'hashtags' : $('#basic_hashtags_input').val(),                      // Gives the Django 'hashtags' variable value of all of the hashtags inputted by the user
             'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(), // I don't know what this does really. Something to do with CSRF, which I mention in the HTML document "index.html", but I don't know why I need to mention it here
@@ -148,12 +176,14 @@ function applyHashtags() {
 function applyBasicHashtags() {
     var hashtags = $('#basic_hashtags_input').val();
     hashtags = hashtags.replace(/\,/g,"");
+    return hashtags;
 }// applyBasicHashtags()
 
 // This function is called when AJAX works properly
 function basicSuccess(json) {                                                       // Takes in JSON as a parameter. I do not know how that gets there when the call to basicSuccess is in data and does not specify JSON. Maybe the call comes from Django directly. I don't really know.
     $('#main_table').empty();                                                       // Remove everything inside of the job table, which was already there
-    if (Object.keys(json).length > 0) {                                             // Somehow this means "If there is something in the json" I think
+    var numJobs = Object.keys(json).length; 
+    if (numJobs > 0) {                                             // Somehow this means "If there is something in the json" I think
         for (var index = 0; index < json.length; index++) {                         // Get the index for each json element
             var job = json[index];                                                  // Then get that element, which is a job
             var pk = job["pk"];                                                     // Save the primary key of the job
@@ -166,6 +196,7 @@ function basicSuccess(json) {                                                   
             $('#job' + pk.toString()).append(string);                              // Add the three data points to the job row
         }// end for
     }// end if
+    $('#found-x-jobs').text(numJobs);
 }// end basicSuccess()
 
 // This function is called if there is an error with the AJAX for some reason or another. I do not know which errors call this function and which ones do not

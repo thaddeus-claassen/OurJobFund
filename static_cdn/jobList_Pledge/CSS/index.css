@@ -6,9 +6,13 @@
     padding-top: 10px;
 }
 
-body {
-    padding-top: 30px;
-    padding-bottom: 30px;
+#advanced-options {
+    font-weight: bold;
+}
+
+#ANDs_of_ORs, #ORs_of_ANDs, #custom, #refresh-button {
+    background: none;
+    border: none;
 }
 
 label {
@@ -19,8 +23,12 @@ label {
     display: none;
 }
 
+.hashtag-radio {
+    font-weight: normal;
+}
+
 #empty-space {
-    height: 200px;
+    height: 100px;
 }
 
 .change-label {
@@ -45,17 +53,12 @@ label {
 }
 
 #or {
-    padding-top:20px;
+    padding-top:10px;
     font-weight: bold;
 }
 
 #job_search_div {
     padding-top: 20px;
-}
-
-#main_table {
-    top: 10px;
-    bottom: 30px;
 }
 
 .table td {
@@ -76,10 +79,6 @@ ul {
 
 #radius {
     margin-top: 10px;
-}
-
-#create_your_own_metric_text {
- margin-top: 100px;
 }
 
 #Google_Map {
@@ -109,4 +108,8 @@ html, body {
     position: relative;
     overflow: auto;
     height: 350px;
+    top: 10px;
+    bottom: 30px;
+    border: 1px solid rgb(0, 0, 0);
+    border: 1px solid rgba(0, 0, 0, .5);
 }

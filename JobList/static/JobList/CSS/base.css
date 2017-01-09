@@ -1,0 +1,24 @@
+* {
+    border-radius: 0 !important;
+}
+
+.change-label {
+    font-weight: normal;
+}
+
+.text_form {
+    overflow: hidden;
+}
+
+.text_label {
+    float: left;
+}
+
+.text_span {
+    display: block;
+    overflow: hidden;
+}
+
+.wide_text {
+    width: 100%;
+}

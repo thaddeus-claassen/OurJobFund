@@ -1,0 +1,41 @@
+{% extends 'JobList/base.html' %}
+
+{% block body %}
+<form id="add-more-locations">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+            
+                <!-- Location -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="text_label change-label" for="location_text" >Location:&nbsp;</label>
+                        <span class="text_span">
+                            <input id="location-text" class="wide_text location-hide" type="text" />
+                        </span>
+                    </div>
+                 </div>
+                <!-- End Location -->
+
+                <!-- Radius -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="radius" class="change-label" value="10" >Radius:</label>
+                        <input id="location-radius" class="location-hide" type="text" size="1" name="radius" />                            
+                    </div>
+                    <div class="col-md-2">
+                        <label class="location-hide change-label" for="mi">mi:</label>
+                        <input class="location-hide" type="radio" name="radius_unit" value="mi" checked="checked" />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="location-hide change-label" for="km">km:</label>
+                        <input class="location-hide" type="radio" name="radius_unit" value="km" />
+                    </div>
+                </div>
+                <!-- End Radius -->
+                
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

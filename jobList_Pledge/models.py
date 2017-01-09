@@ -9,8 +9,8 @@ class Job(models.Model):
     last_time_worked_on = models.DateTimeField(auto_now_add='True');    # Remembers the last time the job was worked as a column
     money_pledged = models.FloatField(default = '0.0');                 # Adds the amount of money pledged as a column
     num_people_doing_job = models.IntegerField(default = '0');          # Adds the number of people who are working on the job as a column
-    latitude = models.FloatField(default = '0.0');
-    longitude = models.FloatField(default = '0.0');
+    latitude = models.FloatField(null = True);
+    longitude = models.FloatField(null = True);
     description = models.CharField(default="", max_length=10000);
     
     # Defines a toString method
@@ -20,10 +20,10 @@ class Job(models.Model):
 
 
 # Create a Tag database
-class Tag(models.Model):                                            
-    tag = models.CharField(max_length=30);                              # Adds the tag as a column to the database
+class Hashtag(models.Model):                                            
+    hashtag = models.CharField(max_length=30);                              # Adds the tag as a column to the database
     jobs = models.ManyToManyField(Job);
 
     # Defines a toString method
     def __str__(self):
-        return self.tag;                                            # Retuns the tag itself
+        return self.hashtag;                                            # Retuns the tag itself

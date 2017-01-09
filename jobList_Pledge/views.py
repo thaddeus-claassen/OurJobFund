@@ -1,7 +1,11 @@
-from django.shortcuts import render, render_to_response, get_object_or_404;
-from .models import Job, Tag;
+from django.shortcuts import render, render_to_response, get_object_or_404, redirect;
+from .models import Job, Hashtag;
 from django.http import JsonResponse, HttpResponse;
 from django.core import serializers;
+from django.contrib.auth import authenticate, login;
+from .forms import UserForm;
+from django.views import generic;
+from django.views.generic import View;
 import json;
 import math;
 
@@ -11,7 +15,7 @@ def job_table(jobs):
             jobs,                                               #   Names the object we want to send as JSON
             content_type="application/json",                    #   For some reason, we have to say this line. I guess so whatever reads this response knows its a JSON object
         );
-  
+
 # This gets the any jobs which match the name or id search in index.html
 def search_jobs(request):    
     data = [];
@@ -28,7 +32,7 @@ def search_jobs(request):
                 data = data.filter(name__contains=word);         #           filter out any job which does not include that word    
     data = serializers.serialize("json", data);                 
     return job_table(data);                                      #call the job_table subroutine, which will hopefully put the jobs the user searched into the table
-
+    
 def search_jobs_by_radius(request):
     data = [];
     if (request.method == 'POST'):
@@ -57,24 +61,28 @@ def apply_metrics(request):
 def apply_basic_hashtags(request):
     data = [];
     if (request.method == 'POST'):                                                  #if the request was a POST (again, I am not entirely sure why I should use this if statement)
-        post_text = request.POST['tags'];                                       #   set the post_text variable to the list of hashtags the user inputted
+        post_text = request.POST['hashtags'];                                       #   set the post_text variable to the list of hashtags the user inputted
         if (post_text != ''):                                                       #   if post_text contains something
-            tagsArray = create_tags_array(post_text);                                 #       create a hashtags array and set each hashtag the user inputted as an element to the array
+            hashtagsArray = create_hashtags_array(post_text);                                 #       create a hashtags array and set each hashtag the user inputted as an element to the array
             data = Job.objects.all();                                               #       create a the variable data which starts out as all jobs
-            for tagString in tagsArray :                                    #       for each individual tag the user inputted (gotten form the hashtags array variable)       
-                currTag = Tag.objects.get(tag__iexact=tagString);   #           find the hashtag from the database
-                currJobs = currTag.jobs.all();                                  #           find all jobs, which contain the hashtag
+            print("Num jobs: " + str(len(data)));
+            for hashtagString in hashtagsArray :                                    #       for each individual tag the user inputted (gotten form the hashtags array variable)       
+                currHashtag = Hashtag.objects.get(hashtag__iexact=hashtagString);   #           find the hashtag from the database
+                currJobs = currHashtag.jobs.all();                                  #           find all jobs, which contain the hashtag
                 data = data & currJobs;                                             #           change the data variable so it doesn't contain jobs without the hashtag (we do this by taking the intersection of the jobs, which contain the tag and the set of jobs previously contained by the prior data variable)
     data = serializers.serialize("json", data);                                     #Change the data variable so it can be read as a JSON object
     return job_table(data);
     
-def create_tags_array(tagsString):
-    tagsString = tagsString.replace(" ","");
-    return tagsString.split(",");
+def create_hashtags_array(hashtagsString):
+    hashtagsString = hashtagsString.replace(" ","");
+    return hashtagsString.split(",");
 
 # Defines a function, which renders the HTML document ANDs_of_ORs.html
 def ANDs_of_ORs(request):
     return render(request, 'jobList_Pledge/ANDs_of_ORs.html');
+    
+def custom_logic(request):
+    return render(request, 'jobList_Pledge/custom_logic.html');
 
 # Defines a function, which renders the HTML document index.html (a.k.a. the main jobList_Pledge page)
 def index(request):
@@ -83,10 +91,10 @@ def index(request):
 # Defines a function, which renders the HTML document detail.html (a.k.a. the page which opens when you click on a job link)
 def detail(request, job_id):
     job = get_object_or_404(Job, pk=job_id);                                        #Find the job from the given primary key, from inside the database
-    all_tags = job.tag_set.all();                                           #Get all hashtags, which are used to describe the job
+    all_hashtags = job.hashtag_set.all();                                           #Get all hashtags, which are used to describe the job
     context = {                                                                     #Define the context dictionary, which tells the HTML document what to call the given variables 
         'job': job,                                                                 #For detail.html, defines the string "job" as the given job
-        'all_hashtags': all_tags,                                               #For detail.html, defines the string "all_hashtags" as the set of hashtags that are used to define the job
+        'all_hashtags': all_hashtags,                                               #For detail.html, defines the string "all_hashtags" as the set of hashtags that are used to define the job
     }
     return render(request, 'jobList_Pledge/detail.html', context)
 
@@ -99,19 +107,19 @@ def create_job(request):
         name = request.POST.get('job_title');
         latitude = request.POST.get('latitude');
         longitude = request.POST.get('longitude');
-        tags = request.POST.get('create_tags');
+        hashtags = request.POST.get('create_tags');
         description = request.POST.get('description');
         job = Job(name=name, latitude=latitude, longitude=longitude, description=description);
         job.save();
-        tagsArray = create_tags_array(tags);
-        for tag in tagsArray :
+        hashtagsArray = create_hashtags_array(hashtags);
+        for tag in hashtagsArray :
             newTag = None;
-            if (Tag.objects.filter(tag__iexact=tag).exists()):
-                newTag = Tag.objects.get(tag__iexact=tag);
+            if (Hashtag.objects.filter(hashtag__iexact=tag).exists()):
+                newTag = Hashtag.objects.get(hashtag__iexact=tag);
             else:
-                newTag = Tag(tag=tag);
+                newTag = Hashtag(hashtag=tag);
                 newTag.save();
-            job.tag_set.add(newTag);
+            job.hashtag_set.add(newTag);
     return index(request);
     
 def description(request, job_id):
@@ -121,52 +129,67 @@ def description(request, job_id):
     }
     return render(request, 'jobList_Pledge/job_description.html', context);
 
-
-# Still Working on code from here to ---------------------------> ... 
 def apply_hashtags(request):
     jobs = [];
     if (request.method == 'POST'):
-        tags = request.POST['hashtags'];
-        jobs = replaceStringWithJobs(tags);
+        hashtags = request.POST['hashtags'];
+        jobs = replaceStringWithJobs(hashtags);
         jobs = Job.objects.all() & jobs;
-        
     jobs = serializers.serialize("json", jobs);
-    return job_table(data);
+    print(jobs)
+    return job_table(jobs);
     
-def replaceStringWithJobs(tags):
-    jobs = [];
-    moreHashtagsToConvert = true;
+def replaceStringWithJobs(hashtags):
     startIndex = -1;
     currIndex = 0;
-    currWord = "";
+    moreHashtagsToConvert = True;
     while (moreHashtagsToConvert):
-        char = hashtags.charAt(currIndex) #Remember to check this function!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        if (char.isAlphanumeric()):
-            currWord += char;
-            if (startIndex == -1):
-                startIndex = currIndex;
-        else:
-            if (startIndex != -1):
-                hashtags = replaceWordForJobs(hashtags, currWord, startIndex, currIndex);
-                currWord = ""
-                startIndex = -1;
+        char = hashtags[currIndex];
+        if (char == '#'):
+            startIndex = currIndex + 1;
+            isAlphanumeric = True;
+            while (isAlphanumeric):
+                currIndex = currIndex + 1;
+                char = hashtags[currIndex];
+                isAlphanumeric = char.isalnum();
+            hashtags = replaceWordForJobs(hashtags, startIndex, currIndex - 1);
         currIndex = currIndex + 1;
-    return eval(jobs);
+    return eval(hashtags);
     
-def replaceWordForJobs(hashtags, currWord, startIndex, currIndex):
+def replaceWordForJobs(hashtags, startIndex, endIndex):
     partOne = hashtags[0:startIndex];
-    partTwo = "Hashtag.objects.get(hashtags__iexact=currWord).jobs.all()";
-    partThree = hashtags[currIndex + 1:hashtags.len()];
+    partTwo = "Hashtag.objects.get(hashtags__iexact=" + hashtags[startIndex + 1:endIndex] + ").jobs.all()";
+    partThree = hashtags[endIndex:hashtags.len()];
     return (partOne + partTwo + partThree);
-    
-# ... here <--------------------------------------
-    
 
     
+class UserFormView(View):
+    form_class = UserForm;
+    template_name = 'jobList_Pledge/registration_form.html';
     
-    
-    
-    
+    # display blank form
+    def get(self, request):
+        form = self.form_class(None);
+        return render(request, self.template_name, {'form': form});
+        
+    # process form data
+    def post(self, request):
+        form = self.form_class(request.POST);
+        if form.is_valid():
+            user = form.save(commit=False);
+            # cleaned (normalized) data
+            username = form.cleaned_data['username'];
+            password = form.cleaned_data['password'];
+            user.set_password(password);
+            user.save();
+            # returns User objects if credentials are correct
+            user = authenticate(username=username, password=password);
+            if user is not None:
+                if user.is_active:
+                    login(request, user);
+                    return redirect('jobList_Pledge:index');
+        return render(request, self.template_name, {'form': form});
+                    
     
     
     

@@ -82,10 +82,10 @@ function addCol() {
 
     var groupID = "group" + (numCols + 1);
     addRow(groupID, 1);
-    addInnerSpan(groupID, 2);
-    addRow(groupID, 2);
-    addInnerSpan(groupID, 3);
-    addRow(groupID, 3);
+//    addInnerSpan(groupID, 2);
+//    addRow(groupID, 2);
+//    addInnerSpan(groupID, 3);
+//    addRow(groupID, 3);
 }// end addCol()
 
 function addTable(numCols) {
@@ -93,21 +93,21 @@ function addTable(numCols) {
 }// end addTable()
 
 function addRow(groupID, rowNumber) {
-    var rowID = groupID + 'row' + rowNumber
+    var rowID = groupID + 'row' + rowNumber;
     var textID = groupID + 'text' + rowNumber;
-    var rowString = $('<tr class="logic_text" id="' + rowID + '"><td><input id="' + textID + '" type="text" size="25" onclick="mainInputFunction(this)" /></td></tr>');
+    var rowString = '<tr class="logic_text" id="' + rowID + '"><td><input id="' + textID + '" type="text" size="25" onclick="mainInputFunction(this)" /></td></tr>';
     $(rowString).appendTo('#' + groupID);
 }// end addRow()
 
-function applyMetric() {
-    $.ajax {
-        type : 'POST';
-        url: 'apply_hashtags';
-        data: {
-            "hashtags" : getHashtagsString();
-        }
-    }// end ajax
-}// end applyMetric()
+//function applyMetric() {
+//    $.ajax {
+//        type : 'POST';
+//        url: 'apply_hashtags';
+//        data: {
+//            "hashtags" : getHashtagsString();
+//        }
+//    }// end ajax
+//}// end applyMetric()
 
 
 

@@ -1,0 +1,30 @@
+{% extends 'JobList/base.html' %}
+
+
+{% load staticfiles %}
+{% block import %}
+    <script type="text/javascript" src="{% static 'JobList/JavaScript/custom.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'JobList/CSS/custom.css' %}" />
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div id="logic-text-explanation" class="col-md-8 col-md-offset-2">
+                (For NOT operator: use '!', '~', or '-'. For AND operator: use '&', or '&&'. For OR operator: use '|', or '||'. To group together clauses: use '()')
+            </div>
+        </div>
+        </div class="row">
+            <div>
+                <textarea id="custom-logic" class="col-md-8 col-md-offset-2" rows="10"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-5">
+                {% csrf_token %}
+                <input type="submit" id="apply-metric" value="Apply Metric" />
+                <input type="button" id="cancel-metric" value="X" />
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -35,7 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'jobList_Pledge.apps.JoblistPledgeConfig',
+    'JobList.apps.JoblistConfig',
+    'home.apps.HomeConfig',   
 ]
 
 MIDDLEWARE = [
