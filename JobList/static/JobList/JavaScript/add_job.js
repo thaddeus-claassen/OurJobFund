@@ -14,6 +14,11 @@ $('document').ready(function() {
         var address = $('#location').val();
         applyLocation(address);
     });
+    $('#create-job').click(function() {
+        create_job();
+        document.location.href = 'index';
+    });
+    
 });
 
 function applyLocation(address) {
@@ -31,3 +36,18 @@ function applyLocation(address) {
         }// end if-else
     });
 }// end applyLocation()
+
+function create_job() {
+    $.ajax({
+        type : 'POST',
+        url : 'create_job',
+        data : {
+            'job_title' : $('#job_title').val(),
+            'latitude' : $('#latitude').val(),
+            'longitude' : $('#longitude').val(),
+            'tags' : $('#tags').val(),
+            'description' : $('#description').val(),
+            'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
+        },
+    });
+}// end create_job()

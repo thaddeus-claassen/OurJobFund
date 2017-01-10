@@ -32,25 +32,15 @@ def search_jobs(request):
     data = serializers.serialize("json", data);              
     return job_table(data);                                      #call the job_table subroutine, which will hopefully put the jobs the user searched into the table
     
-def search_jobs_by_radius(request):
-    data = [];
-    if (request.method == 'POST'):
-        currLatitude = float(request.POST['latitude']);
-        currLongitude = float(request.POST['longitude']);
-        radius = float(request.POST['radius']);
-        data = find_jobs_by_radius(Job.objects.all(), currLatitude, currLongitude, radius);
-    data = serializers.serialize("json", data);
-    return job_table(data);
-    
 def find_jobs_by_radius(jobs, currLatitude, currLongitude, radius):
-    data = Job.objects.filter(latitude__range=(currLatitude - radius, currLatitude + radius));
-    for job in data:
+    jobs = jobs.filter(latitude__range=(currLatitude - radius, currLatitude + radius));
+    for job in jobs:
         lat = job.latitude;
         lon = job.longitude;
         distance = radius * math.acos(math.sin(currLatitude) * math.sin(lat) + math.cos(currLatitude) * math.cos(lat) * math.cos(math.fabs(currLongitude - lon))); #This is called the law of cosines to calculate distance on a sphere. (Earth is not a sphere, thus will have some margin of error. Computation speed compensates)
         if (distance > radius):
-            data.exclude(id=job.id);
-    return data;
+            jobs.exclude(id=job.id);
+    return jobs;
     
 def view_all_metrics_pledge(request):
     return render(request, 'JobList/view_all_metrics_pledge.html');
@@ -58,82 +48,43 @@ def view_all_metrics_pledge(request):
 def apply_metrics(request):
     return render(request, 'JobList/home_logged_out_pledge.html');
     
-# Defines the function which finds the jobs which correspond to the basic tag input
-def apply_basic_tags(request):
-    data = [];
-    if (request.method == 'POST'):                                                  #if the request was a POST (again, I am not entirely sure why I should use this if statement)
-        tags = request.POST['tags'];                                       #   set the post_text variable to the list of tags the user inputted
-        if (tags != ''):                                                       #   if post_text contains something
-            tagsArray = create_tags_array(tags);                       #       create a tags array and set each tag the user inputted as an element to the array
-            data = get_jobs_from_basic_tags(tagsArray);                                 #           change the data variable so it doesn't contain jobs without the tag (we do this by taking the intersection of the jobs, which contain the tag and the set of jobs previously contained by the prior data variable)
-    data = serializers.serialize("json", data);                                     #Change the data variable so it can be read as a JSON object
-    return job_table(data);
-    
-def apply_tag_basic_logic_and_location(request):
-    data = [];
+def apply_tags_and_location(request):
+    jobs = [];
     if (request.method == 'GET'):
-        tags = request.GET['tags'];
-        if (tags == ''):
-            data = Job.objects.all();
+        if (request.user.is_authenticated()):
+            typeOfTags = request.GET['typeOfTags'];
+            if (typeOfTags == 'tag_basic_logic'):
+                jobs = get_jobs_from_basic_tags(request.GET['basicTags']);
+            else:
+                tags = '';
+                if (typeOfTags == 'tag_ANDs_of_ORs_logic'):
+                    tags = request.user.userlogic.ANDs_of_ORs;
+                elif (typeOfTags == 'tag_OR_of_ANDs_logic'):
+                    tags = request.user.userlogic.ORs_of_ANDs;
+                else:
+                    tags = request.user.userlogic.custom;
+                tags = apply_tags(tags);
+                jobs = eval(tags).distinct();
         else:
-            tagsArray = create_tags_array(tags);
-            data = get_jobs_from_basic_tags(tagsArray);
-        latitude = float(request.GET['latitude']);
-        longitude = float(request.GET['longitude']);
-        radius = float(request.GET['radius']);
-        find_jobs_by_radius(data, latitude, longitude, radius);
-    return data;
-        
-        
-def apply_tag_basic_logic(request):
-    data = [];
-    if (request.method == "GET"):
-        if (requested.user.is_authenticated()):
-            tags = request.GET['tags'];
-            tagsArray = create_tags_array(tags);
-            data = get_jobs_from_basic_tags(tagsArray);
-    data = serializers.serialize("json", data);
-    return job_table(data)
+            jobs = get_jobs_from_basic_tags(request.GET['basicTags']);
+        if (request.GET['locationTrue'] == 'true'):
+            latitude = float(request.GET['latitude']);
+            longitude = float(request.GET['longitude']);
+            radius = float(request.GET['radius']);
+            jobs = find_jobs_by_radius(jobs, latitude, longitude, radius);
+    jobs = serializers.serialize('json', jobs);
+    return job_table(jobs);
                 
-def get_jobs_from_basic_tags(tagsArray):
-    jobs = Job.objects.all();                                               #       create a the variable data which starts out as all jobs
-    for tagString in tagsArray :                                    #       for each individual tag the user inputted (gotten form the tags array variable)       
-        currtag = Tag.objects.get(tag__iexact=tagString);   #           find the tag from the database
-        currJobs = currtag.jobs.all();                                  #           find all jobs, which contain the tag
-        jobs = jobs & currJobs;           
+def get_jobs_from_basic_tags(tags):
+    jobs = Job.objects.all();
+    if (tags != ''):
+        tagsArray = create_tags_array(tags);
+        jobs = Job.objects.all();                                               #       create a the variable data which starts out as all jobs
+        for tagString in tagsArray :                                            #       for each individual tag the user inputted (gotten form the tags array variable)       
+            currtag = Tag.objects.get(tag__iexact=tagString);                   #           find the tag from the database
+            currJobs = currtag.jobs.all();                                      #           find all jobs, which contain the tag
+            jobs = jobs & currJobs;           
     return jobs;
-
-def apply_tag_ANDs_of_ORs_logic(request):
-    data = [];
-    if (request.method == "GET"):
-        if (request.user.is_authenticated()):
-            tags = request.user.userlogic.ANDs_of_ORs;
-            tags = apply_tags(tags);
-            data = eval(tags);
-    data = serializers.serialize("json", data);
-    return job_table(data);
-    
-def apply_tag_ORs_of_ANDs_logic(request):
-    data = [];
-    if (request.method == "GET"):
-        if (request.user.is_authenticated()):
-            tags = request.user.userlogic.ORs_of_ANDs;
-            print(tags);
-            tags = apply_tags(tags);
-            print(tags);
-            data = eval(tags);
-    data = serializers.serialize("json", data);
-    return job_table(data);
-    
-def apply_tag_custom_logic(request):
-    data = [];
-    if (request.method == "GET"):
-        if (request.user.is_authenticated()):
-            tags = request.user.userlogic.custom;
-            tags = apply_tags(tags);
-            data = eval(tags);
-    data = serializers.serialize("json", data);
-    return job_table(data);
     
 def apply_tags(tags):
     words = re.sub("[\W_]", " ",  tags).split();
@@ -144,8 +95,8 @@ def apply_tags(tags):
     return tags;
     
 def create_tags_array(tagsString):
-    tagsString = tagsString.replace(" ","");
-    return tagsString.split(",");
+    tagsString = tagsString.replace(","," ");
+    return tagsString.split();
 
 # Defines a function, which renders the HTML document ANDs_of_ORs.html
 def ANDs_of_ORs(request):
@@ -166,7 +117,6 @@ def get_ANDs_of_ORs_tags(request):
             tags = request.user.userlogic.ANDs_of_ORs;
     return HttpResponse(tags);
             
-    
 def ORs_of_ANDs(request):
     return render(request, 'JobList/ORs_of_ANDs.html');
     
@@ -233,13 +183,13 @@ def add_location(request):
     
 def create_job(request):
     if (request.method == 'POST'):
-        name = request.POST.get('job_title');
-        latitude = request.POST.get('latitude');
-        longitude = request.POST.get('longitude');
-        tags = request.POST.get('create_tags');
-        description = request.POST.get('description');
+        name = request.POST['job_title'];
+        latitude = request.POST['latitude'];
+        longitude = request.POST['longitude'];
+        description = request.POST['description'];
         job = Job(name=name, latitude=latitude, longitude=longitude, description=description);
         job.save();
+        tags = request.POST['tags'];
         tagsArray = create_tags_array(tags);
         for tag in tagsArray :
             newTag = None;
@@ -249,7 +199,7 @@ def create_job(request):
                 newTag = Tag(tag=tag);
                 newTag.save();
             job.tag_set.add(newTag);
-    return index(request);
+    return add_job(request);
     
 def description(request, job_id):
     job = get_object_or_404(Job, pk=job_id);

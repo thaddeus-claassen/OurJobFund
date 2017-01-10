@@ -24,23 +24,8 @@ urlpatterns = [
     # /JobList/search_jobs
     url(r'^search_jobs$', views.search_jobs, name='search_jobs'),
     
-    # /JobList/search_jobs_by_radius
-    url(r'^search_jobs_by_radius$', views.search_jobs_by_radius, name='search_jobs_by_radius'),
-    
-    # /JobList/apply_tag_basic_logic_and_location
-    url(r'^apply_tag_basic_logic_and_location$', views.apply_tag_basic_logic_and_location, name='apply_tag_basic_logic_and_location'),
-    
-    # /JobList/apply_tag_basic_logic
-    url(r'^apply_tag_basic_logic$', views.apply_tag_basic_logic, name='apply_tag_basic_logic'),
-    
-    # /JobList/apply_tag_ANDs_of_ORs_logic
-    url(r'^apply_tag_ANDs_of_ORs_logic$', views.apply_tag_ANDs_of_ORs_logic, name='apply_tag_ANDs_of_ORs_logic'),
-    
-    # /JobList/apply_tag_ORs_of_ANDs_logic
-    url(r'^apply_tag_ORs_of_ANDs_logic$', views.apply_tag_ORs_of_ANDs_logic, name='apply_tag_ORs_of_ANDs_logic'),
-    
-    # /JobList/apply_tag_custom_logic
-    url(r'^apply_tag_custom_logic$', views.apply_tag_custom_logic, name='apply_tag_custom_logic'),
+    # /JobList/apply_tags_and_location
+    url(r'^apply_tags_and_location$', views.apply_tags_and_location, name="apply_tags_and_location"),
     
     # /JobList/ANDs_of_ORs
     url(r'^ANDs_of_ORs$', views.ANDs_of_ORs, name='ANDs_of_ORs'),
