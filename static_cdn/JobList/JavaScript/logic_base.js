@@ -1,6 +1,5 @@
 $('document').ready(function() {                                        //Wait until document is ready (what defines as ready, I don't know)
-    addCol();
-    addCol();
+    getTextFromUser()
     $('#apply-metric').click(function(event) {
         event.preventDefault();
         applyMetric();
@@ -10,6 +9,60 @@ $('document').ready(function() {                                        //Wait u
         document.location.href = 'index';
     });
 });
+
+function getTextFromUser() {
+    $.ajax({                                                                                                              
+        type : "GET",                                                          
+        url : getURL(),                                           
+        success : function(data) {
+            var clauses = removeOuterLogic(data);
+            clauses = removeParentheses(clauses);
+            clauses = removeInnerLogic(clauses);
+            for (var i = 0; i < Math.max(2, clauses.length + 1); i++) {
+                addCol();
+            }// end for
+            for (var i = 1; i <= clauses.length; i++) {
+                var groupID = 'group' + i;
+                for (var j = 1; j <= clauses[i - 1].length; j++) {
+                    if ($('#' + groupID + 'row' + j).length == 0) {
+                        addInnerSpan(groupID, j);
+                        addRow(groupID, j);
+                    }// end if
+                    $('#' + groupID + 'text' + j).val(clauses[i - 1][j - 1]);
+                }// end for
+                if (clauses[i - 1].length == 2) {
+                    addInnerSpan(groupID, clauses[i - 1].length + 1);
+                    addRow(groupID, clauses[i - 1].length + 1);
+                } else if (clauses[i - 1].length > 2) {
+                    for (var j = clauses[i - 1].length + 1; j <= clauses[i - 1].length + 2; j++) {
+                        addInnerSpan(groupID, j);
+                        addRow(groupID, j);
+                    }// end for
+                }// end if
+            }// end for
+        },                                                                                                  
+    });
+}// end getTextFromUser()
+
+function removeOuterLogic(data) {
+    return data.split(outerLogic());
+}// end removeInnerLogic()
+
+function removeParentheses(clauses) {
+    for (var i = 0; i < clauses.length; i++) {
+        if (clauses[i].length > 0 && clauses[i][0] == '(') {
+            clauses[i] = clauses[i].substring(1, clauses[i].length - 1);
+        }// end if
+    }// end for
+    return clauses;
+}// end removeParenthesis()
+
+function removeInnerLogic(clauses) {
+    for (var i = 0; i < clauses.length; i++) {
+        clauses[i] = clauses[i].split(innerLogic());
+    }// end for
+    return clauses;
+}// end removeInnerLogic()
 
 function mainInputFunction(input) {
     var textID = $(input).attr('id');                               //      Create new variable textID and set it to the ID of the input clicked on

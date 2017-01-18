@@ -1,0 +1,60 @@
+{% extends 'user/base.html' %}
+
+{% load staticfiles %}
+{% block import %}
+    <script type="text/javascript" src="{% static 'user/JavaScript/index.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'user/CSS/index.css' %}" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+{% endblock %}
+
+{% block body %}
+<div class="container max-height">
+    <div class="row">
+        <div class="col-md-12">
+            {{ username }}
+        </div>
+    </div>
+    <div class="row max-height">
+        <div class="col-md-6 max-height">
+            <div class="row max-height">
+                <div id="description" class="col-md-12">
+                    {{ description }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table" id="pledging-table">
+                    {% for job in pledging %}
+                        <tr id="pledge{{ job.name }}">
+                            <td>{{ job.is_active }}</td>
+                            <td><a href="#">{{ job.name }}</a></td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="working-table">
+                    {% for job in working %}
+                        <tr id="work{{ job.name }}">
+                            <td>{{ job.is_active }}</td>
+                            <td><a href="#">{{ job.name }}</a></td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Public Metric
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

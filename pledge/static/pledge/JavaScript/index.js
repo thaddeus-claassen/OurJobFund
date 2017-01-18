@@ -1,11 +1,13 @@
 var pi = 3.14159265;
 var basicTagInput = "";
 var map;
-var markers = [];
 var center;
 $('document').ready(function() {
     addNumJobsToSpan(0);
 	disableBasicTagsInput();	
+    $('#logout').click(function() {
+        logout();
+    });
     $('[name=tag-radio]').change(function() {
         disableBasicTagsInput();
     });
@@ -54,6 +56,10 @@ $('document').ready(function() {
         }// end if-else
     }); 
 });
+
+function logout() {
+    $.post("/pledge/logout_pledge/");
+}// end logout()
 
 function filterByTagsAndLocation() {
     $.ajax ({
@@ -174,55 +180,8 @@ function findLng() {
 }// end findLon()
 
 function searchJobsByRadiusSuccess(json) {
-    clearMarkers();
-    var numJobs = Object.keys(json).length; 
-    if (numJobs > 0) {
-        for (var index = 0; index < json.length; index++) {
-            var job = json[index];
-            addMarker(job);
-        }// end for
-    }// end if
     searchSuccess(json);
 }// end searchJobsByRadiusSuccess()
-
-// Adds a marker to the map and push to the array.
-function addMarker(job) {
-    var fields = job["fields"];
-    var name = fields['name'];
-    var latitude = fields['latitude'] * (180 / pi); 
-    var longitude = fields['longitude'] * (180 / pi);    
-    var latLng = {lat: latitude, lng: longitude};
-    var marker = new google.maps.Marker({
-        position: latLng,
-        map: map,
-        title: name,
-    });
-    markers.push(marker);
-    setMapOnAll()
-}// end addMarker()
-
-// Sets the map on all markers in the array.
-function setMapOnAll() {
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(map);
-    }// end for
-}// end setMapOnAll()
-
-// Removes the markers from the map, but keeps them in the array.
-function clearMarkers() {
-    setMapOnAll(null);
-}// end clearMarkers()
-
-// Shows any markers currently in the array.
-function showMarkers() {
-    setMapOnAll(map);
-}// end showMarkers()
-
-// Deletes all markers in the array by removing references to them.
-function deleteMarkers() {
-    clearMarkers();
-    markers = [];
-}// end deleteMarkers()
 
 function searchSuccess(json) {    
     $('#main_table').empty();

@@ -1,3 +1,7 @@
+function getURL() {
+    return "get_ANDs_of_ORs_tags";
+}// end getURL()
+
 function applyMetric() {
     var string = getHashtagsString();
     save_tags(string);
@@ -29,13 +33,7 @@ function save_tags(tags) {
             'tags' : tags,
             'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
         },
-        success : success,
-        error : failure,
+        success : function(){},
+        error : function(){},
     });
 }// end save_hashtags()
-
-function success() {
-}// end success()
-
-function failure() {
-}// end failure()
