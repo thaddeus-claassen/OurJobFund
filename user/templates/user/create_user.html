@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% block import %}
+    <script type="text/javascript" src="{% static 'user/JavaScript/create_user.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'user/CSS/create_user.css' %}" />
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <form id="create-user-form" method="POST" action="{% url 'user:create_user' %}">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                {{ field.errors }}
+                                {{ field.label_tag }} {{ field }}
+                                {% if field.help_text %}
+                                    <p class="help">{{ field.help_text|safe }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="checkbox" id="is-at-least-thirteen" name="is-at-least-thirteen" />      
+                            <label for="is-at-least-thirteen">: Check here to verify you are thirteen years old or older</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="submit" value="Submit" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">
+                        For security, your password must contain at least:
+                        <ul>
+                            <li>9 characters</li>
+                            <li>1 uppercase letter</li>
+                            <li>1 lowercase letter</li>
+                            <li>1 number</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+
+
+

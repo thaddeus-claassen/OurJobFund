@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% block import %}
+    <script type="text/javascript" src="{% static 'job/JavaScript/add_job.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/add_job.css' %}" />
+{% endblock %}
+
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <label for="job_title" class="text_label col-md-2 col-md-offset-1">
+            Job Title:
+        </label>
+        <span class="text_span">
+            <input id="job_title" class="col-md-9" type="text" name="job_title" />
+        </span>
+    </div>
+    <div class="row">
+        <label for="location" class="text_label col-md-2 col-md-offset-1">
+            Location (optional):
+        </label>
+        <span class="text_span">
+            <input id="location" class="col-md-7" type="text" name="location" />
+        </span>
+        <div id="locaiton-validation"></div>
+    </div>
+    <input id="latitude" name="latitude"></input>
+    <input id="longitude" name="longitude"></input>
+    <div class="row">
+        <label for="tags" class="text_label col-md-2 col-md-offset-1">
+            tags (max 10):
+        </label>
+        <span class="text_span">
+            <input id="tags" class="col-md-9" type="text" placeholder="(ex: manufacturing, surfing, possums, asdf)" name="create_tags" />
+        </span>
+    </div>
+    <div class="row">
+        <label for="description" class="text_label col-md-2 col-md-offset-1">
+            Description:
+        </label>
+        <span class="text_span">
+            <input id="description" class="col-md-9" type="text" name="description" />
+            <!-- <textarea id="description" name="editor1"></textarea> -->
+        </span>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-2">
+            <input id="create-job" type="button" value="Create Job">
+        </div>
+    </div>
+</div>
+{% endblock %}

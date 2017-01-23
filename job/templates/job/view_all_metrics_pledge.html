@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% block import %}
+    <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/view_all_metrics_pledge.css' %}" />
+    <script type="text/javascript" src="{% static 'job/JavaScript/view_all_metrics_pledge.js' %}" ></script>
+{% endblock %}
+
+
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Remove workers who have:</h2>
+        </div>
+        <div id="filter" class="col-md-6">
+            Apply <input type="text" />&nbsp;'s filter metric?
+            <input type="button" value="Apply" action="#" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <table id="metric_table" class="table">
+                <tbody>
+                    <tr>
+                        <td align="right" class="col-md-5"><label for="inactive">inactive on the website for</label></td>
+                        <td align="center" class="col-md-1"><input id="inactive" type="text" size="2"></td>
+                        <td>
+                            <label for="inactive_day">days:</label>
+                            <input id="inactive_day" type="radio" name="inactive_unit_of_time" checked="checked">
+                            <label for="inactive_week">weeks:</label>
+                            <input id="inactive_week" type="radio" name="inactive_unit_of_time">
+                            <label for="inactive_month">months:</label>
+                            <input id="inactive_month" type="radio" name="inactive_unit_of_time">
+                            <label for="inactive_year">years:</label>
+                            <input id="inactive_year" type="radio" name="inactive_unit_of_time">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" class="col-md-5"><label for="not-updated">updated their working status in the last</label></td>
+                        <td align="center" class="col-md-1"><input id="not-updated" type="text" size="2"></td>
+                        <td>
+                            <label for="updated_day">days:</label>
+                            <input id="updated_day" type="radio" name="updated_unit_of_time" checked="checked">
+                            <label for="updated_week">weeks:</label>
+                            <input id="updated_week" type="radio" name="updated_unit_of_time">
+                            <label for="updated_month">months:</label>
+                            <input id="updated_month" type="radio" name="updated_unit_of_time">
+                            <label for="updated_month">years:</label>
+                            <input id="updated_month" type="radio" name="updated_unit_of_time">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right"><label for="completed-fewer">completed fewer than</label></td>
+                        <td align="center"><input id="completed-fewer" type="text" size="2" /></td>
+                        <td align="left"><label for="completed-fewer">job/s.</label></td>
+                    </tr>
+                    <tr>
+                        <td align="right"><label for="failed-to-complete">failed to complete more than</label></td>
+                        <td align="center"><input id="failed-to-complete" type="text" size="2" /></td>
+                        <td align="left"><label for="failed-to-complete">job/s.<label></td>
+                    </tr>
+                    <tr>
+                        <td align="right"><label for="completed">completed</label></td>
+                        <td align="center"><input id="completed-percent" type="text" size="2"></td>
+                        <td align="left"><label for="completed-percent">% of job/s accepted.<label></td>
+                    </tr>
+                    <tr>
+                        <td align="right"><label for="completed-ratio">at least a</label></td>
+                        <td align="center"><input id="completed-ratio" type="text" size="2"></td>
+                        <td align="left"><label for="completed-ratio">completed-to-failed job ratio</label></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <input id="apply_metrics" type="submit" value="Apply Metrics" />
+            <input id="clear_metrics" type="button" value="Clear Metrics" />
+            <input id="cancel_metrics" type="button" value="X" />
+        </div>
+    </div>
+</div>
+{% endblock %}

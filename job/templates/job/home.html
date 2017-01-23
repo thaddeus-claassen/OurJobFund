@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+
+
+{% load staticfiles %}
+{% block import %}
+    <script type="text/javascript" src="{% static 'job/JavaScript/index.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/index.css' %}" />
+{% endblock %}
+
+
+{% block body %}
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav navbar-left">
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'user:detail' user.id %}">{{ user.username }}</a></li>
+            {% endif %}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Notifications
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Personal Messages</a></li>
+                        <li><a href="#">Group Messages</a></li>
+                    </ul>
+                </li>
+                
+                <li><a>
+                    <form id="logout-form" method="POST" action="{% url 'job:logout_pledge' %}" >
+                        {% csrf_token %}
+                        <input type="submit" value="Logout">
+                    </form>
+                </a></li>
+            {% else %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Login/Sign Up &nbsp;
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <form action="{% url 'job:login_pledge' %}" method="POST">
+                                {% csrf_token %}
+                                <span class="bold">Login:</span></br>
+                                Email
+                                <input id="email" type="text" name="email" />
+                                </br>
+                                Password
+                                <input id="password" type="password" name="password" />
+                                <button type="submit">Submit</button>
+                            </form>
+                        </li>
+                        <li id="tab-or" class="bold">
+                            Or
+                        </li>
+                        <li>
+                            <a href="{% url 'user:create_user' %}"><span id="sign-up" class="bold">Sign Up</span></a>
+                        </li>
+                    </ul>
+                </li>
+            {% endif %}
+        </ul>       
+    </div>
+</nav>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Defines #tag logic -->
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    <label class="tag-radio" for="tag_basic_logic">Basic Option:</label>
+                    <input type="radio" id="tag_basic_logic" name="tag-radio" checked="checked" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="text_label" for="basic_tags_input"> Basic tags form:&nbsp;</label>
+                    <span class="text_span">
+                        <input type="text" id="basic_tags_input" class="wide_text" />
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table">
+                        <tr>
+                            <td id="advanced-options">Advanced options:</td>
+                            <td>
+                                <form action="{% url 'job:ANDs_of_ORs' %}">
+                                    {% csrf_token %}
+                                    <input type="submit" id="ANDs_of_ORs" name="tag_logic" value="&#10064;" />
+                                </form>
+                                <label class="tag-radio" for="tag_ANDs_of_ORs_logic">
+                                    ANDs of ORs
+                                </label>
+                                <input type="radio" id="tag_ANDs_of_ORs_logic" name="tag-radio" />
+                            </td>
+                            <td>
+                                <form action="{% url 'job:ORs_of_ANDs' %}">
+                                    {% csrf_token %}
+                                    <input type="submit" id="ORs_of_ANDs" name="tag_logic" value="&#10064;" />
+                                </form>
+                                <label class="tag-radio" for="tag_ORs_of_ANDs_logic">
+                                    ORs of ANDs
+                                </label>
+                                <input type="radio" id="tag_ORs_of_ANDs_logic" name="tag-radio" />
+                            </td>
+                            <td>
+                                <form action="{% url 'job:custom' %}">
+                                    {% csrf_token %}
+                                    <input type="submit" id="custom" name="tag_logic" value="&#10064;" />
+                                </form>
+                                <label class="tag-radio" for="tag_custom_logic">
+                                    Custom
+                                </label>
+                                <input type="radio" id="tag_custom_logic" name="tag-radio" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <!-- End #tag logic -->
+
+            <!-- Or -->
+            <div id="or" class="row">
+                <div class="col-md-1 col-md-push-6">
+                    Or
+                </div>
+            </div>
+            <!-- End or -->
+
+            <!-- Job search bar -->
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="text_label" for="search_bar" >Search job by name or ID:&nbsp;</label>
+                    <span class="text_span"><input class="wide_text" id="search_bar" type="text" /></span>    
+                </div>
+            </div>
+            <!-- End job search bar -->
+            <div class="row">
+                <div class="col-md-4">
+                    Jobs found: <span id="found-x-jobs" ></span>
+                </div>
+                <div class="col-md-8">
+                    <div id="filter-by"> 
+                        <span>Filter:</span>
+                        <div id="advanced-tags-filter" class="filter-by-button" >Advanced Tags</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Job table -->
+            <div id="row-table" class="row">
+                <div id="table-border" class="col-md-12 ui-widget-content">
+                    <table id="main_table" class="table"></table>
+                </div>
+            </div>
+            <!-- End job table -->
+            
+            <!-- Add Job button -->
+            <div class="row">
+                <div class="col-md-12">
+                    <form action="{% url 'job:add_job' %}" method="GET">
+                        {% csrf_token %}
+                        <input id="add_job" class="col-md-12" type="submit" value="Add job" />
+                    </form>
+                </div>
+            </div>
+            <!-- End Add Job button -->
+        </div>
+
+        <div class="col-md-5 col-md-push-1">
+            <!-- Include location? -->
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="location-checkbox">
+                        View only jobs with location?&nbsp;&nbsp;
+                    </label>
+                    <input id="location-checkbox" name="location-checkbox" type="checkbox">
+                </div>
+            </div>
+            <!-- End include location -->
+
+            <!-- Location -->
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="text_label change-label" for="location_text" >Location:&nbsp;</label>
+                    <span class="text_span">
+                        <input id="location-text" class="wide_text location-hide" type="text" />
+                    </span>
+                </div>
+            </div>
+            <!-- End Location -->
+
+            <!-- Radius -->
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table">
+                        <tr>
+                            <td>
+								<label for="location-radius" class="change-label">Radius:</label>
+								<input id="location-radius" class="location-hide" type="text" size="1" name="radius" value="10" />
+							</td>
+                            <td class="distance-unit location-hide">
+								<label class="change-label" for="mi">mi:</label>
+								<input id="mi" type="radio" name="mi-km" value="mi" checked="checked" />
+							</td>
+                            <td class="distance-unit location-hide">
+								<label class="change-label" for="km">km:</label>
+								<input id="km" type="radio" name="mi-km" value="km" />
+							</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <!-- End Radius -->
+
+            <!-- Google Map -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="location-hide">
+                        <div id="map-canvas"></div>
+                    </div>
+                    <div id="empty-space"></div>
+                </div>
+            </div>
+            <!-- End Google Map -->
+            {% block filter %}{% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

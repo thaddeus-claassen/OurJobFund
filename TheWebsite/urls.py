@@ -18,7 +18,7 @@ from django.contrib import admin;
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^JobList/', include('JobList.urls')),
+    url(r'^job/', include('job.urls')),
     url(r'^', include('home.urls')),
     url(r'^home/', include('home.urls')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),

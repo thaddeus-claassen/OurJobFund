@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% block import %}
+    <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/detail.css' %}" />
+    <script type="text/javascript" src="{% static 'job/JavaScript/detail.js' %}" ></script>
+{% endblock %}
+
+{% block body %}
+<div id="detail_screen" class="container-fluid">
+    <div class="main-row row">
+        <div id="detail_id" class="col-md-12">
+            ID: <span id="job-id">{{ job.pk }}</span>
+        </div>
+    </div>
+    <div class="main-row row">
+        <div id="detail_header" class="col-md-12">
+            {{ job.name }}
+        </div>
+    </div>
+    <div class="main-row row">
+        <div id="detail_tags" class="col-md-12">
+            {% if all_tags %}
+                {% for tag in all_tags %}
+                    {{ tag.tag }}
+                {% endfor %}
+            {% else %}
+                There are no tags
+            {% endif %}
+        </div>
+    </div>
+    <div class="main-row detail_job_information row">
+        <!-- Pledge money, job description -->
+        <div class="detail_job_information col-md-6">
+            <div id="detail_main_editor" class="row">
+                <div class="col-md-12">
+                    Main editor:
+                    <a href="#">
+                        Main editor's username
+                    </a>
+                </div>
+            </div>
+            <div id="detail_money_pledged" class="row">
+                <div class="col-md-6">
+                    Total money pledged:
+                    {{ job.money_pledged }}
+                </div>
+                <div class="col-md-6">
+                    <input id="will-you-pledge-money" type="button" value="Will you pledge money?">
+                    <span id="you-are-pledging">You are pledging:</span>
+                    <span id="you-are-pledging-amount"></span>
+                </div>
+            </div>
+            <div id="detail_job_description" class="row">
+                <div id="detail-description-box" class="col-md-12">
+                    {{ job.description }}
+                    <a id="view-description" href="#" class={{ job.pk }}>View Fullscreen</a>
+                </div>
+            </div>
+            <div id="detail-work-on-job" class="row">
+                <div class="col-md-12">
+                    <input id="decide-to-work-on-job" type="button" value="Decide to work on job?" align="right" />
+                    <span id="you-are-working-on-the-job" ></span>
+                </div>
+            </div>
+        </div>
+        <div class="table-width col-md-6">
+            <div class="table-width row">
+                <div class="table-width col-md-12">
+                    <h4>Workers</h4>
+                    <table id="worker-table" class="table-bordered">
+                        <tr>
+                            <td class="col-md-3">
+                                Most recent update:
+                            </td>
+                            <td class="col-md-3">
+                                By:
+                            </td>
+                            <td class="col-md-3">
+                                Updated on
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>Anyone who asks for money</h4>
+                    <table id="money-table" class="table-bordered">
+                        <tr>
+                            <td class="col-md-3">
+                                Username
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
