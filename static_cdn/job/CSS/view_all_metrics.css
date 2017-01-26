@@ -1,0 +1,16 @@
+#filter {
+    margin-top: 30px;
+}
+
+.table td {
+    border: none !important;
+}
+
+.row {
+    padding-top: 10px;
+}
+
+body {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}

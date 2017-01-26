@@ -1,8 +1,9 @@
-from django.shortcuts import render, get_object_or_404;
-from .models import Job, Tag, UserLogic;
+from django.shortcuts import render, get_object_or_404, redirect;
+from .models import Job, Tag, UserLogic, UserWorkerFilter, UserPledgeFilter;
 from django.http import JsonResponse, HttpResponse;
 from django.core import serializers;
 from django.contrib.auth import authenticate, login, logout;
+from .forms import NewJobForm, ApplyPledgeMetricsForm, ApplyWorkMetricsForm;
 import json, re, math;
 
 def pledge(request):
@@ -61,41 +62,61 @@ def find_jobs_by_radius(jobs, currLatitude, currLongitude, radius):
     return jobs;
     
 def view_all_metrics_pledge(request):
-    return render(request, 'pledge/view_all_metrics_pledge.html');
+    context = {
+        'form' : ApplyPledgeMetricsForm(),
+    }
+    return render(request, 'job/view_all_metrics_pledge.html', context);
     
-def apply_metrics_pledge(request):
+def view_all_metrics_work(request):
+    context = {
+        'form' : ApplyWorkMetricsForm(),
+    }
+    return render(request, 'job/view_all_metrics_work.html', context);
+    
+def apply_metrics(request):
     if (request.method == 'POST'):
         if (request.user.is_authenticated()):
-            worker_database = request.user.userworkerfilter;
-            worker_database.inactive = request.POST['inactive'];
-            worker_database.inactive_unit = request.POST['inactive_unit_of_time'];
-            worker_database.updated = request.POST['not-updated'];
-            worker_database.updated_unit = request.POST['updated-unit-of-time'];
-            worker_database.completed_fewer = request.POST['completed-fewer'];
-            worker_database.failed_to_complete = request.POST['failed-to-complete'];
-            worker_database.completed_percent = request.POST['completed-percent'];
-            worker_database.better_than_complete_fail_ratio = request.POST['completed-ratio'];
-            worker_database.save();
-    return apply_metrics(request);
+            type = request.POST.get('type');
+            if (type == 'pledge'):
+                pledgeMetricForm = ApplyPledgeMetricsForm(data=request.POST, instance=request.user.userworkerfilter);
+                if (pledgeMetricForm.is_valid()):
+                    pledgeMetricForm.save();
+                    return render(request, 'job/pledge.html');
+            else:
+                workMetricForm = ApplyWorkMetricsForm(data=request.POST, instance=request.user.userpledgefilter);
+                if (workMetricForm.is_valid()):
+                    workMetricForm.save();
+                    return render(request, 'job/work.html');
     
 def clear_metrics(request):
     if (request.method == 'POST'):
         if (request.user.is_authenticated()):
-            worker_database = request.user.userworkerfilter;
-            worker_database.inactive = None;
-            worker_database.inactive_unit = 'day';
-            worker_database.updated = None;
-            worker_database.updated_unit = 'day';
-            worker_database.completed_fewer = None;
-            worker_database.failed_to_complete = None;
-            worker_database.completed_percent = None;
-            worker_database.better_than_complete_fail_ratio = None;
-            worker_database.save();
-    return apply_metrics(request);
+            database = request.POST['pledge_or_worker'];
+            if (database == 'pledge-page-worker-database'):
+                return clear_work_metrics(request, pledgeMetricForm);
+            else:
+                return clear_pledge_metrics(request, request.user.userpledgefilter);
+    return render(request, 'job/pledge.html');  
 
-    
-def apply_metrics(request):
-    return render(request, 'pledge/home_pledge.html');
+def clear_pledge_metrics(request, pledge_database):
+    pledge_database.inactive = None;
+    pledge_database.inactive_unit = 'day';
+    pledge_database.failed_to_pay = None;
+    pledge_database.averaged = None;
+    pledge_database.paid_x_times = None;
+    return HttpResponse("Pledge Metrics Cleared");
+
+def clear_work_metrics(request, form):
+    worker_database.inactive = None;
+    worker_database.inactive_unit = 'day';
+    worker_database.updated = None;
+    worker_database.updated_unit = 'day';
+    worker_database.completed_fewer = None;
+    worker_database.failed_to_complete = None;
+    worker_database.completed_percent = None;
+    worker_database.better_than_complete_fail_ratio = None;
+    worker_database.save();
+    return HttpResponse("Work Metrics Cleared");
     
 def apply_tags_and_location(request):
     jobs = [];
@@ -210,7 +231,15 @@ def detail(request, job_id):
         'job': job,                                                                 #For detail.html, defines the string "job" as the given job
         'all_tags': all_tags,                                               #For detail.html, defines the string "all_tags" as the set of tags that are used to define the job
     }
-    return render(request, 'pledge/detail.html', context);
+    print(all_tags);
+    return render(request, 'job/detail.html', context);
+    
+def description(request, job_id):
+    job = get_object_or_404(Job, pk=job_id);
+    context = {
+        'job': job,
+    }
+    return render(request, 'job/description.html', context);
     
 def user_is_working_on_job(request, job_id):
     returnStatement = None;
@@ -234,37 +263,34 @@ def work_on_job(request, job_id):
 
 # Defines a function, which renders the HTML document add_job (a.k.a the page, which gives you the option to create a new job)
 def add_job(request):
-    return render(request, 'pledge/add_job.html');
+    if (request.method == 'POST'):
+        newJobForm = NewJobForm(request.POST);
+        if (newJobForm.is_valid()):
+            name = newJobForm.cleaned_data['name'];
+            latitude = newJobForm.cleaned_data['latitude'];
+            longitude = newJobForm.cleaned_data['longitude'];
+            tags = newJobForm.cleaned_data['tags'];
+            description = newJobForm.cleaned_data['description'];
+            job = Job(name=name, latitude=latitude, longitude=longitude, description=description);
+            job.save();
+            tags = request.POST['tags'];
+            tagsArray = create_tags_array(tags);
+            for tagString in tagsArray :
+                newTag = None;
+                if (Tag.objects.filter(tag__iexact=tagString).exists()):
+                    newTag = Tag.objects.get(tag__iexact=tagString);
+                else:
+                    newTag = Tag(tag=tagString);
+                newTag.save();
+                job.tag_set.add(newTag);
+            return pledge(request);
+    context = {
+        'form' : NewJobForm(), 
+    }
+    return render(request, 'job/add_job.html', context);
     
 def add_location(request):
-    return render(request, 'pledge/add_location.html');
-    
-def create_job(request):
-    if (request.method == 'POST'):
-        name = request.POST['job_title'];
-        latitude = request.POST['latitude'];
-        longitude = request.POST['longitude'];
-        description = request.POST['description'];
-        job = Job(name=name, latitude=latitude, longitude=longitude, description=description);
-        job.save();
-        tags = request.POST['tags'];
-        tagsArray = create_tags_array(tags);
-        for tag in tagsArray :
-            newTag = None;
-            if (Tag.objects.filter(tag__iexact=tag).exists()):
-                newTag = Tag.objects.get(tag__iexact=tag);
-            else:
-                newTag = Tag(tag=tag);
-                newTag.save();
-            job.tag_set.add(newTag);
-    return add_job(request);
-    
-def description(request, job_id):
-    job = get_object_or_404(Job, pk=job_id);
-    context = {
-        'job': job,
-    }
-    return render(request, 'pledge/job_description.html', context);
+    return render(request, 'job/add_location.html');
     
 
                     

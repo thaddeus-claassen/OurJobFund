@@ -38,7 +38,8 @@ def verify_username(request):
 
 def detail(request, user_id):
     user = get_object_or_404(User, pk=user_id);                                       
-    context = {                                                                       
+    context = {              
+        'id' : user_id,
         'username' : user.username,
         'email' : user.email,
         'description' : user.userprofile.description,

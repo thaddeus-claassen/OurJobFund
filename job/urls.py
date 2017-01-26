@@ -34,9 +34,6 @@ urlpatterns = [
     # /job/add_location
     url(r'^add_location$', views.add_location, name='add_location'),
     
-    # /job/create_job
-    url(r'^create_job$', views.create_job, name='create_job'),
-    
     # /job/search_jobs
     url(r'^search_jobs$', views.search_jobs, name='search_jobs'),
     
@@ -73,14 +70,14 @@ urlpatterns = [
     # /job/view_all_metrics_pledge
     url(r'^view_all_metrics_pledge$', views.view_all_metrics_pledge, name='view_all_metrics_pledge'),
     
-    # /job/apply_metrics_pledge
-    url(r'^apply_metrics_pledge$', views.apply_metrics_pledge, name='apply_metrics_pledge'), 
-    
-    # /job/clear_metrics_pledge
-    url(r'^clear_metrics$', views.clear_metrics, name='clear_metrics'),
+    # /job/view_all_metrics_work
+    url(r'^view_all_metrics_work$', views.view_all_metrics_work, name='view_all_metrics_work'),
     
     # /job/apply_metrics
     url(r'^apply_metrics$', views.apply_metrics, name='apply_metrics'),
+    
+    # /job/clear_metrics
+    url(r'^clear_metrics$', views.clear_metrics, name='clear_metrics'),
     
     # /job/<Job ID>/description
     url(r'^(?P<job_id>[0-9]+)/description$', views.description, name='description'),

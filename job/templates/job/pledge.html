@@ -1,5 +1,11 @@
 {% extends 'job/home.html' %}
 
+{% load staticfiles %}
+{% block importThree %}
+    <script type="text/javascript" src="{% static 'job/JavaScript/pledge.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/pledge.css' %}" />
+{% endblock %}
+
 {% block filter %}
 {% if user.is_authenticated %}
     <div class="row">

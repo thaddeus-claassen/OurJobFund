@@ -10,7 +10,6 @@
   $(function() {
     initialiseCKEditor();
     initialiseCKEditorInInlinedForms();
-
     function initialiseCKEditorInInlinedForms() {
       try {
         $(document).on("click", ".add-row a, .grp-add-handler", function () {

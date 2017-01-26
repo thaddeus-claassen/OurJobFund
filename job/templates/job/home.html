@@ -1,70 +1,13 @@
-{% extends 'base.html' %}
-
+{% extends 'navbar.html' %}
 
 {% load staticfiles %}
-{% block import %}
+{% block importTwo %}
     <script type="text/javascript" src="{% static 'job/JavaScript/index.js' %}" ></script>
     <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/index.css' %}" />
+    {% block importThree %}{% endblock %}
 {% endblock %}
 
-
-{% block body %}
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <ul class="nav navbar-nav navbar-left">
-            {% if user.is_authenticated %}
-                <li><a href="{% url 'user:detail' user.id %}">{{ user.username }}</a></li>
-            {% endif %}
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            {% if user.is_authenticated %}
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Notifications
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Personal Messages</a></li>
-                        <li><a href="#">Group Messages</a></li>
-                    </ul>
-                </li>
-                
-                <li><a>
-                    <form id="logout-form" method="POST" action="{% url 'job:logout_pledge' %}" >
-                        {% csrf_token %}
-                        <input type="submit" value="Logout">
-                    </form>
-                </a></li>
-            {% else %}
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Login/Sign Up &nbsp;
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <form action="{% url 'job:login_pledge' %}" method="POST">
-                                {% csrf_token %}
-                                <span class="bold">Login:</span></br>
-                                Email
-                                <input id="email" type="text" name="email" />
-                                </br>
-                                Password
-                                <input id="password" type="password" name="password" />
-                                <button type="submit">Submit</button>
-                            </form>
-                        </li>
-                        <li id="tab-or" class="bold">
-                            Or
-                        </li>
-                        <li>
-                            <a href="{% url 'user:create_user' %}"><span id="sign-up" class="bold">Sign Up</span></a>
-                        </li>
-                    </ul>
-                </li>
-            {% endif %}
-        </ul>       
-    </div>
-</nav>
+{% block content %}
 <div class="container">
     <div class="row">
         <div class="col-md-6">
@@ -162,8 +105,7 @@
             <!-- Add Job button -->
             <div class="row">
                 <div class="col-md-12">
-                    <form action="{% url 'job:add_job' %}" method="GET">
-                        {% csrf_token %}
+                    <form action="{% url 'job:add_job' %}">
                         <input id="add_job" class="col-md-12" type="submit" value="Add job" />
                     </form>
                 </div>

@@ -1,16 +1,3 @@
-#filter {
-    margin-top: 30px;
-}
-
-.table td {
-    border: none !important;
-}
-
-.row {
-    padding-top: 10px;
-}
-
-body {
-    padding-top: 30px;
-    padding-bottom: 30px;
+#id_inactive, #id_updated, #id_completed_fewer, #id_failed_to_complete, #id_completed_percent, #id_completed_ratio {
+    width : 50px;
 }

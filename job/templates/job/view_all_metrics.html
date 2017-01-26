@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% block import %}
+    <script type="text/javascript" src="{% static 'job/JavaScript/view_all_metrics.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/view_all_metrics.css' %}" />
+    {% block importstatic %}{% endblock %}
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>{% block header %}{% endblock %}</h2>
+        </div>
+        <div id="filter" class="col-md-6">
+            Apply <input type="text" />&nbsp;'s filter metric?
+            <input type="button" value="Apply" action="#" />
+        </div>
+    </div>
+    <form id="apply-metrics-form" action="{% url 'job:apply_metrics' %}" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <table id="metric_table" class="table">
+                    <tbody>
+                        {% block content %}{% endblock %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <input id="apply_metrics" type="submit" value="Apply Metrics" />
+                <input id="clear_metrics" type="button" value="Clear Metrics" />
+                <input id="cancel_metrics" type="button" value="X" />
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

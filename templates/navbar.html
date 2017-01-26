@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% block import %}
+    <link rel="stylesheet" type="text/css" href="{% static 'navbar.css' %}" />
+    {% block importTwo %}{% endblock %}
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav navbar-left">
+            {% if user.is_authenticated %}
+            <li>
+                <a href="#">
+                    <form id="logout-form" method="POST" action="{% url 'job:logout_pledge' %}" >
+                        {% csrf_token %}
+                        <input type="submit" value="Logout" />
+                    </form>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+        <ul class="nav navbar-nav navbar-center">
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'user:detail' user.id %}">{{ user.username }}</a></li>
+            {% endif %}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Jobs Working On&nbsp;<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        {% if user.working.all %}
+                            {% for job in user.working.all %}
+                                <li><a href="{% url 'job:detail' job.id %}">{{ job.name }}</a></li>
+                            {% endfor %}
+                        {% else %}
+                            <li>None</li>
+                        {% endif %}
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Jobs Pledged To&nbsp;<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        {% if user.pledging.all %}
+                            {% for job in user.pledging.all %}
+                                <li><a href="{% url 'job:detail' job.id %}">{{ job.name }}</a></li>
+                            {% endfor %}
+                        {% else %}
+                            <li><a>None</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <span>&#9947;</span>&nbsp;<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                    
+                    </ul>
+                </li>
+            {% else %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Login/Sign Up &nbsp;
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <form action="{% url 'job:login_pledge' %}" method="POST">
+                                {% csrf_token %}
+                                <span class="bold">Login:</span></br>
+                                Email
+                                <input id="email" type="text" name="email" />
+                                </br>
+                                Password
+                                <input id="password" type="password" name="password" />
+                                <button type="submit">Submit</button>
+                            </form>
+                        </li>
+                        <li id="tab-or" class="bold">
+                            Or
+                        </li>
+                        <li>
+                            <a href="{% url 'user:create_user' %}"><span id="sign-up" class="bold">Sign Up</span></a>
+                        </li>
+                    </ul>
+                </li>
+            {% endif %}
+        </ul>       
+    </div>
+</nav>
+{% block content %}{% endblock %}
+{% endblock %}
+

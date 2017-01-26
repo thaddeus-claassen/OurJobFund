@@ -2,6 +2,7 @@
 
 {% load staticfiles %}
 {% block import %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="{% static 'job/JavaScript/add_job.js' %}" ></script>
     <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/add_job.css' %}" />
 {% endblock %}
@@ -9,46 +10,44 @@
 
 {% block body %}
 <div class="container-fluid">
-    <div class="row">
-        <label for="job_title" class="text_label col-md-2 col-md-offset-1">
-            Job Title:
-        </label>
-        <span class="text_span">
-            <input id="job_title" class="col-md-9" type="text" name="job_title" />
-        </span>
-    </div>
-    <div class="row">
-        <label for="location" class="text_label col-md-2 col-md-offset-1">
-            Location (optional):
-        </label>
-        <span class="text_span">
-            <input id="location" class="col-md-7" type="text" name="location" />
-        </span>
-        <div id="locaiton-validation"></div>
-    </div>
-    <input id="latitude" name="latitude"></input>
-    <input id="longitude" name="longitude"></input>
-    <div class="row">
-        <label for="tags" class="text_label col-md-2 col-md-offset-1">
-            tags (max 10):
-        </label>
-        <span class="text_span">
-            <input id="tags" class="col-md-9" type="text" placeholder="(ex: manufacturing, surfing, possums, asdf)" name="create_tags" />
-        </span>
-    </div>
-    <div class="row">
-        <label for="description" class="text_label col-md-2 col-md-offset-1">
-            Description:
-        </label>
-        <span class="text_span">
-            <input id="description" class="col-md-9" type="text" name="description" />
-            <!-- <textarea id="description" name="editor1"></textarea> -->
-        </span>
-    </div>
-    <div class="row">
-        <div class="col-md-6 col-md-offset-2">
-            <input id="create-job" type="button" value="Create Job">
+    <form id="create-job-form" method="POST" action="{% url 'job:add_job' %}">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-12">
+                {{ form.name.label_tag }} {{ form.name }}
+            </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label for="location" class="text_label">
+                    Location (optional):
+                </label>
+                <input id="location" type="text" name="location" />
+                <div id="location-validation"></div>
+            </div>
+        </div>
+        <input type="hidden" id="latitude-unused" name="latitude" />
+        <input type="hidden" id="longitude-unused" name="longitude" />
+        <div class="row">
+            <div class="col-md-12">
+                {{ form.tags.label_tag }} {{ form.tags }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{ form.description.label_tag }} {{ form.description }}
+            </div>
+        </div>
+        <input type="submit" value="Create Job" />
+    </form>
+    <form id="create-job-form-two" method="POST" action="{% url 'job:add_job' %}">
+        {% csrf_token %}
+        <input type="hidden" id="name" name="name" />
+        <input type="hidden" id="latitude" name="latitude" />
+        <input type="hidden" id="longitude" name="longitude" />
+        <input type="hidden" id="tags" name="tags" />
+        <input type="hidden" id="description" name="description" />
+    </form>
+    
 </div>
 {% endblock %}

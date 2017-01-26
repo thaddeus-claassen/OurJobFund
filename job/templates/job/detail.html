@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'navbar.html' %}
 
 {% load staticfiles %}
 {% block import %}
@@ -6,7 +6,7 @@
     <script type="text/javascript" src="{% static 'job/JavaScript/detail.js' %}" ></script>
 {% endblock %}
 
-{% block body %}
+{% block content %}
 <div id="detail_screen" class="container-fluid">
     <div class="main-row row">
         <div id="detail_id" class="col-md-12">

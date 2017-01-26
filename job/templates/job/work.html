@@ -1,0 +1,47 @@
+{% extends 'job/home.html' %}
+
+{% load staticfiles %}
+{% block importThree %}
+    <script type="text/javascript" src="{% static 'job/JavaScript/work.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/work.css' %}" />
+{% endblock %}
+
+{% block filter %}
+{% if user.is_authenticated %}
+    <div class="row">
+        <div class="col-md-12">
+            <form action="{% url 'job:view_all_metrics_work' %}">
+                <input id="view_metrics_work" type="submit" value="View All Metrics"/>
+            </form>
+        </div>
+    </div>
+    <form action="#">
+        <div class="row">
+            <div id="filter" class="col-md-12">
+                Apply <input type="text" />&nbsp;'s filter metric?
+                <input type="button" value="Apply" action="#" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                Remove pledgers who have:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-2">
+                - failed to paid the worker/s&nbsp;<input type="text" size="2" />&nbsp;times.
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-2">
+                - averaged&nbsp;<input type="text" size="2" />&nbsp;times.
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-2">
+                - paid&nbsp;<input type="text" size="2" />&nbsp;or fewer times.
+            </div>
+        </div>
+    </form>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'job/view_all_metrics.html' %}
+
+{% load staticfiles %}
+{% block importstatic %}
+    <script type="text/javascript" src="{% static 'job/JavaScript/view_all_metrics_work.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/view_all_metrics_work.css' %}" />
+{% endblock %}
+
+{% block header %}Remove pledgers who have:{% endblock %}
+{% block content %}
+    <input type="hidden" value="work" name="type" />
+    <tr>
+        <td align="right" class="col-md-5"><label for="id_inactive">inactive on the website for</label></td>
+        <td align="center" class="col-md-1">{{ form.inactive }}</td>
+        <td>
+            {{ form.inactive_unit }}
+        </td>
+    </tr>
+    <tr>
+        <td align="right"><label for="id_failed_to_pay">failed to pay worker/s</label></td>
+        <td align="center">{{ form.failed_to_pay }}</td>
+        <td align="left"><label for="id_failed_to_pay">times or more.</label>
+    </tr>
+    <tr>
+        <td align="right"><label for="id_averaged">paid an average of at least</label></td>
+        <td align="center">{{ form.averaged }}</td>
+        <td align="left"><label for="id_averaged">% of money pledged.</label>
+    </tr>
+    <tr>
+        <td align="right"><label for="id_paid_x_times">paid</label></td>
+        <td align="center">{{ form.paid_x_times }}</td>
+        <td align="left"><label for="id_paid_x_times">times or fewer.</label>
+    </tr>
+{% endblock %}
