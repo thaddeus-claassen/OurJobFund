@@ -1,0 +1,23 @@
+{% extends 'navbar.html' %}
+
+{% load staticfiles %}
+{% block importTwo %}
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/index.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form action="{% url 'job:pledge' %}">
+                <input type="submit" value="Pledge money to a job" />
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form action="{% url 'job:work' %}">
+                <input type="submit" value="Work on job" />
+            </form>
+        </div>
+    </div>
+</div> 
+{% endblock %}

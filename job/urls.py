@@ -18,15 +18,27 @@ urlpatterns = [
     
     # /job/work
     url(r'^work$', views.work, name='work'),
-
-    # /job/<Job ID>
-    url(r'^(?P<job_id>[0-9]+)$', views.detail, name='detail'),
-
-    # /job/<Job ID>/user_is_working_on_job
-    url(r'^(?P<job_id>[0-9]+)/user_is_working_on_job$', views.user_is_working_on_job, name='user_is_working_on_job'), 
     
-    # /job/<Job ID>/work_on_job
-    url(r'^(?P<job_id>[0-9]+)/work_on_job$', views.work_on_job, name='work_on_job'), 
+    # /job/verify_username
+    url('^verify_username$', views.verify_username, name='verify_username'),
+    
+    # /job/view_all_metrics_pledge/verify_username
+    url('^view_all_metrics_pledge/verify_username$', views.verify_username),
+    
+    # /job/view_all_metrics_work/verify_username
+    url('^view_all_metrics_work/verify_username$', views.verify_username),
+    
+    # /job/copy_pledge_metrics
+    url('^copy_pledge_metrics$', views.copy_pledge_metrics, name='copy_pledge_metrics'),
+    
+    # /job/view_all_metrics_pledge/copy_pledge_metrics
+    url('^view_all_metrics_pledge/copy_pledge_metrics$', views.copy_pledge_metrics),
+    
+    # /job/copy_worker_metrics
+    url('^copy_worker_metrics$', views.copy_worker_metrics, name='copy_worker_metrics'),
+    
+    # /job/view_all_metrics_work/copy_worker_metrics
+    url('^view_all_metrics_work/copy_worker_metrics$', views.copy_worker_metrics),
 
     # /job/add_job
     url(r'^add_job$', views.add_job, name='add_job'),
@@ -36,6 +48,9 @@ urlpatterns = [
     
     # /job/search_jobs
     url(r'^search_jobs$', views.search_jobs, name='search_jobs'),
+    
+    # /job/search_users
+    url(r'^search_users$', views.search_users, name="search_users"),
     
     # /job/apply_tags_and_location
     url(r'^apply_tags_and_location$', views.apply_tags_and_location, name="apply_tags_and_location"),
@@ -67,11 +82,11 @@ urlpatterns = [
     # /job/get_custom_tags
     url(r'^get_custom_tags$', views.get_custom_tags, name='get_custom_tags'),
     
-    # /job/view_all_metrics_pledge
-    url(r'^view_all_metrics_pledge$', views.view_all_metrics_pledge, name='view_all_metrics_pledge'),
+    # /job/view_all_metrics_pledge/(?P<user_id>[0-9]+)
+    url(r'^view_all_metrics_pledge/(?P<user_id>[0-9]+)$', views.view_all_metrics_pledge, name='view_all_metrics_pledge'),
     
-    # /job/view_all_metrics_work
-    url(r'^view_all_metrics_work$', views.view_all_metrics_work, name='view_all_metrics_work'),
+    # /job/view_all_metrics_work/(?P<user_id>[0-9]+)
+    url(r'^view_all_metrics_work/(?P<user_id>[0-9]+)$', views.view_all_metrics_work, name='view_all_metrics_work'),
     
     # /job/apply_metrics
     url(r'^apply_metrics$', views.apply_metrics, name='apply_metrics'),
@@ -79,8 +94,24 @@ urlpatterns = [
     # /job/clear_metrics
     url(r'^clear_metrics$', views.clear_metrics, name='clear_metrics'),
     
+    # /job/<Job ID>
+    url(r'^(?P<job_id>[0-9]+)$', views.detail, name='detail'),
+    
+    # /job/<Job ID>/view_workers
+    url(r'^(?P<job_id>[0-9]+)/view_workers$', views.view_workers, name='view_workers'),
+    
+    # /job/<Job ID>/become_main_editor
+    url(r'^(?P<job_id>[0-9]+)/become_main_editor$', views.become_main_editor, name='become_main_editor'),     
+
+    # /job/<Job ID>/pledge_money_to_job
+    url(r'^(?P<job_id>[0-9]+)/pledge_money_to_job$', views.pledge_money_to_job, name='pledge_money_to_job'), 
+    
+    # /job/<Job ID>/work_on_job
+    url(r'^(?P<job_id>[0-9]+)/work_on_job$', views.work_on_job, name='work_on_job'), 
+    
     # /job/<Job ID>/description
     url(r'^(?P<job_id>[0-9]+)/description$', views.description, name='description'),
+    
 ]
 
 if settings.DEBUG: # I don't understand what this does. I think something to do with needing to tell Django where the static files are when in testing mode, but I don't understand why it doesn't know where the static files are when the website is up and running

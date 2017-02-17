@@ -2,12 +2,15 @@ var usernameIsValid = false;
 var passIsValid = false;
 var passwordsMatch = false;
 var atLeastThirteen = false;
+var attemptedToCreateUserButError = false;
 $('document').ready(function() {
     $('#create-user-form').submit(function(event) {
         if (usernameIsValid && passwordIsValid && passwordsMatch && atLeastThirteen) {
             
         } else {
+            alert("Invalid attempt to create user error messages");
             errorMessages();
+            attemptedToCreateUserButError = true;
             event.preventDefault();
         }// end if-else
     });
@@ -19,7 +22,6 @@ $('document').ready(function() {
     });
     $('#id_password').after('<span id="id_password_span"></span>');
     $('#id_repeat_password').after('<span id="id_repeat_password_span"></span>');
-    $('#is-at-least-thirteen').after('<span id="is-at-least-thirteen-span"></span>');
     $('#id_password').keyup(function() {
         passIsValid = verifyPassword();
         if ($(this).val() > 0 && $('#id_repeat_password').val() > 0) {
@@ -33,11 +35,13 @@ $('document').ready(function() {
     });
     $('#is-at-least-thirteen').change(function() {
         atLeastThirteen = $(this).is(':checked'); 
-        if (atLeastThirteen) {
-            deleteCheckboxErrorMessage();
-        } else {
-            createCheckboxErrorMessage();
-        }// end if-else
+        if (attemptedToCreateUserButError) {
+            if (atLeastThirteen) {
+                deleteCheckboxErrorMessage();
+            } else {
+                createCheckboxErrorMessage();
+            }// end if-else
+        }// end if
     });
 });
 
@@ -140,7 +144,7 @@ function verifySamePassword() {
 }// end verifySamePassword()
 
 function deleteCheckboxErrorMessage() {
-    $('#is-at-least-thirteen').css('display', 'none');
+    $('#is-at-least-thirteen-span').css('display', 'none');
 }// end deleteCheckboxErrorMessage()
 
 function createCheckboxErrorMessage() {
@@ -149,7 +153,7 @@ function createCheckboxErrorMessage() {
 }// end createCheckboxErrorMessage()
 
 function errorMessages() {
-    if (atLeastThirteen) {
+    if (!atLeastThirteen) {
         createCheckboxErrorMessage();
     }// end if
 }// end errorMessages()

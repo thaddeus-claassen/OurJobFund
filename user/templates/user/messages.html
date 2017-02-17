@@ -1,0 +1,25 @@
+{% extends 'navbar.html' %}
+
+{% load staticfiles %}
+{% block importTwo %}
+    <script type="text/javascript" src="{% static 'user/JavaScript/view_messages.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'user/CSS/view_messages.css' %}" />
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <table>
+                    {% for message in user.receiver_set.all %}
+                        <tr class="{% if not message.is_read %}is_read{% else %}is_not_read{% endif %}">         
+                            <td>Date Sent: {{ message.date_sent }}</td>
+                            <td>Sender: {{ message.sender }}</td>
+                            <td><a href="{% url 'user:message' message.id %}">{{ message.message }}</a></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

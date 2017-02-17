@@ -23,7 +23,7 @@ function applyLocation(address) {
             $('#description').val($('#id_description').val());
             $('#create-job-form-two').submit();
         } else {
-            $('#location-validation').text("Location not valid.");
+            $('#location-validation').text("Invalid Location.");
             $('#location-validation').css('color', 'red');
         }// end if-else
     });

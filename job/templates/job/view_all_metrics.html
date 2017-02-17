@@ -13,10 +13,13 @@
         <div class="col-md-6">
             <h2>{% block header %}{% endblock %}</h2>
         </div>
-        <div id="filter" class="col-md-6">
-            Apply <input type="text" />&nbsp;'s filter metric?
-            <input type="button" value="Apply" action="#" />
-        </div>
+        {% if user.is_authenticated and user.username == username %}
+            <div id="filter" class="col-md-6">
+                Apply <input id="apply_someone_elses_metrics_text" type="text" />&nbsp;'s filter metric?
+                <input id="apply_someone_elses_metrics" type="button" value="Apply" />&nbsp;
+                <span id="apply_someone_elses_metrics_span"></span>
+            </div>
+        {% endif %}
     </div>
     <form id="apply-metrics-form" action="{% url 'job:apply_metrics' %}" method="POST">
         {% csrf_token %}
@@ -29,13 +32,15 @@
                 </table>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <input id="apply_metrics" type="submit" value="Apply Metrics" />
-                <input id="clear_metrics" type="button" value="Clear Metrics" />
-                <input id="cancel_metrics" type="button" value="X" />
+        {% if user.is_authenticated and user.username == username %}
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="apply_metrics" type="submit" value="Apply Metrics" />
+                    <input id="clear_metrics" type="button" value="Clear Metrics" />
+                    <input id="cancel_metrics" type="button" value="X" />
+                </div>
             </div>
-        </div>
+        {% endif %}
     </form>
 </div>
 {% endblock %}

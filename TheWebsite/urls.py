@@ -15,13 +15,49 @@ Including another URLconf
 """
 from django.conf.urls import include, url;
 from django.contrib import admin;
+from django.conf import settings;
+from django.conf.urls.static import static;
+from . import views;
+
+app_name = 'TheWebsite';
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^job/', include('job.urls')),
-    url(r'^', include('home.urls')),
-    url(r'^home/', include('home.urls')),
     url(r'^user/', include('user.urls')),
+    url(r'^job/', include('job.urls')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+    url(r'^', views.index, name='index'),
 ]
 
+if (settings.DEBUG):
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT);
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    

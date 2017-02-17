@@ -1,0 +1,7 @@
+#name {
+    text-align: center;
+}
+
+#edit_div, #message_modal {
+    display: none;
+}

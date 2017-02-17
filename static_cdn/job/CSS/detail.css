@@ -1,6 +1,9 @@
+#pledge_modal {
+    display: none;
+}
 
 #detail_id {
-    text-align:center;
+    text-align: center;
     font-size: 30px;
 }
 

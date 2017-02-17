@@ -2,7 +2,8 @@
 
 {% load staticfiles %}
 {% block import %}
-    <link rel="stylesheet" type="text/css" href="{% static 'navbar.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'CSS/navbar.css' %}" />
+    <script type="text/javascript" src="{% static 'JavaScript/navbar.js' %}" ></script>
     {% block importTwo %}{% endblock %}
 {% endblock %}
 
@@ -11,57 +12,69 @@
     <div class="container-fluid">
         <ul class="nav navbar-nav navbar-left">
             {% if user.is_authenticated %}
-            <li>
-                <a href="#">
-                    <form id="logout-form" method="POST" action="{% url 'job:logout_pledge' %}" >
-                        {% csrf_token %}
-                        <input type="submit" value="Logout" />
-                    </form>
-                </a>
-            </li>
+                <li>
+                    <a href="#">
+                        <form id="logout-form" action="{% url 'job:logout_pledge' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="submit" value="Logout" />
+                        </form>
+                    </a>
+                </li>
+                <li><a href="{% url 'user:detail' user.username %}">{{ user.username }}</a></li>
             {% endif %}
         </ul>
         <ul class="nav navbar-nav navbar-center">
-            {% if user.is_authenticated %}
-                <li><a href="{% url 'user:detail' user.id %}">{{ user.username }}</a></li>
-            {% endif %}
+            <li>
+                <a>
+                    <form id="go_to_user">
+                        <label for="user_search_bar">Search Users:&nbsp;</label>
+                        <input id="user_search_bar" type="text" />
+                    </form>
+                </a>
+            </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             {% if user.is_authenticated %}
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Jobs Working On&nbsp;<span class="caret"></span>
+                        Pledge: Job Updates&nbsp;<span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        {% if user.working.all %}
-                            {% for job in user.working.all %}
-                                <li><a href="{% url 'job:detail' job.id %}">{{ job.name }}</a></li>
-                            {% endfor %}
-                        {% else %}
-                            <li>None</li>
-                        {% endif %}
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Jobs Pledged To&nbsp;<span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        {% if user.pledging.all %}
-                            {% for job in user.pledging.all %}
-                                <li><a href="{% url 'job:detail' job.id %}">{{ job.name }}</a></li>
-                            {% endfor %}
-                        {% else %}
+                        {% for notification in user.usernotification_set.all %}
+                            {% if notification.type == "PU" %}
+                                <li><a href="{% url 'job:detail' workjob.job.pk %}">{{ notification.pledge_job_update.job.name }}</a></li>
+                            {% endif %}
+                        {% empty %}
                             <li><a>None</a></li>
-                        {% endif %}
+                        {% endfor %}
                     </ul>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <span>&#9947;</span>&nbsp;<span class="caret"></span>
+                        Work: Job Updates&nbsp;<span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                    
+                        {% for notification in user.usernotification_set.all %}
+                            {% if notification.type == "WU" %}
+                                <li><a href="{% url 'job:detail' pledgejob.job.pk %}">{{ notification.pledge_job_update.job.name }}</a></li>
+                            {% endif %}
+                        {% empty %}
+                            <li><a>None</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Messages&nbsp;<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        {% for message in user.usernotification_set.all %}
+                            {% if notification.type == "ME" %}
+                                <li><a href="{% url 'user:message' notification.message.id %}">{{ notification.message.description }}</a></li>
+                            {% endif %}
+                        {% empty %}
+                            <li><a>None</a></li>
+                        {% endfor %}
                     </ul>
                 </li>
             {% else %}

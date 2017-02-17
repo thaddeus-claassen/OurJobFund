@@ -5,7 +5,7 @@ class NewJobForm(forms.ModelForm):
     name = forms.CharField(label="Job Title:", max_length=100);
     latitude = forms.FloatField(initial=None);
     longitude = forms.FloatField(initial=None);
-    tags = forms.CharField(label="Tags (optional):", max_length=1000);
+    tags = forms.CharField(label="Tags:", max_length=1000);
     description = forms.CharField(label="Description:", widget=forms.Textarea, max_length=10000);
 
     class Meta: 
@@ -14,7 +14,7 @@ class NewJobForm(forms.ModelForm):
         
         
 CHOICES = [('day', 'days'), ('week', 'weeks'), ('month', 'months'), ('year', 'years')];
-        
+ 
 class ApplyPledgeMetricsForm(forms.ModelForm):
     inactive = forms.IntegerField(label='', min_value=0);
     inactive_unit = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES);

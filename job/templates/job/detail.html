@@ -1,7 +1,7 @@
 {% extends 'navbar.html' %}
 
 {% load staticfiles %}
-{% block import %}
+{% block importTwo %}
     <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/detail.css' %}" />
     <script type="text/javascript" src="{% static 'job/JavaScript/detail.js' %}" ></script>
 {% endblock %}
@@ -9,7 +9,14 @@
 {% block content %}
 <div id="detail_screen" class="container-fluid">
     <div class="main-row row">
-        <div id="detail_id" class="col-md-12">
+        <div class="col-md-2">
+            {% if job.is_active %}
+                Active
+            {% else %}
+                Finished
+            {% endif %}
+        </div>
+        <div id="detail_id" class="col-md-10">
             ID: <span id="job-id">{{ job.pk }}</span>
         </div>
     </div>
@@ -20,13 +27,11 @@
     </div>
     <div class="main-row row">
         <div id="detail_tags" class="col-md-12">
-            {% if all_tags %}
-                {% for tag in all_tags %}
-                    {{ tag.tag }}
-                {% endfor %}
-            {% else %}
+            {% for tag in job.tags_set.all %}
+                {{ tag.tag }}
+            {% empty %}
                 There are no tags
-            {% endif %}
+            {% endfor %}
         </div>
     </div>
     <div class="main-row detail_job_information row">
@@ -34,23 +39,44 @@
         <div class="detail_job_information col-md-6">
             <div id="detail_main_editor" class="row">
                 <div class="col-md-12">
-                    Main editor:
-                    <a href="#">
-                        Main editor's username
-                    </a>
+                    Main editors (Max three):
+                    <span id="main_editors">
+                    {% for main_editor in job.main_editors.all %}
+                        <a href="{% url 'user:detail' main_editor.username %}">{{ main_editor.username }}</a>
+                    {% empty %}
+                        <span id="no_main_editors">No main editors</span>
+                    {% endfor %}
+                    </span>
+                    {% if job.main_editors.count < 3 and user in main_editors %}
+                        &nbsp;<input type="button" id="become_main_editor" value="Click here if you would like to become a main editor" />
+                        <span id="you_are_now_a_main_editor"></span>
+                    {% endif %}
                 </div>
             </div>
-            <div id="detail_money_pledged" class="row">
-                <div class="col-md-6">
-                    Total money pledged:
-                    {{ job.money_pledged }}
+            {% if user.is_authenticated and not is_pledging %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <input id="will_you_pledge_money" type="button" value="Will you pledge money?">
+                        <div id="pledge_modal" class="modal">
+                            <div class="modal-header">
+                                <span id="close_modal">&times;</span>
+                                <h2>Pledge</h2>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    How much would you like to pledge?
+                                    $<input id="pledge_amount" type="text" />  
+                                    (minimum $0.50)
+                                    <span id="pledge_error_message"></span>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <input id="modal_make_pledge" type="button" value="Pledge" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <input id="will-you-pledge-money" type="button" value="Will you pledge money?">
-                    <span id="you-are-pledging">You are pledging:</span>
-                    <span id="you-are-pledging-amount"></span>
-                </div>
-            </div>
+            {% endif %}
             <div id="detail_job_description" class="row">
                 <div id="detail-description-box" class="col-md-12">
                     {{ job.description }}
@@ -59,39 +85,98 @@
             </div>
             <div id="detail-work-on-job" class="row">
                 <div class="col-md-12">
-                    <input id="decide-to-work-on-job" type="button" value="Decide to work on job?" align="right" />
-                    <span id="you-are-working-on-the-job" ></span>
+                    <span id="you-are-working-on-the-job" >{% if user.is_authenticated and workjob %}You are working on the job{% endif %}</span>
+                    {% if user.is_authenticated and not workjob %}
+                        <input id="decide-to-work-on-job" type="button" value="Decide to work on job?" align="right" />
+                        <span id="now-you-are-working-on-job"></span>
+                    {% endif %}
                 </div>
             </div>
         </div>
         <div class="table-width col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="{% url 'job:view_workers' job.id %}">View Workers</a>
+                </div>
+            </div>
+            {% if workjob %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="{% url 'user:post_update' workjob.id %}">
+                            <input id="post_update" type="submit" value="Post Update" />
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
             <div class="table-width row">
                 <div class="table-width col-md-12">
-                    <h4>Workers</h4>
-                    <table id="worker-table" class="table-bordered">
+                    <h4>Updates</h4>
+                    <table id="updates_table" class="table-bordered">
+                        {% for update in ordered_updates %}
+                            <tr class="update_{{ update.has_active_complaint }}" >
+                                <td><a href="{% url 'user:update' update.id %}">{{ update.title }}</a></td>
+                                <td>{{ update.updated }}</td>
+                                <td>{{ update.workjob.worker }}</td>
+                                <td><a href="#">Comments:&nbsp;{{ update.comment_set.count }}</a></td>
+                                <td>Has Complaint</td>
+                            </tr>
+                        {% empty %}
+                            No Updates
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <div class="table-width row">
+                <div class="table-width col-md-12">
+                    <h4>Pledges</h4>
+                    <table id="pledges_table" class="table-bordered">
+                        {% for pledgejob in job.pledgejob_set.all %}
+                            <tr>
+                                <td>{{ pledgejob.pledger.username }}</td>
+                                <td>Pledge: ${{ pledgejob.amount_pledged }}</td>
+                                <td>Paid: ${{ pledgejob.amount_paid }}</td>
+                            </tr>
+                        {% empty %}
+                            None
+                        {% endfor %}
                         <tr>
-                            <td class="col-md-3">
-                                Most recent update:
-                            </td>
-                            <td class="col-md-3">
-                                By:
-                            </td>
-                            <td class="col-md-3">
-                                Updated on
-                            </td>
+                            <td>Total</td>
+                            <td>Pledged: ${{ job.money_pledged }}</td>
+                            <td>Paid: ${{ job.money_paid }}</td>
                         </tr>
                     </table>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
+            <div class="table-width row">
+                <div class="table-width col-md-12">
                     <h4>Anyone who asks for money</h4>
                     <table id="money-table" class="table-bordered">
-                        <tr>
-                            <td class="col-md-3">
-                                Username
-                            </td>
-                        </tr>
+                        {% for workjob in job.workjob_set.all %}
+                            {% if workjob.is_finished %}
+                                <tr>
+                                    <td>
+                                        <input id="pay_worker_button" type="button" value="Pay Here" />
+                                    </td>
+                                    <td>
+                                        {{ workjob.worker.username }} 
+                                    </td>
+                                    <td>
+                                        Asking For: 
+                                        {% if workjob.amount_of_money_asking_for %}
+                                            {{ workjob.amount_of_money_asking_for }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="#">Complaints: {{ workjob.complaints.count }}</a>
+                                    </td>
+                                    <td>
+                                        <input type="button" value="Make Complaint" />
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% empty %}
+                            <tr><td>None</td></tr>
+                        {% endfor %}
                     </table>
                 </div>
             </div>

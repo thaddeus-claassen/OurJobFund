@@ -10,38 +10,59 @@
 {% if user.is_authenticated %}
     <div class="row">
         <div class="col-md-12">
-            <form action="{% url 'job:view_all_metrics_work' %}">
+            <form action="{% url 'job:view_all_metrics_work' user.id %}">
                 <input id="view_metrics_work" type="submit" value="View All Metrics"/>
             </form>
         </div>
     </div>
-    <form action="#">
-        <div class="row">
-            <div id="filter" class="col-md-12">
-                Apply <input type="text" />&nbsp;'s filter metric?
-                <input type="button" value="Apply" action="#" />
-            </div>
+    <div class="row">
+        <div id="filter" class="col-md-12">
+            Apply <input id="apply_metrics_text" type="text" />&nbsp;'s filter metric?
+            <input id="apply_metrics" type="button" value="Apply" />
+            <span id="apply_metrics_span"></span>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                Remove pledgers who have:
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            Remove pledgers who have:
         </div>
-        <div class="row">
-            <div class="col-md-10 col-md-offset-2">
-                - failed to paid the worker/s&nbsp;<input type="text" size="2" />&nbsp;times.
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-2">
+            - not been active on the website for &nbsp; <input type="text" size="2" />
         </div>
-        <div class="row">
-            <div class="col-md-10 col-md-offset-2">
-                - averaged&nbsp;<input type="text" size="2" />&nbsp;times.
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-8">
+            days: <input type="radio" name="unit_of_time" checked="checked" />
         </div>
-        <div class="row">
-            <div class="col-md-10 col-md-offset-2">
-                - paid&nbsp;<input type="text" size="2" />&nbsp;or fewer times.
-            </div>
+        <!-- Weeks
+        <div class="col-md-3 col-md-offset-3">
+            weeks: <input type="radio" name="unit_of_time">
         </div>
-    </form>
+        End weeks -->
+
+        <!-- Months
+        <div class="col-md-3 col-md-offset-2">
+            months: <input type="radio" name="unit_of_time">
+        </div>
+        End months -->
+
+        <!-- Years
+        <div class="col-md-3 col-md-offset-1">
+            years: <input type="radio" name="unit_of_time">
+        </div>
+        End Years -->
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-2">
+            - failed to paid the worker/s&nbsp;<input type="text" size="2" />&nbsp;times.
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-2">
+            - paid&nbsp;<input type="text" size="2" />&nbsp;or fewer times.
+        </div>
+    </div>
 {% endif %}
 {% endblock %}

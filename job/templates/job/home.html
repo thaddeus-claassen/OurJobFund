@@ -2,8 +2,8 @@
 
 {% load staticfiles %}
 {% block importTwo %}
-    <script type="text/javascript" src="{% static 'job/JavaScript/index.js' %}" ></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/index.css' %}" />
+    <script type="text/javascript" src="{% static 'job/JavaScript/home.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/home.css' %}" />
     {% block importThree %}{% endblock %}
 {% endblock %}
 
@@ -33,7 +33,6 @@
                             <td id="advanced-options">Advanced options:</td>
                             <td>
                                 <form action="{% url 'job:ANDs_of_ORs' %}">
-                                    {% csrf_token %}
                                     <input type="submit" id="ANDs_of_ORs" name="tag_logic" value="&#10064;" />
                                 </form>
                                 <label class="tag-radio" for="tag_ANDs_of_ORs_logic">
@@ -43,7 +42,6 @@
                             </td>
                             <td>
                                 <form action="{% url 'job:ORs_of_ANDs' %}">
-                                    {% csrf_token %}
                                     <input type="submit" id="ORs_of_ANDs" name="tag_logic" value="&#10064;" />
                                 </form>
                                 <label class="tag-radio" for="tag_ORs_of_ANDs_logic">
@@ -53,7 +51,6 @@
                             </td>
                             <td>
                                 <form action="{% url 'job:custom' %}">
-                                    {% csrf_token %}
                                     <input type="submit" id="custom" name="tag_logic" value="&#10064;" />
                                 </form>
                                 <label class="tag-radio" for="tag_custom_logic">

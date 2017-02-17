@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect;
-from .models import Job, Tag, UserLogic, UserWorkerFilter, UserPledgeFilter;
+from .models import Job, Tag, User, UserLogic, UserWorkerFilter, UserPledgeFilter;
+from user.models import PledgeJob, WorkJob, WorkJobUpdate;
 from django.http import JsonResponse, HttpResponse;
 from django.core import serializers;
 from django.contrib.auth import authenticate, login, logout;
 from .forms import NewJobForm, ApplyPledgeMetricsForm, ApplyWorkMetricsForm;
-import json, re, math;
-
+import json, re, math;    
+    
 def pledge(request):
     return render(request, 'job/pledge.html');
     
@@ -34,6 +35,17 @@ def job_table(jobs):
             content_type="application/json",                    #   For some reason, we have to say this line. I guess so whatever reads this response knows its a JSON object
         );
 
+def search_users(request):
+    print("Got into search_users in job.views");
+    response = "";
+    if (request.method == 'GET'):
+        username = request.GET['username'];
+        if (User.objects.filter(username=username).exists()):
+            response = "user exists";
+        else:
+            response = "user does not exist";
+    return HttpResponse(response);
+        
 # This gets the any jobs which match the name or id search in index.html
 def search_jobs(request):    
     data = [];
@@ -61,15 +73,21 @@ def find_jobs_by_radius(jobs, currLatitude, currLongitude, radius):
             jobs.exclude(id=job.id);
     return jobs;
     
-def view_all_metrics_pledge(request):
+def view_all_metrics_pledge(request, user_id):
+    user = get_object_or_404(User, pk=user_id);
     context = {
-        'form' : ApplyPledgeMetricsForm(),
+        'form' : ApplyPledgeMetricsForm(initial=getUserWorkerFilterData(user)),
+        'username' : user.username,
+        'pledge_metrics' : user.userworkerfilter,
     }
     return render(request, 'job/view_all_metrics_pledge.html', context);
     
-def view_all_metrics_work(request):
+def view_all_metrics_work(request, user_id):
+    user = get_object_or_404(User, pk=user_id);
     context = {
-        'form' : ApplyWorkMetricsForm(),
+        'form' : ApplyWorkMetricsForm(initial=getUserPledgeFilterData(user)),
+        'username' : user.username,
+        'work_metrics' : user.userpledgefilter,
     }
     return render(request, 'job/view_all_metrics_work.html', context);
     
@@ -223,16 +241,37 @@ def get_custom_tags(request):
             tags = request.user.userlogic.custom;
     return HttpResponse(tags);
 
-# Defines a function, which renders the HTML document detail.html (a.k.a. the page which opens when you click on a job link)
 def detail(request, job_id):
-    job = get_object_or_404(Job, pk=job_id);                                        #Find the job from the given primary key, from inside the database
-    all_tags = job.tag_set.all();                                           #Get all tags, which are used to describe the job
-    context = {                                                                     #Define the context dictionary, which tells the HTML document what to call the given variables 
-        'job': job,                                                                 #For detail.html, defines the string "job" as the given job
-        'all_tags': all_tags,                                               #For detail.html, defines the string "all_tags" as the set of tags that are used to define the job
+    job = get_object_or_404(Job, pk=job_id);                                 
+    is_main_editor = False;
+    is_pledging = False;
+    pledging_amount = 0;
+    workjob = False;       
+    if (request.user.is_authenticated()):
+        if (request.user.main_editors.filter(pk=job_id).exists()):
+            is_main_editor = True;
+        if (request.user.pledgejob_set.all().filter(job=job).exists()):
+            is_pledging = True;
+            pledging_amount = request.user.pledgejob_set.get(job=job).amount_pledged;
+        if (request.user.workjob_set.all().filter(job=job).exists()):
+            workjob = request.user.workjob_set.get(job=job);
+    context = {                                                                     
+        'job': job,
+        'workjob' : workjob,
+        'is_main_editor' : is_main_editor,
+        'is_pledging' : is_pledging,
+        'pledging_amount' : pledging_amount,
+        'workjob' : workjob,
+        'ordered_updates' : WorkJobUpdate.objects.filter(workjob__job=job).order_by('updated'),
     }
-    print(all_tags);
     return render(request, 'job/detail.html', context);
+    
+def view_workers(request, job_id):
+    job = get_object_or_404(Job, pk=job_id);
+    context = {
+        'job' : job,
+    }
+    return render(request, 'job/view_workers.html', context);
     
 def description(request, job_id):
     job = get_object_or_404(Job, pk=job_id);
@@ -241,49 +280,58 @@ def description(request, job_id):
     }
     return render(request, 'job/description.html', context);
     
-def user_is_working_on_job(request, job_id):
-    returnStatement = None;
-    job = get_object_or_404(Job, pk=job_id);
-    if (request.method == 'GET'):
-        if (request.user.is_authenticated()):
-            if (job.workers.filter(pk=request.user.pk).exists()):
-                returnStatement = HttpResponse('Exists');
-            else:
-                returnStatement = HttpResponse('Does Not Exist');
-    return returnStatement;
-    
-def work_on_job(request, job_id):
-    returnStatement = None;
+def become_main_editor(request, job_id):
     job = get_object_or_404(Job, pk=job_id);
     if (request.method == 'POST'):
         if (request.user.is_authenticated()):
-            job.workers.add(request.user);
-            returnStatement = HttpResponse('Exists'); 
-    return returnStatement;
+            if (job.main_editors.all().count() < 3):
+                job.main_editors.add(request.user);
+    return HttpResponse('Finished!');
+    
+def pledge_money_to_job(request, job_id):
+    if (request.method == 'POST'):
+        if (request.user.is_authenticated()):
+            job = get_object_or_404(Job, pk=job_id);
+            if (not job.pledgejob_set.filter(pledger=request.user).exists()):
+                amount_pledged = float(request.POST['amount_pledged']);
+                PledgeJob(pledger=request.user, job=job, amount_pledged=amount_pledged).save();
+                job.money_pledged = job.money_pledged + amount_pledged;
+                job.save();
+    return HttpResponse('Finished!');
+    
+def work_on_job(request, job_id):
+    if (request.method == 'POST'):
+        if (request.user.is_authenticated()):
+            job = get_object_or_404(Job, pk=job_id);
+            if (not job.workjob_set.filter(worker=request.user).exists()):
+                WorkJob(worker=request.user, job=job).save();
+    return HttpResponse('Finished!');
 
 # Defines a function, which renders the HTML document add_job (a.k.a the page, which gives you the option to create a new job)
 def add_job(request):
     if (request.method == 'POST'):
-        newJobForm = NewJobForm(request.POST);
-        if (newJobForm.is_valid()):
-            name = newJobForm.cleaned_data['name'];
-            latitude = newJobForm.cleaned_data['latitude'];
-            longitude = newJobForm.cleaned_data['longitude'];
-            tags = newJobForm.cleaned_data['tags'];
-            description = newJobForm.cleaned_data['description'];
-            job = Job(name=name, latitude=latitude, longitude=longitude, description=description);
-            job.save();
-            tags = request.POST['tags'];
-            tagsArray = create_tags_array(tags);
-            for tagString in tagsArray :
-                newTag = None;
-                if (Tag.objects.filter(tag__iexact=tagString).exists()):
-                    newTag = Tag.objects.get(tag__iexact=tagString);
-                else:
-                    newTag = Tag(tag=tagString);
-                newTag.save();
-                job.tag_set.add(newTag);
-            return pledge(request);
+        if (request.user.is_authenticated()):
+            newJobForm = NewJobForm(request.POST);
+            if (newJobForm.is_valid()):
+                name = newJobForm.cleaned_data['name'];
+                latitude = newJobForm.cleaned_data['latitude'];
+                longitude = newJobForm.cleaned_data['longitude'];
+                tags = newJobForm.cleaned_data['tags'];
+                description = newJobForm.cleaned_data['description'];
+                job = Job(name=name, latitude=latitude, longitude=longitude, description=description);
+                job.main_editors.add(request.user);
+                job.save();
+                tags = request.POST['tags'];
+                tagsArray = create_tags_array(tags);
+                for tagString in tagsArray:
+                    newTag = None;
+                    if (Tag.objects.filter(tag__iexact=tagString).exists()):
+                        newTag = Tag.objects.get(tag__iexact=tagString);
+                    else:
+                        newTag = Tag(tag=tagString);
+                    newTag.save();
+                    job.tag_set.add(newTag);
+                return pledge(request);
     context = {
         'form' : NewJobForm(), 
     }
@@ -292,6 +340,93 @@ def add_job(request):
 def add_location(request):
     return render(request, 'job/add_location.html');
     
-
+def verify_username(request):
+    userNameExists = None;
+    if (request.method == 'GET'):
+        username = request.GET['username'];
+        if (User.objects.filter(username__iexact=username).exists()):
+            userNameExists = 'true';
+        else:
+            userNameExists = 'false';
+    return HttpResponse(userNameExists);
+    
+def copy_pledge_metrics(request):
+    data = {};
+    if (request.method == 'POST'):
+        user = request.user;
+        if (user.is_authenticated()):
+            otherUser = User.objects.get(username=request.POST['username']);
+            copy_pledge_filter(user, otherUser);
+            data = getUserWorkerFilterData(otherUser);
+    return JsonResponse(data, safe=False);
+    
+def copy_worker_metrics(request):
+    data = {};
+    if (request.method == 'POST'):
+        user = request.user;
+        if (user.is_authenticated()):
+            otherUser = User.objects.get(username=request.POST['username']);
+            copy_worker_filter(user, otherUser);
+            data = getUserPledgeFilterData(otherUser);
+    return JsonResponse(data, safe=False);
+    
+def copy_pledge_filter_job(user, otherUser):
+    user.userworkerfilter.inactive = otherUser.userworkerfilter.inactive;
+    user.userworkerfilter.inactive_unit = otherUser.userworkerfilter.inactive_unit;
+    user.userworkerfilter.updated = otherUser.userworkerfilter.updated;
+    user.userworkerfilter.updated_unit = otherUser.userworkerfilter.updated_unit;
+    user.userworkerfilter.completed_fewer = otherUser.userworkerfilter.completed_fewer;
+    user.userworkerfilter.failed_to_complete = otherUser.userworkerfilter.failed_to_complete;
+    user.userworkerfilter.completed_percent = otherUser.userworkerfilter.completed_percent;
+    user.userworkerfilter.completed_ratio = otherUser.userworkerfilter.completed_ratio;
+    user.userworkerfilter.save();
+    
+def copy_worker_filter_job(user, otherUser):
+    user.userpledgefilter.inactive = otherUser.userpledgefilter.inactive;
+    user.userpledgefilter.inactive_unit = otherUser.userpledgefilter.inactive_unit;
+    user.userpledgefilter.failed_to_pay = otherUser.userpledgefilter.failed_to_pay;
+    user.userpledgefilter.averaged = otherUser.userpledgefilter.averaged;
+    user.userpledgefilter.paid_x_times = otherUser.userpledgefilter.paid_x_times;
+    user.userpledgefilter.save();
+    
+def getUserWorkerFilterData(user):
+    data = {};
+    data['inactive'] = user.userworkerfilter.inactive;
+    data['inactive_unit'] = user.userworkerfilter.inactive_unit;
+    data['updated'] = user.userworkerfilter.updated;
+    data['updated_unit'] = user.userworkerfilter.updated_unit;
+    data['completed_fewer'] = user.userworkerfilter.completed_fewer;
+    data['failed_to_complete'] = user.userworkerfilter.failed_to_complete;
+    data['completed_percent'] = user.userworkerfilter.completed_percent;
+    data['completed_ratio'] = user.userworkerfilter.completed_ratio;
+    return data;
+    
+def getUserPledgeFilterData(user):
+    data = {};
+    data['inactive'] = user.userpledgefilter.inactive;
+    data['inactive_unit'] = user.userpledgefilter.inactive_unit;
+    data['failed_to_pay'] = user.userpledgefilter.failed_to_pay;
+    data['averaged'] = user.userpledgefilter.averaged;
+    data['paid_x_times'] = user.userpledgefilter.paid_x_times;
+    return data;
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
                     
     

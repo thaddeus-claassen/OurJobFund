@@ -10,19 +10,19 @@
         <div class="row">
             <div class="col-md-6">
                 <form action="{% url 'job:pledge' %}">
-                    <input type="button" value="Go to pledge list" />
+                    <input type="submit" value="Go to pledge list" />
                 </form>
             </div>
             <div class="col-md-6">
                 <form action="{% url 'job:work' %}">
-                    <input type="button" value="Go to work list" />
+                    <input type="submit" value="Go to work list" />
                 </form>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <form action="{% url 'user:detail' user.id %}">
-                    <input type="button" value="Go to profile" />
+                <form action="{% url 'user:detail' user.username %}">
+                    <input type="submit" value="Go to profile" />
                 </form>
             </div>
         <div>

@@ -55,6 +55,9 @@ $('document').ready(function() {
             filterByTagsAndLocation();
         }// end if-else
     }); 
+    $('#apply_metrics').click(function() {
+        verify_username();
+    });
 });
 
 function logout() {
@@ -183,7 +186,8 @@ function searchJobsByRadiusSuccess(json) {
     searchSuccess(json);
 }// end searchJobsByRadiusSuccess()
 
-function searchSuccess(json) {    
+function searchSuccess(json) {
+    alert(json);
     $('#main_table').empty();
     var numJobs = Object.keys(json).length; 
     if (numJobs > 0) {
@@ -208,3 +212,23 @@ function addNumJobsToSpan(numJobs) {
 function searchFailure(xhr,errmsg,err) {
     console.warn(xhr.responseText);
 }// end searchFailure()
+
+function verify_username() {
+    $.ajax ({
+        type : 'GET',
+        url : 'verify_username',
+        data : {
+            'username' : $('#apply_metrics_text').val(),
+        },
+        success : verifyUsernameSuccess,
+    });
+}// end verify_username()
+
+function verifyUsernameSuccess(str) {
+    if (str === 'true') {
+        copy_metrics();
+    } else {
+        $('#apply_metrics_span').text('Username does not exist');
+        $('#apply_metrics_span').css('color', 'red');
+    }// end if-ese
+}// end verrifyUsernameSuccess()

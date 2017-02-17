@@ -1,44 +1,39 @@
 
-function applyMetrics() {
-    $.ajax({                                                                                                              
-        type : "POST",                                                          
-        url : "apply_metrics_work",                                           
+function getURL() {
+    return 'view_all_metrics_work';
+}// end getCopyMetricsURL()
+
+function copy_metrics() {
+    $.ajax ({
+        type : 'POST',
+        url : 'copy_worker_metrics',
         data : {
-            'inactive' : getInactiveInput(),
-            'inactive_unit_of_time' : getInactiveUnitOfTimeRadio(),
-            'failed_to_pay' : getFailedToPay(),
-            'averaged' : getAveraged(),
-            'paid_x_times' : getPaidXTimes(),
-            'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
-        }                                                                                             
+            'username' : $('#apply_someone_elses_metrics_text').val(),
+        },
+        success : metricsCopiedSuccess,
     });
-}// end applyMetrics()
+}// end copy_pledge_metrics()
 
-function getInactiveInput() {
-    return $('#inactive').val()
-}// end getInactiveInput()
-
-function getInactiveUnitOfTimeRadio() {
-    var string;
-    var id = $('input[name=inactive_unit_of_time]:checked').attr('id');
-    if (id == 'inactive_day') string = 'day';
-    else if (id == 'inactive_week') string = 'week';
-    else if (id == 'inactive_month') string = 'month';
-    else string = 'year';
-    return string;
-}// end getInactiveUnitOfTimeRadio()
-
-function getFailedToPay() {
-    return $('#failed-to-pay').val();
-}// end getFailedToPay()
-
-function getAveraged() {
-    return $('#averaged').val();
-}// end getAveraged()
-
-function getPaidXTimes() {
-    return $('#paid-x-times').val();
-}// end getPaidXTimes()
+function metricsCopiedSuccess(json) {
+    $('#apply_someone_elses_metrics_span').text('Done!');
+    $('#apply_someone_elses_metrics_span').css('color', 'blue');
+    if (Object.keys(json).length > 0) {
+        $('#id_inactive').val(json['inactive']);
+        var unit = json['inactive_unit'];
+        if (unit === 'day') {
+            $('#id_inactive_unit_0').prop('checked', true);
+        } else if (unit === 'week') {
+            $('#id_inactive_unit_1').prop('checked', true);
+        } else if (unit === 'month') {
+            $('#id_inactive_unit_2').prop('checked', true);
+        } else {
+            $('#id_inactive_unit_3').prop('checked', true);
+        }// end if-else
+        $('#id_failed_to_pay').val(json['failed_to_pay']);
+        $('#id_averaged').val(json['failed_to_pay']);
+        $('#id_paid_x_times').val(json['paid_x_times']);
+    }// end if
+}// end metricsCopiedSuccess()
 
 function clearMetrics() {
     $(':text').val('');

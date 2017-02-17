@@ -7,18 +7,60 @@
 {% endblock %}
 
 {% block content %}
+<input id="user_id" type="hidden" value="{{ id }}" />
 <div class="container max-height">
     <div class="row">
         <div id="name" class="col-md-12">
-            {{ username }}
+            <span id="email">{{ email }}</span><span>(To retrieve passwords)</span>
+            <span id="username" >{{ username }}</span>
         </div>
     </div>
     <div class="row">
         {% if user.is_authenticated and user.username == username %}
-            <div class="col-md-4">
+            <div id="make_edits_button_div" class="col-md-3">
                 <div class="row">
                     <div class="col-md-12">
-                        <input type="text" value="{{ user.city }}" />
+                        <input id="make_edits" type="button" value="Make Edits" />
+                    </div>
+                </div>
+            </div>
+            <div id="edit_div" class="col-md-3">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="first_name">First Name:</label>
+                        <input id="first_name" type="text" value="{{ user.first_name }}" />
+                        <span>Public?</span>
+                        <label for="first_name_public_yes">Yes:</label>
+                        <input id="first_name_public_yes" class="make_public" type="radio" value="y" name="first_name_public" />
+                        <label for="first_name_public_no">No:</label>
+                        <input id="first_name_public_no" class="make_public" type="radio" value="n" name="first_name_public" checked="checked" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="last_name">Last Name:</label>
+                        <input id="last_name" type="text" value="{{ user.last_name }}" />
+                        <span>Public?</span>
+                        <label for="last_name_public_yes">Yes:</label>
+                        <input id="last_name_public_yes" class="make_public" type="radio" value="y" name="last_name_public" />
+                        <label for="last_name_public_no">No:</label>
+                        <input id="last_name_public_no" class="make_public" type="radio" value="n" name="last_name_public" checked="checked" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="city">City:</label>
+                        <input id="city" type="text" value="{{ user.city }}" />
+                        <span>Public?</span>
+                        <label for="city_public_yes">Yes:</label>
+                        <input id="city_public_yes" class="make_public" type="radio" value="y" name="city_public" />
+                        <label for="city_public_no">No:</label>
+                        <input id="city_public_no" class="make_public" type="radio" value="n" name="city_public" checked="checked" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="state">State:</label>
                         <select value="{{ user.state }}">
                             <option value="blank"></option>
                             <option value="AL">AL</option>
@@ -72,21 +114,71 @@
                             <option value="WV">WV</option>
                             <option value="WY">WY</option>
                         </select>
+                        <span>Public?</span>
+                        <label for="state_public_yes">Yes:</label>
+                        <input id="state_public_yes" class="make_public" type="radio" value="y" name="state_public" />
+                        <label for="state_public_no">No:</label>
+                        <input id="state_public_no" class="make_public" type="radio" value="n" name="state_public" checked="checked" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        Make all personal information public?
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="make_all_information_public_yes" >Yes:</label>
+                        <input id="make_all_information_public_yes" type="radio" value="y" name="make_all_information_public" />
+                        <label for="make_all_information_public_no" >No:</label>
+                        <input id="make_all_information_public_no" type="radio" value="n" name="make_all_information_public" checked="checked" />
                     </div>
                 </div>
             </div>
         {% endif %}
         {% if user.is_authenticated and user.username == username %}
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <div class="row">
                     <div class="col-md-12">
-                        <textarea>{{ description }}</textarea>
+                        <input id="edit_description" type="button" value="Click Here Edit Description" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <span id="description">{{ description }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <textarea id="textarea_description">{{ description }}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <input id="save_description" type="button" value="Save" />
                     </div>
                 </div>
             </div>
         {% else %}
             <div class="col-md-6">
-                <div class="row">    
+                <div class="row">
+                    <div class="col-md-12">
+                        <input id="message_button" type="button" value="Send this user a message" />
+                        <div id="message_modal" class="modal">
+                            <div class="modal-header">
+                                <span id="close_modal">&times;</span>
+                                <h2>Message</h2>
+                            </div>
+                            <div class="modal-body">
+                                <textarea id="message" ></textarea>     
+                            </div>
+                            <div class="modal-footer">
+                                <input id="send_modal_message" type="button" value="Send Message" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="description" class="row">    
                     <div class="col-md-12">
                         {{ description }}
                     </div>
@@ -100,33 +192,134 @@
         {% endif %}    
                 <div class="row">
                     <div class="col-md-12">
+                        <span>Jobs you are pledged to:</span>
                         <table class="table" id="pledging-table">
-                            {% for job in pledging %}
-                            <tr id="pledge{{ job.name }}">
-                                <td>{{ job.is_active }}</td>
-                                <td><a href="#">{{ job.name }}</a></td>
-                            </tr>
+                            {% for pledgejob in user.pledgejob_set.all %}
+                                {% if pledgejob.job.is_active %}
+                                    <tr id="pledge{{ plegdejob.job.name }}">
+                                        <td><a href="{% url 'job:detail' pledgejob.job.id %}">{{ pledgejob.job.name }}</a></td>
+                                        <td>Is Finished: {{ pledgejob.job.is_finished }}</td>
+                                        <td>Amount Pledged: {{ pledgejob.amount_pledged }}</td>
+                                        <td>Amount Paid (if any): {{ pledgejob.amount_paid }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% empty %}
+                                <tr><td>You are not pledged to any jobs.</td></tr>
                             {% endfor %}
                         </table>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <table id="working-table">
-                        {% for job in working %}
-                        <tr id="work{{ job.name }}">
-                            <td>{{ job.is_active }}</td>
-                            <td><a href="{% url 'job:detail' job.id %}">{{ job.name }}</a></td>
-                        </tr>
-                        {% endfor %}
+                        <span>Jobs you are working on:</span>
+                        <table class="table" id="working-table">
+                            {% for workjob in user.workjob_set.all %}
+                                {% if workjob.job.is_active %}
+                                    <tr id="work_{{ workjob.job.name }}">
+                                        <td><a href="{% url 'job:detail' workjob.job.id %}">{{ workjob.job.name }}</a></td>
+                                        <td>Started Working: {{ workjob.date_joined|date:"D d M Y" }}</td>
+                                        <td><a href="#">Number of Updates: {{ workjob.workjobupdate_set.all.count }}</a></td>
+                                    </tr>
+                                {% endif %}
+                            {% empty %}    
+                                You are not working on any jobs.
+                            {% endfor %}
                         </table>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        Public Metric
+                        <span>Job, which you finished, but this user pledged to them</span>
+                        <table id="finished_pledging_table">
+                            {% for pledgejob in user.pledgejob_set.all %}
+                                {% if pledgejob.amount_pledged <= pledgejob.amount_paid %}
+                                    <tr id="finished_pledge_{{ pledgejob.job.name }}">
+                                        <td><a href="{% url 'job:detail' pledgejob.job.id %}">{{ pledgejob.job.name }}</a></td>
+                                        <td>Amount Pledged: {{ pledgejob.amount_pledged }}</td>
+                                        <td>Amount Paid: {{ pledgejob.amount_paid }}</td>
+                                        <td>Active: {{ pledgejob.job.is_active }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% empty %}
+                                No such jobs.
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>              
+                <div class="row">
+                    <div class="col-md-12">
+                        <span>Jobs, which were worked on, and are now finished</span>
+                        <table id="finished_working_table">
+                            {% for workjob in user.workjob_set.all %}
+                                {% if workjob.is_finished or workjob.job.is_finished %}
+                                    <tr id="finished_work_{{ workjob.job.name }}">
+                                        <td><a href="{% url 'job:detail' workjob.job.id %}">{{ workjob.job.name }}</td>
+                                        <td>Job Finished: {{ workjob.job.is_finished }} </td>
+                                        <td>You Finished: {{ workjob.is_finished }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% empty %}    
+                                No such jobs.
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>    
+                <div class="row">
+                    <div class="col-md-12">
+                        {% if user.is_authenticated and user.username == username %}
+                            <span>Make pledge filter public?</span>
+                            {% if pledge_filter_is_public %}
+                                <label for="yes_public_pledge">Yes:</label>
+                                <input id="yes_public_pledge" type="radio" value="y" name="public_pledge_filter" checked="checked" />
+                                <label for="no_public_pledge">No:</label>
+                                <input id="no_public_pledge" type="radio" value="n" name="public_pledge_filter" />
+                            {% else %}
+                                <label for="yes_public_pledge">Yes:</label>
+                                <input id="yes_public_pledge" type="radio" value="y" name="public_pledge_filter" />
+                                <label for="no_public_pledge">No:</label>
+                                <input id="no_public_pledge" type="radio" value="n" name="public_pledge_filter" checked="checked" />
+                            {% endif %}
+                        {% else %}
+                            {% if pledge_filter_is_public %}
+                                <span>Pledge filter is public</span>
+                                <form action="{% url 'job:view_all_metrics_pledge' id %}">
+                                    <input type="submit" value="View Pledge Filter" />
+                                    <input id="use_pledge_filter" type="button" value="Use Pledge Filter" />
+                                </form>
+                            {% else %}
+                                <span>Pledge filter in not public</span>
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        {% if user.is_authenticated and user.username == username %}
+                            <span>Make worker filter public?</span>
+                            {% if worker_filter_is_public %}
+                                <label for="yes_public_worker">Yes:</label>
+                                <input id="yes_public_worker" type="radio" value="y" name="public_worker_filter" checked="checked" />
+                                <label for="no_public_worker">No:</label>
+                                <input id="no_public_worker" type="radio" value="n" name="public_worker_filter" />
+                            {% else %}
+                                <label for="yes_public_worker">Yes:</label>
+                                <input id="yes_public_worker" type="radio" value="y" name="public_worker_filter" />
+                                <label for="no_public_worker">No:</label>
+                                <input id="no_public_worker" type="radio" value="n" name="public_worker_filter" checked="checked" />                            
+                            {% endif %}
+                        {% else %}
+                            {% if worker_filter_is_public %}
+                                <span>Worker filter is public</span>
+                                <form action="{% url 'job:view_all_metrics_work' id %}">
+                                    <input type="submit" value="View Worker Filter" />
+                                    <input id="use_worker_filter" type="button" value="Use Worker Filter" />
+                                </form>
+                            {% else %}
+                                 <span>Worker filter in not public</span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>  
             </div>
     </div>
 </div>

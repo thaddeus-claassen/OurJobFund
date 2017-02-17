@@ -1,6 +1,10 @@
 
+#pledge_modal, #you_are_now_a_main_editor {
+    display: none;
+}
+
 #detail_id {
-    text-align:center;
+    text-align: center;
     font-size: 30px;
 }
 
@@ -12,10 +16,6 @@
 #display_hashtags {
     text-align: center;
     font-size: 30px;
-}
-
-#detail_job_description {
-    
 }
 
 #detail-description-box {
