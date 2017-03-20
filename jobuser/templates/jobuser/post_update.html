@@ -8,7 +8,7 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <form action="{% url 'user:post_update' workjob.id %}" method="POST" enctype="multipart/form-data">
+        <form action="{% url 'jobuser:post_update' workjob.id %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="col-md-12">
                 Update for {{ workjob.job.name }}

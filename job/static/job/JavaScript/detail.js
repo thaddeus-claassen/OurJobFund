@@ -23,7 +23,13 @@ $('document').ready(function() {
             $('#pledge_error_message').css('color', 'red');
         }// end if-else
     });
-    $('#close_modal').click(function() {
+    $('#finish_job').click(function() {
+        $('#finish_modal').css('display', 'inline');
+    });
+    $('.finish-yes-no').click(function() {
+        css('display', 'none');
+    });
+    $('.close_modal').click(function() {
         $('#pledge_modal').css('display', 'none');
     });
     $('#decide-to-work-on-job').click(function() {
@@ -92,16 +98,15 @@ function work_on_job() {
 }// end work_on_job()
 
 function pledgingMoneyToJobSuccess(string) {
-    if (string == '') {
-        $('#will-you-pledge-money-to-job').css('display', 'inline');
-        $('#you-are-pledging').css('display', 'none');
-        $('#you-are-pledging-amount').css('display', 'none');
-    } else {
-        $('#will-you-pledge-money-to-job').css('display', 'none');
-        $('#you-are-pledging').css('display', 'inline');
-        $('#you-are-pledging-amount').css('display', 'inline');
-        $('#you-are-pledging-amount').text(string);
-    }// end if-else
+    $('#will-you-pledge-money-to-job').css('display', 'none');
+    $('#you-are-pledging').css('display', 'inline');
+    alert(string);
+    var row = "<tr>";
+    row += "<td>" + string.split(" ")[0] + "</td>";
+    row += "<td>Pledge: $" + string.split(" ")[1] + "</td>";
+    row += "<td>Paid: $0.0</td></tr>";
+    alert(row);
+    $('#pledges_table').prepend(row);
 }// end pledgingMoenyToJobSuccess()
 
 function workingOnJobSuccess(string) {

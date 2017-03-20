@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'job',
     'user',
-    'ckeditor',
+    'jobuser',
     'ckeditor_uploader',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
@@ -125,9 +126,11 @@ STATICFILES_DIRS = [
 #    '/var/www/static/',
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static_cdn")
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_UPLOAD_PATH = 'uploads/'
+
+CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'

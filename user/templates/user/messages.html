@@ -7,18 +7,17 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
+    <input id="user" type="hidden" value="{{ user }}" />
+    <input id="other_user" type="hidden" value="{{ other_user }}" />
+    <div id="message_container" class="container">
+        <div class="row" id="textarea_row">
+            <div class="col-md-12">
+                <textarea id="send_message_textarea" ></textarea>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
-                <table>
-                    {% for message in user.receiver_set.all %}
-                        <tr class="{% if not message.is_read %}is_read{% else %}is_not_read{% endif %}">         
-                            <td>Date Sent: {{ message.date_sent }}</td>
-                            <td>Sender: {{ message.sender }}</td>
-                            <td><a href="{% url 'user:message' message.id %}">{{ message.message }}</a></td>
-                        </tr>
-                    {% endfor %}
-                </table>
+                <input id="send_message" type="button" value="Send" />
             </div>
         </div>
     </div>

@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User;
-from .models import WorkJobUpdate;
 from django import forms;
 from django.forms import extras;
 
@@ -21,14 +20,6 @@ class NewUserForm(forms.ModelForm):
         model = User;
         fields = ['username', 'email', 'password'];
         
-class NewWorkJobUpdate(forms.ModelForm):
-    title = forms.CharField(label='Title:', max_length=100);
-    images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}));
-    description = forms.CharField(label='Description:', widget=forms.Textarea);
-    
-    class Meta:
-        model = WorkJobUpdate;
-        fields = ['title', 'description'];
     
 
         

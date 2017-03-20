@@ -5,6 +5,7 @@ $('document').ready(function() {
         window.open("/job/" + jobID + "/description");
     });
     $('#become_main_editor').click(function() {
+        alert('Main editor was pressed');
         become_main_editor();
     });
     $('#will_you_pledge_money').click(function() {
@@ -22,10 +23,18 @@ $('document').ready(function() {
             $('#pledge_error_message').css('color', 'red');
         }// end if-else
     });
-    $('#close_modal').click(function() {
+    $('#finish_job').click(function() {
+        $('#finish_modal').css('display', 'inline');
+    });
+    $('.finish-yes-no').click(function() {
+        css('display', 'none');
+    });
+    $('.close_modal').click(function() {
         $('#pledge_modal').css('display', 'none');
     });
     $('#decide-to-work-on-job').click(function() {
+        $('#decide-to-work-on-job').css('display', 'none');
+        $('#now-you-are-working-on-job').text('Now you are working on job.');
         work_on_job();
     });
 });
@@ -45,6 +54,8 @@ function correctFormat() {
 }// end pledgeErrorMessage()
 
 function become_main_editor() {
+    alert('inside become_main_editor');
+    alert('URL: ' + "" + $('#job-id').text() + "/become_main_editor");
     $.ajax({
         type : "POST",
         url : "" + $('#job-id').text() + "/become_main_editor",
@@ -54,6 +65,14 @@ function become_main_editor() {
         success : becomeMainEditorSuccess,
     });
 }// end work_on_job()
+
+function becomeMainEditorSuccess() {
+    $('#become_a_main_editor').css('display', 'none');
+    $('#you_are_now_a_main_editor').css('display', 'inline');
+    if ($('#no_main_editors').length > 0) {
+        $('#no_main_editors').css('dispaly', 'none');
+    }// end if
+}// end becomeMainEditorSuccess()
 
 function pledge_money_to_job() {
     $.ajax({
@@ -78,21 +97,16 @@ function work_on_job() {
     });
 }// end work_on_job()
 
-function becomeMainEditorSuccess() {
-    
-}// end becomeMainEditorSuccess()
-
 function pledgingMoneyToJobSuccess(string) {
-    if (string == '') {
-        $('#will-you-pledge-money-to-job').css('display', 'inline');
-        $('#you-are-pledging').css('display', 'none');
-        $('#you-are-pledging-amount').css('display', 'none');
-    } else {
-        $('#will-you-pledge-money-to-job').css('display', 'none');
-        $('#you-are-pledging').css('display', 'inline');
-        $('#you-are-pledging-amount').css('display', 'inline');
-        $('#you-are-pledging-amount').text(string);
-    }// end if-else
+    $('#will-you-pledge-money-to-job').css('display', 'none');
+    $('#you-are-pledging').css('display', 'inline');
+    alert(string);
+    var row = "<tr>";
+    row += "<td>" + string.split(" ")[0] + "</td>";
+    row += "<td>Pledge: $" + string.split(" ")[1] + "</td>";
+    row += "<td>Paid: $0.0</td></tr>";
+    alert(row);
+    $('#pledges_table').prepend(row);
 }// end pledgingMoenyToJobSuccess()
 
 function workingOnJobSuccess(string) {

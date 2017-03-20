@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect;
 from .models import Job, Tag, User, UserLogic, UserWorkerFilter, UserPledgeFilter;
-from user.models import PledgeJob, WorkJob, WorkJobUpdate;
+from jobuser.models import PledgeJob, WorkJob, WorkJobUpdate;
 from django.http import JsonResponse, HttpResponse;
 from django.core import serializers;
 from django.contrib.auth import authenticate, login, logout;
@@ -36,12 +36,11 @@ def job_table(jobs):
         );
 
 def search_users(request):
-    print("Got into search_users in job.views");
     response = "";
     if (request.method == 'GET'):
         username = request.GET['username'];
         if (User.objects.filter(username=username).exists()):
-            response = "user exists";
+            redirect('user/detail/' + username);
         else:
             response = "user does not exist";
     return HttpResponse(response);
@@ -289,6 +288,7 @@ def become_main_editor(request, job_id):
     return HttpResponse('Finished!');
     
 def pledge_money_to_job(request, job_id):
+    string = "";
     if (request.method == 'POST'):
         if (request.user.is_authenticated()):
             job = get_object_or_404(Job, pk=job_id);
@@ -297,7 +297,8 @@ def pledge_money_to_job(request, job_id):
                 PledgeJob(pledger=request.user, job=job, amount_pledged=amount_pledged).save();
                 job.money_pledged = job.money_pledged + amount_pledged;
                 job.save();
-    return HttpResponse('Finished!');
+                string += request.user.username + " " + amount_pledged; 
+    return HttpResponse(string);
     
 def work_on_job(request, job_id):
     if (request.method == 'POST'):
@@ -319,6 +320,7 @@ def add_job(request):
                 tags = newJobForm.cleaned_data['tags'];
                 description = newJobForm.cleaned_data['description'];
                 job = Job(name=name, latitude=latitude, longitude=longitude, description=description);
+                job.save();
                 job.main_editors.add(request.user);
                 job.save();
                 tags = request.POST['tags'];
@@ -353,20 +355,18 @@ def verify_username(request):
 def copy_pledge_metrics(request):
     data = {};
     if (request.method == 'POST'):
-        user = request.user;
-        if (user.is_authenticated()):
+        if (request.user.is_authenticated()):
             otherUser = User.objects.get(username=request.POST['username']);
-            copy_pledge_filter(user, otherUser);
+            copy_pledge_filter(request.user, otherUser);
             data = getUserWorkerFilterData(otherUser);
     return JsonResponse(data, safe=False);
     
 def copy_worker_metrics(request):
     data = {};
     if (request.method == 'POST'):
-        user = request.user;
-        if (user.is_authenticated()):
+        if (request.user.is_authenticated()):
             otherUser = User.objects.get(username=request.POST['username']);
-            copy_worker_filter(user, otherUser);
+            copy_worker_filter(request.user, otherUser);
             data = getUserPledgeFilterData(otherUser);
     return JsonResponse(data, safe=False);
     

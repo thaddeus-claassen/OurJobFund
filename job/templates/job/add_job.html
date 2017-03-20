@@ -1,14 +1,14 @@
-{% extends 'base.html' %}
+{% extends 'navbar.html' %}
 
 {% load staticfiles %}
-{% block import %}
+{% block importTwo %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="{% static 'job/JavaScript/add_job.js' %}" ></script>
     <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/add_job.css' %}" />
 {% endblock %}
 
 
-{% block body %}
+{% block content %}
 <div class="container-fluid">
     <form id="create-job-form" method="POST" action="{% url 'job:add_job' %}">
         {% csrf_token %}
@@ -35,9 +35,15 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                {{ form.description.label_tag }} {{ form.description }}
+                {{ form.images }}
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{ form.description.label_tag }}{{ form.description }}
+            </div>
+        </div>
+        {{ form.media }}
         <input type="submit" value="Create Job" />
     </form>
     <form id="create-job-form-two" method="POST" action="{% url 'job:add_job' %}">

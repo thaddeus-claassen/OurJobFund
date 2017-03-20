@@ -1,0 +1,104 @@
+{% extends 'navbar.html' %}
+
+{% load staticfiles %}
+{% block importTwo %}
+    <link rel="stylesheet" type="text/css" href="{% static 'jobuser/CSS/view_update.css' %}" />
+    <script type="text/javascript" src="{% static 'jobuser/JavaScript/view_update_or_comment.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'jobuser/JavaScript/view_update.js' %}" ></script>
+{% endblock %}
+
+{% block content %}
+<input id="update_id" type="hidden" value="{{ update.id }}" />
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            Job: <a href="{% url 'job:detail' update.workjob.job.id %}">{{ update.workjob.job.name }}</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            Updated: {{ update.updated }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            Title: {{ update.title }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            By: {{ update.workjob.worker.username }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for image in update.imageupload_set.all %}
+                <img src="{{ image.image.url }}" class="img-responsive">
+            {% empty %}
+                No images
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            Description: {{ update.description }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% if user.is_authenticated and user_is_working_on_job %}
+                <input id="write_a_comment" type="button" value="Write a Comment" />
+            {% endif %}
+            <div id="write_comment_modal" class="modal">
+                <div class="modal-header">
+                    <span class="close_modal">&times;</span>
+                    <h2>Write a Comment</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="add_image">Add optional image:</label>
+                            <input id="add_image" type="file" accept="image/*">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <span>Is complaint:</span>
+                            <label for="is_complaint_no">No:</label>
+                            <input id="is_complaint_no" type="radio" name="is_complaint" value="n" />
+                            <label for="is_complaint_yes">Yes:</label>
+                            <input id="is_complaint_yes" type="radio" name="is_complaint" value="y" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="comment_textarea">Comment:</label>
+                            <textarea id="comment_textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input id="publish_comment" type="button" value="Publish Comment" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table>
+                {% for comment in update.comment_set.all %}
+                    <tr>
+                        <td>User: {{ comment.commenter.username }}</td>
+                        <td>Written: {{ comment.commented }}</td>
+                        <td><a href="{% url 'jobuser:view_comment' comment.id %}">Comment: {{ comment.description }}</a></td>
+                        <td>Is Complaint: {{ comment.is_complaint }}</td>
+                        <td>Image: {{ comment.imageupload.image }}</td>
+                    </tr>    
+                {% empty %}
+                    <tr><td>There are no comments.</td></tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

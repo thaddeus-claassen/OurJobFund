@@ -1,4 +1,17 @@
 $('document').ready(function() {
+    get_user_info();
+    $('#add_dependent').click(function() {
+        $('#add_dependent_modal').css('display', 'inline');
+    });
+    $('#add_dependent_user').click(function() {
+        if (usernameIsValid && passIsValid && passwordsMatch && atLeastThirteen) {
+            add_dependent();
+            $('#add_dependent_modal').css('display', 'none');
+        } else {
+            errorMessages();
+            attemptedToCreateUserButError = true;
+        }// end if-else
+    });
     $('#message_button').click(function() {
         createMessage();
     });
@@ -7,8 +20,8 @@ $('document').ready(function() {
         $('#message').val('');
         $('#message_modal').css('display', 'none');
     });
-    $('#close_modal').click(function() {
-        $('#message_modal').css('display', 'none');
+    $('.close_modal').click(function() {
+        $('.modal').css('display', 'none');
     });
     $('#make_edits').click(function() {
         makeEdits();
@@ -40,6 +53,18 @@ $('document').ready(function() {
         copy_worker_filter();
     });
 });
+
+function add_dependent() {
+    $.ajax({
+        type : "POST",
+        url : "add_dependent",
+        data : {
+            'username' : $('#id_username').val(),
+            'password' : $('#id_password').val(),
+            'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
+        },
+    });
+}// end addDependent()
 
 function makeAllInformationPublic() {
  
@@ -119,6 +144,39 @@ function copy_worker_filter() {
     });
 }// end copy_worker_filter()
 
+function get_user_info() {
+    $.ajax({
+        url : "get_user_info",
+        data : {
+            'user_id' : $('#user_id').val(),
+        },
+        success : applyUserInfo,
+    });
+}// end userInfo()
+
+function applyUserInfo(json) {
+    if (json['first_name'] != "") {
+        $('#first_name').text(json['first_name']);
+    } else {
+        $('#first_name').text("First name not specified");
+    }// end if-else
+    if (json['last_name'] != "") {
+        $('#last_name').text(json['last_name']);    
+    } else {
+        $('#last_name').text("Last name not specified");
+    }// end if-else
+    if (json['city'] != "") {
+        $('#city').text(json['city']);
+    } else {
+        $('#city').text("City not specified");
+    }// end if-else
+    if (json['state'] != "") {
+        $('#state').text(json['state']);
+    } else {
+        $('#state').text("State not specified");
+    }// end if-else     
+    $('#description').text(json['description']);
+}// end applyUserInfo()
 
 
 

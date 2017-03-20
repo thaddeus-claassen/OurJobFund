@@ -1,0 +1,27 @@
+{% extends 'navbar.html' %}
+
+{% load staticfiles %}
+{% block importTwo %}
+    <link rel="stylesheet" type="text/css" href="{% static 'user/CSS/view_messages_by_user.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% for message in most_recent_messages %}
+        <div class="row">
+            <div class="col-md-12">
+                {{ message.date_sent }}
+                {% if message.receiver == user.username %}
+                    {{ message.sender }}
+                {% else %}
+                    {{ message.receiver }}
+                {% endif %}
+                &nbsp;
+                <a href="{% if message.receiver == user.username %}{% url 'user:messages' message.sender %}{% else %}{% url 'user:messages' message.receiver %}{% endif %}">{{ message.message }}</a>
+            </div>
+        </div>
+    {% empty %}
+        No messages
+    {% endfor %}
+</div>
+{% endblock %}

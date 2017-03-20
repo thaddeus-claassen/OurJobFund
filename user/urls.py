@@ -16,20 +16,20 @@ urlpatterns = [
     # /user/search_users
     url(r'^search_users$', views.search_users, name='search_users'),
     
-    # /user/send_message
-    url(r'^send_message$', views.send_message, name='send_message'),
+    # /user/messages/send_message
+    url(r'^messages/send_message$', views.send_message),
     
-    # /user/messages
-    url(r'^messages$', views.messages, name='messages'),
+    # /user/detail/send_message
+    url(r'^detail/send_message$', views.send_message, name='send_message'),
     
-    # /user/message/<message_id>
-    url(r'^message/(?P<message_id>[0-9]+)$', views.message, name='message'),
+    # /user/view_messages_by_user
+    url(r'^view_messages_by_user$', views.view_messages_by_user, name='view_messages_by_user'),
     
-    # /user/post_update/<workjob_id>
-    url(r'^post_update/(?P<workjob_id>[0-9]+)$', views.post_update, name='post_update'), 
+    # /user/messages/other_user_username
+    url(r'^messages/(?P<user_username>[a-zA-Z0-9]+)$', views.messages, name='messages'),
     
-    # /user/update/<update_id>
-    url(r'^update/(?P<update_id>[0-9]+)$', views.view_update, name='view_update'),
+    # /user/messages/get_messages
+    url(r'^messages/get_messages$', views.get_messages, name='get_messages'),
 
     # /user/detail/save_description/
     url(r'^detail/save_description$', views.save_description, name='save_description'),
@@ -48,6 +48,13 @@ urlpatterns = [
     
     # /user/detail/<user_username>
     url(r'^detail/(?P<user_username>[a-zA-Z0-9]+)$', views.detail, name='detail'),
+    
+    # /user/detail/get_user_info
+    url(r'^detail/get_user_info$', views.get_user_info),
+    
+    # /user/detail/add_dependent
+    url(r'^detail/add_dependent$', views.add_dependent),
+    
 ]
 
 if settings.DEBUG: # I don't understand what this does. I think something to do with needing to tell Django where the static files are when in testing mode, but I don't understand why it doesn't know where the static files are when the website is up and running

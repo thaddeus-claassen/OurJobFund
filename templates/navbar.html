@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block body %}
+<input id="user" type="hidden" value="{{ user.username }}" />
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <ul class="nav navbar-nav navbar-left">
@@ -40,10 +41,8 @@
                         Pledge: Job Updates&nbsp;<span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        {% for notification in user.usernotification_set.all %}
-                            {% if notification.type == "PU" %}
-                                <li><a href="{% url 'job:detail' workjob.job.pk %}">{{ notification.pledge_job_update.job.name }}</a></li>
-                            {% endif %}
+                        {% for notification in user.pledgenotification_set.all %}
+                            <li><a href="#" id="pledge_notification_{{ notification.id }}" onclick="viewPledgeNotification(this.id)">Pledge Notification</a></li>
                         {% empty %}
                             <li><a>None</a></li>
                         {% endfor %}
@@ -54,32 +53,55 @@
                         Work: Job Updates&nbsp;<span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        {% for notification in user.usernotification_set.all %}
-                            {% if notification.type == "WU" %}
-                                <li><a href="{% url 'job:detail' pledgejob.job.pk %}">{{ notification.pledge_job_update.job.name }}</a></li>
-                            {% endif %}
+                        {% for notification in user.worknotification_set.all %}
+                            <li><a href="#" id="work_notification_{{ notification.id }}" onclick="viewWorkNotification(this.id)">Work Notification</a></li>
                         {% empty %}
                             <li><a>None</a></li>
                         {% endfor %}
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <a href="#" id="open_messages_dropdown" class="dropdown-toggle" data-toggle="dropdown">
                         Messages&nbsp;<span class="caret"></span>
                     </a>
-                    <ul class="dropdown-menu">
-                        {% for message in user.usernotification_set.all %}
-                            {% if notification.type == "ME" %}
-                                <li><a href="{% url 'user:message' notification.message.id %}">{{ notification.message.description }}</a></li>
-                            {% endif %}
-                        {% empty %}
-                            <li><a>None</a></li>
-                        {% endfor %}
+                    <ul id="messages_dropdown" class="dropdown-menu">
+                        <li><div id="add_messages"></div></li>
+                        <li id="view_all_messages"><a href="{% url 'user:view_messages_by_user' %}">View All Messages</a></li>
                     </ul>
+                    <div id="view_message_modal" class="modal">
+                        <div class="modal-header">
+                            <span class="close_modal">&times;</span>
+                            <h2>Message <a href="#">View All Messages</a></h2>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <span id="message_date_sent"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <span id="message_sender"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <span id="message_receiver"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <span id="message_message"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </li>
             {% else %}
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown">
                         Login/Sign Up &nbsp;
                         <span class="caret"></span>
                     </a>

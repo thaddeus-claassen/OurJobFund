@@ -59,7 +59,7 @@
                         <input id="will_you_pledge_money" type="button" value="Will you pledge money?">
                         <div id="pledge_modal" class="modal">
                             <div class="modal-header">
-                                <span id="close_modal">&times;</span>
+                                <span class="close_modal">&times;</span>
                                 <h2>Pledge</h2>
                             </div>
                             <div class="modal-body">
@@ -77,9 +77,16 @@
                     </div>
                 </div>
             {% endif %}
+            <div id="description_photos" class="row">
+                <div class="col-md-12">
+                    {% for image in job.imageupload_set.all %}
+                        {{ image.image }}
+                    {% endfor %}
+                </div>
+            </div>
             <div id="detail_job_description" class="row">
                 <div id="detail-description-box" class="col-md-12">
-                    {{ job.description }}
+                    <input type="hidden" value="{{ job.description }}"/>
                     <a id="view-description" href="#" class={{ job.pk }}>View Fullscreen</a>
                 </div>
             </div>
@@ -101,10 +108,23 @@
             </div>
             {% if workjob %}
                 <div class="row">
-                    <div class="col-md-12">
-                        <form action="{% url 'user:post_update' workjob.id %}">
+                    <div class="col-md-6">
+                        <form action="{% url 'jobuser:post_update' workjob.id %}">
                             <input id="post_update" type="submit" value="Post Update" />
                         </form>
+                    </div>
+                    <div class="col-md-6">
+                        <input id="finish_job" type="button" value="Finish Job" />
+                        <div id="finish_modal" class="modal">
+                            <div class="modal-header">
+                                <span class="close_modal">&times;</span>
+                                <h2>Are you sure?</h2>
+                            </div>
+                            <div class="modal-body">
+                                <input id="finish-yes" class="finish-yes-no" type="submit" value="Yes" />
+                                <input id="finish-no" class="finish-yes-no" type="button" value="No" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             {% endif %}
@@ -114,11 +134,11 @@
                     <table id="updates_table" class="table-bordered">
                         {% for update in ordered_updates %}
                             <tr class="update_{{ update.has_active_complaint }}" >
-                                <td><a href="{% url 'user:update' update.id %}">{{ update.title }}</a></td>
+                                <td><a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a></td>
                                 <td>{{ update.updated }}</td>
                                 <td>{{ update.workjob.worker }}</td>
-                                <td><a href="#">Comments:&nbsp;{{ update.comment_set.count }}</a></td>
-                                <td>Has Complaint</td>
+                                <td>Comments:&nbsp;{{ update.comment_set.count }}</td>
+                                <td>Has Complaint: {{ update.has_active_complaint }}</td>
                             </tr>
                         {% empty %}
                             No Updates

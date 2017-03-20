@@ -8,7 +8,6 @@ $('document').ready(function() {
         if (usernameIsValid && passwordIsValid && passwordsMatch && atLeastThirteen) {
             
         } else {
-            alert("Invalid attempt to create user error messages");
             errorMessages();
             attemptedToCreateUserButError = true;
             event.preventDefault();
@@ -157,4 +156,26 @@ function errorMessages() {
         createCheckboxErrorMessage();
     }// end if
 }// end errorMessages()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

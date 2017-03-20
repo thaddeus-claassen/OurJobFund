@@ -2,7 +2,7 @@ from django.db import models;
 from django.core.urlresolvers import reverse;
 from django import forms;
 from django.contrib.auth.models import User;
-from ckeditor.fields import RichTextField;
+from ckeditor_uploader.fields import RichTextUploadingField;
         
 class Job(models.Model):
     is_active = models.BooleanField(default=True);
@@ -15,7 +15,7 @@ class Job(models.Model):
     money_paid = models.FloatField(default=0.0);
     latitude = models.FloatField(null=True, blank=True);
     longitude = models.FloatField(null=True, blank=True);
-    description = models.TextField(default='', null=True, blank=True);
+    description = RichTextUploadingField(default='', null=True, blank=True);
     
     def __str__(self):  
         return self.name;    

@@ -13,20 +13,16 @@
             <table id="worker-table" class="table-bordered">
                 {% for workjob in job.workjob_set.all %}  
                     <tr>
-                        <td>
-                            <a href="{% url 'user:detail' workjob.worker.username %}">{{ workjob.worker.username }}</a>
-                        </td>
-                        <td>
-                            Been working since {{ workjob.date_joined }}
-                        </td>
+                        <td><a href="{% url 'user:detail' workjob.worker.username %}">{{ workjob.worker.username }}</a></td>
+                        <td>Been working since {{ workjob.date_joined }}</td>
                         <td>
                             There are 
                             {% if workjob.workjobupdate_set.all.count == 0 %} 
                                 0 updates
                             {% else %}
-                                <a href="#">
+                                <a href="{% url 'jobuser:view_updates' workjob.worker.id %}">
                                     {{ workjob.workjobupdate_set.all.count }}
-                                    update {{ workjob.workjobupdate_set.count|pluralize }} from this worker
+                                    update{{ workjob.workjobupdate_set.count|pluralize }} from this worker
                                 </a>
                             {% endif %}
                         </td>

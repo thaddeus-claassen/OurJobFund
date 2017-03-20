@@ -1,0 +1,32 @@
+{% extends 'navbar.html' %}
+
+{% load staticfiles %}
+{% block importTwo %}
+    <link rel="stylesheet" type="text/css" href="{% static 'user/CSS/view_updates.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            Updates from {{ workjob.worker.username }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table>
+                {% for update in workjob.workjobupdate_set.all %}
+                    <tr>
+                        <td><a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a></td>
+                        <td>Has Complaint: {{ update.has_active_complaint }}</td>
+                        <td>Total Complaints Ever: {{ update.total_complaints }}</td>
+                        <td>Total number of comments: {{ update.comment_set.all.count }}</td>
+                    </tr>
+                {% empty %}
+                    No updates
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'navbar.html' %}
+
+{% load staticfiles %}
+{% block importTwo %}
+    <link rel="stylesheet" type="text/css" href="{% static 'user/CSS/messages.css' %}" />
+    <script type="text/javascript" src="{% static 'user/JavaScript/messages.js' %}" ></script>
+{% endblock %}
+
+
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            From: {{ message.sender }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            To: {{ message.receiver}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {{ message.message }}
+        </div>
+    </div>
+</div>
+{% endblock %}

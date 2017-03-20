@@ -2,6 +2,6 @@
     text-align: center;
 }
 
-#edit_div, #message_modal {
+#edit_div, #message_modal, #textarea_description, #save_description, #add_dependent_modal {
     display: none;
 }
