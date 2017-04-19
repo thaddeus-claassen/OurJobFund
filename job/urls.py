@@ -49,38 +49,8 @@ urlpatterns = [
     # /job/search_jobs
     url(r'^search_jobs$', views.search_jobs, name='search_jobs'),
     
-    # /job/search_users
-    url(r'^search_users$', views.search_users, name="search_users"),
-    
     # /job/apply_tags_and_location
     url(r'^apply_tags_and_location$', views.apply_tags_and_location, name="apply_tags_and_location"),
-    
-    # /job/ANDs_of_ORs
-    url(r'^ANDs_of_ORs$', views.ANDs_of_ORs, name='ANDs_of_ORs'),
-    
-    # /job/save_ANDs_of_ORs_tags
-    url(r'^save_ANDs_of_ORs_tags$', views.save_ANDs_of_ORs_tags, name='save_ANDs_of_ORs_tags'),
-    
-    # /job/get_ANDs_of_ORs_tags
-    url(r'^get_ANDs_of_ORs_tags$', views.get_ANDs_of_ORs_tags, name='get_ANDs_of_ORs_tags'),
-    
-    # /job/ORs_of_ANDs
-    url(r'^ORs_of_ANDs$', views.ORs_of_ANDs, name='ORs_of_ANDs'),
-    
-    # /job/save_ORs_of_ANDs_tags
-    url(r'^save_ORs_of_ANDs_tags$', views.save_ORs_of_ANDs_tags, name='save_ORs_of_ANDs_tags'),
-    
-    # /job/get_ORs_of_ANDs_tags
-    url(r'^get_ORs_of_ANDs_tags$', views.get_ORs_of_ANDs_tags, name='get_ORs_of_ANDs_tags'),
-    
-    # /job/custom
-    url(r'^custom$', views.custom, name='custom'),
-    
-    # /job/save_custom_tags
-    url(r'^save_custom_tags$', views.save_custom_tags, name='save_custom_tags'),
-    
-    # /job/get_custom_tags
-    url(r'^get_custom_tags$', views.get_custom_tags, name='get_custom_tags'),
     
     # /job/view_all_metrics_pledge/(?P<user_id>[0-9]+)
     url(r'^view_all_metrics_pledge/(?P<user_id>[0-9]+)$', views.view_all_metrics_pledge, name='view_all_metrics_pledge'),

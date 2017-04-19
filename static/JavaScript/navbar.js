@@ -89,7 +89,9 @@ function search_users() {
 
 function userSearchSuccess(string) {
     if (string === "user exists") {
-        $('#go_to_user').attr('action', "user/" + $('#user_search_bar').val());        
+        var firstAction = $('#go_to_user').attr('action');
+        var newAction = firstAction.substring(0, firstAction.length - 1) + $('#user_search_bar').val();
+        $('#go_to_user').attr('action', newAction);
         $('#go_to_user').submit();
     }// end if
 }// end userSearchSuccess()

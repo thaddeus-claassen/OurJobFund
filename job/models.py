@@ -27,31 +27,4 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.tag;                                         
-       
-class UserLogic(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE);
-    ANDs_of_ORs = models.CharField(default="", max_length=10000);
-    ORs_of_ANDs = models.CharField(default="", max_length=10000);
-    custom = models.CharField(default="", max_length=10000);
-    
-class UserPledgeFilter(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE);
-    is_public = models.BooleanField(default=False);
-    inactive = models.IntegerField(null=True);
-    inactive_unit = models.CharField(default="", max_length=5);
-    failed_to_pay = models.IntegerField(null=True);
-    averaged = models.IntegerField(null=True);
-    paid_x_times = models.IntegerField(null=True);
-
-class UserWorkerFilter(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE);
-    is_public = models.BooleanField(default=False);
-    inactive = models.IntegerField(null=True, blank=True);
-    inactive_unit = models.CharField(default="", max_length=5);
-    updated = models.IntegerField(null=True, blank=True);
-    updated_unit = models.CharField(default="", max_length=5);
-    completed_fewer = models.IntegerField(null=True, blank=True);
-    failed_to_complete = models.IntegerField(null=True, blank=True);
-    completed_percent = models.FloatField(null=True, blank=True);
-    completed_ratio = models.FloatField(null=True, blank=True);
 

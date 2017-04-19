@@ -28,7 +28,7 @@ def post_update(request, workjob_id):
                     'update_form' : NewWorkJobUpdate(),
                 }
                 return render(request, 'jobuser/post_update.html', context);
-    return detail(request, workjob.job.pk);
+    return redirect('/job/detail/' + workjob.job.pk);
     
 def view_update(request, update_id):
     update = get_object_or_404(WorkJobUpdate, pk=update_id);
@@ -45,6 +45,7 @@ def view_comment(request, comment_id):
         currComment = comment.super_comment;
     update = currComment.update;
     context = {
+        'user_is_working_on_job' : WorkJob.objects.filter(job=update.workjob.job, worker=request.user).exists(), 
         'user_is_working_on_job' : WorkJob.objects.filter(job=update.workjob.job, worker=request.user).exists(), 
         'comment' : comment,
     }

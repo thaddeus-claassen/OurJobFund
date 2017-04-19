@@ -46,15 +46,11 @@ urlpatterns = [
     # /user/copy_worker_filter
     url(r'^copy_worker_filter$', views.copy_worker_filter),
     
-    # /user/detail/<user_username>
+    # /user/<user_username>
     url(r'^detail/(?P<user_username>[a-zA-Z0-9]+)$', views.detail, name='detail'),
     
-    # /user/detail/get_user_info
+    # /user/get_user_info
     url(r'^detail/get_user_info$', views.get_user_info),
-    
-    # /user/detail/add_dependent
-    url(r'^detail/add_dependent$', views.add_dependent),
-    
 ]
 
 if settings.DEBUG: # I don't understand what this does. I think something to do with needing to tell Django where the static files are when in testing mode, but I don't understand why it doesn't know where the static files are when the website is up and running

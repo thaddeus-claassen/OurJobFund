@@ -13,53 +13,91 @@
         <div class="col-md-6">
             <!-- Defines #tag logic -->
             <div class="row">
-                <div class="col-md-10 col-md-offset-1">
-                    <label class="tag-radio" for="tag_basic_logic">Basic Option:</label>
+                <div class="col-md-12">
+                    <label class="tag-radio" for="tag_basic_logic">Basic:</label>
                     <input type="radio" id="tag_basic_logic" name="tag-radio" checked="checked" />
+                    <label class="tag-radio" for="tag_ANDs_of_ORs_logic">ANDs of ORs:</label>
+                    <input type="radio" id="tag_ANDs_of_ORs_logic" name="tag-radio" />
+                    <label class="tag-radio" for="tag_ORs_of_ANDs_logic">ORs of ANDs:</label>
+                    <input type="radio" id="tag_ORs_of_ANDs_logic" name="tag-radio" />
+                    <label class="tag-radio" for="tag_custom_logic">Custom:</label>
+                    <input type="radio" id="tag_custom_logic" name="tag-radio" />
+                    <input type="button" value="Apply Tags" />
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
-                    <label class="text_label" for="basic_tags_input"> Basic tags form:&nbsp;</label>
-                    <span class="text_span">
-                        <input type="text" id="basic_tags_input" class="wide_text" />
-                    </span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <table class="table">
-                        <tr>
-                            <td id="advanced-options">Advanced options:</td>
-                            <td>
-                                <form action="{% url 'job:ANDs_of_ORs' %}">
-                                    <input type="submit" id="ANDs_of_ORs" name="tag_logic" value="&#10064;" />
-                                </form>
-                                <label class="tag-radio" for="tag_ANDs_of_ORs_logic">
-                                    ANDs of ORs
-                                </label>
-                                <input type="radio" id="tag_ANDs_of_ORs_logic" name="tag-radio" />
-                            </td>
-                            <td>
-                                <form action="{% url 'job:ORs_of_ANDs' %}">
-                                    <input type="submit" id="ORs_of_ANDs" name="tag_logic" value="&#10064;" />
-                                </form>
-                                <label class="tag-radio" for="tag_ORs_of_ANDs_logic">
-                                    ORs of ANDs
-                                </label>
-                                <input type="radio" id="tag_ORs_of_ANDs_logic" name="tag-radio" />
-                            </td>
-                            <td>
-                                <form action="{% url 'job:custom' %}">
-                                    <input type="submit" id="custom" name="tag_logic" value="&#10064;" />
-                                </form>
-                                <label class="tag-radio" for="tag_custom_logic">
-                                    Custom
-                                </label>
-                                <input type="radio" id="tag_custom_logic" name="tag-radio" />
-                            </td>
-                        </tr>
-                    </table>
+                <div id="tags_div" class="col-md-12">
+                    <div id="basic_tags">
+                        <table class="table">
+                            <tr>
+                                <td><input type="text"></td>
+                                <td>AND</td>
+                                <td><input type="text"></td>
+                                <td>AND</td>
+                                <td><input type="text"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text"></td>
+                                <td>AND</td>
+                                <td><input type="text"></td>
+                                <td>AND</td>
+                                <td><input type="text"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text"></td>
+                                <td>AND</td>
+                                <td><input type="text"></td>
+                                <td>AND</td>
+                                <td><input type="text"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="base_tags">
+                        <table class="table base_tags_table">
+                            <tr><td>
+                                <input type="text">
+                            </td></tr>
+                            <tr><td><span class="ANDs_of_ORs_tags">OR</span><span class="ORs_of_ANDs_tags">AND</span></td></tr>
+                            <tr><td>
+                                <input type="text">
+                            </td></tr>
+                            <tr><td><span class="ANDs_of_ORs_tags">OR</span><span class="ORs_of_ANDs_tags">AND</span></td></tr>
+                            <tr><td>
+                                <input type="text">
+                            </td></tr>
+                        </table>
+                        <table class="table base_tags_table"><tr><td><span class="ORs_of_ANDs_tags">OR</span><span class="ANDs_of_ORs_tags">AND</span></td></tr></table>
+                        <table class="table base_tags_table">
+                            <tr><td>
+                                <input type="text">
+                            </td></tr>
+                            <tr><td><span class="ANDs_of_ORs_tags">OR</span><span class="ORs_of_ANDs_tags">AND</span></td></tr>
+                            <tr><td>
+                                <input type="text">
+                            </td></tr>
+                            <tr><td><span class="ANDs_of_ORs_tags">OR</span><span class="ORs_of_ANDs_tags">AND</span></td></tr>
+                            <tr><td>
+                                <input type="text">
+                            </td></tr>
+                        </table>
+                        <table class="table base_tags_table"><tr><td><span class="ORs_of_ANDs_tags">OR</span><span class="ANDs_of_ORs_tags">AND</span></td></tr></table>
+                        <table class="table base_tags_table">
+                            <tr><td>
+                                <input type="text">
+                            </td></tr>
+                            <tr><td><span class="ANDs_of_ORs_tags">OR</span><span class="ORs_of_ANDs_tags">AND</span></td></tr>
+                            <tr><td>
+                                <input type="text">
+                            </td></tr>
+                            <tr><td><span class="ANDs_of_ORs_tags">OR</span><span class="ORs_of_ANDs_tags">AND</span></td></tr>
+                            <tr><td>
+                                <input type="text">
+                            </td></tr>
+                        </table>
+                    </div>
+                    <div id="custom_tags">
+                        <textarea id="custom_tags_textarea"></textarea>
+                    </div>
                 </div>
             </div>
             <!-- End #tag logic -->
@@ -111,17 +149,6 @@
         </div>
 
         <div class="col-md-5 col-md-push-1">
-            <!-- Include location? -->
-            <div class="row">
-                <div class="col-md-8">
-                    <label for="location-checkbox">
-                        View only jobs with location?&nbsp;&nbsp;
-                    </label>
-                    <input id="location-checkbox" name="location-checkbox" type="checkbox">
-                </div>
-            </div>
-            <!-- End include location -->
-
             <!-- Location -->
             <div class="row">
                 <div class="col-md-12">
@@ -140,14 +167,20 @@
                         <tr>
                             <td>
 								<label for="location-radius" class="change-label">Radius:</label>
-								<input id="location-radius" class="location-hide" type="text" size="1" name="radius" value="10" />
 							</td>
+                            <td>
+                                <input id="location-radius" class="location-hide" type="text" size="1" name="radius" value="10" />
+                            </td>
                             <td class="distance-unit location-hide">
 								<label class="change-label" for="mi">mi:</label>
+                            </td>
+                            <td>
 								<input id="mi" type="radio" name="mi-km" value="mi" checked="checked" />
 							</td>
                             <td class="distance-unit location-hide">
 								<label class="change-label" for="km">km:</label>
+                            </td>
+                            <td>
 								<input id="km" type="radio" name="mi-km" value="km" />
 							</td>
                         </tr>
@@ -155,18 +188,46 @@
                 </div>
             </div>
             <!-- End Radius -->
-
-            <!-- Google Map -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="location-hide">
-                        <div id="map-canvas"></div>
-                    </div>
-                    <div id="empty-space"></div>
-                </div>
+            <div id="remove_pledgers" class="filter">
+                <table class="table">
+                    <tr><td>Remove pledgers who have:</td></tr>
+                    <tr>
+                        <td>not been active on the website for</td>
+                        <td><input type="text" size="2" /></td>
+                        <td>days.</td>
+                    </tr>
+                    <tr>
+                        <td>failed to paid the worker/s</td>
+                        <td><input type="text" size="2" /></td>
+                        <td>times.</td>
+                    </tr>
+                    <tr>
+                        <td>paid</td>
+                        <td><input type="text" size="2" /></td>
+                        <td>or fewer times.</td>
+                    </tr>
+                </table>
             </div>
-            <!-- End Google Map -->
-            {% block filter %}{% endblock %}
+            <div id="remove_workers" class="filter">
+                <table class="table">
+                    <tr><td>Remove any potential worker who has:</td></tr>
+                    <tr>
+                        <td>not been active on the website for</td>
+                        <td><input type="text" size="2" /></td>
+                        <td>day/s.</td>
+                    </tr>
+                    <tr>
+                        <td>completed fewer than</td>
+                        <td><input type="text" size="2" /></td>
+                        <td>job/s.</td>
+                    </tr>
+                    <tr>
+                        <td>failed to complete more than</td>
+                        <td><input type="text" size="2" /></td>
+                        <td>jjob/s.</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </div>

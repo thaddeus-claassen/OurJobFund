@@ -9,8 +9,7 @@ from .forms import UserForm, NewUserForm;
 from jobuser.forms import NewWorkJobUpdate;
 from .models import UserProfile, Messages, UserMessage;
 from jobuser.models import WorkJob, ImageUpload, WorkJobUpdate;
-from job.models import Job, UserLogic, UserPledgeFilter, UserWorkerFilter;
-from job.views import copy_pledge_filter_job, copy_worker_filter_job;
+from job.models import Job;
 from datetime import datetime;
 
 def create_user(request):
@@ -31,7 +30,7 @@ def create_user(request):
             if user is not None:
                 if user.is_active:
                     login(request, user);
-                    return render(request, 'user/new_user_just_created.html');
+                    return redirect('user/' + username);
     context = {
         'form' : NewUserForm(), 
     }
@@ -40,7 +39,7 @@ def create_user(request):
 def search_users(request):
     response = "";
     username = request.GET['username'];
-    if (User.objects.filter(username=username).exists()):
+    if (User.objects.filter(username__iexact=username).exists()):
         response = "user exists";
     else:
         response = "user does not exist";

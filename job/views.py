@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect;
-from .models import Job, Tag, User, UserLogic, UserWorkerFilter, UserPledgeFilter;
+from .models import Job, Tag, User;
 from jobuser.models import PledgeJob, WorkJob, WorkJobUpdate;
 from django.http import JsonResponse, HttpResponse;
 from django.core import serializers;
 from django.contrib.auth import authenticate, login, logout;
-from .forms import NewJobForm, ApplyPledgeMetricsForm, ApplyWorkMetricsForm;
+from .forms import NewJobForm;
 import json, re, math;    
     
 def pledge(request):
@@ -34,16 +34,6 @@ def job_table(jobs):
             jobs,                                               #   Names the object we want to send as JSON
             content_type="application/json",                    #   For some reason, we have to say this line. I guess so whatever reads this response knows its a JSON object
         );
-
-def search_users(request):
-    response = "";
-    if (request.method == 'GET'):
-        username = request.GET['username'];
-        if (User.objects.filter(username=username).exists()):
-            redirect('user/detail/' + username);
-        else:
-            response = "user does not exist";
-    return HttpResponse(response);
         
 # This gets the any jobs which match the name or id search in index.html
 def search_jobs(request):    
@@ -136,6 +126,7 @@ def clear_work_metrics(request, form):
     return HttpResponse("Work Metrics Cleared");
     
 def apply_tags_and_location(request):
+    data = {};
     jobs = [];
     if (request.method == 'GET'):
         if (request.user.is_authenticated()):
@@ -155,12 +146,17 @@ def apply_tags_and_location(request):
         else:
             jobs = get_jobs_from_basic_tags(request.GET['basicTags']);
         if (request.GET['locationTrue'] == 'true'):
-            latitude = float(request.GET['latitude']);
-            longitude = float(request.GET['longitude']);
-            radius = float(request.GET['radius']);
-            jobs = find_jobs_by_radius(jobs, latitude, longitude, radius);
-    jobs = serializers.serialize('json', jobs);
-    return job_table(jobs);
+            jobs = find_jobs_by_radius(jobs, float(request.GET['latitude']), float(request.GET['longitude']), float(request.GET['radius']));
+        if (len(jobs) > 0):
+            for i in range(len(jobs)):
+                job = jobs[i];
+                data['pk'] = job.pk;
+                data['name'] = job.name;
+                data['fields'] = {};
+                data['money_pledged'] = job.money_pledged;
+                data['num_workers'] = job.num_workers;
+            data = apply_metrics_to_jobs(jobs);
+    return JsonResponse(data, safe=False);
                 
 def get_jobs_from_basic_tags(tags):
     jobs = Job.objects.all();
@@ -181,64 +177,28 @@ def apply_tags(tags):
     tags = re.sub(r'([a-zA-Z0-9]+)', "Tag.objects.get(tag__iexact='" + r'\1' + "').jobs.all()", tags);
     return tags;
     
+def apply_metrics_to_jobs(jobs):
+    for job in jobs:
+        apply_pledge_metrics_to(job);
+        apply_work_metrics_to(job);
+    return jobs;
+    
+def apply_pledge_metrics_to(job):
+    #amount_pledged = job.money_pledged;
+    #filter = request.user.userpledgefilter;
+    #for pledger in job.pledgejob_set.all():
+    #    if (filter.inactive != '' && filter.inactive_unit != ''):
+    #        ago = exec("datetime.timedelta(" + filter.inactive_unit + "=" + filter.inactive + ")");
+    #        if (ago > pledger.lastlogin):
+    #            amount_pledged = amount_pledged - pledger.amount_pledged;
+    #    if (filter.failed_to_pay != ''):
+    #        if (pledger):
+    #            break;
+    return None;
+    
 def create_tags_array(tagsString):
     tagsString = tagsString.replace(","," ");
     return tagsString.split();
-
-# Defines a function, which renders the HTML document ANDs_of_ORs.html
-def ANDs_of_ORs(request):
-    return render(request, 'pledge/ANDs_of_ORs.html');
-    
-def save_ANDs_of_ORs_tags(request):
-    if (request.method == 'POST'):
-        if (request.user.is_authenticated()):
-            tags = request.POST['tags'];
-            request.user.userlogic.ANDs_of_ORs = tags; 
-            request.user.userlogic.save();
-    return ANDs_of_ORs(request);
-    
-def get_ANDs_of_ORs_tags(request):
-    tags = "";
-    if (request.method == 'GET'):
-        if (request.user.is_authenticated()):
-            tags = request.user.userlogic.ANDs_of_ORs;
-    return HttpResponse(tags);
-            
-def ORs_of_ANDs(request):
-    return render(request, 'pledge/ORs_of_ANDs.html');
-    
-def save_ORs_of_ANDs_tags(request):
-    if (request.method == 'POST'):
-        if request.user.is_authenticated():
-            tags = request.POST['tags'];
-            request.user.userlogic.ORs_of_ANDs = tags; 
-            request.user.userlogic.save();
-    return ORs_of_ANDs(request);
-    
-def get_ORs_of_ANDs_tags(request):
-    tags = "";
-    if (request.method == 'GET'):
-        if (request.user.is_authenticated()):
-            tags = request.user.userlogic.ORs_of_ANDs;
-    return HttpResponse(tags);
-    
-def custom(request):
-    return render(request, 'pledge/custom.html');
-    
-def save_custom_tags(request):
-    if (request.method == 'POST'):
-        if (request.user.is_authenticated()):
-            tags = request.POST.get('tags');
-            request.user.userlogic.custom = tags; 
-            request.user.userlogic.save();
-    return custom(request);
-    
-def get_custom_tags(request):
-    tags = "";
-    if (request.method == 'GET'):
-        if (request.user.is_authenticated()):
-            tags = request.user.userlogic.custom;
-    return HttpResponse(tags);
 
 def detail(request, job_id):
     job = get_object_or_404(Job, pk=job_id);                                 
@@ -333,7 +293,7 @@ def add_job(request):
                         newTag = Tag(tag=tagString);
                     newTag.save();
                     job.tag_set.add(newTag);
-                return pledge(request);
+                return redirect('/home');
     context = {
         'form' : NewJobForm(), 
     }
@@ -350,7 +310,7 @@ def verify_username(request):
             userNameExists = 'true';
         else:
             userNameExists = 'false';
-    return HttpResponse(userNameExists);
+    return HttpResponse(userNameExists);   
     
 def copy_pledge_metrics(request):
     data = {};
@@ -409,6 +369,9 @@ def getUserPledgeFilterData(user):
     data['averaged'] = user.userpledgefilter.averaged;
     data['paid_x_times'] = user.userpledgefilter.paid_x_times;
     return data;
+    
+    
+    
                     
                     
                     

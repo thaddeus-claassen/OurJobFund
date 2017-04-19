@@ -1,4 +1,4 @@
-$('document').ready(function() {                                        //Wait until document is ready (what defines as ready, I don't know)
+$('document').ready(function() {
     getTextFromUser()
     $('#apply-metric').click(function(event) {
         event.preventDefault();
@@ -65,7 +65,7 @@ function removeInnerLogic(clauses) {
 }// end removeInnerLogic()
 
 function mainInputFunction(input) {
-    var textID = $(input).attr('id');                               //      Create new variable textID and set it to the ID of the input clicked on
+    var textID = $(input).attr('id');
     var rowArray = findRows(textID);
     var rowNumber = rowArray[0];
     var numEmptyRows = rowArray[1];
@@ -81,10 +81,10 @@ function mainInputFunction(input) {
 }// end mainInputFunction() 
 
 function findRows(textID) {
-    var rowNumber = 0;                                              //      Create new variable rowNumber and set it to zero. This variable keeps track of the current rowNumber we are looking at (we will iterate through all of them)
-    var nameTemplate = textID.substring(0,10);                      //      Create new variable nameTemplate, which stores a template for each ID of any row
-    var tempRow = nameTemplate + "1";                               //      Create new variable tempRow and set it to the ID of the first row
-    var numEmptyRows = 0;                                           //      Create 
+    var rowNumber = 0;
+    var nameTemplate = textID.substring(0,10);
+    var tempRow = nameTemplate + "1";
+    var numEmptyRows = 0;
     while ($('#' + tempRow).length > 0) {
         rowNumber++;
         tempRow = nameTemplate + rowNumber.toString();

@@ -27,7 +27,7 @@
         <ul class="nav navbar-nav navbar-center">
             <li>
                 <a>
-                    <form id="go_to_user">
+                    <form id="go_to_user" action="{% url 'user:detail' 0 %}">
                         <label for="user_search_bar">Search Users:&nbsp;</label>
                         <input id="user_search_bar" type="text" />
                     </form>
@@ -66,7 +66,7 @@
                     </a>
                     <ul id="messages_dropdown" class="dropdown-menu">
                         <li><div id="add_messages"></div></li>
-                        <li id="view_all_messages"><a href="{% url 'user:view_messages_by_user' %}">View All Messages</a></li>
+                        <li id="view_all_messages"><a id="test" href="{% url 'user:view_messages_by_user' %}">View All Messages</a></li>
                     </ul>
                     <div id="view_message_modal" class="modal">
                         <div class="modal-header">

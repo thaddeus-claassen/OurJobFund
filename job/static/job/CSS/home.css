@@ -2,16 +2,41 @@ html, body {
 	height: 100%;
 }
 
-#screen {
-    margin-top: 45px;
+#tags_div {
+    border: 1px solid black; 
+    overflow: auto;
 }
 
-.row {
-    padding-top: 10px;
+#basic_tags {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    z-index: 10;
 }
 
-#advanced-options {
-    font-weight: bold;
+#base_tags {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+.base_tags_table {
+    display: inline-block;
+    overflow: auto;
+    position: relative;
+}
+
+#custom_tags_textarea {
+    width: 100%;
+}
+
+.filter {
+    border: 1px solid black;
+    overflow: auto;
+    max-height: 30%;
 }
 
 .bold {
@@ -33,10 +58,6 @@ html, body {
 
 label {
     cursor: default;
-}
-
-.location-hide, .distance-unit, .time-unit {
-    display: none;
 }
 
 .hashtag-radio {
@@ -76,10 +97,6 @@ label {
     padding-top: 20px;
 }
 
-.table td {
-    border: none !important;
-}
-
 #job_button {
     position: relative;
 }
@@ -94,24 +111,6 @@ ul {
 
 #radius {
     margin-top: 10px;
-}
-
-#Google_Map {
-    overflow: hidden;
-    height: 250px;
-    width: 250px;
-}
-
-#map-canvas {
-  min-width: 100px;
-  width: 100%;
-  min-height: 200px;
-  height: 100%;
-}
-
-#gmap_canvas img {
-    max-width: none!important;
-    background: none!important;
 }
 
 #table-border {
