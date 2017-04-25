@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect;
 from django.contrib.auth.models import User;
 from django.views.generic import View;
@@ -11,84 +12,76 @@ from .models import UserProfile, Messages, UserMessage;
 from jobuser.models import WorkJob, ImageUpload, WorkJobUpdate;
 from job.models import Job;
 from datetime import datetime;
+from random import randint;
 
-def create_user(request):
-    if (request.method == 'POST'):
-        newUserForm = NewUserForm(request.POST);
-        if (newUserForm.is_valid()):
-            username = newUserForm.cleaned_data['username'];
-            email = newUserForm.cleaned_data['email'];
-            password = newUserForm.cleaned_data['password'];
-            user = User(username=username, email=email);
-            user.set_password(password);
-            user.save();
-            user = authenticate(username=username, password=password);
-            UserProfile(user=user).save();
-            UserLogic(user=user).save();
-            UserPledgeFilter(user=user).save();
-            UserWorkerFilter(user=user).save();
-            if user is not None:
-                if user.is_active:
-                    login(request, user);
-                    return redirect('user/' + username);
-    context = {
-        'form' : NewUserForm(), 
-    }
-    return render(request, 'user/create_user.html', context);            
+def sign_in(request):
+    if (request.user.is_authenticated()):
+        return redirect('job/home');
+    else: 
+        if (request.method == 'POST'):
+            userForm = UserForm(request.POST);
+            newUserForm = NewUserForm(request.POST);
+            if (userForm.is_valid()):
+                email = userForm.cleaned_data['email'];
+                password = userForm.cleaned_data['password'];
+                user = authenticate(email=email, password=password);
+                if (user is not None):
+                    if (user.is_active):
+                        login(request, user);
+                        return redirect('job/home');
+            elif (newUserForm.is_valid()):
+                first_name = newUserForm.cleaned_data['first_name'];
+                last_name = newUserForm.cleaned_data['last_name'];
+                email = newUserForm.cleaned_data['email'];
+                password = newUserForm.cleaned_data['password'];
+                user = User(email=email);
+                user.set_password(password);
+                user.save();
+                user = authenticate(email=email, password=password);
+                random_string = create_user_random_string();
+                UserProfile(user=user, random_string=random_string).save();
+                if (user is not None):
+                    if (user.is_active):
+                        login(request, user);
+                        return redirect('user/' + random_string);
+        context = {
+            'new_user_form' : NewUserForm(), 
+            'existing_user_form' : UserForm(),
+        }
+        return render(request, 'user/create_user.html', context);
+        
+def sign_out(request):
+    logout(request);
+    return redirect('user:sign_in');
 
+@login_required    
 def search_users(request):
-    response = "";
-    username = request.GET['username'];
-    if (User.objects.filter(username__iexact=username).exists()):
-        response = "user exists";
-    else:
-        response = "user does not exist";
-    return HttpResponse(response);
-    
-def get_messages_for_navbar(request):
-    messages = None;
-    if (request.user.is_authenticated()):
-        for message in UserMessage.objects.filter(Q(sender=request.user.username) | Q(receiver=request.user.username)).all():
-            if (message.date_viewed == ""):
-                message.date_viewed == datetime.now;
-        messages = UserMessage.objects.filter(Q(sender=request.user.username) | Q(receiver=request.user.username)).order_by('-date_sent')[:5];
-        messages = serializers.serialize('json', messages);
-    return HttpResponse(messages, content_type='json/application');
-    
-def get_num_unviewed_messages(request):
-    numMessages = 0;
-    if (request.user.is_authenticated()):
-        messages = UserMessage.objects.filter(receiver=request.user.username).all();
-        for message in messages:
-            if (message.date_viewed == ""):
-                numMessages = numMessages + 1
-    return HttpResponse(numMessages);
-    
-def verify_username(request):
-    usernameExists = None;
-    if (request.method == 'GET'):
+    if (request.is_ajax()):
+        response = "";
         username = request.GET['username'];
         if (User.objects.filter(username__iexact=username).exists()):
-            usernameExists = 'true';
+            response = "user exists";
         else:
-            usernameExists = 'false';
-    return HttpResponse(usernameExists);
+            response = "user does not exist";
+        return HttpResponse(response);
+    else:
+        return Http404();
 
-def detail(request, user_username):
-    user = get_object_or_404(User, username=user_username);       
+@login_required    
+def detail(request, user_random_string):
+    user = get_object_or_404(User, random_string=user_random_string);       
     context = {
         'id' : user.id,
         'username' : user_username,
         'email' : user.email,
         'description' : user.userprofile.description,
-        'pledge_filter_is_public' :  user.userworkerfilter.is_public,
-        'worker_filter_is_public' :  user.userpledgefilter.is_public,
     }
     return render(request, 'user/detail.html', context);
-    
+
+@login_required    
 def get_user_info(request):
-    data = {};
     if (request.is_ajax()):
+        data = {};
         user_id = request.GET['user_id'];
         user = get_object_or_404(User, pk=user_id);
         data['first_name'] = user.first_name;
@@ -96,129 +89,52 @@ def get_user_info(request):
         data['city'] = user.userprofile.city;
         data['state'] = user.userprofile.state;
         data['description'] = user.userprofile.description;
-    return JsonResponse(data, safe=False);
-    
-def add_dependent(request):
-    response = "Dependent Error";
-    if (request.method == 'POST'):
-        if (request.user.is_authenticated()):
-            username = request.POST['username'];
-            password = request.POST['password'];
-            newUser = User(username=username, email=request.user.email);
-            newUser.set_password(password);
-            newUser.save();
-            UserProfile(user=newUser, is_dependent=True, dependent_on=request.user).save();
-            UserLogic(user=newUser).save();
-            UserPledgeFilter(user=newUser).save();
-            UserWorkerFilter(user=newUser).save();
-            response = "Dependent Created";
-    return HttpResponse(response);
-    
+        return JsonResponse(data, safe=False);
+    else:
+        return Http404();
+
+@login_required    
 def save_description(request):
-    if (request.method == 'POST'):
-        if (request.user.is_authenticated()):
-            request.user.userprofile.description = request.POST['description'];
-            request.user.userprofile.save();
-    return HttpResponse('Done!');
+    if (request.is_ajax()):
+        if (request.method == 'POST'):
+            if (request.user.is_authenticated()):
+                request.user.userprofile.description = request.POST['description'];
+                request.user.userprofile.save();
+        return HttpResponse('Done!');
+    else:
+        return Http404();
     
-def send_message(request):
-    response = "Failure";
-    if (request.method == 'POST'):
-        if (request.user.is_authenticated()):
-            sender = request.user;
-            receiver = User.objects.get(username=request.POST['receiver']);
-            messages = haveMessages(sender, receiver);
-            if (messages == None):
-                messages = Messages(userA=sender, userB=receiver);
-                messages.save();
-            message = request.POST['message'];
-            usermessage = UserMessage(twoUsers=messages, message=message, sender=sender.username, receiver=receiver.username).save();
-            response = "Success";
-    return HttpResponse(response);
-    
-def messages(request, user_username):
-    if (request.user.is_authenticated()):
-        other_user = get_object_or_404(User, username=user_username);
-        messages = haveMessages(request.user, other_user);
-        if (messages != None):
-            context = {
-                'other_user' : other_user,
-                'messages' : messages.usermessage_set.all(),
-            };
-            return render(request, 'user/messages.html', context);
-    return detail(request, user_username);
-    
-def get_messages(request):
-    messages = None;
-    if (request.method == 'POST'):
-        if (request.user.is_authenticated()):
-            otherUser = get_object_or_404(User, username=request.POST['other_user']);
-            messages = getOrderedMessages(request.user, otherUser, 50);
-            if (messages != None):
-                messages = serializers.serialize('json', messages);
-    return HttpResponse(messages, content_type="application/json");
-    
-def view_messages_by_user(request):
-    if (request.user.is_authenticated()):
-        context = {
-            'most_recent_messages' : get_recent_messages(request.user),
-        }
-        return render(request, 'user/view_messages_by_user.html', context);  
-    return Http404();
+
+def create_user_random_string(request):
+    random_string = '';
+    available_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+    for i in range(20):
+        index = randint(0, 61);
+        random_char = available_chars[index];
+        random_string = random_string + random_char;
+    return random_string;
         
-def get_recent_messages(user):
-    messagesQuery = Messages.objects.filter(Q(userA=user) | Q(userB=user)).order_by('-most_recent_sent');
-    recentMessages = UserMessage.objects.none();
-    for messages in messagesQuery:
-        recentMessages = recentMessages | messages.usermessage_set.order_by('-date_sent')[:1];
-    return recentMessages;
-    
-def change_public_pledge_filter(request):
-    if (request.method == 'POST'):
-        if (request.user.is_authenticated()):
-            request.user.userworkerfilter.is_public = not request.user.userworkerfilter.is_public;
-            request.user.userworkerfilter.save();
-    return HttpResponse("Finished!");
-    
-def change_public_worker_filter(request):
-    if (request.method == 'POST'):
-        if (request.user.is_authenticated()):
-            request.user.userpledgefilter.is_public = not request.user.userpledgefilter.is_public;
-            request.user.userpledgefilter.save();
-    return HttpResponse("Finished!");
-    
-def copy_pledge_filter(request):
-    if (request.method == 'POST'):
-        if (request.user.is_authenticated):
-            otherUser = get_object_or_404(User, pk=request.POST['user_id']);
-            copy_pledge_filter_job(request.user, otherUser);
-    return HttpResponse('Finished!');
-    
-def copy_worker_filter(request):
-    if (request.method == 'POST'):
-        if (request.user.is_authenticated):
-            otherUser = get_object_or_404(User, pk=request.POST['user_id']);
-            copy_worker_filter_job(request.user, otherUser);
-    return HttpResponse('Finished!');
         
-def haveMessages(user1, user2):
-    messages = None;
-    if (user1.messagesA.filter(userB=user2).exists()):
-        messages = user1.messagesA.get(userB=user2);
-    elif (user1.messagesB.filter(userA=user2).exists()):
-        messages = user1.messagesB.get(userA=user2);
-    return messages;
-    
-def getOrderedMessages(user1, user2, numMessages):
-    messages = None;
-    if (user1.messagesA.filter(userB=user2).exists()):
-        messages = user1.messagesA.get(userB=user2).usermessage_set.order_by('-date_sent')[:numMessages];
-    elif (user1.messagesB.filter(userA=user2).exists()):
-        messages = user1.messagesB.get(userA=user2).usermessage_set.order_by('-date_sent')[:numMessages];
-    data  = {};
-    return messages;
         
-      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
     
         

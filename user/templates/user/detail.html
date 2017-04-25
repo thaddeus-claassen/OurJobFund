@@ -3,7 +3,6 @@
 {% load staticfiles %}
 {% block importTwo %}
     <script type="text/javascript" src="{% static 'user/JavaScript/detail.js' %}" ></script>
-    <script type="text/javascript" src="{% static 'user/JavaScript/create_user.js' %}" ></script>    
     <link rel="stylesheet" type="text/css" href="{% static 'user/CSS/detail.css' %}" />
 {% endblock %}
 
@@ -11,273 +10,40 @@
 <input id="user_id" type="hidden" value="{{ id }}" />
 <div class="container max-height">
     <div class="row">
-        <div id="name" class="col-md-8">
-            <span id="email">{{ email }}</span><span>(To retrieve passwords)</span>
-            <span id="username" >{{ username }}</span>
-        </div>
-        <div class="col-md-4">
-            {% if user.is_authenticated and user.username == username %}
-                <input id="add_dependent" type="button" value="Add Dependent" />
-                <div id="add_dependent_modal" class="modal">
-                    <div class="modal-header">
-                        <span class="close_modal">&times;</span>
-                        <h2>Add Dependent</h2>
-                        <h6>(This is for users who need an account, but are not financially independent.)</h6>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label for="id_username">Username (cannot be changed):</label>
-                                        <input id="id_username" type="text" />
-                                        <span id="id_username_span"></span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label for="id_password">Password:</label>
-                                        <input id="id_password" type="password" />
-                                        <span id="id_password_span"></span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">                    
-                                        <label for="id_repeat_password">Repeat Password:</label>
-                                        <input id="id_repeat_password" type="password" />
-                                        <span id="id_repeat_password_span"></span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <input type="checkbox" id="is-at-least-thirteen" name="is-at-least-thirteen" />      
-                                        <label for="is-at-least-thirteen">: Check here to verify your dependent is thirteen years old or older</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        For security, your password must contain at least:
-                                        <ul>
-                                            <li>9 characters</li>
-                                            <li>1 uppercase letter</li>
-                                            <li>1 lowercase letter</li>
-                                            <li>1 number</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <input id="add_dependent_user" type="button" value="Add Dependent User" />
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            {% if user.is_authenticated and user.username == username %}
-                <div class="row">
-                    <div class="col-md-12">
-                        <input id="make_edits" type="button" value="Make Edits" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div id="edit_div" class="col-md-12">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="first_name_input">First Name:</label>
-                                <input id="first_name_input" type="text" />
-                                <span>Public?</span>
-                                <label for="first_name_public_yes">Yes:</label>
-                                <input id="first_name_public_yes" class="make_public" type="radio" value="y" name="first_name_public" />
-                                <label for="first_name_public_no">No:</label>
-                                <input id="first_name_public_no" class="make_public" type="radio" value="n" name="first_name_public" checked="checked" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="last_name_input">Last Name:</label>
-                                <input id="last_name_input" type="text" />
-                                <span>Public?</span>
-                                <label for="last_name_public_yes">Yes:</label>
-                                <input id="last_name_public_yes" class="make_public" type="radio" value="y" name="last_name_public" />
-                                <label for="last_name_public_no">No:</label>
-                                <input id="last_name_public_no" class="make_public" type="radio" value="n" name="last_name_public" checked="checked" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="city_input">City:</label>
-                                <input id="city_input" type="text" />
-                                <span>Public?</span>
-                                <label for="city_public_yes">Yes:</label>
-                                <input id="city_public_yes" class="make_public" type="radio" value="y" name="city_public" />
-                                <label for="city_public_no">No:</label>
-                                <input id="city_public_no" class="make_public" type="radio" value="n" name="city_public" checked="checked" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="state_input">State:</label>
-                                <select id="state_input" >
-                                    <option value="blank"></option>
-                                    <option value="AL">AL</option>
-                                    <option value="AK">AK</option>
-                                    <option value="AR">AR</option>
-                                    <option value="AZ">AZ</option>
-                                    <option value="CA">CA</option>
-                                    <option value="CO">CO</option>
-                                    <option value="CT">CT</option>
-                                    <option value="DE">DE</option>
-                                    <option value="FL">FL</option>
-                                    <option value="GA">GA</option>
-                                    <option value="HI">HI</option>
-                                    <option value="IA">IA</option>
-                                    <option value="ID">ID</option>
-                                    <option value="IL">IL</option>
-                                    <option value="IN">IN</option>
-                                    <option value="KS">KS</option>
-                                    <option value="KY">KY</option>
-                                    <option value="LA">LA</option>
-                                    <option value="MA">MA</option>
-                                    <option value="MD">MD</option>
-                                    <option value="ME">ME</option>
-                                    <option value="MI">MI</option>
-                                    <option value="MN">MN</option>
-                                    <option value="MO">MO</option>
-                                    <option value="MS">MS</option>
-                                    <option value="MT">MT</option>
-                                    <option value="NC">NC</option>
-                                    <option value="ND">ND</option>
-                                    <option value="NE">NE</option>
-                                    <option value="NH">NH</option>
-                                    <option value="NJ">NJ</option>
-                                    <option value="NM">NM</option>
-                                    <option value="NV">NV</option>
-                                    <option value="NY">NY</option>
-                                    <option value="OH">OH</option>
-                                    <option value="OK">OK</option>
-                                    <option value="OR">OR</option>
-                                    <option value="PA">PA</option>
-                                    <option value="RI">RI</option>
-                                    <option value="SC">SC</option>
-                                    <option value="SD">SD</option>
-                                    <option value="TN">TN</option>
-                                    <option value="TX">TX</option>
-                                    <option value="UT">UT</option>
-                                    <option value="VA">VA</option>
-                                    <option value="VT">VT</option>
-                                    <option value="WA">WA</option>
-                                    <option value="WI">WI</option>
-                                    <option value="WV">WV</option>
-                                    <option value="WY">WY</option>
-                                </select>
-                                <span>Public?</span>
-                                <label for="state_public_yes">Yes:</label>
-                                <input id="state_public_yes" class="make_public" type="radio" value="y" name="state_public" />
-                                <label for="state_public_no">No:</label>
-                                <input id="state_public_no" class="make_public" type="radio" value="n" name="state_public" checked="checked" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                Make all personal information public?
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="make_all_information_public_yes" >Yes:</label>
-                                <input id="make_all_information_public_yes" type="radio" value="y" name="make_all_information_public" />
-                                <label for="make_all_information_public_no" >No:</label>
-                                <input id="make_all_information_public_no" type="radio" value="n" name="make_all_information_public" checked="checked" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% else %}
-                <div class="row">
-                    <div class="col-md-12">
-                        <span id="first_name"></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <span id="last_name"></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <span id="city"></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <span id="state"></span>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
+        {{ user.first_name }}&nbsp;{{ user.last_name }}
         {% if user.is_authenticated and user.username == username %}
-            <div class="col-md-4">
-                <div class="row">
-                    <div class="col-md-12">
-                        <input id="edit_description" type="button" value="Click Here Edit Description" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <span id="description"></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <textarea id="textarea_description"></textarea>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <input id="save_description" type="button" value="Save" />
-                    </div>
-                </div>
-            </div>
-        {% else %}
-            <div class="col-md-4">
-                <div class="row">
-                    <div class="col-md-6">
-                        <input id="message_button" type="button" value="Send this user a message" />
-                        <div id="message_modal" class="modal">
-                            <div class="modal-header">
-                                <span class="close_modal">&times;</span>
-                                <h2>Message</h2>
-                            </div>
-                            <div class="modal-body">
-                                <textarea id="message" ></textarea>     
-                            </div>
-                            <div class="modal-footer">
-                                <input id="send_modal_message" type="button" value="Send Message" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <a href="{% url 'user:messages' id %}">View All Messages</a>
-                    </div>
-                </div>
-                <div class="row">    
-                    <div class="col-md-12">
-                        <span id="description"></span>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-        <div class="col-md-4">  
+        <div class="col-md-6">
             <div class="row">
                 <div class="col-md-12">
-                    <span>Jobs you are pledged to:</span>
-                    <table class="table" id="pledging-table">
+                    <input id="edit_description" type="button" value="Click Here Edit Description" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <span id="description"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <textarea id="textarea_description"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <input id="save_description" type="button" value="Save" />
+                </div>
+            </div>
+        </div>
+        {% else %} 
+        <div class="col-md-6">
+            <span id="description"></span>
+        </div>
+        {% endif %}
+        <div class="col-md-6">  
+            <div class="row">
+                <div class="col-md-12 table_div">
+                    <span>Pledged:</span>
+                    <table id="pledging_table" class="table">
                         {% for pledgejob in user.pledgejob_set.all %}
                             {% if pledgejob.job.is_active %}
                                 <tr id="pledge{{ plegdejob.job.name }}">
@@ -294,9 +60,28 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
-                    <span>Jobs you are working on:</span>
-                    <table class="table" id="working-table">
+                <div class="col-md-12 table_div">
+                    <span>Paid:</span>
+                    <table id="finished_pledging_table" class="table">
+                        {% for pledgejob in user.pledgejob_set.all %}
+                            {% if pledgejob.amount_pledged <= pledgejob.amount_paid %}
+                                <tr id="finished_pledge_{{ pledgejob.job.name }}">
+                                    <td><a href="{% url 'job:detail' pledgejob.job.id %}">{{ pledgejob.job.name }}</a></td>
+                                    <td>Amount Pledged: {{ pledgejob.amount_pledged }}</td>
+                                    <td>Amount Paid: {{ pledgejob.amount_paid }}</td>
+                                    <td>Active: {{ pledgejob.job.is_active }}</td>
+                                </tr>
+                            {% endif %}
+                        {% empty %}
+                            No such jobs.
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 table_div">
+                    <span>Working:</span>
+                    <table id="working_table" class="table">
                         {% for workjob in user.workjob_set.all %}
                             {% if workjob.job.is_active %}
                                 <tr id="work_{{ workjob.job.name }}">
@@ -312,30 +97,11 @@
                         {% endfor %}
                     </table>
                 </div>
-            </div>
+            </div>     
             <div class="row">
-                <div class="col-md-12">
-                    <span>Job, which you finished, but this user pledged to them</span>
-                    <table id="finished_pledging_table">
-                        {% for pledgejob in user.pledgejob_set.all %}
-                            {% if pledgejob.amount_pledged <= pledgejob.amount_paid %}
-                                <tr id="finished_pledge_{{ pledgejob.job.name }}">
-                                    <td><a href="{% url 'job:detail' pledgejob.job.id %}">{{ pledgejob.job.name }}</a></td>
-                                    <td>Amount Pledged: {{ pledgejob.amount_pledged }}</td>
-                                    <td>Amount Paid: {{ pledgejob.amount_paid }}</td>
-                                    <td>Active: {{ pledgejob.job.is_active }}</td>
-                                </tr>
-                            {% endif %}
-                        {% empty %}
-                            No such jobs.
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>              
-            <div class="row">
-                <div class="col-md-12">
-                    <span>Jobs, which were worked on, and are now finished</span>
-                    <table id="finished_working_table">
+                <div class="col-md-12 table_div">
+                    <span>Worked:</span>
+                    <table id="finished_working_table" class="table">
                         {% for workjob in user.workjob_set.all %}
                             {% if workjob.is_finished or workjob.job.is_finished %}
                                 <tr id="finished_work_{{ workjob.job.name }}">
@@ -350,62 +116,6 @@
                     </table>
                 </div>
             </div>    
-            <div class="row">
-                <div class="col-md-12">
-                    {% if user.is_authenticated and user.username == username %}
-                        <span>Make pledge filter public?</span>
-                        {% if pledge_filter_is_public %}
-                            <label for="yes_public_pledge">Yes:</label>
-                            <input id="yes_public_pledge" type="radio" value="y" name="public_pledge_filter" checked="checked" />
-                            <label for="no_public_pledge">No:</label>
-                            <input id="no_public_pledge" type="radio" value="n" name="public_pledge_filter" />
-                        {% else %}
-                            <label for="yes_public_pledge">Yes:</label>
-                            <input id="yes_public_pledge" type="radio" value="y" name="public_pledge_filter" />
-                            <label for="no_public_pledge">No:</label>
-                            <input id="no_public_pledge" type="radio" value="n" name="public_pledge_filter" checked="checked" />
-                        {% endif %}
-                    {% else %}
-                        {% if pledge_filter_is_public %}
-                            <span>Pledge filter is public</span>
-                            <form action="{% url 'job:view_all_metrics_pledge' id %}">
-                                <input type="submit" value="View Pledge Filter" />
-                                <input id="use_pledge_filter" type="button" value="Use Pledge Filter" />
-                            </form>
-                        {% else %}
-                            <span>Pledge filter in not public</span>
-                        {% endif %}
-                    {% endif %}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    {% if user.is_authenticated and user.username == username %}
-                        <span>Make worker filter public?</span>
-                        {% if worker_filter_is_public %}
-                            <label for="yes_public_worker">Yes:</label>
-                            <input id="yes_public_worker" type="radio" value="y" name="public_worker_filter" checked="checked" />
-                            <label for="no_public_worker">No:</label>
-                            <input id="no_public_worker" type="radio" value="n" name="public_worker_filter" />
-                        {% else %}
-                            <label for="yes_public_worker">Yes:</label>
-                            <input id="yes_public_worker" type="radio" value="y" name="public_worker_filter" />
-                            <label for="no_public_worker">No:</label>
-                            <input id="no_public_worker" type="radio" value="n" name="public_worker_filter" checked="checked" />                            
-                        {% endif %}
-                    {% else %}
-                        {% if worker_filter_is_public %}
-                            <span>Worker filter is public</span>
-                            <form action="{% url 'job:view_all_metrics_work' id %}">
-                                <input type="submit" value="View Worker Filter" />
-                                <input id="use_worker_filter" type="button" value="Use Worker Filter" />
-                            </form>
-                        {% else %}
-                            <span>Worker filter in not public</span>
-                        {% endif %}
-                    {% endif %}
-                </div>
-            </div>  
         </div>
     </div>
 </div>

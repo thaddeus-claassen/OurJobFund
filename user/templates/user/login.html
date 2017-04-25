@@ -1,0 +1,40 @@
+{% extends 'navbar.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form id="sign-up-form" method="POST" action="{% url 'job:home' %}">
+            {% csrf_token %}
+            {% for field in new_user_form %}
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ field.errors }}
+                        {{ field.label }}{{ field }}
+                        {% if field.help_text %}
+                            <p class="help">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form id="sign-in-form" method="POST" action="{% url 'job:home' %}">
+            {% csrf_token %}    
+            {% for field in existing_user_form %}
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ field.errors }}
+                        {{ field.label }}{{ field }}
+                        {% if field.help_text %}
+                            <p class="help">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+            </form>
+        </div>
+    </div>
+</div> 
+{% endblock %}

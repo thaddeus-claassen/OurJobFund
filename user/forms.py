@@ -10,15 +10,13 @@ class UserForm(forms.ModelForm):
         fields = ['email', 'password'];
             
         
-class NewUserForm(forms.ModelForm): 
-    username = forms.CharField(label='Username:', max_length=100);
-    email = forms.EmailField(label='Email:');
+class NewUserForm(forms.ModelForm):
     password = forms.CharField(label='Password:', widget=forms.PasswordInput);
     repeat_password = forms.CharField(label='Repeat Password:', widget=forms.PasswordInput);
     
     class Meta: 
         model = User;
-        fields = ['username', 'email', 'password'];
+        fields = ['first_name', 'last_name', 'email', 'password'];
         
     
 

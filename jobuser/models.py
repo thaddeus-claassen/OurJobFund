@@ -34,7 +34,6 @@ class Comment(models.Model):
     is_complaint = models.BooleanField(default=False);
     has_been_nullified = models.BooleanField(default=False);
     update = models.ForeignKey(WorkJobUpdate, on_delete=models.CASCADE, null=True);
-    super_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True);
     commented = models.DateTimeField(auto_now_add=True, null=True);
     description = models.TextField(null=True, blank=True);
     

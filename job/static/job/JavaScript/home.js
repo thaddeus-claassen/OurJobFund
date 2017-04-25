@@ -118,7 +118,6 @@ function hideTagsInput() {
 
 function search_jobs() {
     $.ajax({
-        type : "POST",
         url : "search_jobs",
         data : {
             'job_name_or_id' : $('#search_bar').val(),

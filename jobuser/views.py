@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404;
 from django.http import HttpResponse, Http404;
 from django.contrib.auth.models import User;
@@ -6,30 +7,31 @@ from job.models import Job;
 from .forms import NewWorkJobUpdate, NewComment;
 from job.views import detail;
 
+@login_required
 def post_update(request, workjob_id):
     workjob = get_object_or_404(WorkJob, pk=workjob_id);
-    if (request.user.is_authenticated()):
-        if (request.method == 'POST'):
-            form = NewWorkJobUpdate(request.POST, request.FILES);
-            if (form.is_valid()):
-                title = form.cleaned_data['title'];
-                description = form.cleaned_data['description'];
-                newUpdate = WorkJobUpdate(workjob=workjob, title=title, description=description);
-                newUpdate.save();
-                for image in request.FILES.getlist('images'):
-                    image=ImageUpload(image=image);
-                    image.save();
-                    newUpdate.imageupload_set.add(image);
-                sendUpdateNotifications(newUpdate);
-        else:
-            if (workjob.worker == request.user):
-                context = {
-                    'workjob' : workjob,
-                    'update_form' : NewWorkJobUpdate(),
-                }
-                return render(request, 'jobuser/post_update.html', context);
+    if (request.method == 'POST'):
+        form = NewWorkJobUpdate(request.POST, request.FILES);
+        if (form.is_valid()):
+            title = form.cleaned_data['title'];
+            description = form.cleaned_data['description'];
+            newUpdate = WorkJobUpdate(workjob=workjob, title=title, description=description);
+            newUpdate.save();
+            for image in request.FILES.getlist('images'):
+                image=ImageUpload(image=image);
+                image.save();
+                newUpdate.imageupload_set.add(image);
+            sendUpdateNotifications(newUpdate);
+    else:
+        if (workjob.worker == request.user):
+            context = {
+                'workjob' : workjob,
+                'update_form' : NewWorkJobUpdate(),
+            }
+            return render(request, 'jobuser/post_update.html', context);
     return redirect('/job/detail/' + workjob.job.pk);
     
+@login_required    
 def view_update(request, update_id):
     update = get_object_or_404(WorkJobUpdate, pk=update_id);
     context = {
@@ -38,45 +40,43 @@ def view_update(request, update_id):
     }
     return render(request, 'jobuser/view_update.html', context);
     
+@login_required    
 def view_comment(request, comment_id):
-    comment = get_object_or_404(Comment, pk=comment_id);
-    currComment = comment;
-    while (comment.super_comment != None):
-        currComment = comment.super_comment;
-    update = currComment.update;
+    comment = get_object_or_404(Comment, pk=comment_id)
     context = {
-        'user_is_working_on_job' : WorkJob.objects.filter(job=update.workjob.job, worker=request.user).exists(), 
-        'user_is_working_on_job' : WorkJob.objects.filter(job=update.workjob.job, worker=request.user).exists(), 
+        'user_is_working_on_job' : WorkJob.objects.filter(job=comment.update.workjob.job, worker=request.user).exists(), 
+        'user_is_working_on_job' : WorkJob.objects.filter(job=comment.update.workjob.job, worker=request.user).exists(), 
         'comment' : comment,
     }
     return render(request, 'jobuser/view_comment.html', context);
-    
+
+@login_required    
 def publish_comment(request):
     if (request.method == 'POST'):
-        if (request.user.is_authenticated):
-            if (request.is_ajax()):
-                image = request.POST['image'];
-                is_complaint = request.POST['is_complaint'];
-                if (is_complaint == 'y'):
-                    is_complaint = True;
-                else:
-                    is_complaint = False;
-                description = request.POST['comment'];
-                newComment = Comment(commenter=request.user, is_complaint=is_complaint, description=description);
+        if (request.is_ajax()):
+            image = request.POST['image'];
+            is_complaint = request.POST['is_complaint'];
+            if (is_complaint == 'y'):
+                is_complaint = True;
+            else:
+                is_complaint = False;
+            description = request.POST['comment'];
+            newComment = Comment(commenter=request.user, is_complaint=is_complaint, description=description);
+            newComment.save();
+            ImageUpload(comment=newComment, image=image).save();
+            id = request.POST['id'];
+            if (request.POST['is_update'] == "true"):
+                update = get_object_or_404(WorkJobUpdate, pk=id);
+                update.comment_set.add(newComment);
+            else:
+                comment = get_object_or_404(Comment, pk=id);
+                newComment.super_comment = comment;
                 newComment.save();
-                ImageUpload(comment=newComment, image=image).save();
-                id = request.POST['id'];
-                if (request.POST['is_update'] == "true"):
-                    update = get_object_or_404(WorkJobUpdate, pk=id);
-                    update.comment_set.add(newComment);
-                else:
-                    comment = get_object_or_404(Comment, pk=id);
-                    newComment.super_comment = comment;
-                    newComment.save();
-                    comment.save();
-                sendCommentNotifications(newComment);
+                comment.save();
+            sendCommentNotifications(newComment);
     return HttpResponse("");
     
+@login_required    
 def view_updates(request, workjob_id):
     workjob = get_object_or_404(WorkJob, pk=workjob_id);
     context = {

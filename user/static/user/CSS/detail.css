@@ -2,6 +2,12 @@
     text-align: center;
 }
 
-#edit_div, #message_modal, #textarea_description, #save_description, #add_dependent_modal {
+#edit_div, #textarea_description, #save_description {
     display: none;
+}
+
+.table_div {
+    border: 1px solid black;
+    height: 25%;
+    width: 100%;
 }

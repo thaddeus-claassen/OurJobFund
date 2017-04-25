@@ -4,16 +4,9 @@ from jobuser.models import WorkJobUpdate, Comment;
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE);
-    is_dependent = models.BooleanField(default=False);
-    dependent_on = models.ForeignKey(User, on_delete=models.CASCADE, related_name="dependent_on", null=True);
     description = models.CharField(default="", max_length=10000);
-    public_first_name = models.BooleanField(default=False);
-    public_last_name = models.BooleanField(default=False);
-    city = models.CharField(blank=True, max_length=1000);
-    public_city = models.BooleanField(default=False);
-    state = models.CharField(blank=True, max_length=2);
-    public_state = models.BooleanField(default=False);
-    public_filter = models.BooleanField(default=False); 
+    random_string = models.CharField(default="", max_length=20);
+    
     
 class Messages(models.Model):
     userA = models.ForeignKey(User, on_delete=models.CASCADE, related_name="messagesA");

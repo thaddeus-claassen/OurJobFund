@@ -11,6 +11,85 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6">
+            <!-- Job search bar -->
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="text_label" for="search_bar" >Search job by name or ID:&nbsp;</label>
+                    <span class="text_span"><input class="wide_text" id="search_bar" type="text" /></span>    
+                </div>
+            </div>
+            <!-- End job search bar -->
+            
+            <!-- Location -->
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="text_label change-label" for="location_text" >Location:&nbsp;</label>
+                    <span class="text_span">
+                        <input id="location-text" class="wide_text location-hide" type="text" />
+                    </span>
+                </div>
+            </div>
+            <!-- End Location -->
+
+            <!-- Radius -->
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table">
+                        <tr>
+                            <td>
+								<label for="location-radius" class="change-label">Radius:</label>
+							</td>
+                            <td>
+                                <input id="location-radius" class="location-hide" type="text" size="1" name="radius" value="10" />
+                            </td>
+                            <td class="distance-unit location-hide">
+								<label class="change-label" for="mi">mi:</label>
+                            </td>
+                            <td>
+								<input id="mi" type="radio" name="mi-km" value="mi" checked="checked" />
+							</td>
+                            <td class="distance-unit location-hide">
+								<label class="change-label" for="km">km:</label>
+                            </td>
+                            <td>
+								<input id="km" type="radio" name="mi-km" value="km" />
+							</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <!-- End Radius -->
+            <div class="row">
+                <div class="col-md-4">
+                    Jobs found: <span id="found-x-jobs" ></span>
+                </div>
+                <div class="col-md-8">
+                    <div id="filter-by"> 
+                        <span>Filter:</span>
+                        <div id="advanced-tags-filter" class="filter-by-button" >Advanced Tags</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Job table -->
+            <div id="row-table" class="row">
+                <div id="table-border" class="col-md-12 ui-widget-content">
+                    <table id="main_table" class="table"></table>
+                </div>
+            </div>
+            <!-- End job table -->
+            
+            <!-- Add Job button -->
+            <div class="row">
+                <div class="col-md-12">
+                    <form action="{% url 'job:add_job' %}">
+                        <input id="add_job" class="col-md-12" type="submit" value="Add job" />
+                    </form>
+                </div>
+            </div>
+            <!-- End Add Job button -->
+        </div>
+
+        <div class="col-md-5 col-md-push-1">
             <!-- Defines #tag logic -->
             <div class="row">
                 <div class="col-md-12">
@@ -101,93 +180,7 @@
                 </div>
             </div>
             <!-- End #tag logic -->
-
-            <!-- Or -->
-            <div id="or" class="row">
-                <div class="col-md-1 col-md-push-6">
-                    Or
-                </div>
-            </div>
-            <!-- End or -->
-
-            <!-- Job search bar -->
-            <div class="row">
-                <div class="col-md-12">
-                    <label class="text_label" for="search_bar" >Search job by name or ID:&nbsp;</label>
-                    <span class="text_span"><input class="wide_text" id="search_bar" type="text" /></span>    
-                </div>
-            </div>
-            <!-- End job search bar -->
-            <div class="row">
-                <div class="col-md-4">
-                    Jobs found: <span id="found-x-jobs" ></span>
-                </div>
-                <div class="col-md-8">
-                    <div id="filter-by"> 
-                        <span>Filter:</span>
-                        <div id="advanced-tags-filter" class="filter-by-button" >Advanced Tags</div>
-                    </div>
-                </div>
-            </div>
-            <!-- Job table -->
-            <div id="row-table" class="row">
-                <div id="table-border" class="col-md-12 ui-widget-content">
-                    <table id="main_table" class="table"></table>
-                </div>
-            </div>
-            <!-- End job table -->
             
-            <!-- Add Job button -->
-            <div class="row">
-                <div class="col-md-12">
-                    <form action="{% url 'job:add_job' %}">
-                        <input id="add_job" class="col-md-12" type="submit" value="Add job" />
-                    </form>
-                </div>
-            </div>
-            <!-- End Add Job button -->
-        </div>
-
-        <div class="col-md-5 col-md-push-1">
-            <!-- Location -->
-            <div class="row">
-                <div class="col-md-12">
-                    <label class="text_label change-label" for="location_text" >Location:&nbsp;</label>
-                    <span class="text_span">
-                        <input id="location-text" class="wide_text location-hide" type="text" />
-                    </span>
-                </div>
-            </div>
-            <!-- End Location -->
-
-            <!-- Radius -->
-            <div class="row">
-                <div class="col-md-12">
-                    <table class="table">
-                        <tr>
-                            <td>
-								<label for="location-radius" class="change-label">Radius:</label>
-							</td>
-                            <td>
-                                <input id="location-radius" class="location-hide" type="text" size="1" name="radius" value="10" />
-                            </td>
-                            <td class="distance-unit location-hide">
-								<label class="change-label" for="mi">mi:</label>
-                            </td>
-                            <td>
-								<input id="mi" type="radio" name="mi-km" value="mi" checked="checked" />
-							</td>
-                            <td class="distance-unit location-hide">
-								<label class="change-label" for="km">km:</label>
-                            </td>
-                            <td>
-								<input id="km" type="radio" name="mi-km" value="km" />
-							</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <!-- End Radius -->
             <div id="remove_pledgers" class="filter">
                 <table class="table">
                     <tr><td>Remove pledgers who have:</td></tr>

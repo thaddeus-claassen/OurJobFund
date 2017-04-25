@@ -7,52 +7,32 @@
 {% endblock %}
 
 {% block content %}
-<div id="detail_screen" class="container-fluid">
+<div id="detail_screen" class="container-fluid div_100_percent">
     <div class="main-row row">
-        <div class="col-md-2">
+        <div class="col-md-3">
             {% if job.is_active %}
                 Active
             {% else %}
                 Finished
             {% endif %}
         </div>
-        <div id="detail_id" class="col-md-10">
+        <div class="col-md-3">
             ID: <span id="job-id">{{ job.pk }}</span>
         </div>
-    </div>
-    <div class="main-row row">
-        <div id="detail_header" class="col-md-12">
+        <div class="col-md-3">
             {{ job.name }}
         </div>
-    </div>
-    <div class="main-row row">
-        <div id="detail_tags" class="col-md-12">
-            {% for tag in job.tags_set.all %}
+        <div class="col-md-3">
+            {% for tag in job.tag_set.all %}
                 {{ tag.tag }}
             {% empty %}
                 There are no tags
             {% endfor %}
         </div>
     </div>
-    <div class="main-row detail_job_information row">
+    <div class="main-row detail_job_information row div_100_percent">
         <!-- Pledge money, job description -->
-        <div class="detail_job_information col-md-6">
-            <div id="detail_main_editor" class="row">
-                <div class="col-md-12">
-                    Main editors (Max three):
-                    <span id="main_editors">
-                    {% for main_editor in job.main_editors.all %}
-                        <a href="{% url 'user:detail' main_editor.username %}">{{ main_editor.username }}</a>
-                    {% empty %}
-                        <span id="no_main_editors">No main editors</span>
-                    {% endfor %}
-                    </span>
-                    {% if job.main_editors.count < 3 and user in main_editors %}
-                        &nbsp;<input type="button" id="become_main_editor" value="Click here if you would like to become a main editor" />
-                        <span id="you_are_now_a_main_editor"></span>
-                    {% endif %}
-                </div>
-            </div>
+        <div class="detail_job_information col-md-6 div_100_percent">
             {% if user.is_authenticated and not is_pledging %}
                 <div class="row">
                     <div class="col-md-12">
@@ -77,17 +57,20 @@
                     </div>
                 </div>
             {% endif %}
-            <div id="description_photos" class="row">
+            <div id="description" class="row">
                 <div class="col-md-12">
-                    {% for image in job.imageupload_set.all %}
-                        {{ image.image }}
-                    {% endfor %}
-                </div>
-            </div>
-            <div id="detail_job_description" class="row">
-                <div id="detail-description-box" class="col-md-12">
-                    <input type="hidden" value="{{ job.description }}"/>
-                    <a id="view-description" href="#" class={{ job.pk }}>View Fullscreen</a>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% for image in job.imageupload_set.all %}
+                                {{ image.image }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ job.description }}
+                        </div>
+                    </div>
                 </div>
             </div>
             <div id="detail-work-on-job" class="row">
@@ -99,11 +82,48 @@
                     {% endif %}
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>Pledges</h4>
+                    <div id="pledges_table_div" class="table_div">
+                        <table id="pledges_table" class="table">
+                            {% for pledgejob in job.pledgejob_set.all %}
+                                <tr>
+                                    <td>{{ pledgejob.pledger.username }}</td>
+                                    <td>Pledge: ${{ pledgejob.amount_pledged }}</td>
+                                    <td>Paid: ${{ pledgejob.amount_paid }}</td>
+                                </tr>
+                            {% empty %}
+                                None
+                            {% endfor %}
+                            <tr>
+                                <td>Total</td>
+                                <td>Pledged: ${{ job.money_pledged }}</td>
+                                <td>Paid: ${{ job.money_paid }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="table-width col-md-6">
             <div class="row">
                 <div class="col-md-12">
-                    <a href="{% url 'job:view_workers' job.id %}">View Workers</a>
+                    <div id="workers_table_div" class="table_div">
+                        <table id="workers_table" class="table">
+                            <h4>Workers</h4>
+                            {% for workjob in job.workjob_set.all %}
+                                <tr>
+                                    <td>{{ workjob.worker.first_name }}&nbsp;{{ workjob.worker.last_name }}</td>
+                                    <td>Date started: {{ workjob.date_joined }}</td>
+                                    <td>Number of updates: {{ workjob.workjobupdate_set.all.count }}</td>
+                                    <td>Finished: {{ workjob.is_finished }}</td>
+                                </tr>
+                            {% empty %}
+                                There are no workers.
+                            {% endfor %}
+                        </table>
+                    </div>
                 </div>
             </div>
             {% if workjob %}
@@ -128,76 +148,24 @@
                     </div>
                 </div>
             {% endif %}
-            <div class="table-width row">
-                <div class="table-width col-md-12">
+            <div class="row">
+                <div class="col-md-12">
                     <h4>Updates</h4>
-                    <table id="updates_table" class="table-bordered">
-                        {% for update in ordered_updates %}
-                            <tr class="update_{{ update.has_active_complaint }}" >
-                                <td><a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a></td>
-                                <td>{{ update.updated }}</td>
-                                <td>{{ update.workjob.worker }}</td>
-                                <td>Comments:&nbsp;{{ update.comment_set.count }}</td>
-                                <td>Has Complaint: {{ update.has_active_complaint }}</td>
-                            </tr>
-                        {% empty %}
-                            No Updates
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>
-            <div class="table-width row">
-                <div class="table-width col-md-12">
-                    <h4>Pledges</h4>
-                    <table id="pledges_table" class="table-bordered">
-                        {% for pledgejob in job.pledgejob_set.all %}
-                            <tr>
-                                <td>{{ pledgejob.pledger.username }}</td>
-                                <td>Pledge: ${{ pledgejob.amount_pledged }}</td>
-                                <td>Paid: ${{ pledgejob.amount_paid }}</td>
-                            </tr>
-                        {% empty %}
-                            None
-                        {% endfor %}
-                        <tr>
-                            <td>Total</td>
-                            <td>Pledged: ${{ job.money_pledged }}</td>
-                            <td>Paid: ${{ job.money_paid }}</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="table-width row">
-                <div class="table-width col-md-12">
-                    <h4>Anyone who asks for money</h4>
-                    <table id="money-table" class="table-bordered">
-                        {% for workjob in job.workjob_set.all %}
-                            {% if workjob.is_finished %}
-                                <tr>
-                                    <td>
-                                        <input id="pay_worker_button" type="button" value="Pay Here" />
-                                    </td>
-                                    <td>
-                                        {{ workjob.worker.username }} 
-                                    </td>
-                                    <td>
-                                        Asking For: 
-                                        {% if workjob.amount_of_money_asking_for %}
-                                            {{ workjob.amount_of_money_asking_for }}
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <a href="#">Complaints: {{ workjob.complaints.count }}</a>
-                                    </td>
-                                    <td>
-                                        <input type="button" value="Make Complaint" />
-                                    </td>
+                    <div id="updates_table_div" class="table_div">
+                        <table id="updates_table" class="table">
+                                <tr class="update_{{ update.has_active_complaint }}">
+                                {% for update in ordered_updates reversed %}
+                                    <td><a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a></td>
+                                    <td>{{ update.updated }}</td>
+                                    <td>{{ update.workjob.worker }}</td>
+                                    <td>Comments:&nbsp;{{ update.comment_set.count }}</td>
+                                    <td>Has Complaint: {{ update.has_active_complaint }}</td>
                                 </tr>
-                            {% endif %}
-                        {% empty %}
-                            <tr><td>None</td></tr>
-                        {% endfor %}
-                    </table>
+                            {% empty %}
+                                No Updates
+                            {% endfor %}
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

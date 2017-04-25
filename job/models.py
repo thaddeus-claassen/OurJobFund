@@ -8,7 +8,6 @@ class Job(models.Model):
     is_active = models.BooleanField(default=True);
     is_finished = models.BooleanField(default=True);
     name = models.CharField(max_length=100);                           
-    main_editors = models.ManyToManyField(User, related_name="main_editors");
     creation_date = models.DateTimeField(auto_now_add=True);
     num_people_doing_job = models.IntegerField(default=0);
     money_pledged = models.FloatField(default=0.0);      

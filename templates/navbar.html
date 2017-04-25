@@ -13,14 +13,6 @@
     <div class="container-fluid">
         <ul class="nav navbar-nav navbar-left">
             {% if user.is_authenticated %}
-                <li>
-                    <a href="#">
-                        <form id="logout-form" action="{% url 'job:logout_pledge' %}" method="POST">
-                            {% csrf_token %}
-                            <input type="submit" value="Logout" />
-                        </form>
-                    </a>
-                </li>
                 <li><a href="{% url 'user:detail' user.username %}">{{ user.username }}</a></li>
             {% endif %}
         </ul>
@@ -60,72 +52,7 @@
                         {% endfor %}
                     </ul>
                 </li>
-                <li class="dropdown">
-                    <a href="#" id="open_messages_dropdown" class="dropdown-toggle" data-toggle="dropdown">
-                        Messages&nbsp;<span class="caret"></span>
-                    </a>
-                    <ul id="messages_dropdown" class="dropdown-menu">
-                        <li><div id="add_messages"></div></li>
-                        <li id="view_all_messages"><a id="test" href="{% url 'user:view_messages_by_user' %}">View All Messages</a></li>
-                    </ul>
-                    <div id="view_message_modal" class="modal">
-                        <div class="modal-header">
-                            <span class="close_modal">&times;</span>
-                            <h2>Message <a href="#">View All Messages</a></h2>
-                        </div>
-                        <div class="modal-body">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <span id="message_date_sent"></span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <span id="message_sender"></span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <span id="message_receiver"></span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <span id="message_message"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            {% else %}
-                <li class="dropdown">
-                    <a href="" class="dropdown-toggle" data-toggle="dropdown">
-                        Login/Sign Up &nbsp;
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <form action="{% url 'job:login_pledge' %}" method="POST">
-                                {% csrf_token %}
-                                <span class="bold">Login:</span></br>
-                                Email
-                                <input id="email" type="text" name="email" />
-                                </br>
-                                Password
-                                <input id="password" type="password" name="password" />
-                                <button type="submit">Submit</button>
-                            </form>
-                        </li>
-                        <li id="tab-or" class="bold">
-                            Or
-                        </li>
-                        <li>
-                            <a href="{% url 'user:create_user' %}"><span id="sign-up" class="bold">Sign Up</span></a>
-                        </li>
-                    </ul>
-                </li>
+                <li><a href="{% url 'user:sign_out' %}">Logout</a></li>
             {% endif %}
         </ul>       
     </div>
