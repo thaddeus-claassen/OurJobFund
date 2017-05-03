@@ -11,10 +11,9 @@
 <input id="user" type="hidden" value="{{ user.username }}" />
 <nav class="navbar navbar-default">
     <div class="container-fluid">
+        {% if user.is_authenticated %}
         <ul class="nav navbar-nav navbar-left">
-            {% if user.is_authenticated %}
-                <li><a href="{% url 'user:detail' user.username %}">{{ user.username }}</a></li>
-            {% endif %}
+            <li><a href="{% url 'user:detail' user.userprofile.random_string %}">{{ user.first_name }}&nbsp;{{ user.last_name }}</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-center">
             <li>
@@ -27,34 +26,41 @@
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            {% if user.is_authenticated %}
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Pledge: Job Updates&nbsp;<span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        {% for notification in user.pledgenotification_set.all %}
-                            <li><a href="#" id="pledge_notification_{{ notification.id }}" onclick="viewPledgeNotification(this.id)">Pledge Notification</a></li>
-                        {% empty %}
-                            <li><a>None</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Work: Job Updates&nbsp;<span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        {% for notification in user.worknotification_set.all %}
-                            <li><a href="#" id="work_notification_{{ notification.id }}" onclick="viewWorkNotification(this.id)">Work Notification</a></li>
-                        {% empty %}
-                            <li><a>None</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
-                <li><a href="{% url 'user:sign_out' %}">Logout</a></li>
-            {% endif %}
-        </ul>       
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    Pledge: Job Updates&nbsp;<span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                {% for notification in user.pledgenotification_set.all %}
+                    <li><a href="#" id="pledge_notification_{{ notification.id }}" onclick="viewPledgeNotification(this.id)">Pledge Notification</a></li>
+                {% empty %}
+                    <li><a>None</a></li>
+                {% endfor %}
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    Work: Job Updates&nbsp;<span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    {% for notification in user.worknotification_set.all %}
+                        <li><a href="#" id="work_notification_{{ notification.id }}" onclick="viewWorkNotification(this.id)">Work Notification</a></li>
+                    {% empty %}
+                        <li><a>None</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+            <li><a href="{% url 'user:sign_out' %}">Logout</a></li>
+        </ul> 
+        {% else %}
+        <form id="sign-in-form" class="navbar-form navbar-right" method="POST" action="{% url 'user:sign_in' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                {{  existing_user_form }}
+            </div>
+            <button type="submit" class="btn btn-default">Log In</button>
+        </form>
+        {% endif %}
     </div>
 </nav>
 {% block content %}{% endblock %}

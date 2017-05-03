@@ -199,8 +199,6 @@ def add_job(request):
             description = newJobForm.cleaned_data['description'];
             job = Job(name=name, latitude=latitude, longitude=longitude, description=description);
             job.save();
-            job.main_editors.add(request.user);
-            job.save();
             tags = request.POST['tags'];
             tagsArray = create_tags_array(tags);
             for tagString in tagsArray:

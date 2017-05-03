@@ -8,7 +8,7 @@ from django.db.models import Q;
 from django.contrib.auth import authenticate, login, logout;
 from .forms import UserForm, NewUserForm;
 from jobuser.forms import NewWorkJobUpdate;
-from .models import UserProfile, Messages, UserMessage;
+from .models import UserProfile;
 from jobuser.models import WorkJob, ImageUpload, WorkJobUpdate;
 from job.models import Job;
 from datetime import datetime;
@@ -23,33 +23,48 @@ def sign_in(request):
             newUserForm = NewUserForm(request.POST);
             if (userForm.is_valid()):
                 email = userForm.cleaned_data['email'];
-                password = userForm.cleaned_data['password'];
-                user = authenticate(email=email, password=password);
-                if (user is not None):
-                    if (user.is_active):
-                        login(request, user);
-                        return redirect('job/home');
-            elif (newUserForm.is_valid()):
+                if (email != ""):
+                    user = authenticate(username=email, password=userForm.cleaned_data['password']);
+                    if (user is not None):
+                        if (user.is_active):
+                            login(request, user);
+                            return redirect('job:home');
+            if (newUserForm.is_valid()):
+                validEmail = False;
+                validPassword = False;
+                user = newUserForm.save(commit=False);
                 first_name = newUserForm.cleaned_data['first_name'];
                 last_name = newUserForm.cleaned_data['last_name'];
                 email = newUserForm.cleaned_data['email'];
+                if (not User.objects.filter(email=email).exists()):
+                    validEmail = True;
                 password = newUserForm.cleaned_data['password'];
-                user = User(email=email);
+                repeat_password = newUserForm.cleaned_data['repeat_password'];
+                if (password == repeat_password):
+                    validPassword = True;
                 user.set_password(password);
+                user.email = email;
+                user.username = email;
                 user.save();
-                user = authenticate(email=email, password=password);
-                random_string = create_user_random_string();
-                UserProfile(user=user, random_string=random_string).save();
+                user = authenticate(username=email, password=password);
+                UserProfile(user=user, random_string=create_user_random_string()).save();
                 if (user is not None):
                     if (user.is_active):
                         login(request, user);
-                        return redirect('user/' + random_string);
-        context = {
-            'new_user_form' : NewUserForm(), 
-            'existing_user_form' : UserForm(),
-        }
-        return render(request, 'user/create_user.html', context);
+                        return redirect('user:' + user.userprofile.random_string);
+    context = {
+        'new_user_form' : NewUserForm(), 
+        'existing_user_form' : UserForm(),
+    }
+    return render(request, 'user/login.html', context);
         
+def check_email_is_unused(request):
+    emailIsUnused = True;
+    if (request.is_ajax()):
+        emailIsUnused = not User.objects.filter(email=request.GET['email']).exists();
+    return emailIsUnused;
+
+@login_required        
 def sign_out(request):
     logout(request);
     return redirect('user:sign_in');
@@ -69,12 +84,9 @@ def search_users(request):
 
 @login_required    
 def detail(request, user_random_string):
-    user = get_object_or_404(User, random_string=user_random_string);       
+    user = get_object_or_404(UserProfile, random_string=user_random_string).user;       
     context = {
-        'id' : user.id,
-        'username' : user_username,
-        'email' : user.email,
-        'description' : user.userprofile.description,
+        'detail_user' : user,
     }
     return render(request, 'user/detail.html', context);
 
@@ -105,7 +117,7 @@ def save_description(request):
         return Http404();
     
 
-def create_user_random_string(request):
+def create_user_random_string():
     random_string = '';
     available_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
     for i in range(20):

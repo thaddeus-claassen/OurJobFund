@@ -57,6 +57,13 @@ $('document').ready(function() {
     });
 });
 
+function toggleAdvancedSearch() {
+    $('#toggle-advanced-search').click(function(event) {
+        event.preventDefault();
+        $('#wrapper').toggleClass('advancedSettingsDisplayed');
+    });
+}// end toggleAdvancedSearch()
+
 function logout() {
     $.post("/job/logout_pledge/");
 }// end logout()

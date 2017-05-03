@@ -2,6 +2,33 @@ html, body {
 	height: 100%;
 }
 
+/*
+#advanced-settings-wrapper {
+    z-index: 1;
+    position: absolute;
+    height: 100%;
+    overflow-y: hidden;
+    background: 2C3E50;
+    border: 2px solid red;
+    opacity: 0.9;
+}
+
+#content-wrapper {
+    width: 100%;
+    position: absolute;
+    padding: 15px;
+    border: 5px solid green;
+}
+
+#wrapper.advancedSettingsDisplayed #advanced-settings-wrapper {
+    width: 250px;
+}
+
+#wrapper.advancedSettingsDisplayed #content-wrapper {
+    padding-left: 250px;
+}
+*/
+
 #tags_div {
     border: 1px solid black; 
     overflow: auto;

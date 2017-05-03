@@ -1,5 +1,9 @@
-#name {
-    text-align: center;
+html, body {
+    height: 100%;
+}
+
+.max-height {
+    border: 1px solid black;
 }
 
 #edit_div, #textarea_description, #save_description {
@@ -8,6 +12,6 @@
 
 .table_div {
     border: 1px solid black;
-    height: 25%;
+    height: 20%;
     width: 100%;
 }

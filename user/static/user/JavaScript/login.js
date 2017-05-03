@@ -1,11 +1,12 @@
-var usernameIsValid = false;
+var emailIsValid = false;
 var passIsValid = false;
 var passwordsMatch = false;
 var atLeastThirteen = false;
 var attemptedToCreateUserButError = false;
 $('document').ready(function() {
-    $('#create-user-form').submit(function(event) {
-        if (usernameIsValid && passwordIsValid && passwordsMatch && atLeastThirteen) {
+    createSpansAboveInputsForErrorMessages();
+    $('#sign-up-form').submit(function(event) {
+        if (emailIsValid && passwordIsValid && passwordsMatch && atLeastThirteen) {
             
         } else {
             errorMessages();
@@ -13,14 +14,6 @@ $('document').ready(function() {
             event.preventDefault();
         }// end if-else
     });
-    $('#id_username').after('<span id="id_username_span"></span>');
-    $('#id_username').keyup(function() {
-        if ($('#id_username').val().length > 0) {
-            verifyUsername();
-        }// end if
-    });
-    $('#id_password').after('<span id="id_password_span"></span>');
-    $('#id_repeat_password').after('<span id="id_repeat_password_span"></span>');
     $('#id_password').keyup(function() {
         passIsValid = verifyPassword();
         if ($(this).val() > 0 && $('#id_repeat_password').val() > 0) {
@@ -32,7 +25,7 @@ $('document').ready(function() {
             passwordsMatch = verifySamePassword();
         }// end if
     });
-    $('#is-at-least-thirteen').change(function() {
+    $('#over_thirteen').change(function() {
         atLeastThirteen = $(this).is(':checked'); 
         if (attemptedToCreateUserButError) {
             if (atLeastThirteen) {
@@ -44,29 +37,23 @@ $('document').ready(function() {
     });
 });
 
-function verifyUsername() {
-    $.ajax({
-        type : 'GET',
-        url : 'verify_username',
-        data : {
-            'username' : $('#id_username').val(),
-        },
-        error : usernameFailure,
-        success : usernameSuccess,
-    });
-}// end verifyUsername()
+function createSpansAboveInputsForErrorMessages() {
+    $('#id_first_name').before("<div class='row'><div class='col-md-12'><span id='id_first_name_span'></span></div></div>'");
+    $('#id_last_name').before("<div class='row'><div class='col-md-12'><span id='id_last_name_span'></span></div></div>'");
+    $('#id_email').before("<div class='row'><div class='col-md-12'><span id='id_email_span'></span></div></div>'");
+    $('#id_password').before("<div class='row'><div class='col-md-12'><span id='id_password_span'></span></div></div>'");
+    $('#id_repeat_password').before("<div class='row'><div class='col-md-12'><span id='id_repeat_password_span'></span></div></div>'");
+}// end createSpansAfterInputsForErrorMessages()
 
-function usernameFailure() {
+function emailFailure() {
     usernameIsValid = false;
 }// end usernameFailure()
 
-function usernameSuccess(usernameExists) {
-    usernameIsValid = true;
-    if (usernameExists === 'true') {
-        $('#id_username_span').text('&nbsp; Username is already used');
-    } else {
-        $('#id_username_span').text('&nbsp; Username is valid');
-    }// end if-else
+function emailSuccess(emailExists) {
+    emailIsValid = true;
+    if (emailExists) {
+        $('#id_username_span').text('email is already in use');
+    }// end if
 }// end usernameSuccess()
 
 function verifyPassword() {

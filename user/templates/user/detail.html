@@ -10,38 +10,46 @@
 <input id="user_id" type="hidden" value="{{ id }}" />
 <div class="container max-height">
     <div class="row">
-        {{ user.first_name }}&nbsp;{{ user.last_name }}
-        {% if user.is_authenticated and user.username == username %}
+        <div class="col-md-6">
+            <img src=""
+        </div>
+        <div class="col-md-6">
+            {{ user.first_name }}&nbsp;{{ user.last_name }}
+        </div>
+    </div>
+    <div class="row max-height">
+        {% if user.is_authenticated and user.username == detail_user.username %}
         <div class="col-md-6">
             <div class="row">
-                <div class="col-md-12">
-                    <input id="edit_description" type="button" value="Click Here Edit Description" />
+                <div class="col-md-6">
+                    <label for="description">Description:</label>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <span id="description"></span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <textarea id="textarea_description"></textarea>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <input id="save_description" type="button" value="Save" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <span id="description">{{ detail_user.userprofile.description }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <textarea id="textarea_description" class="col-md-12"></textarea>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <input id="edit_description" type="button" value="Edit" />
                 </div>
             </div>
         </div>
         {% else %} 
         <div class="col-md-6">
-            <span id="description"></span>
+            <span id="description">{{ detail_user.userprofile.description }}</span>
         </div>
         {% endif %}
-        <div class="col-md-6">  
-            <div class="row">
-                <div class="col-md-12 table_div">
+        <div class="col-md-6 max-height">  
+            <div class="row table_div">
+                <div class="col-md-12 max-height">
                     <span>Pledged:</span>
                     <table id="pledging_table" class="table">
                         {% for pledgejob in user.pledgejob_set.all %}
@@ -59,8 +67,8 @@
                     </table>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12 table_div">
+            <div class="row table_div">
+                <div class="col-md-12 max-height">
                     <span>Paid:</span>
                     <table id="finished_pledging_table" class="table">
                         {% for pledgejob in user.pledgejob_set.all %}
@@ -78,8 +86,8 @@
                     </table>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12 table_div">
+            <div class="row table_div">
+                <div class="col-md-12 max-height">
                     <span>Working:</span>
                     <table id="working_table" class="table">
                         {% for workjob in user.workjob_set.all %}
@@ -98,8 +106,8 @@
                     </table>
                 </div>
             </div>     
-            <div class="row">
-                <div class="col-md-12 table_div">
+            <div class="row table_div">
+                <div class="col-md-12 max-height">
                     <span>Worked:</span>
                     <table id="finished_working_table" class="table">
                         {% for workjob in user.workjob_set.all %}
