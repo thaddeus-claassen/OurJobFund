@@ -17,10 +17,10 @@ urlpatterns = [
     url(r'^search_users$', views.search_users, name='search_users'),
     
     # /user/detail/save_description/
-    url(r'^detail/save_description$', views.save_description, name='save_description'),
+    url(r'^save_description$', views.save_description, name='save_description'),
     
     # /user/<user_random_string>
-    url(r'^detail/(?P<user_random_string>[a-zA-Z0-9]+)$', views.detail, name='detail'),
+    url(r'^(?P<user_random_string>[a-zA-Z0-9]+)$', views.detail, name='detail'),
         
 ]
 

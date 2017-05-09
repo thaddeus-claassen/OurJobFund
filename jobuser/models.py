@@ -43,28 +43,22 @@ class ImageUpload(models.Model):
     comment = models.OneToOneField(Comment, on_delete=models.CASCADE, null=True);
     image = models.ImageField();
     
-class WorkNotification(models.Model):
-    worker = models.ForeignKey(User, on_delete=models.CASCADE);
+class Notification(models.Model):
+    notifier = models.ForeignKey(User, on_delete=models.CASCADE);
+    job = models.OneToOneField(Job, on_delete=models.CASCADE);
+    text = models.CharField(default="", max_length=100);
+    is_pledge = models.BooleanField(default=False);
+    pledge = models.FloatField(default=0.0);
+    is_payment = models.BooleanField(default=False);
+    payment = models.FloatField(default=0.0);
     is_update = models.BooleanField(default=False);
     update = models.ForeignKey(WorkJobUpdate, blank=True, null=True);
     is_comment = models.BooleanField(default=False);
     comment = models.ForeignKey(Comment, blank=True, null=True);
+    is_new_worker = models.BooleanField(default=False);
     date_sent = models.DateTimeField(auto_now_add=True, editable=False);
     date_viewed = models.DateTimeField(blank=True, null=True);
     date_read = models.DateTimeField(blank=True, null=True);
-    
-class PledgeNotification(models.Model):
-    pledger = models.ForeignKey(User, on_delete=models.CASCADE);
-    is_money_request = models.BooleanField(default=False);
-    jo_pk = models.IntegerField(blank=True, null=True);
-    is_update = models.BooleanField(default=False);
-    update = models.ForeignKey(WorkJobUpdate, on_delete=models.CASCADE, blank=True, null=True);
-    is_comment = models.BooleanField(default=False);
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, blank=True, null=True);
-    date_sent = models.DateTimeField(auto_now_add=True, editable=False);
-    date_viewed = models.DateTimeField(blank=True, null=True);
-    date_read = models.DateTimeField(blank=True, null=True);
-    
 
 
     

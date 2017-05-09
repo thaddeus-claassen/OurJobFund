@@ -13,6 +13,7 @@
     <div class="container-fluid">
         {% if user.is_authenticated %}
         <ul class="nav navbar-nav navbar-left">
+            <li><a href="{% url 'job:home' %}">Jobs</a></li>
             <li><a href="{% url 'user:detail' user.userprofile.random_string %}">{{ user.first_name }}&nbsp;{{ user.last_name }}</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-center">
@@ -28,23 +29,11 @@
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    Pledge: Job Updates&nbsp;<span class="caret"></span>
+                    Updates&nbsp;<span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                {% for notification in user.pledgenotification_set.all %}
-                    <li><a href="#" id="pledge_notification_{{ notification.id }}" onclick="viewPledgeNotification(this.id)">Pledge Notification</a></li>
-                {% empty %}
-                    <li><a>None</a></li>
-                {% endfor %}
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    Work: Job Updates&nbsp;<span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    {% for notification in user.worknotification_set.all %}
-                        <li><a href="#" id="work_notification_{{ notification.id }}" onclick="viewWorkNotification(this.id)">Work Notification</a></li>
+                    {% for notification in user.notification_set.order_by__date_sent %}
+                        <li><a href="#" id="notification_{{ notification.id }}" onclick="viewNotification(this.id)">{{ notification.text }}</a></li>
                     {% empty %}
                         <li><a>None</a></li>
                     {% endfor %}

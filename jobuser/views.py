@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404;
 from django.http import HttpResponse, Http404;
 from django.contrib.auth.models import User;
-from .models import WorkJob, WorkJobUpdate, ImageUpload, Comment, WorkNotification, PledgeNotification;
+from .models import WorkJob, WorkJobUpdate, ImageUpload, Comment, Notification;
 from job.models import Job;
 from .forms import NewWorkJobUpdate, NewComment;
 from job.views import detail;
@@ -87,35 +87,52 @@ def view_updates(request, workjob_id):
 def sendUpdateNotifications(update):
     for workjob in update.workjob.job.workjob_set.all():
         if (workjob.worker != update.workjob.worker):
-            WorkNotification(worker=workjob.worker, is_update=True, update=update).save();
+            notif = Notification(notifier=workjob.worker, is_update=True, update=update);
+            createNotificationText(notif);
+            notif.save();
     for pledgejob in update.workjob.job.pledgejob_set.all(): 
-        PledgeNotification(pledger=pledgejob.pledger, is_update=True, update=update).save();   
+        notif = Notification(notifier=pledgejob.pledger, is_update=True, update=update).save();
+        createNotificationText(notif);
+        notif.save();
         
 def sendCommentNotifications(comment):    
     for workjob in comment.job.workjob_set.all():
         if (workjob.worker != comment.commenter):
-            WorkNotification(worker=workjob.worker, is_comment=True, comment=comment).save();
+            notif = Notification(notifier=workjob.worker, is_comment=True, comment=comment).save();
+            createNotificationText(notif);
+            notif.save();
     for pledgejob in comment.job.pledgejob_set.all():
         if (pledgejob.pledger != comment.commenter):
-            PledgeNotification(pledger=pledgejob.pledger, is_comment=True, comment=comment).save();
+            notif = Notification(notifier=pledgejob.pledger, is_comment=True, comment=comment).save();
+            createNotificationText(notif);
+            notif.save();
             
-def view_pledge_notification(request, notification_id):
-    pledge_notification = get_object_or_404(PledgeNotification, pk=notification_id);
-    if (pledge_notification.is_money_request):
-        return detail(request, pledge_notification.job_pk);
-    elif (pledge_notification.is_update):
-        return view_update(request, pledge_notification.update.pk);
-    elif (pledge_notification.is_comment):
-        return view_comment(request, pledge_notification.comment.pk);
-    return Http404();
-    
-def view_work_notification(request, notification_id):
-    work_notification = get_object_or_404(WorkNotification, pk=notification_id);
-    if (work_notification.is_update):
-        return view_update(request, work_notification.update.pk);
-    elif (work_notification.is_comment):
-        return view_comment(request, work_notification.comment.pk);
-    return Http404();
+def createNotificationText(notification):
+    text = notification.notifier.first_name + " " + notification.notifier.last_name;
+    if (notification.is_pledge):
+        text = text + " pledged $" + notification.pledge + " to"; 
+    elif (notification.is_payment):
+        text = text + " paid $" + notification.payment + " to";
+    elif (notification.is_update):
+        text = text + " updated";
+    elif (notification.is_comment):
+        text = text + " commented"
+    elif (notification.is_new_worker):
+        text = text + " is working on ";
+    else:
+        Http404();
+    text = text + " " + notification.job.name;
+    notification.text = text;
+            
+def view_notification(request, notification_id):
+    notification = get_object_or_404(Notification, pk=notification_id);
+    if (notification.is_update or notification.is_pledge or notification.is_payment or notification.is_new_worker):
+        return redirect('job/detail' + notification.job.pk);
+    elif (notification.is_comment):
+        return redirect('job/view_update' + notification.comment.update.pk);
+    else:
+        return Http404();
+
 
 
 

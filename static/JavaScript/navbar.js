@@ -32,15 +32,10 @@ function userSearchSuccess(string) {
     }// end if
 }// end userSearchSuccess()
 
-function viewPledgeNotification(notification_id) {
+function viewNotification(notification_id) {
     var id = notification_id.substr(20, notification_id.length);
-    document.location = '/jobuser/view_pledge_notification/' + id.toString(); 
+    document.location = '/jobuser/view_notification/' + id.toString(); 
 }// end viewPledgeNotification()
-
-function viewWorkNotification(notification_id) {
-    var id = notification_id.substr(18, notification_id.length);
-    document.location = '/jobuser/view_work_notification/' + id.toString(); 
-}// end viewWorkNotification()
 
 
 

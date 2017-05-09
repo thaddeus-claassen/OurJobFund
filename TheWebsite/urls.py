@@ -18,15 +18,14 @@ from django.contrib import admin;
 from django.conf import settings;
 from django.conf.urls.static import static;
 from user.views import search_users;
-from jobuser.views import view_pledge_notification, view_work_notification;
+from jobuser.views import view_notification;
 from . import views;
 
 app_name = 'TheWebsite';
 
 urlpatterns = [
     url(r'search_users$', search_users),
-    url(r'view_pledge_notification/(?P<notification_id>[0-9]+)$', view_pledge_notification),
-    url(r'view_work_notification/(?P<notification_id>[0-9]+)$', view_work_notification),
+    url(r'view_notification/(?P<notification_id>[0-9]+)$', view_notification),
     url(r'^admin/', admin.site.urls),
     url(r'^user/', include('user.urls')),
     url(r'^job/', include('job.urls')),

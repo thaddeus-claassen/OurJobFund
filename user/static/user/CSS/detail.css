@@ -2,16 +2,27 @@ html, body {
     height: 100%;
 }
 
-.max-height {
-    border: 1px solid black;
-}
-
 #edit_div, #textarea_description, #save_description {
     display: none;
 }
 
+#textarea_description {
+    resize: none;
+}
+
+#textarea_description, #description_div {
+    border: 1px solid black;
+    width: 100%;
+    height: 300px;
+    overflow: auto;
+}
+
 .table_div {
     border: 1px solid black;
-    height: 20%;
+}
+
+table {
+    overflow: auto;
+    height: 100px;
     width: 100%;
 }

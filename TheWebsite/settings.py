@@ -131,3 +131,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 LOGIN_URL = '/user/sign_in'
+
+ABSOLUTE_URL_OVERRIDES = {
+    'auth.user': lambda u: "/user/%s/" % u.userprofile.random_string,
+}

@@ -47,11 +47,11 @@ def sign_in(request):
                 user.username = email;
                 user.save();
                 user = authenticate(username=email, password=password);
-                UserProfile(user=user, random_string=create_user_random_string()).save();
+                UserProfile(user=user, photo=None, random_string=create_user_random_string()).save();
                 if (user is not None):
                     if (user.is_active):
                         login(request, user);
-                        return redirect('user:' + user.userprofile.random_string);
+                        return redirect(user);
     context = {
         'new_user_form' : NewUserForm(), 
         'existing_user_form' : UserForm(),
