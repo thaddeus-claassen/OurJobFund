@@ -1,3 +1,10 @@
-#view_message_modal {
-    display: none;
+
+option:hover {
+    background: grey;
+}
+
+#bottom-bar {
+    border: 1px solid black;
+    position: relative;
+    width: 100%;
 }

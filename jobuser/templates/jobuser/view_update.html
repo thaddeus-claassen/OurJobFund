@@ -1,9 +1,8 @@
-{% extends 'navbar.html' %}
+{% extends 'base.html' %}
 
 {% load staticfiles %}
-{% block importTwo %}
+{% block import %}
     <link rel="stylesheet" type="text/css" href="{% static 'jobuser/CSS/view_update.css' %}" />
-    <script type="text/javascript" src="{% static 'jobuser/JavaScript/view_update_or_comment.js' %}" ></script>
     <script type="text/javascript" src="{% static 'jobuser/JavaScript/view_update.js' %}" ></script>
 {% endblock %}
 

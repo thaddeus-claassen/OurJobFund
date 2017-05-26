@@ -1,217 +1,92 @@
-{% extends 'navbar.html' %}
+{% extends 'base.html' %}
 
 {% load staticfiles %}
-{% block importTwo %}
+{% block import %}
     <script type="text/javascript" src="{% static 'job/JavaScript/home.js' %}" ></script>
     <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/home.css' %}" />
-    {% block importThree %}{% endblock %}
 {% endblock %}
 
 {% block content %}
 <div id="wrapper">
-    <div id="content-wrapper">
+    <div id="advanced-settings-wrapper">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <!-- Job search bar -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <a id="toggle-advanced-settings" class="btn btn-success" href="#">Toggle Menu</a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label class="text_label" for="search_bar" >Search job by name or ID:&nbsp;</label>
-                            <span class="text_span"><input class="wide_text" id="search_bar" type="text" /></span>
-                        </div>
-                    </div>
-                    <!-- End job search bar -->
-            
-                    <!-- Location -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label class="text_label change-label" for="location_text" >Location:&nbsp;</label>
-                            <span class="text_span">
-                                <input id="location-text" class="wide_text location-hide" type="text" />
-                            </span>
-                        </div>
-                    </div>
-                    <!-- End Location -->
-
-                    <!-- Radius -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table class="table">
-                                <tr>
-                                    <td>
-                                        <label for="location-radius" class="change-label">Radius:</label>
-                                    </td>
-                                    <td>
-                                        <input id="location-radius" class="location-hide" type="text" size="1" name="radius" value="10" />
-                                    </td>
-                                    <td class="distance-unit location-hide">
-                                        <label class="change-label" for="mi">mi:</label>
-                                    </td>
-                                    <td>
-                                        <input id="mi" type="radio" name="mi-km" value="mi" checked="checked" />
-                                    </td>
-                                    <td class="distance-unit location-hide">
-                                        <label class="change-label" for="km">km:</label>
-                                    </td>
-                                    <td>
-                                        <input id="km" type="radio" name="mi-km" value="km" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                    <!-- End Radius -->
-                    <div class="row">
-                        <div class="col-md-4">
-                            Jobs found: <span id="found-x-jobs" ></span>
-                        </div>
-                        <div class="col-md-8">
-                            <div id="filter-by"> 
-                                <span>Filter:</span>
-                                <div id="advanced-tags-filter" class="filter-by-button" >Advanced Tags</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Job table -->
-                    <div id="row-table" class="row">
-                        <div id="table-border" class="col-md-12 ui-widget-content">
-                            <table id="main_table" class="table"></table>
-                        </div>
-                    </div>
-                    <!-- End job table -->
-            
-                    <!-- Add Job button -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <form action="{% url 'job:add_job' %}">
-                                <input id="add_job" class="col-md-12" type="submit" value="Add job" />
-                            </form>
-                        </div>
-                    </div>
-                    <!-- End Add Job button -->
+                    <h1>Advanced Settings</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Coming Soon</h1>
                 </div>
             </div>
         </div>
     </div>
-    <div id="advanced-settings-wrapper">
-        <div class="container-fluid">
-            <!-- Defines #tag logic -->
-            <div class="row">
-                <div class="col-md-12">
-                    <label class="tag-radio" for="tag_basic_logic">Basic:</label>
-                    <input type="radio" id="tag_basic_logic" name="tag-radio" checked="checked" />
-                    <label class="tag-radio" for="tag_ANDs_of_ORs_logic">ANDs of ORs:</label>
-                    <input type="radio" id="tag_ANDs_of_ORs_logic" name="tag-radio" />
-                    <label class="tag-radio" for="tag_ORs_of_ANDs_logic">ORs of ANDs:</label>
-                    <input type="radio" id="tag_ORs_of_ANDs_logic" name="tag-radio" />
-                    <label class="tag-radio" for="tag_custom_logic">Custom:</label>
-                    <input type="radio" id="tag_custom_logic" name="tag-radio" />
-                    <input type="button" value="Apply Tags" />
+    <div id="content-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <form id="sort-form" action="{% url 'job:home' %}"></form>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="text_label" for="search_bar" >Search Jobs:</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input form="sort-form" id="search_bar" type="text" name="search" />
+                    </div>
+                    <div class="col-md-4">
+                        <form action="{% url 'job:add_job' %}">
+                            <input id="add_job" type="submit" value="Create Job" />
+                        </form>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div id="tags_div" class="col-md-12">
-                    <div id="basic_tags">
+                <!-- Radius -->
+                <div class="row">
+                    <div class="col-md-12">
                         <table class="table">
                             <tr>
-                                <td><input type="text"></td>
-                                <td>AND</td>
-                                <td><input type="text"></td>
-                                <td>AND</td>
-                                <td><input type="text"></td>
-                            </tr>
-                            <tr>
-                                <td><input type="text"></td>
-                                <td>AND</td>
-                                <td><input type="text"></td>
-                                <td>AND</td>
-                                <td><input type="text"></td>
-                            </tr>
-                            <tr>
-                                <td><input type="text"></td>
-                                <td>AND</td>
-                                <td><input type="text"></td>
-                                <td>AND</td>
-                                <td><input type="text"></td>
+                                <td><label for="location_text" >Location:&nbsp;</label></td>
+                                <td><input id="location-text" type="text" form="sort-form" /></td>
+                                <td><label for="location-radius">Radius:</label></td>
+                                <td><input id="location-radius" type="text" size="1" name="radius" value="10" form="sort-form" /></td>
+                                <td><label for="mi">mi:</label></td>
+                                <td><input id="mi" type="radio" name="mi-km" value="mi" form="sort-form" checked="checked" /></td>
+                                <td><label for="km">km:</label></td>
+                                <td><input id="km" type="radio" name="mi-km" value="km" form="sort-form" /></td>
+                                <td>Jobs found:</td>
+                                <td><span id="num-jobs-found">0</span></td>
                             </tr>
                         </table>
-                    </div>
-                    <div id="base_tags">
-                        <table class="table base_tags_table">
-                            <tr><td><input type="text"></td></tr>
-                            <tr><td><span class="ANDs_of_ORs_tags">OR</span><span class="ORs_of_ANDs_tags">AND</span></td></tr>
-                            <tr><td><input type="text"></td></tr>
-                            <tr><td><span class="ANDs_of_ORs_tags">OR</span><span class="ORs_of_ANDs_tags">AND</span></td></tr>
-                            <tr><td><input type="text"></td></tr>
-                        </table>
-                        <table class="table base_tags_table"><tr><td><span class="ORs_of_ANDs_tags">OR</span><span class="ANDs_of_ORs_tags">AND</span></td></tr></table>
-                        <table class="table base_tags_table">
-                            <tr><td><input type="text"></td></tr>
-                            <tr><td><span class="ANDs_of_ORs_tags">OR</span><span class="ORs_of_ANDs_tags">AND</span></td></tr>
-                            <tr><td><input type="text"></td></tr>
-                            <tr><td><span class="ANDs_of_ORs_tags">OR</span><span class="ORs_of_ANDs_tags">AND</span></td></tr>
-                            <tr><td><input type="text"></td></tr>
-                        </table>
-                        <table class="table base_tags_table"><tr><td><span class="ORs_of_ANDs_tags">OR</span><span class="ANDs_of_ORs_tags">AND</span></td></tr></table>
-                        <table class="table base_tags_table">
-                            <tr><td><input type="text"></td></tr>
-                            <tr><td><span class="ANDs_of_ORs_tags">OR</span><span class="ORs_of_ANDs_tags">AND</span></td></tr>
-                            <tr><td><input type="text"></td></tr>
-                            <tr><td><span class="ANDs_of_ORs_tags">OR</span><span class="ORs_of_ANDs_tags">AND</span></td></tr>
-                            <tr><td><input type="text"></td></tr>
-                        </table>
-                    </div>
-                    <div id="custom_tags">
-                        <textarea id="custom_tags_textarea"></textarea>
                     </div>
                 </div>
-            </div>
-            <!-- End #tag logic -->
-            
-            <div id="remove_pledgers" class="filter">
-                <table class="table">
-                    <tr><td>Remove pledgers who have:</td></tr>
-                    <tr>
-                        <td>not been active on the website for</td>
-                        <td><input type="text" size="2" /></td>
-                        <td>days.</td>
-                    </tr>
-                    <tr>
-                        <td>failed to paid the worker/s</td>
-                        <td><input type="text" size="2" /></td>
-                        <td>times.</td>
-                    </tr>
-                    <tr>
-                        <td>paid</td>
-                        <td><input type="text" size="2" /></td>
-                        <td>or fewer times.</td>
-                    </tr>
-                </table>
-            </div>
-            <div id="remove_workers" class="filter">
-                <table class="table">
-                    <tr><td>Remove any potential worker who has:</td></tr>
-                    <tr>
-                        <td>not been active on the website for</td>
-                        <td><input type="text" size="2" /></td>
-                        <td>day/s.</td>
-                    </tr>
-                    <tr>
-                        <td>completed fewer than</td>
-                        <td><input type="text" size="2" /></td>
-                        <td>job/s.</td>
-                    </tr>
-                    <tr>
-                        <td>failed to complete more than</td>
-                        <td><input type="text" size="2" /></td>
-                        <td>job/s.</td>
-                    </tr>
-                </table>
+                <!-- End Radius -->
+
+                <!-- Job table -->
+                <div id="row-table" class="row">
+                    <div id="table-border" class="col-md-12">
+                        <table id="main_table" class="table">
+                            <thead>
+                                <tr>
+                                    <input id="sort-by" type="hidden" value="{{ sort_by }}" form="sort-form" name="sort-by" />
+                                    <th id="name" class="sort">Name</th>
+                                    <th id="created" class="sort">Created</th>
+                                    <th id="pledged" class="sort">Pledged</th>
+                                    <th id="workers" class="sort">Workers</th>
+                                </tr>
+                            </thead>
+                            <tbody id="main_table_body">
+                                {% for job in jobs %}
+                                <tr>
+                                    <td><a href="{% url 'job:detail' job.random_string %}">{{ job.name }}</a></td>
+                                    <td>{{ job.creation_date }}</td>
+                                    <td>{{ job.money_pledged }}</td>
+                                    <td> {{ job.num_workers }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- End job table -->
             </div>
         </div>
     </div>

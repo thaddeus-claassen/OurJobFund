@@ -1,7 +1,3 @@
-html, css, .div_100_percent {
-    height: 100%;
-}
-
 #finish_modal, #pledge_modal, #you_are_now_a_main_editor {
     display: none;
 }
@@ -10,7 +6,6 @@ html, css, .div_100_percent {
     display: block-inline;
     overflow: auto;
     width: 100%;
-    height: 40%;
 }
 
 table {
@@ -20,7 +15,7 @@ table {
 }
 
 #description {
-    height: 40%;
+    height: 300px;
     border: 1px solid black;
 }
 

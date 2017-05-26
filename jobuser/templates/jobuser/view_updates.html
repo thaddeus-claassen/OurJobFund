@@ -1,7 +1,7 @@
-{% extends 'navbar.html' %}
+{% extends 'base.html' %}
 
 {% load staticfiles %}
-{% block importTwo %}
+{% block import %}
     <link rel="stylesheet" type="text/css" href="{% static 'user/CSS/view_updates.css' %}" />
 {% endblock %}
 
@@ -9,18 +9,15 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            Updates from {{ workjob.worker.username }}
+            Updates
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
             <table>
-                {% for update in workjob.workjobupdate_set.all %}
+                {% for update in user.notification_set.order_by__date_sent %}
                     <tr>
-                        <td><a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a></td>
-                        <td>Has Complaint: {{ update.has_active_complaint }}</td>
-                        <td>Total Complaints Ever: {{ update.total_complaints }}</td>
-                        <td>Total number of comments: {{ update.comment_set.all.count }}</td>
+                        <td><a href="{% url 'jobuser:view_update' update.id %}">{{ update.text }}</a></td>
                     </tr>
                 {% empty %}
                     No updates

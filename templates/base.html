@@ -3,26 +3,99 @@
 <head>
     <meta charset="UTF-8">
     {% load staticfiles %}
-    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="//cdn.ckeditor.com/4.5.11/standard/ckeditor.js"></script>
     <script type="text/javascript" src="{% static 'job/JavaScript/main.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'CSS/base.css' %}" />
+    <link rel="stylesheet" type="text/js" href="{% static 'JavaScript/base.js' %}" />
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&dummy=.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     {% block import %}{% endblock %}
-
 </head>
 <body>
-    {% block body %}
-
-    {% endblock %}
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                {% if user.is_authenticated %}
+                    <ul class="nav navbar-nav navbar-left">
+                        <li><a href="{% url 'user:detail' user.username %}">{{ user.first_name }}&nbsp;{{ user.last_name }}</a></li>
+                        <li>
+                            <a>
+                                <form id="go_to_user" action="{% url 'user:search_users' %}">
+                                    <label for="user_search_bar">Search Users:&nbsp;</label>
+                                    <input id="user_search_bar" type="text" name="search-users"/>
+                                </form>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="{% url 'job:home' %}">Jobs</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                Updates&nbsp;<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                {% if user.notification_set.all.count > 0 %}
+                                {% for notification in user.notification_set.order_by__date_sent|slice:"10" %}
+                                <li>
+                                    <a href="{% url 'jobuser:view_updates' %}" id="notification_{{ notification.id }}" onclick="viewNotification(this.id)">
+                                        {{ notification.text }}
+                                    </a>                        
+                                </li>
+                                {% endfor %}
+                                <li><a href="{% url 'jobuser:view_updates' %}">View All Updates</a></li>
+                                {% else %}
+                                <li><a id="no-updates" href="">None</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                Settings&nbsp;<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{% url 'info:account' %}">Account</a></li>
+                                <li><a href="{% url 'user:sign_out' %}">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    {% else %}
+                    <form id="sign-in-form" class="navbar-form navbar-right" method="POST" action="{% url 'user:sign_in' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            {{ existing_user_form }}
+                        </div>
+                        <button type="submit" class="btn btn-default" name="sign-in">Log In</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    <footer id="footer" class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="{% url 'info:about' %}">About</a>
+                        <a href="{% url 'info:contact' %}">Contact</a>
+                        <a href="{% url 'info:terms-of-agreement' %}">Terms of Agreement</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
-
-
 </html>

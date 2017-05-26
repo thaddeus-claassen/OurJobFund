@@ -1,16 +1,27 @@
+html, css, .div_100_percent {
+    height: 100%;
+}
 
 #finish_modal, #pledge_modal, #you_are_now_a_main_editor {
     display: none;
 }
 
-#detail_id {
-    text-align: center;
-    font-size: 30px;
+.table_div {
+    display: block-inline;
+    overflow: auto;
+    width: 100%;
+    height: 40%;
 }
 
-#detail_header {
-    text-align: center;
-    font-size: 50px;
+table {
+    position: relative;
+    white-space: nowrap;
+    height: 100%;
+}
+
+#description {
+    height: 40%;
+    border: 1px solid black;
 }
 
 #display_hashtags {
@@ -19,14 +30,9 @@
 }
 
 #detail-description-box {
+    height: 40%;
     outline: thin solid;
     position: relative;
-}
-
-#view-description {
-    position: absolute;
-    right: 0;
-    bottom: 0;
 }
 
 #detail_work_on_job {

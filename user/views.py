@@ -1,68 +1,72 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect;
 from django.contrib.auth.models import User;
-from django.views.generic import View;
 from django.http import JsonResponse, HttpResponse, Http404;
 from django.core import serializers;
 from django.db.models import Q;
 from django.contrib.auth import authenticate, login, logout;
 from .forms import UserForm, NewUserForm;
-from jobuser.forms import NewWorkJobUpdate;
 from .models import UserProfile;
-from jobuser.models import WorkJob, ImageUpload, WorkJobUpdate;
+from jobuser.models import WorkJob, ImageUpload;
 from job.models import Job;
 from datetime import datetime;
 from random import randint;
 
 def sign_in(request):
+    userForm = UserForm(request.POST or None);
+    newUserForm = NewUserForm(request.POST or None);
     if (request.user.is_authenticated()):
         return redirect('job/home');
     else: 
         if (request.method == 'POST'):
-            userForm = UserForm(request.POST);
-            newUserForm = NewUserForm(request.POST);
-            if (userForm.is_valid()):
-                email = userForm.cleaned_data['email'];
-                if (email != ""):
-                    user = authenticate(username=email, password=userForm.cleaned_data['password']);
+            if ('sign-in' in request.POST):
+                if (userForm.is_valid()):
+                    email = userForm.cleaned_data['email'];
+                    if (email != ""):
+                        user = authenticate(username=email, password=userForm.cleaned_data['password']);
+                        if (user is not None):
+                            if (user.is_active):
+                                login(request, user);
+                                return redirect('job:home');
+            elif ('sign-up' in request.POST):
+                if (newUserForm.is_valid()):
+                    user = newUserForm.save(commit=False);
+                    first_name = newUserForm.cleaned_data['first_name'];
+                    last_name = newUserForm.cleaned_data['last_name'];
+                    user.first_name = first_name;
+                    user.last_name = last_name;
+                    user.email = newUserForm.cleaned_data['email'];
+                    password = newUserForm.cleaned_data['password'];
+                    user.set_password(password);
+                    user.username = createNewUsername(first_name, last_name);
+                    user.save();
+                    UserProfile(user=user).save();
+                    user = authenticate(username=user.username, password=password);
                     if (user is not None):
                         if (user.is_active):
                             login(request, user);
-                            return redirect('job:home');
-            if (newUserForm.is_valid()):
-                validEmail = False;
-                validPassword = False;
-                user = newUserForm.save(commit=False);
-                first_name = newUserForm.cleaned_data['first_name'];
-                last_name = newUserForm.cleaned_data['last_name'];
-                email = newUserForm.cleaned_data['email'];
-                if (not User.objects.filter(email=email).exists()):
-                    validEmail = True;
-                password = newUserForm.cleaned_data['password'];
-                repeat_password = newUserForm.cleaned_data['repeat_password'];
-                if (password == repeat_password):
-                    validPassword = True;
-                user.set_password(password);
-                user.email = email;
-                user.username = email;
-                user.save();
-                user = authenticate(username=email, password=password);
-                UserProfile(user=user, photo=None, random_string=create_user_random_string()).save();
-                if (user is not None):
-                    if (user.is_active):
-                        login(request, user);
-                        return redirect(user);
+                            return redirect(user);
     context = {
-        'new_user_form' : NewUserForm(), 
-        'existing_user_form' : UserForm(),
+        'new_user_form' : newUserForm, 
+        'existing_user_form' : userForm,
     }
-    return render(request, 'user/login.html', context);
+    return render(request, 'user/signup.html', context);
         
 def check_email_is_unused(request):
     emailIsUnused = True;
     if (request.is_ajax()):
         emailIsUnused = not User.objects.filter(email=request.GET['email']).exists();
     return emailIsUnused;
+    
+def createNewUsername(first_name, last_name):
+    combinedNames = first_name + last_name;
+    lastDigit = 1;
+    username = combinedNames + str(lastDigit);
+    while (User.objects.filter(username=username).exists()):
+       lastDigit = lastDigit + 1;
+       username = combinedNames + str(lastDigit);
+    return username;
+        
 
 @login_required        
 def sign_out(request):
@@ -71,20 +75,43 @@ def sign_out(request):
 
 @login_required    
 def search_users(request):
+    search = request.GET['search-users'];
+    context = {
+        'users' : getUsersFromQuery(search, 0),
+        'search' : search,
+        'total' : getTotalNumberOfUsersFromQuery(search),
+    };
+    return render(request, 'user/users.html', context);
+
+def see_more_users(request):
     if (request.is_ajax()):
-        response = "";
-        username = request.GET['username'];
-        if (User.objects.filter(username__iexact=username).exists()):
-            response = "user exists";
-        else:
-            response = "user does not exist";
-        return HttpResponse(response);
+        search = request.GET['search'];
+        num_searches = request.GET['num_searches'];
+        users = getUsersFromQuery(search, num_searches);
+        users = serializers.serialize("json", users);
+        return HttpResponse(users, content_type="application/json");
     else:
         return Http404();
-
+        
+def getUsersFromQuery(search, num_searches):
+    users = User.objects.all();
+    for word in search.split():
+        users = users.filter(Q(first_name__startswith=word) | Q(last_name__startswith=word));
+    start = (50 * num_searches);
+    end = start + 50;
+    users = users[start:end];
+    return users;
+    
+def getTotalNumberOfUsersFromQuery(search):
+    users = User.objects.all();
+    for word in search.split():
+        users = users.filter(Q(first_name__startswith=word) | Q(last_name__startswith=word));
+    return users.count();
+        
+        
 @login_required    
-def detail(request, user_random_string):
-    user = get_object_or_404(UserProfile, random_string=user_random_string).user;       
+def detail(request, username):
+    user = get_object_or_404(User, username=username);       
     context = {
         'detail_user' : user,
     }

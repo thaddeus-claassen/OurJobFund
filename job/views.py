@@ -1,35 +1,72 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required;
 from django.shortcuts import render, get_object_or_404, redirect;
 from .models import Job, Tag, User;
-from jobuser.models import PledgeJob, WorkJob, WorkJobUpdate;
+from jobuser.models import Update;
+from jobuser.views import createUpdate;
+from django.db.models import Q;
+from jobuser.models import PledgeJob, WorkJob;
 from django.http import JsonResponse, HttpResponse, Http404;
 from django.core import serializers;
 from django.contrib.auth import authenticate, login, logout;
 from .forms import NewJobForm;
 import json, re, math;
+from random import randint;
 
 @login_required
 def home(request):
-    return render(request, 'job/home.html');
-
+    context = {};
+    jobs = Job.objects.none();
+    sort_by = request.GET.get('sort-by');
+    if (sort_by is not None):
+        search = request.GET.get('search');
+        if (search != ""):
+            jobs = getJobs(search, sort_by, 0, 50);
+    else:
+        sort_by = 'created descending';
+    context['jobs'] = jobs;
+    context['sort_by'] = sort_by;        
+    return render(request, 'job/home.html', context);
+    
 @login_required    
-def search_jobs(request):
+def see_more_jobs(request):
     if (request.is_ajax()):
-        data = [];
-        post_text = request.POST['job_name_or_id'];
-        if post_text.isnumeric():
-            post_text = int(post_text);
-            data = Job.objects.get(pk=post_text);
-            data = [data];
-        else:
-            post_text_array = post_text.split();
-            data = Job.objects.all();
-            for word in post_text_array:
-                data = data.filter(name__contains=word);
-        data = serializers.serialize("json", data);
-        return HttpResponse(data, content_type="application/json");
+        start = 50 * request.GET['numSearches'];
+        end = start + 50;
+        jobs = getJobs(request.GET['search'], request.GET['sort-by'], start, end);
+        jobs = serializers.serialize('json', jobs);
+        return HttpResponse(jobs, content_type="application/json");
     else:
         return Http404();
+        
+def getJobs(search, sort_by, start, end):
+    search_array = search.split();
+    jobs = Job.objects.all();
+    for word in search_array:
+        jobs = jobs.filter(Q(name__contains=word) | Q(tag__tag__contains=word)).distinct();
+    sort_by_column = sort_by.split(" ")[0];
+    ascending_or_descending = sort_by.split(" ")[1];
+    if (sort_by_column == 'created'):
+        if (ascending_or_descending == 'ascending'):
+            jobs = jobs.order_by('creation_date');
+        else:
+            jobs = jobs.order_by('-creation_date');
+    elif (sort_by == 'pledged'):
+        if (ascending_or_descending == 'ascending'):
+            jobs = jobs.order_by('money_pledged');
+        else:
+            jobs = jobs.order_by('-money_pledged');
+    elif (sort_by == 'workers'):
+        if (ascending_or_descending == 'ascending'):
+            jobs = jobs.order_by('workers');
+        else:
+            jobs = jobs.order_by('-workers');
+    else:
+        if (ascending_or_descending == 'ascending'):
+            jobs = jobs.order_by('name');
+        else:
+            jobs = jobs.order_by('-name');
+    jobs = jobs[start:end];
+    return jobs;
 
 @login_required
 def find_jobs_by_radius(jobs, currLatitude, currLongitude, radius):
@@ -81,11 +118,11 @@ def get_jobs_from_basic_tags(tags):
     jobs = Job.objects.all();
     if (tags != ''):
         tagsArray = create_tags_array(tags);
-        jobs = Job.objects.all();                                               #       create a the variable data which starts out as all jobs
-        for tagString in tagsArray :                                            #       for each individual tag the user inputted (gotten form the tags array variable)       
-            currtag = Tag.objects.get(tag__iexact=tagString);                   #           find the tag from the database
-            currJobs = currtag.jobs.all();                                      #           find all jobs, which contain the tag
-            jobs = jobs & currJobs;           
+        jobs = Job.objects.all();
+        for tagString in tagsArray:       
+            currtag = Tag.objects.get(tag__iexact=tagString);
+            currJobs = currtag.jobs.all();
+            jobs = jobs & currJobs;
     return jobs;
     
 def apply_tags(tags):
@@ -95,76 +132,34 @@ def apply_tags(tags):
             Tag(tag=word).save();
     tags = re.sub(r'([a-zA-Z0-9]+)', "Tag.objects.get(tag__iexact='" + r'\1' + "').jobs.all()", tags);
     return tags;
-
-@login_required    
-def apply_metrics_to_jobs(jobs):
-    for job in jobs:
-        apply_pledge_metrics_to(job);
-        apply_work_metrics_to(job);
-    return jobs;
-    
-def apply_pledge_metrics_to(job):
-    #amount_pledged = job.money_pledged;
-    #filter = request.user.userpledgefilter;
-    #for pledger in job.pledgejob_set.all():
-    #    if (filter.inactive != '' && filter.inactive_unit != ''):
-    #        ago = exec("datetime.timedelta(" + filter.inactive_unit + "=" + filter.inactive + ")");
-    #        if (ago > pledger.lastlogin):
-    #            amount_pledged = amount_pledged - pledger.amount_pledged;
-    #    if (filter.failed_to_pay != ''):
-    #        if (pledger):
-    #            break;
-    return None;
     
 def create_tags_array(tagsString):
     tagsString = tagsString.replace(","," ");
     return tagsString.split();
 
 @login_required    
-def detail(request, job_id):
-    job = get_object_or_404(Job, pk=job_id);                                 
-    is_main_editor = False;
-    is_pledging = False;
-    pledging_amount = 0;
-    workjob = False;       
+def detail(request, job_random_string):
+    job = get_object_or_404(Job, random_string=job_random_string);
+    if (request.method == "POST"):
+        if ('pledge_money_to_job' in request.POST['pledge_money_to_job']):
+            PledgeJob(pledger=request.user, job=job).save();
+            return redirect('job:detail', job_random_string=job_random_string);
+        elif ('work_on_job' in request.POST['work_on_job']):
+            WorkJob(worker=request.user, job=job).save();
+            return redirect('job:detail', job_random_string=job_random_string);
+    pledgejob = None;
+    workjob = None;
     if (request.user.pledgejob_set.all().filter(job=job).exists()):
-        is_pledging = True;
-        pledging_amount = request.user.pledgejob_set.get(job=job).amount_pledged;
+        pledgejob = request.user.pledgejob_set.get(job=job);
     if (request.user.workjob_set.all().filter(job=job).exists()):
         workjob = request.user.workjob_set.get(job=job);
     context = {                                                                     
         'job': job,
+        'pledgejob' : pledgejob,
         'workjob' : workjob,
-        'is_pledging' : is_pledging,
-        'pledging_amount' : pledging_amount,
-        'workjob' : workjob,
-        'ordered_updates' : WorkJobUpdate.objects.filter(workjob__job=job).order_by('updated'),
+        'ordered_updates' : Update.objects.all(),
     }
     return render(request, 'job/detail.html', context);
-    
-@login_required
-def view_workers(request, job_id):
-    job = get_object_or_404(Job, pk=job_id);
-    context = {
-        'job' : job,
-    }
-    return render(request, 'job/view_workers.html', context);
-    
-@login_required    
-def description(request, job_id):
-    job = get_object_or_404(Job, pk=job_id);
-    context = {
-        'job': job,
-    }
-    return render(request, 'job/description.html', context);
-    
-@login_required    
-def become_main_editor(request, job_id):
-    job = get_object_or_404(Job, pk=job_id);
-    if (request.method == 'POST'):
-        if (job.main_editors.all().count() < 3):
-            job.main_editors.add(request.user);
-    return HttpResponse('Finished!');
     
 @login_required
 def pledge_money_to_job(request, job_id):
@@ -180,12 +175,14 @@ def pledge_money_to_job(request, job_id):
     return HttpResponse(string);
     
 @login_required
-def work_on_job(request, job_id):
+def work_on_job(request, job_random_string):
+    return_string = "Did not go through normal AJAX call";
     if (request.method == 'POST'):
-        job = get_object_or_404(Job, pk=job_id);
+        job = get_object_or_404(Job, random_string=job_random_string);
         if (not job.workjob_set.filter(worker=request.user).exists()):
-            WorkJob(worker=request.user, job=job).save();
-    return HttpResponse('Finished!');
+            workjob = WorkJob(worker=request.user, job=job).save();
+            return_string = "success";
+    return HttpResponse(return_string);
 
 @login_required    
 def add_job(request):
@@ -197,7 +194,7 @@ def add_job(request):
             longitude = newJobForm.cleaned_data['longitude'];
             tags = newJobForm.cleaned_data['tags'];
             description = newJobForm.cleaned_data['description'];
-            job = Job(name=name, latitude=latitude, longitude=longitude, description=description);
+            job = Job(name=name, latitude=latitude, longitude=longitude, description=description, random_string=createRandomString());
             job.save();
             tags = request.POST['tags'];
             tagsArray = create_tags_array(tags);
@@ -209,7 +206,7 @@ def add_job(request):
                     newTag = Tag(tag=tagString);
                 newTag.save();
                 job.tag_set.add(newTag);
-            return redirect('/home');
+            return redirect('job:home');
     context = {
         'form' : NewJobForm(), 
     }
@@ -219,26 +216,17 @@ def add_job(request):
 def add_location(request):
     return render(request, 'job/add_location.html');
     
-    
-    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+def createRandomString():
+    random_string = '';
+    available_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+    for i in range(50):
+        index = randint(0, 61);
+        random_char = available_chars[index];
+        random_string = random_string + random_char;
+    if (Job.objects.filter(random_string=random_string).exists()):
+        random_string = createRandomString();
+    return random_string;
+                   
                     
                     
     

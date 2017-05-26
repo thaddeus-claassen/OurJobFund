@@ -1,13 +1,13 @@
-html, body {
-    height: 100%;
-}
-
 #edit_div, #textarea_description, #save_description {
     display: none;
 }
 
 #textarea_description {
     resize: none;
+}
+
+#textarea_description {
+    text-sizing: border-box;
 }
 
 #textarea_description, #description_div {

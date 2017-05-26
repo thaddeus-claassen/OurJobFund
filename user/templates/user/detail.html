@@ -1,141 +1,136 @@
-{% extends 'navbar.html' %}
+{% extends 'base.html' %}
 
 {% load staticfiles %}
-{% block importTwo %}
+{% block import %}
     <script type="text/javascript" src="{% static 'user/JavaScript/detail.js' %}" ></script>
     <link rel="stylesheet" type="text/css" href="{% static 'user/CSS/detail.css' %}" />
 {% endblock %}
 
 {% block content %}
 <input id="user_id" type="hidden" value="{{ id }}" />
-<div class="container">
-    <div class="row">
-        <div class="col-md-12 text-center">
-            {{ user.first_name }}&nbsp;{{ user.last_name }}
+<div class="row">
+    <div class="col-md-5">
+        {% if not detail_user.is_active %}
+        <div class="row">
+            <div class="col-md-12">
+                User is not active.
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4 col-md-offset-1">
-            <div class="row">    
-                <div class="col-md-12">
-                    {% if user.userprofile.photo %}
-                    <img src="{{ user.userprofile.photo.url }}" class="img-responsive">
-                    {% endif %}
-                </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-md-12 text-center">
+                {{ detail_user.first_name }}&nbsp;{{ detail_user.last_name }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="description">Description</label>
             </div>
             {% if user.is_authenticated and user.username == detail_user.username %}
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="description">Description</label>
-                </div>
-                <div class="col-md-6">
-                    <input id="save_description" type="button" value="Save" />
-                </div>
+            <div class="col-md-6 text-right">
+                <input id="save_description" type="button" value="Save" />
             </div>
-            <div class="row">
-                <div id="description_div" class="col-md-12">
-                    <span id="description">{{ detail_user.userprofile.description }}</span>
-                </div>
+            <div class="col-md-6 text-right">
+                <input id="edit_description" type="button" value="Edit" />
             </div>
-            <div class="row">
-                <div class="col-md-12 form-group">
-                    <textarea id="textarea_description" class="form-control"></textarea>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <input id="edit_description" type="button" value="Edit" />
-                </div>
-            </div>
-            {% else %} 
-            <div class="row">
-                <div id="description_div" class="col-md-12">
-                    <span id="description">{{ detail_user.userprofile.description }}</span>
-                </div>
-            </div> 
             {% endif %}
         </div>
-        <div class="col-md-5 col-md-offset-1">  
-            <div class="row table_div">
-                <div class="col-md-12 max-height">
-                    <span>Pledged:</span>
-                    <table id="pledging_table" class="table">
-                        {% for pledgejob in user.pledgejob_set.all %}
-                            {% if pledgejob.job.is_active %}
-                                <tr id="pledge{{ plegdejob.job.name }}">
-                                    <td><a href="{% url 'job:detail' pledgejob.job.id %}">{{ pledgejob.job.name }}</a></td>
-                                    <td>Is Finished: {{ pledgejob.job.is_finished }}</td>
-                                    <td>Amount Pledged: {{ pledgejob.amount_pledged }}</td>
-                                    <td>Amount Paid (if any): {{ pledgejob.amount_paid }}</td>
-                                </tr>
-                            {% endif %}
-                        {% empty %}
-                            <tr><td>You are not pledged to any jobs.</td></tr>
-                        {% endfor %}
-                    </table>
-                </div>
+        {% if user.is_authenticated and user.username == detail_user.username %}
+        <div class="row">
+            <div id="description_div" class="col-md-12">
+                <span id="description">{{ detail_user.userprofile.description }}</span>
             </div>
-            <br>
-            <div class="row table_div">
-                <div class="col-md-12 max-height">
-                    <span>Paid:</span>
-                    <table id="finished_pledging_table" class="table">
-                        {% for pledgejob in user.pledgejob_set.all %}
-                            {% if pledgejob.amount_pledged <= pledgejob.amount_paid %}
-                                <tr id="finished_pledge_{{ pledgejob.job.name }}">
-                                    <td><a href="{% url 'job:detail' pledgejob.job.id %}">{{ pledgejob.job.name }}</a></td>
-                                    <td>Amount Pledged: {{ pledgejob.amount_pledged }}</td>
-                                    <td>Amount Paid: {{ pledgejob.amount_paid }}</td>
-                                    <td>Active: {{ pledgejob.job.is_active }}</td>
-                                </tr>
-                            {% endif %}
-                        {% empty %}
-                            <tr><td>You have not paid any jobs.</td></tr>
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>
-            <br>
-            <div class="row table_div">
-                <div class="col-md-12 max-height">
-                    <span>Working:</span>
-                    <table id="working_table" class="table">
-                        {% for workjob in user.workjob_set.all %}
-                            {% if workjob.job.is_active %}
-                                <tr id="work_{{ workjob.job.name }}">
-                                    <td><a href="{% url 'job:detail' workjob.job.id %}">{{ workjob.job.name }}</a></td>
-                                    <td>Started Working: {{ workjob.date_joined|date:"D d M Y" }}</td>
-                                    <td><a href="{% url 'jobuser:view_updates' workjob.id %}">
-                                        Number of Updates: {{ workjob.workjobupdate_set.all.count }}
-                                    </a></td>
-                                </tr>
-                            {% endif %}
-                        {% empty %}    
-                            <tr><td>No Jobs.</td></tr>
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>
-            <br>
-            <div class="row table_div">
-                <div class="col-md-12 max-height">
-                    <span>Worked:</span>
-                    <table id="finished_working_table" class="table">
-                        {% for workjob in user.workjob_set.all %}
-                            {% if workjob.is_finished or workjob.job.is_finished %}
-                                <tr id="finished_work_{{ workjob.job.name }}">
-                                    <td><a href="{% url 'job:detail' workjob.job.id %}">{{ workjob.job.name }}</td>
-                                    <td>Job Finished: {{ workjob.job.is_finished }} </td>
-                                    <td>You Finished: {{ workjob.is_finished }}</td>
-                                </tr>
-                            {% endif %}
-                        {% empty %}    
-                            <tr><td>No such jobs.</td></tr>
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>    
         </div>
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <textarea id="textarea_description" class="form-control"></textarea>
+            </div>
+        </div>
+        {% else %} 
+        <div class="row">
+            <div id="description_div" class="col-md-12">
+                <span id="description">{{ detail_user.userprofile.description }}</span>
+            </div>
+        </div> 
+        {% endif %}
+    </div>
+    <div class="col-md-6 col-md-offset-1">  
+        <div class="row table_div">
+            <div class="col-md-12 max-height">
+                <span>Pledged:</span>
+                <table id="pledging_table" class="table">
+                    {% for pledgejob in user.pledgejob_set.all %}
+                    {% if pledgejob.job.is_active %}
+                    <tr id="pledge{{ plegdejob.job.name }}">
+                        <td><a href="{% url 'job:detail' pledgejob.job.id %}">{{ pledgejob.job.name }}</a></td>
+                        <td>Is Finished: {{ pledgejob.job.is_finished }}</td>
+                        <td>Amount Pledged: {{ pledgejob.amount_pledged }}</td>
+                        <td>Amount Paid (if any): {{ pledgejob.amount_paid }}</td>
+                    </tr>
+                    {% endif %}
+                    {% empty %}
+                    <tr><td>You are not pledged to any jobs.</td></tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="row table_div">
+            <div class="col-md-12 max-height">
+                <span>Paid:</span>
+                <table id="finished_pledging_table" class="table">
+                    {% for pledgejob in user.pledgejob_set.all %}
+                    {% if pledgejob.amount_pledged <= pledgejob.amount_paid %}
+                    <tr id="finished_pledge_{{ pledgejob.job.name }}">
+                        <td><a href="{% url 'job:detail' pledgejob.job.id %}">{{ pledgejob.job.name }}</a></td>
+                        <td>Amount Pledged: {{ pledgejob.amount_pledged }}</td>
+                        <td>Amount Paid: {{ pledgejob.amount_paid }}</td>
+                        <td>Active: {{ pledgejob.job.is_active }}</td>
+                    </tr>
+                    {% endif %}
+                    {% empty %}
+                    <tr><td>You have not paid any jobs.</td></tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="row table_div">
+            <div class="col-md-12 max-height">
+                <span>Working:</span>
+                <table id="working_table" class="table">
+                    {% for workjob in user.workjob_set.all %}
+                    {% if workjob.job.is_active %}
+                    <tr id="work_{{ workjob.job.name }}">
+                        <td><a href="{% url 'job:detail' workjob.job.id %}">{{ workjob.job.name }}</a></td>
+                        <td>Started Working: {{ workjob.date_joined|date:"D d M Y" }}</td>
+                        <td><a href="{% url 'jobuser:view_updates' workjob.id %}">
+                            Number of Updates: {{ workjob.workjobupdate_set.all.count }}
+                        </a></td>
+                    </tr>
+                    {% endif %}
+                    {% empty %}    
+                        <tr><td>No Jobs.</td></tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="row table_div">
+            <div class="col-md-12 max-height">
+                <span>Worked:</span>
+                <table id="finished_working_table" class="table">
+                    {% for workjob in user.workjob_set.all %}
+                    {% if workjob.is_finished or workjob.job.is_finished %}
+                    <tr id="finished_work_{{ workjob.job.name }}">
+                        <td><a href="{% url 'job:detail' workjob.job.id %}">{{ workjob.job.name }}</td>
+                        <td>Job Finished: {{ workjob.job.is_finished }} </td>
+                        <td>You Finished: {{ workjob.is_finished }}</td>
+                    </tr>
+                    {% endif %}
+                    {% empty %}    
+                    <tr><td>No such jobs.</td></tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>    
     </div>
 </div>
 {% endblock %}
