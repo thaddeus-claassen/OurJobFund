@@ -2,32 +2,29 @@ from django.contrib.auth.decorators import login_required;
 from django.shortcuts import render, get_object_or_404;
 from django.http import HttpResponse, Http404;
 from django.contrib.auth.models import User;
-from .models import WorkJob, ImageUpload;
+from .models import JobUser, ImageUpload;
 from job.models import Job;
 
 @login_required
 def post_update(request, workjob_id):
-    workjob = get_object_or_404(WorkJob, pk=workjob_id);
+    jobuser = get_object_or_404(JobUser, pk=workjob_id);
     if (request.method == 'POST'):
         form = NewWorkJobUpdate(request.POST, request.FILES);
         if (form.is_valid()):
             title = form.cleaned_data['title'];
             description = form.cleaned_data['description'];
-            newUpdate = WorkJobUpdate(workjob=workjob, title=title, description=description);
-            newUpdate.save();
+            update = Update(jobuser=jobuser, title=title, description=description);
+            update.save();
             for image in request.FILES.getlist('images'):
-                image=ImageUpload(image=image);
+                image=ImageUpload(image=image, update=update);
                 image.save();
-                newUpdate.imageupload_set.add(image);
-            sendUpdateNotifications(newUpdate);
-    else:
-        if (workjob.worker == request.user):
-            context = {
-                'workjob' : workjob,
-                'update_form' : NewWorkJobUpdate(),
-            }
-            return render(request, 'jobuser/post_update.html', context);
-    return redirect('/job/' + workjob.job.random_string);
+    if (jobuser.user == request.user):
+        context = {
+            'jobuser' : jobuser,
+            'update_form' : NewWorkJobUpdate(),
+        }
+        return render(request, 'jobuser/post_update.html', context);
+    return redirect('/job/' + jobuser.job.random_string);
     
 @login_required    
 def view_update(request, update_id):

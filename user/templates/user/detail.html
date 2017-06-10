@@ -9,7 +9,7 @@
 {% block content %}
 <input id="user_id" type="hidden" value="{{ id }}" />
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-12">
         {% if not detail_user.is_active %}
         <div class="row">
             <div class="col-md-12">
@@ -54,83 +54,53 @@
         </div> 
         {% endif %}
     </div>
-    <div class="col-md-6 col-md-offset-1">  
-        <div class="row table_div">
-            <div class="col-md-12 max-height">
-                <span>Pledged:</span>
-                <table id="pledging_table" class="table">
-                    {% for pledgejob in user.pledgejob_set.all %}
-                    {% if pledgejob.job.is_active %}
-                    <tr id="pledge{{ plegdejob.job.name }}">
-                        <td><a href="{% url 'job:detail' pledgejob.job.id %}">{{ pledgejob.job.name }}</a></td>
-                        <td>Is Finished: {{ pledgejob.job.is_finished }}</td>
-                        <td>Amount Pledged: {{ pledgejob.amount_pledged }}</td>
-                        <td>Amount Paid (if any): {{ pledgejob.amount_paid }}</td>
-                    </tr>
-                    {% endif %}
-                    {% empty %}
-                    <tr><td>You are not pledged to any jobs.</td></tr>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
-        <div class="row table_div">
-            <div class="col-md-12 max-height">
-                <span>Paid:</span>
-                <table id="finished_pledging_table" class="table">
-                    {% for pledgejob in user.pledgejob_set.all %}
-                    {% if pledgejob.amount_pledged <= pledgejob.amount_paid %}
-                    <tr id="finished_pledge_{{ pledgejob.job.name }}">
-                        <td><a href="{% url 'job:detail' pledgejob.job.id %}">{{ pledgejob.job.name }}</a></td>
-                        <td>Amount Pledged: {{ pledgejob.amount_pledged }}</td>
-                        <td>Amount Paid: {{ pledgejob.amount_paid }}</td>
-                        <td>Active: {{ pledgejob.job.is_active }}</td>
-                    </tr>
-                    {% endif %}
-                    {% empty %}
-                    <tr><td>You have not paid any jobs.</td></tr>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
-        <div class="row table_div">
-            <div class="col-md-12 max-height">
-                <span>Working:</span>
-                <table id="working_table" class="table">
-                    {% for workjob in user.workjob_set.all %}
-                    {% if workjob.job.is_active %}
-                    <tr id="work_{{ workjob.job.name }}">
-                        <td><a href="{% url 'job:detail' workjob.job.id %}">{{ workjob.job.name }}</a></td>
-                        <td>Started Working: {{ workjob.date_joined|date:"D d M Y" }}</td>
-                        <td><a href="{% url 'jobuser:view_updates' workjob.id %}">
-                            Number of Updates: {{ workjob.workjobupdate_set.all.count }}
-                        </a></td>
-                    </tr>
-                    {% endif %}
-                    {% empty %}    
-                        <tr><td>No Jobs.</td></tr>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
-        <div class="row table_div">
-            <div class="col-md-12 max-height">
-                <span>Worked:</span>
-                <table id="finished_working_table" class="table">
-                    {% for workjob in user.workjob_set.all %}
-                    {% if workjob.is_finished or workjob.job.is_finished %}
-                    <tr id="finished_work_{{ workjob.job.name }}">
-                        <td><a href="{% url 'job:detail' workjob.job.id %}">{{ workjob.job.name }}</td>
-                        <td>Job Finished: {{ workjob.job.is_finished }} </td>
-                        <td>You Finished: {{ workjob.is_finished }}</td>
-                    </tr>
-                    {% endif %}
-                    {% empty %}    
-                    <tr><td>No such jobs.</td></tr>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>    
+    <div class="col-md-12">
+        <span>Current:</span>
+        <table id="current" class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Pledged / Paid</th>
+                    <th>Working</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pledgejob in user.pledgejob_set.all %}
+                <tr id="pledge_{{ pledgejob.job.name }}">
+                    <td><a href="{% url 'job:detail' pledgejob.job.random_string %}">{{ pledgejob.job.name }}</a></td>
+                    <td>${{ pledgejob.amount_pledged }}</td>
+                    <td>{{ pledgejob.amount_paid }}</td>
+                </tr>
+                {% empty %}
+                <tr><td>You are not pledged to any jobs.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-12">
+        <span>Finished:</span>
+        <table id="finished" class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Pledged / Paid</th>
+                    <th>Worked</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for pledgejob in user.pledgejob_set.all %}
+                {% if pledgejob.amount_pledged <= pledgejob.amount_paid %}
+                <tr id="finished_pledge_{{ pledgejob.job.name }}">
+                    <td><a href="{% url 'job:detail' pledgejob.job.random_string %}">{{ pledgejob.job.name }}</a></td>
+                    <td>${{ pledgejob.amount_pledged }}</td>
+                    <td>{{ pledgejob.amount_paid }}</td>
+                </tr>
+                {% endif %}
+            {% empty %}
+                <tr><td>You have not paid any jobs.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}

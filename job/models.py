@@ -21,11 +21,14 @@ class Job(models.Model):
     def __str__(self):  
         return self.name;    
 
-        
 class Tag(models.Model):                                            
     tag = models.CharField(max_length=30);                     
     jobs = models.ManyToManyField(Job);
 
     def __str__(self):
-        return self.tag;                                         
+        return self.tag;
+
+class ImageUpload(models.Model):
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, null=True);
+    image = models.ImageField();        
 

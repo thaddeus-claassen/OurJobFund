@@ -14,8 +14,9 @@ table {
     height: 100%;
 }
 
-#description {
+#job_description {
     height: 300px;
+    width: 100%;
     border: 1px solid black;
 }
 
@@ -34,4 +35,6 @@ table {
     height: 30px;
 }
 
-
+.pledge_work_inputs {
+    width: 100%;
+}

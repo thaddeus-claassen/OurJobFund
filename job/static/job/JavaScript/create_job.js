@@ -15,9 +15,9 @@ function applyLocation(address) {
     geocoder.geocode({ 'address': address}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             var center = results[0].geometry.location;
-            var pi = 3.14159265;
-            $('#id_latitude').val(center.lat() * (pi / 180));
-            $('#id_longitude').val(center.lng() * (pi / 180));
+            alert("(" + center.lat() + ", " + center.lng() + ")");
+            $('#id_latitude').val(center.lat());
+            $('#id_longitude').val(center.lng());
             $('#create-job-form').submit();
         } else {
             $('#location-validation').text("Invalid Location.");

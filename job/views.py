@@ -4,7 +4,7 @@ from .models import Job, Tag, User;
 from jobuser.models import Update;
 from jobuser.views import createUpdate;
 from django.db.models import Q;
-from jobuser.models import PledgeJob, WorkJob;
+from jobuser.models import JobUser;
 from django.http import JsonResponse, HttpResponse, Http404;
 from django.core import serializers;
 from django.contrib.auth import authenticate, login, logout;
@@ -13,150 +13,126 @@ import json, re, math;
 from random import randint;
 
 @login_required
-def home(request):
-    context = {};
-    jobs = Job.objects.none();
-    sort_by = request.GET.get('sort-by');
-    if (sort_by is not None):
-        search = request.GET.get('search');
-        if (search != ""):
-            jobs = getJobs(search, sort_by, 0, 50);
-    else:
-        sort_by = 'created descending';
-    context['jobs'] = jobs;
-    context['sort_by'] = sort_by;        
-    return render(request, 'job/home.html', context);
+def home(request):     
+    return render(request, 'job/home.html');
     
-@login_required    
-def see_more_jobs(request):
+@login_required
+def get_jobs(request):
     if (request.is_ajax()):
-        start = 50 * request.GET['numSearches'];
-        end = start + 50;
-        jobs = getJobs(request.GET['search'], request.GET['sort-by'], start, end);
+        jobs = findJobs(request);
+        jobs = jobs[0:50];
+        jobs = serializers.serialize('json', jobs);
+        return HttpResponse(jobs, content_type="application/json");
+    else:
+        return Http404();
+
+@login_required
+def add_jobs(request):
+    if (request.is_ajax()):
+        numSearches =  int(request.GET['numSearches']);
+        jobs = findJobs(request);
+        jobs = jobs[50 * numSearches:50 * (numSearches + 1)];
+        jobs = serializers.serialize('json', jobs);
+        return HttpResponse(jobs, content_type="application/json");
+    else:
+        return Http404();
+
+@login_required        
+def sort_jobs(request):
+    if (request.is_ajax()):
+        numSearches =  int(request.GET['numSearches']);
+        jobs = findJobs(request);
+        jobs = jobs[0:50 * numSearches];
         jobs = serializers.serialize('json', jobs);
         return HttpResponse(jobs, content_type="application/json");
     else:
         return Http404();
         
-def getJobs(search, sort_by, start, end):
-    search_array = search.split();
+@login_required
+def get_total_jobs(request):
+    if (request.is_ajax()):
+        jobs = findJobs(request);
+        total = {};
+        total['total'] = jobs.count();
+        return HttpResponse(json.dumps(total), content_type="application/json");
+    else:
+        return Http404();
+        
+def findJobs(request):
+    search_array = request.GET['search'].split(" "); 
+    sort_array = request.GET['sort'].split(" ");
+    latitude_in_degrees_as_string = request.GET['latitude'];
+    longitude_in_degrees_as_string = request.GET['longitude'];
+    radius_in_miles_as_string = request.GET['radius'];
     jobs = Job.objects.all();
+    if (latitude_in_degrees_as_string != "" and longitude_in_degrees_as_string != "" and radius_in_miles_as_string != ""):
+        jobs = findJobsByRadius(jobs, float(latitude_in_degrees_as_string), float(longitude_in_degrees_as_string), float(radius_in_miles_as_string));
     for word in search_array:
-        jobs = jobs.filter(Q(name__contains=word) | Q(tag__tag__contains=word)).distinct();
-    sort_by_column = sort_by.split(" ")[0];
-    ascending_or_descending = sort_by.split(" ")[1];
-    if (sort_by_column == 'created'):
-        if (ascending_or_descending == 'ascending'):
+        jobs = jobs.filter(Q(name__contains=word) | Q(tag__tag__contains=word));
+    jobs = jobs.distinct();
+    if (sort_array[0] == 'created'):
+        if (sort_array[1] == 'ascending'):
             jobs = jobs.order_by('creation_date');
         else:
             jobs = jobs.order_by('-creation_date');
-    elif (sort_by == 'pledged'):
-        if (ascending_or_descending == 'ascending'):
+    elif (sort_array[0] == 'pledged'):
+        if (sort_array[1] == 'ascending'):
             jobs = jobs.order_by('money_pledged');
         else:
             jobs = jobs.order_by('-money_pledged');
-    elif (sort_by == 'workers'):
-        if (ascending_or_descending == 'ascending'):
+    elif (sort_array[0] == 'workers'):
+        if (sort_array[1] == 'ascending'):
             jobs = jobs.order_by('workers');
         else:
             jobs = jobs.order_by('-workers');
     else:
-        if (ascending_or_descending == 'ascending'):
-            jobs = jobs.order_by('name');
+        if (sort_array[1] == 'ascending'):
+            jobs = jobs.extra(select={'case_insensitive_name': 'lower(name)'}).order_by('case_insensitive_name');
         else:
-            jobs = jobs.order_by('-name');
-    jobs = jobs[start:end];
+            jobs = jobs.extra(select={'case_insensitive_name': 'lower(name)'}).order_by('-case_insensitive_name');
     return jobs;
 
-@login_required
-def find_jobs_by_radius(jobs, currLatitude, currLongitude, radius):
-    jobs = jobs.filter(latitude__range=(currLatitude - radius, currLatitude + radius));
+def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_miles):
+    radius_in_degrees = radius_in_miles / 69;
+    latitude_in_radians = latitude_in_degrees * math.pi / 180;
+    longitude_in_radians = longitude_in_degrees * math.pi / 180;
+    radius_in_radians = radius_in_degrees * math.pi / 180;
+    jobs = jobs.filter(latitude__range=(latitude_in_degrees - radius_in_degrees, latitude_in_degrees + radius_in_degrees));
     for job in jobs:
-        lat = job.latitude;
-        lon = job.longitude;
-        distance = radius * math.acos(math.sin(currLatitude) * math.sin(lat) + math.cos(currLatitude) * math.cos(lat) * math.cos(math.fabs(currLongitude - lon))); #This is called the law of cosines to calculate distance on a sphere. (Earth is not a sphere, thus will have some margin of error. Computation speed compensates)
-        if (distance > radius):
-            jobs.exclude(id=job.id);
+        lat = job.latitude * math.pi / 180;
+        lon = job.longitude * math.pi / 180;
+        RADIUS_OF_EARTH_IN_MILES = 3959;
+        distance = RADIUS_OF_EARTH_IN_MILES * math.acos(math.sin(latitude_in_radians) * math.sin(lat) + math.cos(latitude_in_radians) * math.cos(lat) * math.cos(math.fabs(longitude_in_radians - lon))); #This is called the Spherical Law of Cosines and it is used to calculate distances on a sphere. (Note: Earth is not a sphere, thus this will have a margin of error, but it is small. Computation speed compensates)
+        print("Job: " + job.name + " Distance: " + str(distance));
+        if (distance > radius_in_miles):
+            print("Excluded Job: " + job.name);
+            jobs = jobs.exclude(id=job.id);
     return jobs;
-    
-@login_required    
-def apply_tags_and_location(request):
-    if (request.is_ajax()):
-        data = {};
-        jobs = [];
-        if (request.method == 'GET'):
-            typeOfTags = request.GET['typeOfTags'];
-            if (typeOfTags == 'tag_basic_logic'):
-                jobs = get_jobs_from_basic_tags(request.GET['basicTags']);
-            else:
-                tags = '';
-                if (typeOfTags == 'tag_ANDs_of_ORs_logic'):
-                    tags = request.user.userlogic.ANDs_of_ORs;
-                elif (typeOfTags == 'tag_OR_of_ANDs_logic'):
-                    tags = request.user.userlogic.ORs_of_ANDs;
-                else:
-                    tags = request.user.userlogic.custom;
-                tags = apply_tags(tags);
-                jobs = eval(tags).distinct();
-            if (request.GET['locationTrue'] == 'true'):
-                jobs = find_jobs_by_radius(jobs, float(request.GET['latitude']), float(request.GET['longitude']), float(request.GET['radius']));
-            if (len(jobs) > 0):
-                for i in range(len(jobs)):
-                    job = jobs[i];
-                    data['pk'] = job.pk;
-                    data['name'] = job.name;
-                    data['fields'] = {};
-                    data['money_pledged'] = job.money_pledged;
-                    data['num_workers'] = job.num_workers;
-                data = apply_metrics_to_jobs(jobs);
-        return JsonResponse(data, safe=False);
-    else:
-        return Http404();
-
-@login_required
-def get_jobs_from_basic_tags(tags):
-    jobs = Job.objects.all();
-    if (tags != ''):
-        tagsArray = create_tags_array(tags);
-        jobs = Job.objects.all();
-        for tagString in tagsArray:       
-            currtag = Tag.objects.get(tag__iexact=tagString);
-            currJobs = currtag.jobs.all();
-            jobs = jobs & currJobs;
-    return jobs;
-    
-def apply_tags(tags):
-    words = re.sub("[\W_]", " ",  tags).split();
-    for word in words:
-        if (not Tag.objects.filter(tag__iexact=word).exists()):
-            Tag(tag=word).save();
-    tags = re.sub(r'([a-zA-Z0-9]+)', "Tag.objects.get(tag__iexact='" + r'\1' + "').jobs.all()", tags);
-    return tags;
-    
-def create_tags_array(tagsString):
-    tagsString = tagsString.replace(","," ");
-    return tagsString.split();
 
 @login_required    
 def detail(request, job_random_string):
     job = get_object_or_404(Job, random_string=job_random_string);
     if (request.method == "POST"):
-        if ('pledge_money_to_job' in request.POST['pledge_money_to_job']):
-            PledgeJob(pledger=request.user, job=job).save();
-            return redirect('job:detail', job_random_string=job_random_string);
-        elif ('work_on_job' in request.POST['work_on_job']):
-            WorkJob(worker=request.user, job=job).save();
-            return redirect('job:detail', job_random_string=job_random_string);
-    pledgejob = None;
-    workjob = None;
-    if (request.user.pledgejob_set.all().filter(job=job).exists()):
-        pledgejob = request.user.pledgejob_set.get(job=job);
-    if (request.user.workjob_set.all().filter(job=job).exists()):
-        workjob = request.user.workjob_set.get(job=job);
+        jobuser = JobUser.objects.filter(user=request.user, job=job).first();
+        if (not jobuser):
+            jobuser = JobUser(user=request.user, job=job).save();
+        if ('pledge_money_to_job' in request.POST):
+            pass;
+        elif ('pay_money_to_job' in request.POST):
+            pass;
+        elif ('work_on_job' in request.POST):
+            work = Work(jobuser=jobuser);
+            finish.save();
+        elif ('finish_job' in request.POST):
+            finish = Finish(jobuser=jobuser);
+            finish.save()
+        return redirect('job:detail', job_random_string=job_random_string);
+    jobuser = None;
+    if (JobUser.objects.filter(user=request.user, job=job).exists()):
+        jobuser = request.user.jobuser_set.all().get(job=job);
     context = {                                                                     
         'job': job,
-        'pledgejob' : pledgejob,
-        'workjob' : workjob,
+        'jobuser' : jobuser,
         'ordered_updates' : Update.objects.all(),
     }
     return render(request, 'job/detail.html', context);
@@ -185,7 +161,7 @@ def work_on_job(request, job_random_string):
     return HttpResponse(return_string);
 
 @login_required    
-def add_job(request):
+def create_job(request):
     if (request.method == 'POST'):
         newJobForm = NewJobForm(request.POST);
         if (newJobForm.is_valid()):
@@ -197,7 +173,7 @@ def add_job(request):
             job = Job(name=name, latitude=latitude, longitude=longitude, description=description, random_string=createRandomString());
             job.save();
             tags = request.POST['tags'];
-            tagsArray = create_tags_array(tags);
+            tagsArray = tags.split(" ");
             for tagString in tagsArray:
                 newTag = None;
                 if (Tag.objects.filter(tag__iexact=tagString).exists()):
@@ -210,11 +186,7 @@ def add_job(request):
     context = {
         'form' : NewJobForm(), 
     }
-    return render(request, 'job/add_job.html', context);
-    
-@login_required
-def add_location(request):
-    return render(request, 'job/add_location.html');
+    return render(request, 'job/create_job.html', context);
     
 def createRandomString():
     random_string = '';

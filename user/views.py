@@ -7,7 +7,6 @@ from django.db.models import Q;
 from django.contrib.auth import authenticate, login, logout;
 from .forms import UserForm, NewUserForm;
 from .models import UserProfile;
-from jobuser.models import WorkJob, ImageUpload;
 from job.models import Job;
 from datetime import datetime;
 from random import randint;

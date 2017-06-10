@@ -25,18 +25,15 @@
     <div id="content-wrapper">
         <div class="row">
             <div class="col-md-12">
-                <form id="sort-form" action="{% url 'job:home' %}"></form>
                 <div class="row">
                     <div class="col-md-4">
-                        <label class="text_label" for="search_bar" >Search Jobs:</label>
+                        <label class="text_label" for="search_jobs" >Search Jobs:</label>
                     </div>
                     <div class="col-md-4">
-                        <input form="sort-form" id="search_bar" type="text" name="search" />
+                        <input id="search_jobs" type="text" />
                     </div>
                     <div class="col-md-4">
-                        <form action="{% url 'job:add_job' %}">
-                            <input id="add_job" type="submit" value="Create Job" />
-                        </form>
+                        Jobs found: <span id="num-jobs-found">0</span>
                     </div>
                 </div>
                 <!-- Radius -->
@@ -44,16 +41,17 @@
                     <div class="col-md-12">
                         <table class="table">
                             <tr>
-                                <td><label for="location_text" >Location:&nbsp;</label></td>
-                                <td><input id="location-text" type="text" form="sort-form" /></td>
-                                <td><label for="location-radius">Radius:</label></td>
-                                <td><input id="location-radius" type="text" size="1" name="radius" value="10" form="sort-form" /></td>
-                                <td><label for="mi">mi:</label></td>
-                                <td><input id="mi" type="radio" name="mi-km" value="mi" form="sort-form" checked="checked" /></td>
-                                <td><label for="km">km:</label></td>
-                                <td><input id="km" type="radio" name="mi-km" value="km" form="sort-form" /></td>
-                                <td>Jobs found:</td>
-                                <td><span id="num-jobs-found">0</span></td>
+                                <input id="latitude" type="hidden" value="" />
+                                <input id="longitude" type="hidden" value="" />
+                                <td><label for="location" >Location</label></td>
+                                <td><input id="location" class="related-to-location" type="text" /></td>
+                                <td><label for="radius">Radius (mi):</label></td>
+                                <td><input id="radius" class="related-to-location" type="text" size="1" value="0" /></td>
+                                <td>
+                                    <form action="{% url 'job:create_job' %}">
+                                        <input id="create_job" type="submit" value="Create Job" />
+                                    </form>
+                                </td>
                             </tr>
                         </table>
                     </div>
@@ -66,23 +64,14 @@
                         <table id="main_table" class="table">
                             <thead>
                                 <tr>
-                                    <input id="sort-by" type="hidden" value="{{ sort_by }}" form="sort-form" name="sort-by" />
+                                    <input id="sort" type="hidden" value="created descending" />
                                     <th id="name" class="sort">Name</th>
                                     <th id="created" class="sort">Created</th>
                                     <th id="pledged" class="sort">Pledged</th>
                                     <th id="workers" class="sort">Workers</th>
                                 </tr>
                             </thead>
-                            <tbody id="main_table_body">
-                                {% for job in jobs %}
-                                <tr>
-                                    <td><a href="{% url 'job:detail' job.random_string %}">{{ job.name }}</a></td>
-                                    <td>{{ job.creation_date }}</td>
-                                    <td>{{ job.money_pledged }}</td>
-                                    <td> {{ job.num_workers }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
+                            <tbody id="main_table_body"></tbody>
                         </table>
                     </div>
                 </div>

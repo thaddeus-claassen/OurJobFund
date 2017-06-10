@@ -2,13 +2,13 @@
 
 {% load staticfiles %}
 {% block import %}
-    <script type="text/javascript" src="{% static 'job/JavaScript/add_job.js' %}" ></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/add_job.css' %}" />
+    <script type="text/javascript" src="{% static 'job/JavaScript/create_job.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/create_job.css' %}" />
 {% endblock %}
 
 
 {% block content %}
-<form id="create-job-form" method="POST" action="{% url 'job:add_job' %}">
+<form id="create-job-form" method="POST" action="{% url 'job:create_job' %}">
     {% csrf_token %}
     <div class="row">
         <div class="col-md-2">
@@ -22,9 +22,7 @@
     {{ form.longitude }}
     <div class="row">
         <div class="col-md-2">
-            <label for="location" class="text_label">
-                Location (optional):
-             </label>
+            {{ form.location.label_tag }}
         </div>
         <div class="col-md-10">
             {{ form.location }}
@@ -41,7 +39,7 @@
     </div>
     <div class="row">
         <div class="col-md-2">
-            {{ forms.images.label_tag }}
+            {{ form.images.label_tag }}
         </div>
         <div class="col-md-10">
             {{ form.images }}
@@ -56,7 +54,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-10 col-md-offset-2">
             <input type="submit" value="Create Job" />
         </div>
     </div>

@@ -28,10 +28,6 @@ $('document').ready(function() {
     $('.close_modal').click(function() {
         $('#pledge_modal').css('display', 'none');
     });
-    $('#work_on_job').click(function() {
-        $('#work_on_job').css('display', 'none');
-        work_on_job();
-    });
 });
 
 function correctFormat() {
@@ -59,17 +55,6 @@ function pledge_money_to_job() {
         success : pledgingMoneyToJobSuccess,
     });
 }// end pledge_money()
-
-function work_on_job() {
-    $.ajax({
-        type : "POST",
-        url : "work_on_job",
-        data : {
-            'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
-        },
-        success : workOnJobSuccess,
-    });
-}// end work_on_job()
 
 function pledgingMoneyToJobSuccess(string) {
     $('#will-you-pledge-money-to-job').css('display', 'none');
