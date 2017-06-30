@@ -10,7 +10,7 @@ $('document').ready(function() {
         $('#save_description').css('display', 'inline');
     });
     $('#save_description').click(function() {
-        save_description();
+        description();
         $('#description_div').css('display', 'inline');
         $('#description').text($('#textarea_description').val());
         $('#textarea_description').css('display', 'none');
@@ -19,10 +19,10 @@ $('document').ready(function() {
     });
 });
 
-function save_description() {
+function description() {
     $.ajax({
         type : "POST",
-        url : "save_description",
+        url : "description/",
         data : {
             'description' : $('#textarea_description').val(),
             'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),

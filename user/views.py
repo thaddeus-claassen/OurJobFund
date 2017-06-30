@@ -5,7 +5,7 @@ from django.http import JsonResponse, HttpResponse, Http404;
 from django.core import serializers;
 from django.db.models import Q;
 from django.contrib.auth import authenticate, login, logout;
-from .forms import UserForm, NewUserForm;
+from .forms import UserForm, NewUserForm, DescriptionForm;
 from .models import UserProfile;
 from job.models import Job;
 from datetime import datetime;
@@ -22,7 +22,7 @@ def sign_in(request):
                 if (userForm.is_valid()):
                     email = userForm.cleaned_data['email'];
                     if (email != ""):
-                        user = authenticate(username=email, password=userForm.cleaned_data['password']);
+                        user = authenticate(email=email, password=userForm.cleaned_data['password']);
                         if (user is not None):
                             if (user.is_active):
                                 login(request, user);
@@ -44,7 +44,7 @@ def sign_in(request):
                     if (user is not None):
                         if (user.is_active):
                             login(request, user);
-                            return redirect(user);
+                            return redirect('job:home');
     context = {
         'new_user_form' : newUserForm, 
         'existing_user_form' : userForm,
@@ -106,73 +106,20 @@ def getTotalNumberOfUsersFromQuery(search):
     for word in search.split():
         users = users.filter(Q(first_name__startswith=word) | Q(last_name__startswith=word));
     return users.count();
-        
-        
+         
 @login_required    
 def detail(request, username):
-    user = get_object_or_404(User, username=username);       
+    user = get_object_or_404(User, username=username);
+    if (request.method == 'POST'):
+        request.user.userprofile.description = request.POST.get('description');
+        request.user.userprofile.save();
     context = {
         'detail_user' : user,
+        'current_jobusers' : user.jobuser_set.filter(job__is_finished=False),
+        'finished_jobusers' : user.jobuser_set.filter(job__is_finished=True),
     }
     return render(request, 'user/detail.html', context);
-
-@login_required    
-def get_user_info(request):
-    if (request.is_ajax()):
-        data = {};
-        user_id = request.GET['user_id'];
-        user = get_object_or_404(User, pk=user_id);
-        data['first_name'] = user.first_name;
-        data['last_name'] = user.last_name;
-        data['city'] = user.userprofile.city;
-        data['state'] = user.userprofile.state;
-        data['description'] = user.userprofile.description;
-        return JsonResponse(data, safe=False);
-    else:
-        return Http404();
-
-@login_required    
-def save_description(request):
-    if (request.is_ajax()):
-        if (request.method == 'POST'):
-            if (request.user.is_authenticated()):
-                request.user.userprofile.description = request.POST['description'];
-                request.user.userprofile.save();
-        return HttpResponse('Done!');
-    else:
-        return Http404();
-    
-
-def create_user_random_string():
-    random_string = '';
-    available_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-    for i in range(20):
-        index = randint(0, 61);
-        random_char = available_chars[index];
-        random_string = random_string + random_char;
-    return random_string;
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     
     
-        
+    
+    

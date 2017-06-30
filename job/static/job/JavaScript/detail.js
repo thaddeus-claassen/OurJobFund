@@ -1,32 +1,18 @@
+var currSort = "date_descending";
+
 $('document').ready(function() {
-    $('#view-description').click(function(event) {
-        event.preventDefault();
-        var jobID = $(this).attr('class');    
-        window.open("/job/" + jobID + "/description");
-    });
-    $('#will_you_pledge_money').click(function() {
-        $('#pledge_modal').css('display', 'inline');
-    });
-    $('#modal_make_pledge').click(function() {
-        var errorMessage = correctFormat()
-        if (errorMessage === "") {
-            pledge_money_to_job();
-            $('#pledge_modal').css('display', 'none');
-            $('#will_you_pledge_money').css('display', 'none');
-            $('#will_you_pledge_money').after('You are pledging $' + $('#pledge_amount').val());
-        } else {
-            $('#pledge_error_message').text(errorMessage);
-            $('#pledge_error_message').css('color', 'red');
-        }// end if-else
-    });
-    $('#finish_job').click(function() {
-        $('#finish_modal').css('display', 'inline');
-    });
-    $('.finish-yes-no').click(function() {
-        css('display', 'none');
-    });
-    $('.close_modal').click(function() {
-        $('#pledge_modal').css('display', 'none');
+    $('.sort').click(function() {
+        $('tbody').each(function(i, obj) {
+            $(this).css('display', 'none');
+        });
+        //sortArray = currSort.split("_");
+        //if ($(this).attr('id') === sortArray[0] && sortArray[1] === 'ascending') {
+        //    currSort = $(this).attr('id') + "_descending";
+        //} else {
+        //    currSort = $(this).attr('id') + "_ascending";
+        //}// end if-else
+        //$('#' + currSort).css('display', 'inline');
+        $('#title_ascending').css('display', 'inline');
     });
 });
 

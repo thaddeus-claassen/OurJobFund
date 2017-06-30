@@ -1,5 +1,6 @@
 from django.db import models;
 from django.contrib.auth.models import User;
+from job.models import Job;
 from django.urls import reverse
 
 class UserProfile(models.Model):
@@ -8,4 +9,8 @@ class UserProfile(models.Model):
     
     def get_absolute_url(self):
         return reverse("user.views.detail", args=[self.random_string]);
+        
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE);
+    job = models.ForeignKey(Job, on_delete=models.CASCADE);
     

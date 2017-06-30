@@ -1,10 +1,9 @@
 from django.contrib.auth.decorators import login_required;
 from django.shortcuts import render, get_object_or_404, redirect;
 from .models import Job, Tag, User;
-from jobuser.models import Update;
 from jobuser.views import createUpdate;
 from django.db.models import Q;
-from jobuser.models import JobUser;
+from jobuser.models import JobUser, Pledge, Pay, Work, Finish, Update;
 from django.http import JsonResponse, HttpResponse, Http404;
 from django.core import serializers;
 from django.contrib.auth import authenticate, login, logout;
@@ -71,25 +70,21 @@ def findJobs(request):
         jobs = jobs.filter(Q(name__contains=word) | Q(tag__tag__contains=word));
     jobs = jobs.distinct();
     if (sort_array[0] == 'created'):
-        if (sort_array[1] == 'ascending'):
-            jobs = jobs.order_by('creation_date');
-        else:
-            jobs = jobs.order_by('-creation_date');
+        jobs = jobs.order_by('creation_date');
+        if (sort_array[1] == 'descending'):
+            jobs = jobs[::-1];
     elif (sort_array[0] == 'pledged'):
-        if (sort_array[1] == 'ascending'):
-            jobs = jobs.order_by('money_pledged');
-        else:
-            jobs = jobs.order_by('-money_pledged');
+        jobs = jobs.order_by('money_pledged');
+        if (sort_array[1] == 'descending'):
+            jobs = jobs[::-1];
     elif (sort_array[0] == 'workers'):
-        if (sort_array[1] == 'ascending'):
-            jobs = jobs.order_by('workers');
-        else:
-            jobs = jobs.order_by('-workers');
+        jobs = jobs.order_by('num_workers');
+        if (sort_array[1] == 'descending'):
+            jobs = jobs[::-1];
     else:
-        if (sort_array[1] == 'ascending'):
-            jobs = jobs.extra(select={'case_insensitive_name': 'lower(name)'}).order_by('case_insensitive_name');
-        else:
-            jobs = jobs.extra(select={'case_insensitive_name': 'lower(name)'}).order_by('-case_insensitive_name');
+        jobs = jobs.extra(select={'case_insensitive_name': 'lower(name)'}).order_by('case_insensitive_name');
+        if (sort_array[1] == 'descending'):
+            jobs = jobs[::-1];
     return jobs;
 
 def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_miles):
@@ -103,7 +98,6 @@ def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_
         lon = job.longitude * math.pi / 180;
         RADIUS_OF_EARTH_IN_MILES = 3959;
         distance = RADIUS_OF_EARTH_IN_MILES * math.acos(math.sin(latitude_in_radians) * math.sin(lat) + math.cos(latitude_in_radians) * math.cos(lat) * math.cos(math.fabs(longitude_in_radians - lon))); #This is called the Spherical Law of Cosines and it is used to calculate distances on a sphere. (Note: Earth is not a sphere, thus this will have a margin of error, but it is small. Computation speed compensates)
-        print("Job: " + job.name + " Distance: " + str(distance));
         if (distance > radius_in_miles):
             print("Excluded Job: " + job.name);
             jobs = jobs.exclude(id=job.id);
@@ -115,14 +109,15 @@ def detail(request, job_random_string):
     if (request.method == "POST"):
         jobuser = JobUser.objects.filter(user=request.user, job=job).first();
         if (not jobuser):
-            jobuser = JobUser(user=request.user, job=job).save();
+            jobuser = JobUser(user=request.user, job=job);
+            jobuser.save();
         if ('pledge_money_to_job' in request.POST):
             pass;
         elif ('pay_money_to_job' in request.POST):
             pass;
         elif ('work_on_job' in request.POST):
             work = Work(jobuser=jobuser);
-            finish.save();
+            work.save();
         elif ('finish_job' in request.POST):
             finish = Finish(jobuser=jobuser);
             finish.save()
@@ -130,18 +125,43 @@ def detail(request, job_random_string):
     jobuser = None;
     if (JobUser.objects.filter(user=request.user, job=job).exists()):
         jobuser = request.user.jobuser_set.all().get(job=job);
+    notification = request.user.notification_set.filter(job=job).first();
+    if (notification):
+        notification.delete();
+    updates = Update.objects.filter(jobuser__job=job);
+    updates_last_name = updates.extra(select={'case_insensitive_last_name': 'lower(title)'}).order_by('case_insensitive_last_name');
+    updates_date = updates.order_by('-date');
+    updates_title = updates.extra(select={'case_insensitive_title' : 'lower(title)'}).order_by('case_insensitive_title');
     context = {                                                                     
         'job': job,
         'jobuser' : jobuser,
-        'ordered_updates' : Update.objects.all(),
+        'updates_last_name' : updates_last_name,
+        'updates_date' : updates_date,
+        'updates_title' : updates_title,
     }
     return render(request, 'job/detail.html', context);
     
 @login_required
-def pledge_money_to_job(request, job_id):
+def pledges(request, job_random_string):
+    job = get_object_or_404(Job, random_string=job_random_string);
+    context = {
+        'jobusers' : job.jobuser_set.all(),
+    }
+    return render(request, 'job/pledges.html', context);
+    
+@login_required
+def workers(request, job_random_string):
+    job = get_object_or_404(Job, random_string=job_random_string);
+    context = {
+        'jobusers' : job.jobuser_set.all(),
+    }
+    return render(request, 'job/workers.html', context);
+    
+@login_required
+def pledge_money_to_job(request, job_random_string):
     string = "";
     if (request.method == 'POST'):
-        job = get_object_or_404(Job, pk=job_id);
+        job = get_object_or_404(Job, random_string=job_random_string);
         if (not job.pledgejob_set.filter(pledger=request.user).exists()):
             amount_pledged = float(request.POST['amount_pledged']);
             PledgeJob(pledger=request.user, job=job, amount_pledged=amount_pledged).save();
@@ -152,7 +172,6 @@ def pledge_money_to_job(request, job_id):
     
 @login_required
 def work_on_job(request, job_random_string):
-    return_string = "Did not go through normal AJAX call";
     if (request.method == 'POST'):
         job = get_object_or_404(Job, random_string=job_random_string);
         if (not job.workjob_set.filter(worker=request.user).exists()):

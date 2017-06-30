@@ -1,7 +1,3 @@
-html, css, .div_100_percent {
-    height: 100%;
-}
-
 #finish_modal, #pledge_modal, #you_are_now_a_main_editor {
     display: none;
 }
@@ -10,17 +6,17 @@ html, css, .div_100_percent {
     display: block-inline;
     overflow: auto;
     width: 100%;
-    height: 40%;
 }
 
-table {
-    position: relative;
-    white-space: nowrap;
-    height: 100%;
+#job_description {
+    height: 300px;
+    width: 100%;
+    border: 1px solid black;
 }
 
-#description {
-    height: 40%;
+#updates_div {
+    height: 300px;
+    width: 100%;
     border: 1px solid black;
 }
 
@@ -39,4 +35,7 @@ table {
     height: 30px;
 }
 
+.pledge_work_inputs {
+    width: 100%;
+}
 

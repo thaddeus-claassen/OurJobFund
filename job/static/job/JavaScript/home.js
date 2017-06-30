@@ -45,6 +45,15 @@ $('document').ready(function() {
             get_total_jobs();
         }// end if
     });
+    $('#search_button').click(function(event) {
+        numSearches = 0;
+        if ($('#location').val() == "") {
+            get_jobs();
+        } else {
+            applyLocation();
+        }// end if-else
+        get_total_jobs();
+    });
      $(window).scroll(function(){
         if ($(window).scrollTop() == $(document).height()-$(window).height()) {
             if (50 * numSearches <= parseInt($('#num-jobs-found').text())) {
@@ -69,7 +78,7 @@ function get_jobs() {
 }// end get_jobs()
 
 function add_jobs() {
-        $.ajax({
+    $.ajax({
         url : 'add_jobs',
         data : {
             'numSearches' : numSearches,

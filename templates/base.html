@@ -7,7 +7,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script type="text/javascript" src="{% static 'job/JavaScript/main.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'CSS/base.css' %}" />
     <link rel="stylesheet" type="text/js" href="{% static 'JavaScript/base.js' %}" />
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&dummy=.js"></script>
@@ -16,7 +15,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     {% block import %}{% endblock %}
 </head>
-<body>
+<body>   
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="row">
@@ -37,21 +36,18 @@
                         <li><a href="{% url 'user:detail' user.username %}">{{ user.first_name }}&nbsp;{{ user.last_name }}</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                Updates&nbsp;<span class="caret"></span>
+                                Updates ({{ user.notification_set.all.count }})<span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                            {% if user.notification_set.all.count > 0 %}
-                                {% for notification in user.notification_set.order_by__date_sent|slice:"10" %}
+                            {% for notification in user.notification_set.all %}
                                 <li>
-                                    <a href="{% url 'jobuser:view_updates' %}" id="notification_{{ notification.id }}" onclick="viewNotification(this.id)">
-                                        {{ notification.text }}
+                                    <a href="{% url 'job:detail' notification.job.random_string %}" id="notification_{{ notification.id }}" >
+                                        {{ notification.job.name }}
                                     </a>                        
                                 </li>
-                                {% endfor %}
-                                <li><a href="{% url 'jobuser:view_updates' %}">View All Updates</a></li>
-                            {% else %}
+                            {% empty %}
                                 <li><a id="no-updates" href="">None</a></li>
-                            {% endif %}
+                            {% endfor %}
                             </ul>
                         </li>
                         <li class="dropdown">

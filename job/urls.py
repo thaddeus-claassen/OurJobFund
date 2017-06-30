@@ -19,14 +19,20 @@ urlpatterns = [
     # /job/add_jobs
     url(r'^add_jobs/$', views.add_jobs),
     
-    # job/sort_jobs
+    # /job/sort_jobs
     url(r'^sort_jobs/$', views.sort_jobs),
     
-    # job/get_total_jobs
+    # /job/get_total_jobs
     url(r'^get_total_jobs/$', views.get_total_jobs),
     
     # /job/<Job Random String>
     url(r'^(?P<job_random_string>[a-zA-Z0-9]+)/$', views.detail, name='detail'),
+    
+    # /job/<Job Random String>/pledges
+    url(r'^(?P<job_random_string>[a-zA-Z0-9]+)/pledges/$', views.pledges, name='pledges'),
+    
+    # /job/<Job Random String>/workers
+    url(r'^(?P<job_random_string>[a-zA-Z0-9]+)/workers/$', views.workers, name='workers'),
     
 ]
 

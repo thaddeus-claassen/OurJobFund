@@ -4,8 +4,7 @@ from django import forms;
 from django.contrib.auth.models import User;
         
 class Job(models.Model):
-    is_active = models.BooleanField(default=True);
-    is_finished = models.BooleanField(default=True);
+    is_finished = models.BooleanField(default=False);
     name = models.CharField(max_length=100);
     creation_date = models.DateField(auto_now_add=True);
     creation_datetime = models.DateTimeField(auto_now_add=True);

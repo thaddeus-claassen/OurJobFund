@@ -26,37 +26,37 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="row">
-                    <div class="col-md-4">
-                        <label class="text_label" for="search_jobs" >Search Jobs:</label>
+                    <div class="col-md-9">
+                        <input id="search_jobs" type="text" placeholder="Search Jobs" />
                     </div>
-                    <div class="col-md-4">
-                        <input id="search_jobs" type="text" />
-                    </div>
-                    <div class="col-md-4">
-                        Jobs found: <span id="num-jobs-found">0</span>
+                    <div class="col-md-3">
+                        Jobs: <span id="num-jobs-found">0</span>
                     </div>
                 </div>
                 <!-- Radius -->
                 <div class="row">
-                    <div class="col-md-12">
-                        <table class="table">
-                            <tr>
-                                <input id="latitude" type="hidden" value="" />
-                                <input id="longitude" type="hidden" value="" />
-                                <td><label for="location" >Location</label></td>
-                                <td><input id="location" class="related-to-location" type="text" /></td>
-                                <td><label for="radius">Radius (mi):</label></td>
-                                <td><input id="radius" class="related-to-location" type="text" size="1" value="0" /></td>
-                                <td>
-                                    <form action="{% url 'job:create_job' %}">
-                                        <input id="create_job" type="submit" value="Create Job" />
-                                    </form>
-                                </td>
-                            </tr>
-                        </table>
+                    <input id="latitude" type="hidden" value="" />
+                    <input id="longitude" type="hidden" value="" />
+                    <div class="col-md-9">
+                        <input id="location" type="text" placeholder="Location" />
                     </div>
+                    <div class="col-md-3">
+                        <input id="radius" type="text" placeholder="Radius (mi)" />
+                    </div>
+                    
                 </div>
                 <!-- End Radius -->
+                
+                <div class="row">
+                    <div class="col-md-9">
+                        <input id="search_button" type="button" value="Search" />
+                    </div>
+                    <div class="col-md-3">
+                        <form action="{% url 'job:create_job' %}">
+                            <input id="create_job" type="submit" value="Create Job" />
+                        </form>
+                    </div>
+                </div>
 
                 <!-- Job table -->
                 <div id="row-table" class="row">

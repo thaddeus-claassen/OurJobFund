@@ -2,31 +2,36 @@
 
 {% load staticfiles %}
 {% block import %}
-    <link rel="stylesheet" type="text/css" href="{% static 'user/CSS/post_update.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'jobuser/CSS/post_update.css' %}" />
 {% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="row">
-        <form action="{% url 'jobuser:post_update' workjob.id %}" method="POST" enctype="multipart/form-data">
+        <form id="post_update_form" action="{% url 'jobuser:post_update' jobuser.id %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="col-md-12">
-                Update for {{ workjob.job.name }}
+                Update for {{ jobuser.job.name }}
             </div>
-            <div class="col-md-12">
-                {{ update_form.title.label }}
-                {{ update_form.title }}
+            <div class="col-md-2">
+                {{ form.title.label }}
             </div>
-            <div class="col-md-12">
-                {{ update_form.images }}
+            <div class="col-md-10">
+                {{ form.title }}
             </div>
-            <div class="col-md-12">
-                {{ update_form.description.label }}
+            <div class="col-md-2">
+                {{ form.images.label }}
             </div>
-            <div class="col-md-12">
-                {{ update_form.description }}
+            <div class="col-md-10">
+                {{ form.images }}
             </div>
-            <div class="col-md-12">
+            <div class="col-md-2">
+                {{ form.description.label }}
+            </div>
+            <div class="col-md-10">
+                {{ form.description }}
+            </div>
+            <div class="col-md-10 col-md-offset-2">
                 <input type="submit" value="Submit" />
             </div>
         </form>

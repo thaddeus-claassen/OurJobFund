@@ -35,13 +35,3 @@ function makeEdits() {
     $('#edit_div').css('display', 'inline');
 }// end makeEdits()
 
-function change_public_pledge_filter() {
-    $.ajax({
-        type : "POST",
-        url : "change_public_pledge_filter",
-        data : {
-            'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
-        },
-    });
-}// ed change_public_pledge_filter()
-

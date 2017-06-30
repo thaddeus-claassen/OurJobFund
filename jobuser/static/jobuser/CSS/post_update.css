@@ -1,0 +1,8 @@
+#post_update_form input {
+    width: 100%;
+}
+
+#post_update_form textarea {
+    width: 100%;
+    resize: none;
+}

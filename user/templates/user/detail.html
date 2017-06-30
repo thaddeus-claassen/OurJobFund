@@ -28,7 +28,7 @@
             </div>
             {% if user.is_authenticated and user.username == detail_user.username %}
             <div class="col-md-6 text-right">
-                <input id="save_description" type="button" value="Save" />
+                <input id="save_description" type="submit" value="Save" form="save_description_form" />
             </div>
             <div class="col-md-6 text-right">
                 <input id="edit_description" type="button" value="Edit" />
@@ -38,12 +38,15 @@
         {% if user.is_authenticated and user.username == detail_user.username %}
         <div class="row">
             <div id="description_div" class="col-md-12">
-                <span id="description">{{ detail_user.userprofile.description }}</span>
+                <span id="description" form="save_description_form" >{{ detail_user.userprofile.description }}</span>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12 form-group">
-                <textarea id="textarea_description" class="form-control"></textarea>
+                <form id="save_description_form" action="{{ request.get_full_path }}" method="POST">
+                {% csrf_token %}
+                    <textarea id="textarea_description" class="form-control" name="description"></textarea>
+                </form>
             </div>
         </div>
         {% else %} 
@@ -55,7 +58,7 @@
         {% endif %}
     </div>
     <div class="col-md-12">
-        <span>Current:</span>
+        <h3>Current Jobs:</h3>
         <table id="current" class="table">
             <thead>
                 <tr>
@@ -65,20 +68,31 @@
                 </tr>
             </thead>
             <tbody>
-                {% for pledgejob in user.pledgejob_set.all %}
-                <tr id="pledge_{{ pledgejob.job.name }}">
-                    <td><a href="{% url 'job:detail' pledgejob.job.random_string %}">{{ pledgejob.job.name }}</a></td>
-                    <td>${{ pledgejob.amount_pledged }}</td>
-                    <td>{{ pledgejob.amount_paid }}</td>
+                {% for current_jobuser in current_jobusers %}
+                <tr id="current_{{ current_jobuser.job.name }}">
+                    <td><a href="{% url 'job:detail' current_jobuser.job.random_string %}">{{ current_jobuser.job.name }}</a></td>
+                    <td>
+                        {% if current_jobuser.pledge_set.all.exists %}
+                            ${{ current_jobuser.pledge_set.all.first.amount_pledged }}
+                        {% else %}
+                            $0
+                        {% endif %}
+                        / ${{ current_jobuser.amount_paid }}</td>
+                    <td>{{ current_jobuser.work_set.all.exists }}</td>
                 </tr>
-                {% empty %}
-                <tr><td>You are not pledged to any jobs.</td></tr>
                 {% endfor %}
             </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td>Total:</td>
+                    <td>{{ current_jobusers.count }}</td>
+                </tr>
+            </tfoot>
         </table>
     </div>
     <div class="col-md-12">
-        <span>Finished:</span>
+        <h3>Completed Jobs:</h3>
         <table id="finished" class="table">
             <thead>
                 <tr>
@@ -88,18 +102,32 @@
                 </tr>
             </thead>
             <tbody>
-            {% for pledgejob in user.pledgejob_set.all %}
-                {% if pledgejob.amount_pledged <= pledgejob.amount_paid %}
-                <tr id="finished_pledge_{{ pledgejob.job.name }}">
-                    <td><a href="{% url 'job:detail' pledgejob.job.random_string %}">{{ pledgejob.job.name }}</a></td>
-                    <td>${{ pledgejob.amount_pledged }}</td>
-                    <td>{{ pledgejob.amount_paid }}</td>
+            {% for finished_jobuser in finished_jobusers %}
+                <tr id="finished_{{ finished_jobuser.job.name }}">
+                    <td><a href="{% url 'job:detail' finished_jobuser.job.random_string %}">{{ finished_jobuser.job.name }}</a></td>
+                    <td>
+                        {% if finished_jobuser.pledge_set.all.exists %}
+                            ${{ finished_jobuser.pledge_set.all.first.amount_pledged }}
+                        {% else %}
+                            $0
+                        {% endif %}
+                        / ${{ finished_jobuser.amount_paid }}
+                    </td>
+                    <td>{{ finished_jobuser.work_set.all.exists }}</td>
                 </tr>
-                {% endif %}
             {% empty %}
                 <tr><td>You have not paid any jobs.</td></tr>
             {% endfor %}
             </tbody>
+            {% if finished_jobusers %}
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td>Total:</td>
+                    <td>{{ finished_jobusers.count }}</td>
+                </tr>
+            </tfoot>
+            {% endif %}
         </table>
     </div>
 </div>

@@ -6,10 +6,22 @@
     display: none;
 }
 
-#search_bar {
-    float: left;
+#search_jobs {
+    width: 100%;
 }
 
-#add_job {
-    float: right;
+#search_button {
+    width: 100%;
+}
+
+#location {
+    width: 100%;
+}
+
+#radius {
+    width: 100%;
+}
+
+#create_job {
+    width: 100%;
 }

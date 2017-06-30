@@ -1,7 +1,3 @@
-html, body {
-    height: 100%;
-}
-
 #edit_div, #textarea_description, #save_description {
     display: none;
 }

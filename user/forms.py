@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User;
+from user.models import User, UserProfile;
 from django.core.validators import RegexValidator; 
 from django import forms;
 from django.forms import extras;
@@ -46,6 +46,14 @@ class NewUserForm(forms.ModelForm):
             raise forms.ValidationError("Passwords do not match");
         return repeat_password;
         
+
+class DescriptionForm(forms.ModelForm):
+        description = forms.CharField(label="Description:", widget=forms.Textarea, max_length=10000);
+        
+        class Meta:
+            model = UserProfile;
+            fields = ['description'];
+
     
 
         
