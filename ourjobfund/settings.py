@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -25,7 +24,7 @@ SECRET_KEY = '9b4+u#&_7u83+*85ff0x%_00hym40j5&^r-0g4__c(y)f5%co5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ourjobfund.com', 'www.ourjobfund.com'];
 
 # Application definition
 INSTALLED_APPS = [
@@ -136,3 +135,5 @@ LOGIN_URL = '/user/sign_in/'
 ABSOLUTE_URL_OVERRIDES = {
     'auth.user': lambda u: "/user/%s/" % u.username,
 }
+
+STRIPE_API_KEY = "sk_test_JvyyL77qDrRlG90842qXtRZL";

@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required;
 from django.shortcuts import render, get_object_or_404, redirect;
 from .models import Job, Tag, User;
-from jobuser.views import createUpdate;
+from user.models import Notification;
 from django.db.models import Q;
 from jobuser.models import JobUser, Pledge, Pay, Work, Finish, Update;
 from django.http import JsonResponse, HttpResponse, Http404;
@@ -108,13 +108,15 @@ def detail(request, job_random_string):
     job = get_object_or_404(Job, random_string=job_random_string);
     if (request.method == "POST"):
         jobuser = JobUser.objects.filter(user=request.user, job=job).first();
+        print(request.POST);
         if (not jobuser):
             jobuser = JobUser(user=request.user, job=job);
             jobuser.save();
         if ('pledge_money_to_job' in request.POST):
-            pass;
-        elif ('pay_money_to_job' in request.POST):
-            pass;
+            amount_pledged = float(request.POST.get('pledge_money_to_job'));
+            if (amount_pledged >= 0.5):
+                pledge = Pledge(jobuser=jobuser, amount=amount_pledged);
+                pledge.save();
         elif ('work_on_job' in request.POST):
             work = Work(jobuser=jobuser);
             work.save();
@@ -122,40 +124,41 @@ def detail(request, job_random_string):
             finish = Finish(jobuser=jobuser);
             finish.save()
         return redirect('job:detail', job_random_string=job_random_string);
+    pledges = Pledge.objects.filter(jobuser__job=job);
+    total_pledged = 0;
+    for pledge in pledges:
+        total_pledged = total_pledged + pledge.amount;
+    total_paid = 0;
+    for pledge in pledges:
+        for payment in pledge.jobuser.pay_set.all():
+            total_paid = total_paid + payment;
+    workers = Work.objects.filter(jobuser__job=job);
+    total_working = workers.count() - Finish.objects.filter(jobuser__job=job).count();
     jobuser = None;
     if (JobUser.objects.filter(user=request.user, job=job).exists()):
         jobuser = request.user.jobuser_set.all().get(job=job);
-    notification = request.user.notification_set.filter(job=job).first();
-    if (notification):
-        notification.delete();
+    if (Notification.objects.filter(user=request.user, job=job).exists()):
+        print(Notification.objects.all());
+        print("One is about to be deleted");
+        print("User: " + request.user.username + "  Job: " + job.name);  
+        Notification.objects.get(user=request.user, job=job).delete();
     updates = Update.objects.filter(jobuser__job=job);
     updates_last_name = updates.extra(select={'case_insensitive_last_name': 'lower(title)'}).order_by('case_insensitive_last_name');
     updates_date = updates.order_by('-date');
     updates_title = updates.extra(select={'case_insensitive_title' : 'lower(title)'}).order_by('case_insensitive_title');
     context = {                                                                     
         'job': job,
+        'pledges' : pledges,
+        'total_pledged' : total_pledged,
+        'total_paid' : total_paid,
+        'workers' : workers,
+        'total_working' : total_working,
         'jobuser' : jobuser,
         'updates_last_name' : updates_last_name,
         'updates_date' : updates_date,
         'updates_title' : updates_title,
     }
     return render(request, 'job/detail.html', context);
-    
-@login_required
-def pledges(request, job_random_string):
-    job = get_object_or_404(Job, random_string=job_random_string);
-    context = {
-        'jobusers' : job.jobuser_set.all(),
-    }
-    return render(request, 'job/pledges.html', context);
-    
-@login_required
-def workers(request, job_random_string):
-    job = get_object_or_404(Job, random_string=job_random_string);
-    context = {
-        'jobusers' : job.jobuser_set.all(),
-    }
-    return render(request, 'job/workers.html', context);
     
 @login_required
 def pledge_money_to_job(request, job_random_string):

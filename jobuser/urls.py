@@ -13,6 +13,9 @@ urlpatterns = [
     # /jobuser/update/<update_id>
     url(r'^update/(?P<update_id>[0-9]+)/$', views.view_update, name='view_update'),
     
+    # /jobuser/pay/<jobuser_id>
+    url(r'^pay/(?P<jobuser_id>[0-9]+)/$', views.pay, name='pay'), 
+
 ]
 
 if settings.DEBUG:

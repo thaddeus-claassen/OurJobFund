@@ -2,9 +2,12 @@ from django.contrib.auth.decorators import login_required;
 from django.shortcuts import render, get_object_or_404, redirect;
 from django.http import HttpResponse, Http404;
 from django.contrib.auth.models import User;
-from .models import JobUser, Update, ImageUpload;
+from .models import JobUser, Update, ImageUpload, Pay;
+from user.models import Notification;
 from job.models import Job;
 from .forms import UpdateForm;
+import stripe;
+import ourjobfund.settings
 
 @login_required
 def post_update(request, jobuser_id):
@@ -19,6 +22,7 @@ def post_update(request, jobuser_id):
             for image in request.FILES.getlist('images'):
                 image=ImageUpload(image=image, update=update);
                 image.save();
+            sendNotifications(update);
             return redirect('job:detail', job_random_string=jobuser.job.random_string);
     if (jobuser.user == request.user):
         context = {
@@ -37,18 +41,44 @@ def view_update(request, update_id):
     }
     return render(request, 'jobuser/view_update.html', context);
     
-def createUpdate(jobuser, title, description):
-    update = Update(jobuser=jobuser, title=title, description=description);
-    update.save();
-    sendNotifications(update);
-    
 def sendNotifications(update):
-    users = update.jobuser.job.user_set.all().exclude(update.jobuser.user);
-    for currUser in users:
-        if not currUser.notification_set.filter(job=update.job).exists():
-            notification = Notification(user=request.user, job=update.job);
-            notification.save()
-            currUser.notification_set.add(notification);
+    users = User.objects.filter(jobuser__job=update.jobuser.job).exclude(email=update.jobuser.user.email);
+    for user in users:
+        if not user.notification_set.filter(job=update.jobuser.job).exists():
+            notification = Notification(user=user, job=update.jobuser.job);
+            notification.save();
+            
+@login_required            
+def pay(request, jobuser_id):
+    jobuser = get_object_or_404(JobUser, pk=jobuser_id);
+    if (request.method == "POST" and 'stripeToken' in request.POST):
+        stripe.api_key = settings.STRIPE_API_KEY;
+        token = request.form['stripeToken'];
+        plan = stripe.Plan.retrieve(request.POST['plan']);
+        receiver_amount = plan.amount - (.05 * plan.amount);
+        charge = stripe.Charge.create(
+            amount = plan.amount,
+            currency = "usd",
+            source = token,
+            destination = {
+                amount : receiver_amount,
+                account : jobuser.user.userprofile.stripe_account_id,
+            },
+        );
+        charge = stripe.Charge.create(
+            amount = plan.amount - receiver_amount,
+            currency = "usd",
+            source = token,
+        );
+        origJobuser = JobUser.objects.get(user=request.user, job=jobuser.job);
+        payment = Pay(jobuser=origJobuser, receiver=jobuser.user, amount=plan.amount);
+        origJobuser.amount_paid = origJobuser.amount_paid + plan.amount;
+        return redirect('Job:detail', jobuser.job.random_string);
+    context = {
+        'amount' : request.GET.get('amount_paying'),
+        'jobuser' : jobuser,
+    }
+    return render(request, 'jobuser/pay.html', context);
     
     
     

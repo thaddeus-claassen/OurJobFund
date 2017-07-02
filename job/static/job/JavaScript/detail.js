@@ -5,14 +5,30 @@ $('document').ready(function() {
         $('tbody').each(function(i, obj) {
             $(this).css('display', 'none');
         });
-        //sortArray = currSort.split("_");
-        //if ($(this).attr('id') === sortArray[0] && sortArray[1] === 'ascending') {
-        //    currSort = $(this).attr('id') + "_descending";
-        //} else {
-        //    currSort = $(this).attr('id') + "_ascending";
-        //}// end if-else
-        //$('#' + currSort).css('display', 'inline');
-        $('#title_ascending').css('display', 'inline');
+        sortArray = currSort.split("_");
+        if ($(this).attr('id') === sortArray[0] && sortArray[1] === 'ascending') {
+            currSort = $(this).attr('id') + "_descending";
+        } else {
+            currSort = $(this).attr('id') + "_ascending";
+        }// end if-else
+        $('#' + currSort).css('display', 'inline');
+    });
+    $('#pledge_money').click(function() {
+        $(this).css('display', 'none');
+        $('.pledge_clicked').css('display', 'inline');
+    });
+    $('#pay_money').click(function() {
+        $(this).css('display', 'none');
+        $('#pay_clicked').css('display', 'inline');
+    });
+    $('#pay_amount').change(function() {
+        $('#stripe-button-script').attr('data-amount', $(this).val());
+    });
+    $('.pay_worker').click(function() {
+        $(this).css('display', 'none');
+        var name = $(this).attr('id').split('_');
+        $('#paying_' + name[1]).css('display', 'inline');
+        alert('#paying_' + name[1]);
     });
 });
 

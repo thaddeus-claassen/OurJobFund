@@ -22,7 +22,7 @@ def sign_in(request):
                 if (userForm.is_valid()):
                     email = userForm.cleaned_data['email'];
                     if (email != ""):
-                        user = authenticate(email=email, password=userForm.cleaned_data['password']);
+                        user = authenticate(username=User.objects.get(email=email).username, password=userForm.cleaned_data['password']);
                         if (user is not None):
                             if (user.is_active):
                                 login(request, user);

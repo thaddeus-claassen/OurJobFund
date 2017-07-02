@@ -28,12 +28,6 @@ urlpatterns = [
     # /job/<Job Random String>
     url(r'^(?P<job_random_string>[a-zA-Z0-9]+)/$', views.detail, name='detail'),
     
-    # /job/<Job Random String>/pledges
-    url(r'^(?P<job_random_string>[a-zA-Z0-9]+)/pledges/$', views.pledges, name='pledges'),
-    
-    # /job/<Job Random String>/workers
-    url(r'^(?P<job_random_string>[a-zA-Z0-9]+)/workers/$', views.workers, name='workers'),
-    
 ]
 
 if settings.DEBUG:
