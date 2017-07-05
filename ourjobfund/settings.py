@@ -12,11 +12,11 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
-SECURE_SSL_REDIRECT = True;
+SECURE_SSL_REDIRECT = False;
 
-SESSION_COOKIE_SECURE = True;
+SESSION_COOKIE_SECURE = False;
 
-CSRF_COOKIE_SECURE = True;
+CSRF_COOKIE_SECURE = False;
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -30,7 +30,7 @@ SECRET_KEY = '9b4+u#&_7u83+*85ff0x%_00hym40j5&^r-0g4__c(y)f5%co5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.ourjobfund.com', '54.173.90.146'];
+ALLOWED_HOSTS = [];
 
 # Application definition
 INSTALLED_APPS = [
