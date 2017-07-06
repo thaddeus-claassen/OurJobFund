@@ -12,11 +12,29 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
+########################################################################################################################################
+####### First variable is for development. Second variable is for production. Change each time when switching between the two. #########
+########################################################################################################################################
+
+DEBUG = True;
+#DEBUG = False;
+
+ALLOWED_HOSTS = [];
+#ALLOWED_HOSTS = ['.ourjobfund.com', '54.173.90.146'];
+
 SECURE_SSL_REDIRECT = False;
+#SECURE_SSL_REDIRECT = True;
 
 SESSION_COOKIE_SECURE = False;
+#SESSION_COOKIE_SECURE = True;
 
 CSRF_COOKIE_SECURE = False;
+#CSRF_COOKIE_SECURE = True;
+
+########################################################################################################################################
+####### END development vs production variables  #######################################################################################
+########################################################################################################################################
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,10 +45,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '9b4+u#&_7u83+*85ff0x%_00hym40j5&^r-0g4__c(y)f5%co5'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = [];
 
 # Application definition
 INSTALLED_APPS = [
