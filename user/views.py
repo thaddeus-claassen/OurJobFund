@@ -12,13 +12,14 @@ from datetime import datetime;
 from random import randint;
 
 def sign_in(request):
-    userForm = UserForm(request.POST or None);
-    newUserForm = NewUserForm(request.POST or None);
+    userForm = UserForm();
+    newUserForm = NewUserForm();
     if (request.user.is_authenticated()):
         return redirect('job/home');
     else: 
         if (request.method == 'POST'):
             if ('sign-in' in request.POST):
+                userForm = UserForm(request.POST);
                 if (userForm.is_valid()):
                     email = userForm.cleaned_data['email'];
                     if (email != ""):
@@ -28,6 +29,7 @@ def sign_in(request):
                                 login(request, user);
                                 return redirect('job:home');
             elif ('sign-up' in request.POST):
+                newUserForm = NewUserForm(request.POST);
                 if (newUserForm.is_valid()):
                     user = newUserForm.save(commit=False);
                     first_name = newUserForm.cleaned_data['first_name'];

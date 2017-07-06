@@ -7,7 +7,6 @@
 {% endblock %}
 
 {% block content %}
-<div id="fb-root"></div>
 <div class="row">
     <div class="col-md-12S">
         <form id="sign-up-form" method="POST" action="{% url 'user:sign_in' %}">
@@ -18,8 +17,7 @@
                     {% if field.auto_id == "id_age_checkbox"%}
                         {{ field.label }}
                     {% endif %}
-                    {{ field }}
-                    {{ field.errors }}
+                    {{ field }}{{ field.errors }}
                 </div>
             </div>
             {% endfor %}
