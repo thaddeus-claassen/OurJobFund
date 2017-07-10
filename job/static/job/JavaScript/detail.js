@@ -28,7 +28,39 @@ $('document').ready(function() {
         $(this).css('display', 'none');
         var name = $(this).attr('id').split('_');
         $('#paying_' + name[1]).css('display', 'inline');
-        alert('#paying_' + name[1]);
+    });
+    var handler = StripeCheckout.configure({
+        key: 'pk_test_DF7zGC0IPpcOQyWr2nWHVLZ6',
+        locale: 'auto',
+        name: 'OurJobFund',
+        description: 'One-time donation',
+        token: function(token) {
+            $('#stripe_token').val(token.id);
+            $('#pay_form').submit();
+        }
+    });
+    
+    $('.pay_button').click(function(e) {
+        e.preventDefault();
+        $('#error_explanation').html('');
+        var username = $(this).attr('id').split("-")[0];
+        var amount = $('#' + username + '-amount_paying').val();
+        amount = amount.replace(/\$/g, '').replace(/\,/g, '')
+        amount = parseFloat(amount);
+        if (isNaN(amount)) {
+            $('#error_explanation').html('<p>Please enter a valid amount in USD ($).</p>');
+        } else if (amount < 5.00) {
+            $('#error_explanation').html('<p>Donation amount must be at least $1.</p>');
+        } else {
+            amount = amount * 100; // Needs to be an integer!
+            handler.open({
+                amount: Math.round(amount)
+            });
+        }
+    });
+    // Close Checkout on page navigation
+    $(window).on('popstate', function() {
+        handler.close();
     });
 });
 

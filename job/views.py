@@ -108,7 +108,6 @@ def detail(request, job_random_string):
     job = get_object_or_404(Job, random_string=job_random_string);
     if (request.method == "POST"):
         jobuser = JobUser.objects.filter(user=request.user, job=job).first();
-        print(request.POST);
         if (not jobuser):
             jobuser = JobUser(user=request.user, job=job);
             jobuser.save();
@@ -122,7 +121,28 @@ def detail(request, job_random_string):
             work.save();
         elif ('finish_job' in request.POST):
             finish = Finish(jobuser=jobuser);
-            finish.save()
+            finish.save();
+        elif ('stripeToken' in request.POST):
+            stripe.api_key = STRIPE_API_KEY;
+            token = request.POST['stripeToken'];
+            receiver_amount = plan.amount - (.05 * plan.amount);
+            charge = stripe.Charge.create(
+                amount = plan.amount,
+                currency = "usd",
+                source = token,
+                destination = {
+                    amount : receiver_amount,
+                    account : jobuser.user.userprofile.stripe_account_id,
+                },
+            );
+            charge = stripe.Charge.create(
+                amount = plan.amount - receiver_amount,
+                currency = "usd",
+                source = token,
+            );
+            origJobuser = JobUser.objects.get(user=request.user, job=jobuser.job);
+            payment = Pay(jobuser=origJobuser, receiver=jobuser.user, amount=plan.amount);
+            origJobuser.amount_paid = origJobuser.amount_paid + plan.amount;
         return redirect('job:detail', job_random_string=job_random_string);
     pledges = Pledge.objects.filter(jobuser__job=job);
     total_pledged = 0;
@@ -137,10 +157,7 @@ def detail(request, job_random_string):
     jobuser = None;
     if (JobUser.objects.filter(user=request.user, job=job).exists()):
         jobuser = request.user.jobuser_set.all().get(job=job);
-    if (Notification.objects.filter(user=request.user, job=job).exists()):
-        print(Notification.objects.all());
-        print("One is about to be deleted");
-        print("User: " + request.user.username + "  Job: " + job.name);  
+    if (Notification.objects.filter(user=request.user, job=job).exists()): 
         Notification.objects.get(user=request.user, job=job).delete();
     updates = Update.objects.filter(jobuser__job=job);
     updates_last_name = updates.extra(select={'case_insensitive_last_name': 'lower(title)'}).order_by('case_insensitive_last_name');

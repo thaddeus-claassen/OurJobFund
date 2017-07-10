@@ -4,6 +4,7 @@
 {% block import %}
     <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/detail.css' %}" />
     <script type="text/javascript" src="{% static 'job/JavaScript/detail.js' %}" ></script>
+    <script src="https://checkout.stripe.com/checkout.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -88,20 +89,21 @@
                 </tr>
             </thead>
             <tbody>
-            {% for worker in workers %}
-                <tr>
-                    <td>{{ worker.jobuser.user.first_name }}&nbsp;{{ worker.jobuser.user.last_name }}</td>
-                    <td>{{ worker.date }}</td>
-                    <td>{{ worker.jobuser.finish_set.all.exists }}
-                    <td>{{ pledger.paid }}</td>
-                    <td>
-                        <form action="{% url 'jobuser:pay' worker.jobuser.pk %}" >
-                            <input type="text" placeholder="Amount" name="amount_paying" />
-                            <input type="submit" value="Pay" />
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
+                <form id="pay_form" action="{% url 'jobuser:pay_success' %}" >
+                {% for worker in workers %}
+                    <tr>
+                        <td>{{ worker.jobuser.user.first_name }}&nbsp;{{ worker.jobuser.user.last_name }}</td>
+                        <td>{{ worker.date }}</td>
+                        <td>{{ worker.jobuser.finish_set.all.exists }}
+                        <td>{{ pledger.paid }}</td>
+                        <td>
+                            <input id="{{ worker.jobuser.user.username }}-amount_paying" type="text" placeholder="Amount" name="amount_paying" />
+                            <input id="{{ worker.jobuser.user.username }}-pay_button" class="pay_button" type="button" value="Pay" />
+                        </td>
+                    </tr>
+                {% endfor %}
+                    <input id="stripe_token" type="hidden" />
+                </form>
             </tbody>
             <tfoot>
                 <tr>
