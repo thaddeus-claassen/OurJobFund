@@ -15,7 +15,7 @@ def sign_in(request):
     userForm = UserForm();
     newUserForm = NewUserForm();
     if (request.user.is_authenticated()):
-        return redirect('job/home');
+        return redirect('job:home');
     else: 
         if (request.method == 'POST'):
             if ('sign-in' in request.POST):
