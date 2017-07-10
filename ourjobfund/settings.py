@@ -12,29 +12,18 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
-########################################################################################################################################
-####### First variable is for development. Second variable is for production. Change each time when switching between the two. #########
-########################################################################################################################################
-
 DEBUG = True;
-#DEBUG = False;
 
-ALLOWED_HOSTS = [];
-#ALLOWED_HOSTS = ['.ourjobfund.com', '54.173.90.146'];
-
-SECURE_SSL_REDIRECT = False;
-#SECURE_SSL_REDIRECT = True;
-
-SESSION_COOKIE_SECURE = False;
-#SESSION_COOKIE_SECURE = True;
-
-CSRF_COOKIE_SECURE = False;
-#CSRF_COOKIE_SECURE = True;
-
-########################################################################################################################################
-####### END development vs production variables  #######################################################################################
-########################################################################################################################################
-
+if DEBUG:
+    ALLOWED_HOSTS = [];
+    SECURE_SSL_REDIRECT = False;
+    SESSION_COOKIE_SECURE = False;
+    CSRF_COOKIE_SECURE = False;
+else:
+    ALLOWED_HOSTS = ['.ourjobfund.com', '54.173.90.146'];
+    SECURE_SSL_REDIRECT = True;
+    SESSION_COOKIE_SECURE = True;
+    CSRF_COOKIE_SECURE = True;
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -101,6 +90,25 @@ DATABASES = {
     }
 }
 
+if not DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'file': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': '/home/ubuntu/ourjobfund/debug.log',
+            },
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['file'],
+                'level': 'DEBUG',
+                'propagate': True,
+            },
+        },
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
