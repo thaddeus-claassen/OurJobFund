@@ -2,8 +2,8 @@
 
 {% load staticfiles %}
 {% block import %}
-    <link rel="stylesheet" type="text/css" href="{% static 'CSS/account.css' %}" />
-    <link rel="stylesheet" type="text/js" href="{% static 'JavaScript/account.js' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'info/CSS/account.css' %}" />
+    <link rel="stylesheet" type="text/js" href="{% static 'info/JavaScript/account.js' %}" />
 {% endblock %}
 
 {% block content %}
@@ -11,28 +11,24 @@
     <div class="col-md-12">
         <table class="table">
             <tr>
-                <td>First Name:</td>
-                <td>{{ user.first_name }}</td>
-                <td><span class="pencil">&#9998;</span></td>
-                <td><button type="button">Edit</button></td>
+                <td class="title">First Name:</td>
+                <td class="user_info">{{ user.first_name }}</td>
+                <td><input class="change" type="button" value="Edit" /></td>
             </tr>
             <tr>
-                <td>Last Name:</td>
-                <td>{{ user.last_name }}</td>
-                <td><span class="pencil">&#9998;</span></td>
-                <td><button type="button">Edit</button></td>
+                <td class="title">Last Name:</td>
+                <td class="user_info">{{ user.last_name }}</td>
+                <td><button class="change" type="button">Edit</button></td>
             </tr>
             <tr>
-                <td>Email:</td>
-                <td>{{ user.email }}</td>
-                <td><span class="pencil">&#9998;</span></td>
-                <td><button type="button">Edit</button></td>
+                <td class="title">Email:</td>
+                <td class="user_info">{{ user.email }}</td>
+                <td><button class="change" type="button">Edit</button></td>
             </tr>
             <tr>
-                <td>Password:</td>
-                <td><span id="password-span">*********</span></td>
-                <td><span class="pencil">&#9998;</span></td>
-                <td><button type="button">Edit</button></td>
+                <td class="title">Password:</td>
+                <td class="user_info"><span id="password-span">*********</span></td>
+                <td><button class="change" type="button">Edit</button></td>
             </tr> 
         </table>
     </div>

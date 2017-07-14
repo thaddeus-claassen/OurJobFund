@@ -121,6 +121,10 @@ function get_total_jobs() {
     });
 }// end get_total_jobs()
 
+function getTotalJobs(json) {
+    $('#num-jobs-found').text(json['total']);
+}// end getTotalJobs()
+
 function getJobsSuccess(json) {
     numSearches = 1;
     $('#main_table_body').empty();
@@ -135,11 +139,11 @@ function addJobsSuccess(json) {
 function sortJobsSuccess(json) {
     $('#main_table_body').empty();
     addJobsToTable(json);
+    var sort = $('#sort').val();
+    var type = sort[0];
+    var a_or_d = sort[1];
+    
 }// end sortJobs()
-
-function getTotalJobs(json) {
-    $('#num-jobs-found').text(json['total']);
-}// end getTotalJobs()
 
 function addJobsToTable(json) {
     var numJobs = Object.keys(json).length;

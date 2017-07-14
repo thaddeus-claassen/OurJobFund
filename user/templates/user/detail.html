@@ -72,11 +72,7 @@
                 <tr id="current_{{ current_jobuser.job.name }}">
                     <td><a href="{% url 'job:detail' current_jobuser.job.random_string %}">{{ current_jobuser.job.name }}</a></td>
                     <td>
-                        {% if current_jobuser.pledge_set.all.exists %}
-                            ${{ current_jobuser.pledge_set.all.first.amount_pledged }}
-                        {% else %}
-                            $0
-                        {% endif %}
+                        ${{ current_jobuser.amount_pledged }}
                         / ${{ current_jobuser.amount_paid }}</td>
                     <td>{{ current_jobuser.work_set.all.exists }}</td>
                 </tr>

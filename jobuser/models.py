@@ -5,13 +5,14 @@ from django.contrib.auth.models import User;
 class JobUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE);
     job = models.ForeignKey(Job, on_delete=models.CASCADE);
+    amount_pledged = models.FloatField(default=0.0);
     amount_paid = models.FloatField(default=0.0);
 
 class Pledge(models.Model):
     jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);
     amount = models.FloatField(editable=False, null=True, blank=True);
     date = models.DateTimeField(auto_now_add=True);
-    
+
 class Pay(models.Model):    
     jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);
     amount = models.IntegerField(editable=False, null=True, blank=True);

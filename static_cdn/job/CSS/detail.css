@@ -1,41 +1,19 @@
-#finish_modal, #pledge_modal, #you_are_now_a_main_editor {
-    display: none;
-}
 
-.table_div {
-    display: block-inline;
-    overflow: auto;
-    width: 100%;
+.information_table {
+    height: 300px;
+    overflow-y: scroll;
+    border: 1px solid black;
 }
 
 #job_description {
-    height: 300px;
-    width: 100%;
     border: 1px solid black;
-}
-
-#updates_div {
     height: 300px;
-    width: 100%;
-    border: 1px solid black;
 }
 
-#display_hashtags {
-    text-align: center;
-    font-size: 30px;
+.starts_hidden {
+    display: none;
 }
 
-#detail-description-box {
-    height: 40%;
-    outline: thin solid;
-    position: relative;
-}
-
-#detail_work_on_job {
-    height: 30px;
-}
-
-.pledge_work_inputs {
+#post_update, #pay_money, #pledge_money, #finish_job, #work_on_job {
     width: 100%;
 }
-

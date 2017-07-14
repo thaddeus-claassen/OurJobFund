@@ -6,8 +6,6 @@ from .models import JobUser, Update, ImageUpload, Pay;
 from user.models import Notification;
 from job.models import Job;
 from .forms import UpdateForm;
-from ourjobfund.settings import STRIPE_API_KEY;
-import stripe;
 
 @login_required
 def post_update(request, jobuser_id):

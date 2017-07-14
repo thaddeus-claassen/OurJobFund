@@ -1,7 +1,10 @@
 $('document').ready(function() {
-    
+    alert('document is ready');
+    $('.change').click(function() {
+        $('button was clicked');
+        var row = $(this).parent();
+        alert(row);
+        var info = $(row).children('.class', 'user_info');
+        alert(info);
+    });
 });
-
-function get_num_chars_in_password() {
-
-}// end get_num_chars_in_password()

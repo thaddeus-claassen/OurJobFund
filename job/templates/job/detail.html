@@ -89,20 +89,33 @@
                 </tr>
             </thead>
             <tbody>
-                <form id="pay_form" action="{% url 'jobuser:pay_success' %}" >
+                <form id="pay_form" action="{{ request.get_full_path }}" method="POST" >
+                {% csrf_token %}
                 {% for worker in workers %}
                     <tr>
-                        <td>{{ worker.jobuser.user.first_name }}&nbsp;{{ worker.jobuser.user.last_name }}</td>
+                        <td>
+                            {% if worker.jobuser.user.is_active %}
+                            <a href="{% url 'user:detail' worker.jobuser.user.username %}">
+                                {{ worker.jobuser.user.first_name }}&nbsp;{{ worker.jobuser.user.last_name }}
+                            </a>
+                            {% else %}
+                            <span>[ Deleted User ]</span>
+                            {% endif %}
+                        </td>
                         <td>{{ worker.date }}</td>
                         <td>{{ worker.jobuser.finish_set.all.exists }}
                         <td>{{ pledger.paid }}</td>
                         <td>
-                            <input id="{{ worker.jobuser.user.username }}-amount_paying" type="text" placeholder="Amount" name="amount_paying" />
+                            {% if jobuser.pledge_set.all and request.user.username != worker.jobuser.user.username %}
+                            <input id="{{ worker.jobuser.user.username }}-amount_paying" type="text" placeholder="Amount" />
                             <input id="{{ worker.jobuser.user.username }}-pay_button" class="pay_button" type="button" value="Pay" />
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
-                    <input id="stripe_token" type="hidden" />
+                    <input id="pay_to" type="hidden" name="pay_to" />
+                    <input id="pay_amount" type="hidden" name="pay_amount" /> 
+                    <input id="stripe_token" type="hidden" name="stripeToken" />
                 </form>
             </tbody>
             <tfoot>
@@ -120,15 +133,8 @@
 <div class="row">
     <div class="information_table col-md-12">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <h4>Updates</h4>
-            </div>
-            <div class="col-md-6">
-                {% if jobuser %}
-                <form action="{% url 'jobuser:post_update' jobuser.id %}">
-                    <input id="post_update" class="pledge_work_inputs" type="submit" value="Post Update" />
-                </form>
-                {% endif %}
             </div>
         </div>
         <div class="row">
@@ -147,7 +153,7 @@
                         <tr>
                             <td>
                                 {% if update.jobuser.user.is_active %}
-                                <a href="{% url 'user:detail' jobuser.user.username %}">
+                                <a href="{% url 'user:detail' update.jobuser.user.username %}">
                                     {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
                                 </a>
                                 {% else %}
@@ -158,7 +164,13 @@
                             <td>
                                 <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
                             </td>
-                            <td>{{ update.imageupload_set.count }}</td>
+                            <td>
+                            {% if update.imageupload_set.all %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                            </td>
                         </tr>
                     {% empty %}
                         <tr><td>No Updates</td></tr>
@@ -168,9 +180,9 @@
                     {% for update in updates_last_name reversed %}
                         <tr>
                             <td>
-                                {% if jobuser.user.is_active %}
-                                <a href="{% url 'user:detail' jobuser.user.username %}">
-                                    {{ jobuser.user.first_name }}&nbsp;{{ jobuser.user.last_name }}
+                                {% if update.jobuser.user.is_active %}
+                                <a href="{% url 'user:detail' update.jobuser.user.username %}">
+                                    {{ update.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
                                 </a>
                                 {% else %}
                                 <span>[ Deleted User ]</span>
@@ -180,7 +192,13 @@
                             <td>
                                 <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
                             </td>
-                            <td>{{ update.imageupload_set.count }}</td>
+                            <td>
+                            {% if update.imageupload_set.all %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                            </td>
                         </tr>
                     {% empty %}
                         <tr><td>No Updates</td></tr>
@@ -190,9 +208,9 @@
                     {% for update in updates_date %}
                         <tr>
                             <td>
-                                {% if jobuser.user.is_active %}
-                                <a href="{% url 'user:detail' jobuser.user.username %}">
-                                    {{ jobuser.user.first_name }}&nbsp;{{ jobuser.user.last_name }}
+                                {% if update.jobuser.user.is_active %}
+                                <a href="{% url 'user:detail' update.jobuser.user.username %}">
+                                    {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
                                 </a>
                                 {% else %}
                                 <span>[ Deleted User ]</span>
@@ -202,7 +220,13 @@
                             <td>
                                 <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
                             </td>
-                            <td>{{ update.imageupload_set.count }}</td>
+                            <td>
+                            {% if update.imageupload_set.all %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                            </td>
                         </tr>
                     {% empty %}
                         <tr><td>No Updates</td></tr>
@@ -212,9 +236,9 @@
                     {% for update in updates_date reversed %}
                         <tr>
                             <td>
-                                {% if jobuser.user.is_active %}
-                                <a href="{% url 'user:detail' jobuser.user.username %}">
-                                    {{ jobuser.user.first_name }}&nbsp;{{ jobuser.user.last_name }}
+                                {% if update.jobuser.user.is_active %}
+                                <a href="{% url 'user:detail' update.jobuser.user.username %}">
+                                    {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
                                 </a>
                                 {% else %}
                                 <span>[ Deleted User ]</span>
@@ -224,7 +248,13 @@
                             <td>
                                 <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
                             </td>
-                            <td>{{ update.imageupload_set.count }}</td>
+                            <td>
+                            {% if update.imageupload_set.all %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                            </td>
                         </tr>
                     {% empty %}
                         <tr><td>No Updates</td></tr>
@@ -234,9 +264,9 @@
                     {% for update in updates_title %}
                         <tr>
                             <td>
-                                {% if jobuser.user.is_active %}
-                                <a href="{% url 'user:detail' jobuser.user.username %}">
-                                    {{ jobuser.user.first_name }}&nbsp;{{ jobuser.user.last_name }}
+                                {% if update.jobuser.user.is_active %}
+                                <a href="{% url 'user:detail' update.jobuser.user.username %}">
+                                    {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
                                 </a>
                                 {% else %}
                                 <span>[ Deleted User ]</span>
@@ -246,7 +276,13 @@
                             <td>
                                 <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
                             </td>
-                            <td>{{ update.imageupload_set.count }}</td>
+                            <td>
+                            {% if update.imageupload_set.all %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                            </td>
                         </tr>
                     {% empty %}
                         <tr><td>No Updates</td></tr>
@@ -256,9 +292,9 @@
                     {% for update in updates_title reversed %}
                         <tr>
                             <td>
-                                {% if jobuser.user.is_active %}
-                                <a href="{% url 'user:detail' jobuser.user.username %}">
-                                    {{ jobuser.user.first_name }}&nbsp;{{ jobuser.user.last_name }}
+                                {% if update.jobuser.user.is_active %}
+                                <a href="{% url 'user:detail' update.jobuser.user.username %}">
+                                    {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
                                 </a>
                                 {% else %}
                                 <span>[ Deleted User ]</span>
@@ -268,7 +304,13 @@
                             <td>
                                 <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
                             </td>
-                            <td>{{ update.imageupload_set.count }}</td>
+                            <td>
+                            {% if update.imageupload_set.all %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                            </td>
                         </tr>
                     {% empty %}
                         <tr><td>No Updates</td></tr>
@@ -289,14 +331,16 @@
     </div>
 </div>
 <div class="row">
-    {% if jobuser and jobuser.pledge_set.all.exists %}
-    <div class="col-md-6">
-        <form action="{{ request.get_full_path }}" method="POST">
-            {% csrf_token %}
-            <input id="pay_money" class="pledge_work_inputs" type="button" value="Pay" name="pay_money_to_job" />
+    <div class="col-md-12">
+        {% if jobuser %}
+        <form action="{% url 'jobuser:post_update' jobuser.id %}">
+            <input id="post_update" class="pledge_work_inputs" type="submit" value="Post Update" />
         </form>
+        {% endif %}
     </div>
-    {% else %}
+</div>
+<div class="row">
+    {% if not jobuser or not jobuser.pledge_set.all.exists %}
     <div class="col-md-6">
         <form action="{{ request.get_full_path }}" method="POST">
             {% csrf_token %}

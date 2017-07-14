@@ -21,9 +21,6 @@ $('document').ready(function() {
         $(this).css('display', 'none');
         $('#pay_clicked').css('display', 'inline');
     });
-    $('#pay_amount').change(function() {
-        $('#stripe-button-script').attr('data-amount', $(this).val());
-    });
     $('.pay_worker').click(function() {
         $(this).css('display', 'none');
         var name = $(this).attr('id').split('_');
@@ -52,9 +49,11 @@ $('document').ready(function() {
         } else if (amount < 5.00) {
             $('#error_explanation').html('<p>Donation amount must be at least $1.</p>');
         } else {
-            amount = amount * 100; // Needs to be an integer!
+            amount = Math.round(amount * 100); // Needs to be an integer!
+            $('#pay_amount').val(amount);
+            $('#pay_to').val(username);
             handler.open({
-                amount: Math.round(amount)
+                amount: amount
             });
         }
     });

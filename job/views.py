@@ -10,6 +10,8 @@ from django.contrib.auth import authenticate, login, logout;
 from .forms import NewJobForm;
 import json, re, math;
 from random import randint;
+from ourjobfund.settings import STRIPE_API_KEY;
+import stripe;
 
 @login_required
 def home(request):     
@@ -52,7 +54,7 @@ def get_total_jobs(request):
     if (request.is_ajax()):
         jobs = findJobs(request);
         total = {};
-        total['total'] = jobs.count();
+        total['total'] = len(jobs)
         return HttpResponse(json.dumps(total), content_type="application/json");
     else:
         return Http404();
@@ -107,7 +109,9 @@ def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_
 def detail(request, job_random_string):
     job = get_object_or_404(Job, random_string=job_random_string);
     if (request.method == "POST"):
+        print("Got into POST");
         jobuser = JobUser.objects.filter(user=request.user, job=job).first();
+        print(request.POST);
         if (not jobuser):
             jobuser = JobUser(user=request.user, job=job);
             jobuser.save();
@@ -116,6 +120,7 @@ def detail(request, job_random_string):
             if (amount_pledged >= 0.5):
                 pledge = Pledge(jobuser=jobuser, amount=amount_pledged);
                 pledge.save();
+                jobuser.amount_pledged = jobuser.amount_pledged + amount_pledged;
         elif ('work_on_job' in request.POST):
             work = Work(jobuser=jobuser);
             work.save();
@@ -123,26 +128,33 @@ def detail(request, job_random_string):
             finish = Finish(jobuser=jobuser);
             finish.save();
         elif ('stripeToken' in request.POST):
-            stripe.api_key = STRIPE_API_KEY;
-            token = request.POST['stripeToken'];
-            receiver_amount = plan.amount - (.05 * plan.amount);
-            charge = stripe.Charge.create(
-                amount = plan.amount,
-                currency = "usd",
-                source = token,
-                destination = {
-                    amount : receiver_amount,
-                    account : jobuser.user.userprofile.stripe_account_id,
-                },
-            );
-            charge = stripe.Charge.create(
-                amount = plan.amount - receiver_amount,
-                currency = "usd",
-                source = token,
-            );
-            origJobuser = JobUser.objects.get(user=request.user, job=jobuser.job);
-            payment = Pay(jobuser=origJobuser, receiver=jobuser.user, amount=plan.amount);
-            origJobuser.amount_paid = origJobuser.amount_paid + plan.amount;
+            print("stripeToken is in request.POST");
+            receiver_username = request.POST['pay_to'];
+            receiver = None;
+            if (User.objects.filter(username=receiver_username).exists()):
+                receiver = User.objects.get(username=receiver_username);
+            else:
+                stripe.api_key = STRIPE_API_KEY;
+                token = request.POST['stripeToken'];
+                amount_paying = float(request.POST['pay_amount']);
+                receiver_amount = amount_paying - (.05 * amount_paying);
+                charge = stripe.Charge.create(
+                    amount = amount_paying,
+                    currency = "usd",
+                    source = token,
+                    destination = {
+                        amount : receiver_amount,
+                        account : jobuser.user.userprofile.stripe_account_id,
+                    },
+                );
+                charge = stripe.Charge.create(
+                    amount = amount_paying - receiver_amount,
+                    currency = "usd",
+                    source = token,
+                );
+                origJobuser = JobUser.objects.get(user=request.user, job=jobuser.job);
+                payment = Pay(jobuser=origJobuser, receiver=jobuser.user, amount=plan.amount);
+                origJobuser.amount_paid = origJobuser.amount_paid + plan.amount;
         return redirect('job:detail', job_random_string=job_random_string);
     pledges = Pledge.objects.filter(jobuser__job=job);
     total_pledged = 0;

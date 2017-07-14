@@ -21,7 +21,7 @@ from user.views import search_users;
 from job.views import home;
 from . import views;
 
-app_name = 'TheWebsite';
+app_name = 'ourjobfund';
 
 urlpatterns = [
     url(r'search_users$', search_users),

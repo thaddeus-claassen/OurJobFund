@@ -78,7 +78,7 @@ function get_jobs() {
 }// end get_jobs()
 
 function add_jobs() {
-        $.ajax({
+    $.ajax({
         url : 'add_jobs',
         data : {
             'numSearches' : numSearches,
