@@ -21,6 +21,13 @@ $('document').ready(function() {
         $(this).css('display', 'none');
         $('#pay_clicked').css('display', 'inline');
     });
+    $('#work_on_job').click(function() {
+        if ($(this).attr('type') === 'button') {
+            $(this).css('display', 'none');
+            $('#connect_with_stripe_message').css('display', 'inline');
+            $('#stripe_connect').css('display', 'inline');
+        }// end if
+    });
     $('.pay_worker').click(function() {
         $(this).css('display', 'none');
         var name = $(this).attr('id').split('_');
@@ -36,7 +43,6 @@ $('document').ready(function() {
             $('#pay_form').submit();
         }
     });
-    
     $('.pay_button').click(function(e) {
         e.preventDefault();
         $('#error_explanation').html('');

@@ -33,6 +33,6 @@ class Update(models.Model):
     description = models.CharField(default="", max_length=1000);
     date = models.DateTimeField(auto_now_add=True);
     
-class ImageUpload(models.Model):
+class Image(models.Model):
     update = models.ForeignKey(Update, on_delete=models.CASCADE, null=True);
     image = models.ImageField();

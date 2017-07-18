@@ -10,11 +10,8 @@ from .models import UserProfile;
 from job.models import Job;
 from datetime import datetime;
 from random import randint;
-# import the logging library
-import logging
+import logging;
 
-# Get an instance of a logger
-logger = logging.getLogger(__name__)
 
 def sign_in(request):
     userForm = UserForm();

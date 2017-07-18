@@ -26,3 +26,9 @@ table {
     height: 100px;
     width: 100%;
 }
+
+.information_table {
+    height: 300px;
+    overflow-y: scroll;
+    border: 1px solid black;
+}

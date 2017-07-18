@@ -28,7 +28,7 @@ urlpatterns = [
     # /job/<Job Random String>
     url(r'^(?P<job_random_string>[a-zA-Z0-9]+)/$', views.detail, name='detail'),
     
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT);

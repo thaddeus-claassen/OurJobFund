@@ -22,11 +22,15 @@
     {% endfor %}
     </div>
 </div>
-<div class="detail_job_information row">
+<div class="row">
     <div class="col-md-12">
-    {% for image in job.imageupload_set.all %}
-        {{ image.image }}
-    {% endfor %}
+    {% if job.image_set.all.count > 0 %}
+        <div id="images">
+        {% for image in job.image_set.all %}
+            <img src="{{ image.image.url }}" class="img-responsive image">
+        {% endfor %}
+        </div>
+    {% endif %}
     </div>
 </div>
 <div class="row">
@@ -103,7 +107,7 @@
                             {% endif %}
                         </td>
                         <td>{{ worker.date }}</td>
-                        <td>{{ worker.jobuser.finish_set.all.exists }}
+                        <td>{{ worker.jobuser.finish_set.all.exists }}</td>
                         <td>{{ pledger.paid }}</td>
                         <td>
                             {% if jobuser.pledge_set.all and request.user.username != worker.jobuser.user.username %}
@@ -131,203 +135,199 @@
     </div>
 </div>
 <div class="row">
-    <div class="information_table col-md-12">
-        <div class="row">
-            <div class="col-md-12">
-                <h4>Updates</h4>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <table id="updates_table" class="table">
-                    <thead>
-                        <tr>
-                            <th id="last_name" class="sort">User</th>
-                            <th id="date" class="sort">Date</th>
-                            <th id="title" class="sort">Title</th>
-                            <th id="images" class="sort">Image/s</th>
-                        </tr>
-                    </thead>
-                    <tbody id="last_name_ascending" class="starts_hidden">
-                    {% for update in updates_last_name %}
-                        <tr>
-                            <td>
-                                {% if update.jobuser.user.is_active %}
-                                <a href="{% url 'user:detail' update.jobuser.user.username %}">
-                                    {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
-                                </a>
-                                {% else %}
-                                <span>[ Deleted User ]</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ update.date }}</td>
-                            <td>
-                                <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
-                            </td>
-                            <td>
-                            {% if update.imageupload_set.all %}
-                                Yes
-                            {% else %}
-                                No
-                            {% endif %}
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <tr><td>No Updates</td></tr>
-                    {% endfor %}
-                    </tbody>
-                    <tbody id="last_name_descending" class="starts_hidden" >
-                    {% for update in updates_last_name reversed %}
-                        <tr>
-                            <td>
-                                {% if update.jobuser.user.is_active %}
-                                <a href="{% url 'user:detail' update.jobuser.user.username %}">
-                                    {{ update.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
-                                </a>
-                                {% else %}
-                                <span>[ Deleted User ]</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ update.date }}</td>
-                            <td>
-                                <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
-                            </td>
-                            <td>
-                            {% if update.imageupload_set.all %}
-                                Yes
-                            {% else %}
-                                No
-                            {% endif %}
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <tr><td>No Updates</td></tr>
-                    {% endfor %}
-                    </tbody>
-                    <tbody id="date_ascending" class="starts_hidden" >
-                    {% for update in updates_date %}
-                        <tr>
-                            <td>
-                                {% if update.jobuser.user.is_active %}
-                                <a href="{% url 'user:detail' update.jobuser.user.username %}">
-                                    {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
-                                </a>
-                                {% else %}
-                                <span>[ Deleted User ]</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ update.date }}</td>
-                            <td>
-                                <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
-                            </td>
-                            <td>
-                            {% if update.imageupload_set.all %}
-                                Yes
-                            {% else %}
-                                No
-                            {% endif %}
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <tr><td>No Updates</td></tr>
-                    {% endfor %}
-                    </tbody>
-                    <tbody id="date_descending" >
-                    {% for update in updates_date reversed %}
-                        <tr>
-                            <td>
-                                {% if update.jobuser.user.is_active %}
-                                <a href="{% url 'user:detail' update.jobuser.user.username %}">
-                                    {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
-                                </a>
-                                {% else %}
-                                <span>[ Deleted User ]</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ update.date }}</td>
-                            <td>
-                                <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
-                            </td>
-                            <td>
-                            {% if update.imageupload_set.all %}
-                                Yes
-                            {% else %}
-                                No
-                            {% endif %}
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <tr><td>No Updates</td></tr>
-                    {% endfor %}
-                    </tbody>
-                    <tbody id="title_ascending" class="starts_hidden">
-                    {% for update in updates_title %}
-                        <tr>
-                            <td>
-                                {% if update.jobuser.user.is_active %}
-                                <a href="{% url 'user:detail' update.jobuser.user.username %}">
-                                    {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
-                                </a>
-                                {% else %}
-                                <span>[ Deleted User ]</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ update.date }}</td>
-                            <td>
-                                <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
-                            </td>
-                            <td>
-                            {% if update.imageupload_set.all %}
-                                Yes
-                            {% else %}
-                                No
-                            {% endif %}
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <tr><td>No Updates</td></tr>
-                    {% endfor %}
-                    </tbody>
-                    <tbody id="title_descending" class="starts_hidden" >
-                    {% for update in updates_title reversed %}
-                        <tr>
-                            <td>
-                                {% if update.jobuser.user.is_active %}
-                                <a href="{% url 'user:detail' update.jobuser.user.username %}">
-                                    {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
-                                </a>
-                                {% else %}
-                                <span>[ Deleted User ]</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ update.date }}</td>
-                            <td>
-                                <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
-                            </td>
-                            <td>
-                            {% if update.imageupload_set.all %}
-                                Yes
-                            {% else %}
-                                No
-                            {% endif %}
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <tr><td>No Updates</td></tr>
-                    {% endfor %}
-                    </tbody>
-                    {% if ordered_updates %}
-                    <tfoot>
-                        <tr>
-                            <td></td>
-                            <td>Total:</td>
-                            <td>{{ ordered_updates.count }}</td>
-                        </tr>
-                    </tfoot>
+    <div class="col-md-12">
+        <h4>Updates</h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 information_table">
+        <table id="updates_table" class="table">
+            <thead>
+                <tr>
+                    <th id="last_name" class="sort">User</th>
+                    <th id="date" class="sort">Date</th>
+                    <th id="title" class="sort">Title</th>
+                    <th id="images" class="sort">Image/s</th>
+                </tr>
+            </thead>
+            <tbody id="last_name_ascending">
+            {% for update in updates_last_name %}
+                <tr>
+                    <td>
+                        {% if update.jobuser.user.is_active %}
+                        <a href="{% url 'user:detail' update.jobuser.user.username %}">
+                            {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
+                        </a>
+                        {% else %}
+                        <span>[ Deleted User ]</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ update.date }}</td>
+                    <td>
+                        <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
+                    </td>
+                    <td>
+                    {% if update.image_set.all %}
+                        Yes
+                    {% else %}
+                        No
                     {% endif %}
-                </table>
-            </div>
-        </div>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td>No Updates</td></tr>
+            {% endfor %}
+            </tbody>
+            <tbody id="last_name_descending">
+            {% for update in updates_last_name reversed %}
+                <tr>
+                    <td>
+                        {% if update.jobuser.user.is_active %}
+                        <a href="{% url 'user:detail' update.jobuser.user.username %}">
+                            {{ update.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
+                        </a>
+                        {% else %}
+                        <span>[ Deleted User ]</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ update.date }}</td>
+                    <td>
+                        <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
+                    </td>
+                    <td>
+                    {% if update.image_set.all %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td>No Updates</td></tr>
+            {% endfor %}
+            </tbody>
+            <tbody id="date_ascending">
+            {% for update in updates_date %}
+                <tr>
+                    <td>
+                        {% if update.jobuser.user.is_active %}
+                        <a href="{% url 'user:detail' update.jobuser.user.username %}">
+                            {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
+                        </a>
+                        {% else %}
+                        <span>[ Deleted User ]</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ update.date }}</td>
+                    <td>
+                        <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
+                    </td>
+                    <td>
+                    {% if update.image_set.all %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td>No Updates</td></tr>
+            {% endfor %}
+            </tbody>
+            <tbody id="date_descending" >
+            {% for update in updates_date reversed %}
+                <tr>
+                    <td>
+                        {% if update.jobuser.user.is_active %}
+                        <a href="{% url 'user:detail' update.jobuser.user.username %}">
+                            {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
+                        </a>
+                        {% else %}
+                        <span>[ Deleted User ]</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ update.date }}</td>
+                    <td>
+                        <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
+                    </td>
+                    <td>
+                    {% if update.image_set.all %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td>No Updates</td></tr>
+            {% endfor %}
+            </tbody>
+            <tbody id="title_ascending">
+            {% for update in updates_title %}
+                <tr>
+                    <td>
+                        {% if update.jobuser.user.is_active %}
+                        <a href="{% url 'user:detail' update.jobuser.user.username %}">
+                            {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
+                        </a>
+                        {% else %}
+                        <span>[ Deleted User ]</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ update.date }}</td>
+                    <td>
+                        <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
+                    </td>
+                    <td>
+                    {% if update.image_set.all %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td>No Updates</td></tr>
+            {% endfor %}
+            </tbody>
+            <tbody id="title_descending">
+            {% for update in updates_title reversed %}
+                <tr>
+                    <td>
+                        {% if update.jobuser.user.is_active %}
+                        <a href="{% url 'user:detail' update.jobuser.user.username %}">
+                            {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
+                        </a>
+                        {% else %}
+                        <span>[ Deleted User ]</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ update.date }}</td>
+                    <td>
+                        <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
+                    </td>
+                    <td>
+                    {% if update.image_set.all %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td>No Updates</td></tr>
+            {% endfor %}
+            </tbody>
+            {% if ordered_updates %}
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td>Total:</td>
+                    <td>{{ ordered_updates.count }}</td>
+                </tr>
+            </tfoot>
+            {% endif %}
+        </table>
     </div>
 </div>
 <div class="row">
@@ -361,7 +361,16 @@
     <div class="col-md-6">
         <form action="{{ request.get_full_path }}" method="POST">
             {% csrf_token %}
+            {% if user_has_stripe_account %}
+            User has stripe_account
             <input id="work_on_job" class="pledge_work_inputs" type="submit" value="Work" name="work_on_job" />
+            {% else %}
+            <input id="work_on_job" class="pledge_work_inputs" type="button" value="Work" name="work_on_job" />
+            <span id="connect_with_stripe_message">We do not have your Stripe account on record. Please click here to sign-in or create account with Stripe so that you can be properly paid.</span>
+            <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write" id="stripe_connect" class="stripe-connect">
+                <span>Connect with Stripe</span>
+            </a>
+            {% endif %}
         </form>
     </div>
     {% endif %}

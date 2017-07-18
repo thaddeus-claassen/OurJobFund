@@ -6,7 +6,7 @@ class NewJobForm(forms.ModelForm):
     location = forms.CharField(label="Location:", widget=forms.TextInput(attrs={'placeholder': '(Optional)'}), max_length=1000, required=False);
     latitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
     longitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
-    tags = forms.CharField(label="Tags:", widget=forms.TextInput(attrs={'placeholder': '(Optional)'}), max_length=1000);
+    tags = forms.CharField(label="Tags:", widget=forms.TextInput(attrs={'placeholder': '(Optional)'}), max_length=1000, required=False);
     images = forms.ImageField(label="Images:", widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False);
     description = forms.CharField(label="Description:", widget=forms.Textarea(attrs={'placeholder': '(Required)'}), max_length=10000);
 

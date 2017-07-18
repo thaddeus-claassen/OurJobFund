@@ -8,7 +8,7 @@
 
 
 {% block content %}
-<form id="create-job-form" method="POST" action="{% url 'job:create_job' %}">
+<form id="create-job-form" method="POST" action="{% url 'job:create_job' %}" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="row">
         <div class="col-md-2">

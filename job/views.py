@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required;
 from django.shortcuts import render, get_object_or_404, redirect;
-from .models import Job, Tag, User;
+from .models import Job, Tag, User, Image;
 from user.models import Notification;
 from django.db.models import Q;
 from jobuser.models import JobUser, Pledge, Pay, Work, Finish, Update;
@@ -101,7 +101,6 @@ def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_
         RADIUS_OF_EARTH_IN_MILES = 3959;
         distance = RADIUS_OF_EARTH_IN_MILES * math.acos(math.sin(latitude_in_radians) * math.sin(lat) + math.cos(latitude_in_radians) * math.cos(lat) * math.cos(math.fabs(longitude_in_radians - lon))); #This is called the Spherical Law of Cosines and it is used to calculate distances on a sphere. (Note: Earth is not a sphere, thus this will have a margin of error, but it is small. Computation speed compensates)
         if (distance > radius_in_miles):
-            print("Excluded Job: " + job.name);
             jobs = jobs.exclude(id=job.id);
     return jobs;
 
@@ -109,9 +108,7 @@ def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_
 def detail(request, job_random_string):
     job = get_object_or_404(Job, random_string=job_random_string);
     if (request.method == "POST"):
-        print("Got into POST");
         jobuser = JobUser.objects.filter(user=request.user, job=job).first();
-        print(request.POST);
         if (not jobuser):
             jobuser = JobUser(user=request.user, job=job);
             jobuser.save();
@@ -128,7 +125,6 @@ def detail(request, job_random_string):
             finish = Finish(jobuser=jobuser);
             finish.save();
         elif ('stripeToken' in request.POST):
-            print("stripeToken is in request.POST");
             receiver_username = request.POST['pay_to'];
             receiver = None;
             if (User.objects.filter(username=receiver_username).exists()):
@@ -175,6 +171,7 @@ def detail(request, job_random_string):
     updates_last_name = updates.extra(select={'case_insensitive_last_name': 'lower(title)'}).order_by('case_insensitive_last_name');
     updates_date = updates.order_by('-date');
     updates_title = updates.extra(select={'case_insensitive_title' : 'lower(title)'}).order_by('case_insensitive_title');
+    user_has_stripe_account = (request.user.userprofile.stripe_account_id != None) and (request.user.userprofile.stripe_account_id != '');
     context = {                                                                     
         'job': job,
         'pledges' : pledges,
@@ -186,30 +183,9 @@ def detail(request, job_random_string):
         'updates_last_name' : updates_last_name,
         'updates_date' : updates_date,
         'updates_title' : updates_title,
+        'user_has_stripe_account' : user_has_stripe_account,
     }
     return render(request, 'job/detail.html', context);
-    
-@login_required
-def pledge_money_to_job(request, job_random_string):
-    string = "";
-    if (request.method == 'POST'):
-        job = get_object_or_404(Job, random_string=job_random_string);
-        if (not job.pledgejob_set.filter(pledger=request.user).exists()):
-            amount_pledged = float(request.POST['amount_pledged']);
-            PledgeJob(pledger=request.user, job=job, amount_pledged=amount_pledged).save();
-            job.money_pledged = job.money_pledged + amount_pledged;
-            job.save();
-            string += request.user.username + " " + amount_pledged; 
-    return HttpResponse(string);
-    
-@login_required
-def work_on_job(request, job_random_string):
-    if (request.method == 'POST'):
-        job = get_object_or_404(Job, random_string=job_random_string);
-        if (not job.workjob_set.filter(worker=request.user).exists()):
-            workjob = WorkJob(worker=request.user, job=job).save();
-            return_string = "success";
-    return HttpResponse(return_string);
 
 @login_required    
 def create_job(request):
@@ -223,7 +199,6 @@ def create_job(request):
             description = newJobForm.cleaned_data['description'];
             job = Job(name=name, latitude=latitude, longitude=longitude, description=description, random_string=createRandomString());
             job.save();
-            tags = request.POST['tags'];
             tagsArray = tags.split(" ");
             for tagString in tagsArray:
                 newTag = None;
@@ -233,6 +208,9 @@ def create_job(request):
                     newTag = Tag(tag=tagString);
                 newTag.save();
                 job.tag_set.add(newTag);
+            for image in request.FILES.getlist('images'):
+                image = Image(image=image, job=job);
+                image.save();
             return redirect('job:home');
     context = {
         'form' : NewJobForm(), 

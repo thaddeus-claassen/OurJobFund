@@ -1,8 +1,15 @@
 
 .information_table {
     height: 300px;
-    overflow-y: scroll;
     border: 1px solid black;
+}
+
+thead, tbody, tfoot {
+    display: block;
+}
+
+tbody {
+    overflow: auto;
 }
 
 #job_description {
@@ -10,10 +17,22 @@
     height: 300px;
 }
 
-.starts_hidden {
+#date_ascending, #last_name_ascending, #last_name_descending, #title_ascending, #title_descending, .pledge_clicked, #stripe_connect, #connect_with_stripe_message {
     display: none;
 }
 
 #post_update, #pay_money, #pledge_money, #finish_job, #work_on_job {
     width: 100%;
+}
+
+#images {
+    width: 100%;
+    height: 150px;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.image {
+    height: 100%;
+    display: inline-block;
 }

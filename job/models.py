@@ -27,7 +27,7 @@ class Tag(models.Model):
     def __str__(self):
         return self.tag;
 
-class ImageUpload(models.Model):
+class Image(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE, null=True);
     image = models.ImageField();        
 
