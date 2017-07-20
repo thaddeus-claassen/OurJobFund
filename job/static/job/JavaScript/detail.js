@@ -1,17 +1,8 @@
-var currSort = "date_descending";
+var currSort = 'date-descending';
 
 $('document').ready(function() {
     $('.sort').click(function() {
-        $('tbody').each(function(i, obj) {
-            $(this).css('display', 'none');
-        });
-        sortArray = currSort.split("_");
-        if ($(this).attr('id') === sortArray[0] && sortArray[1] === 'ascending') {
-            currSort = $(this).attr('id') + "_descending";
-        } else {
-            currSort = $(this).attr('id') + "_ascending";
-        }// end if-else
-        $('#' + currSort).css('display', 'inline');
+        sort($(this).attr('id'));
     });
     $('#pledge_money').click(function() {
         $(this).css('display', 'none');
@@ -69,6 +60,33 @@ $('document').ready(function() {
     });
 });
 
+function sort(sort) {
+    ascending_or_descending = 'ascending';
+    if (sort === currSort.split('-')[0] && currSort.split('-')[1] === 'ascending') {
+        ascending_or_descending = 'descending';
+    }// end if
+    currSort = sort + "-" + ascending_or_descending;
+    $.ajax({
+        url : $(location).attr('href') + "sort",
+        data : {
+            'sort' : sort,
+            'ascending_or_descending' : ascending_or_descending,
+        },
+        success: sortSuccess,
+    });
+}// end sort()
+
+function sortSuccess(json) {
+    //$('#update-body').empty();
+    //var num = Object.keys(json).length;
+    //if (num > 0) {
+    //    for (var index = 0; index < json.length; index++) {
+    //        var update = json[index];
+    //        var fields = job["fields"];
+    //    }// end for
+    //}// end if
+}// end sortSuccess()
+
 function correctFormat() {
     var errorMessage = "";
     var amount = parseFloat($('#pledge_amount').val());
@@ -83,33 +101,7 @@ function correctFormat() {
     return errorMessage;
 }// end pledgeErrorMessage()
 
-function pledge_money_to_job() {
-    $.ajax({
-        type : "POST",
-        url : "" + $('#job-id').text() + "/pledge_money_to_job",
-        data : {
-            'amount_pledged' : $('#pledge_amount').val(),
-            'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
-        },
-        success : pledgingMoneyToJobSuccess,
-    });
-}// end pledge_money()
 
-function pledgingMoneyToJobSuccess(string) {
-    $('#will-you-pledge-money-to-job').css('display', 'none');
-    $('#you-are-pledging').css('display', 'inline');
-    var row = "<tr>";
-    row += "<td>" + string.split(" ")[0] + "</td>";
-    row += "<td>Pledge: $" + string.split(" ")[1] + "</td>";
-    row += "<td>Paid: $0.0</td></tr>";
-    $('#pledges_table').prepend(row);
-}// end pledgingMoenyToJobSuccess()
-
-function workOnJobSuccess(string) {
-    if (string == 'success') {
-
-    }// end if
-}// end workOnJobSuccess()
 
 
 

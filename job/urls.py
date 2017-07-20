@@ -24,9 +24,12 @@ urlpatterns = [
     
     # /job/get_total_jobs
     url(r'^get_total_jobs/$', views.get_total_jobs),
-    
+
     # /job/<Job Random String>
     url(r'^(?P<job_random_string>[a-zA-Z0-9]+)/$', views.detail, name='detail'),
+    
+    #/job/<Job Random String>/sort
+    url(r'^(?P<job_random_string>[a-zA-Z0-9]+)/sort/$', views.detail_sort),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

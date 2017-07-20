@@ -142,7 +142,6 @@ function sortJobsSuccess(json) {
     var sort = $('#sort').val();
     var type = sort[0];
     var a_or_d = sort[1];
-    
 }// end sortJobs()
 
 function addJobsToTable(json) {

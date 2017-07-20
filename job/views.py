@@ -14,7 +14,15 @@ from ourjobfund.settings import STRIPE_API_KEY;
 import stripe;
 
 @login_required
-def home(request):     
+def home(request):
+    job_random_string = request.GET.get('state', None);
+    if (job_random_string is not None):
+        job = get_object_or_404(Job, random_string=job_random_string);
+        code = request.GET.get('code', None);
+        request.user.userprofile.stripe_account_id = code;
+        work = Work(jobuser=JobUser.objects.get(user=request.user, job=job));
+        work.save();
+        return redirect(job);
     return render(request, 'job/home.html');
     
 @login_required
@@ -73,20 +81,14 @@ def findJobs(request):
     jobs = jobs.distinct();
     if (sort_array[0] == 'created'):
         jobs = jobs.order_by('creation_date');
-        if (sort_array[1] == 'descending'):
-            jobs = jobs[::-1];
     elif (sort_array[0] == 'pledged'):
         jobs = jobs.order_by('money_pledged');
-        if (sort_array[1] == 'descending'):
-            jobs = jobs[::-1];
     elif (sort_array[0] == 'workers'):
         jobs = jobs.order_by('num_workers');
-        if (sort_array[1] == 'descending'):
-            jobs = jobs[::-1];
     else:
         jobs = jobs.extra(select={'case_insensitive_name': 'lower(name)'}).order_by('case_insensitive_name');
-        if (sort_array[1] == 'descending'):
-            jobs = jobs[::-1];
+    if (sort_array[1] == 'descending'):
+        jobs = jobs[::-1];
     return jobs;
 
 def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_miles):
@@ -126,31 +128,20 @@ def detail(request, job_random_string):
             finish.save();
         elif ('stripeToken' in request.POST):
             receiver_username = request.POST['pay_to'];
-            receiver = None;
-            if (User.objects.filter(username=receiver_username).exists()):
-                receiver = User.objects.get(username=receiver_username);
-            else:
-                stripe.api_key = STRIPE_API_KEY;
-                token = request.POST['stripeToken'];
-                amount_paying = float(request.POST['pay_amount']);
-                receiver_amount = amount_paying - (.05 * amount_paying);
-                charge = stripe.Charge.create(
-                    amount = amount_paying,
-                    currency = "usd",
-                    source = token,
-                    destination = {
-                        amount : receiver_amount,
-                        account : jobuser.user.userprofile.stripe_account_id,
-                    },
-                );
-                charge = stripe.Charge.create(
-                    amount = amount_paying - receiver_amount,
-                    currency = "usd",
-                    source = token,
-                );
-                origJobuser = JobUser.objects.get(user=request.user, job=jobuser.job);
-                payment = Pay(jobuser=origJobuser, receiver=jobuser.user, amount=plan.amount);
-                origJobuser.amount_paid = origJobuser.amount_paid + plan.amount;
+            stripe.api_key = STRIPE_API_KEY;
+            token = request.POST['stripeToken'];
+            amount_paying = int(request.POST['pay_amount']);
+            charge = stripe.Charge.create(
+                amount = amount_paying,
+                currency = "usd",
+                source = token,
+                destination = {
+                    'account' : jobuser.user.userprofile.stripe_account_id,
+                },
+            );
+            payment = Pay(jobuser=jobuser, receiver=jobuser.user, amount=float(amount_paying));
+            payment.save();
+            jobuser.amount_paid = jobuser.amount_paid + amount_paying;
         return redirect('job:detail', job_random_string=job_random_string);
     pledges = Pledge.objects.filter(jobuser__job=job);
     total_pledged = 0;
@@ -159,7 +150,8 @@ def detail(request, job_random_string):
     total_paid = 0;
     for pledge in pledges:
         for payment in pledge.jobuser.pay_set.all():
-            total_paid = total_paid + payment;
+            total_paid = total_paid + payment.amount;
+    total_paid = total_paid / 100;
     workers = Work.objects.filter(jobuser__job=job);
     total_working = workers.count() - Finish.objects.filter(jobuser__job=job).count();
     jobuser = None;
@@ -167,10 +159,7 @@ def detail(request, job_random_string):
         jobuser = request.user.jobuser_set.all().get(job=job);
     if (Notification.objects.filter(user=request.user, job=job).exists()): 
         Notification.objects.get(user=request.user, job=job).delete();
-    updates = Update.objects.filter(jobuser__job=job);
-    updates_last_name = updates.extra(select={'case_insensitive_last_name': 'lower(title)'}).order_by('case_insensitive_last_name');
-    updates_date = updates.order_by('-date');
-    updates_title = updates.extra(select={'case_insensitive_title' : 'lower(title)'}).order_by('case_insensitive_title');
+    updates = Update.objects.filter(jobuser__job=job).order_by('-date');
     user_has_stripe_account = (request.user.userprofile.stripe_account_id != None) and (request.user.userprofile.stripe_account_id != '');
     context = {                                                                     
         'job': job,
@@ -180,13 +169,34 @@ def detail(request, job_random_string):
         'workers' : workers,
         'total_working' : total_working,
         'jobuser' : jobuser,
-        'updates_last_name' : updates_last_name,
-        'updates_date' : updates_date,
-        'updates_title' : updates_title,
+        'updates' : updates,
         'user_has_stripe_account' : user_has_stripe_account,
     }
     return render(request, 'job/detail.html', context);
-
+    
+@login_required    
+def detail_sort(request, job_random_string):
+    rows = None;
+    if (request.is_ajax()):
+        job = get_object_or_404(Job, random_string=job_random_string);
+        sort = request.GET.get('sort');
+        descending_or_ascending = request.GET.get('descending_or_ascending');
+        updates = Update.objects.filter(jobuser__job=job);
+        if (sort == 'last_name'):
+            rows = updates.extra(select={'case_insensitive_last_name': 'lower(title)'}).order_by('case_insensitive_last_name');
+        elif (sort == 'date'):
+            rows = updates.order_by('date');
+        elif (sort == 'title'):
+            rows = updates.extra(select={'case_insensitive_title' : 'lower(title)'}).order_by('case_insensitive_title');
+        elif (sort == 'update-images'):
+            rows = updates.extra(select={'image_count' : 'image_set.count()'}).order_by('image_count');
+        if (descending_or_ascending == 'descending'):
+            updates = updates[::-1];
+        rows = serializers.serialize('json', rows);
+        return HttpResponse(rows, content_type="application/json");
+    else:
+        return Http404();
+    
 @login_required    
 def create_job(request):
     if (request.method == 'POST'):

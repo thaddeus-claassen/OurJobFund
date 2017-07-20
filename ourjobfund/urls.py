@@ -30,7 +30,8 @@ urlpatterns = [
     url(r'^job/', include('job.urls')),
     url(r'^$', include('job.urls')),
     url(r'^jobuser/', include('jobuser.urls')),
-    url(r'info/', include('info.urls')),
+    url(r'^info/', include('info.urls')),
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT);
 
 if (settings.DEBUG):

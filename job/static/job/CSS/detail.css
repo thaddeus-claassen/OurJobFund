@@ -1,15 +1,7 @@
 
-.information_table {
-    height: 300px;
+table {
     border: 1px solid black;
-}
-
-thead, tbody, tfoot {
-    display: block;
-}
-
-tbody {
-    overflow: auto;
+    height: 300px;
 }
 
 #job_description {
@@ -17,7 +9,7 @@ tbody {
     height: 300px;
 }
 
-#date_ascending, #last_name_ascending, #last_name_descending, #title_ascending, #title_descending, .pledge_clicked, #stripe_connect, #connect_with_stripe_message {
+.pledge_clicked, #stripe_connect, #connect_with_stripe_message {
     display: none;
 }
 

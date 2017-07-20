@@ -24,7 +24,7 @@ def sign_in(request):
                 userForm = UserForm(request.POST);
                 if (userForm.is_valid()):
                     email = userForm.cleaned_data['email'];
-                    if (email != ""):
+                    if (email != "" and User.objects.filter(email=email).exists()):
                         user = authenticate(username=User.objects.get(email=email).username, password=userForm.cleaned_data['password']);
                         if (user is not None):
                             if (user.is_active):

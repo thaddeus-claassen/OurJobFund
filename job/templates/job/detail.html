@@ -15,10 +15,11 @@
 </div>
 <div class="row">
     <div class="col-md-12">
+    Tags:
     {% for tag in job.tag_set.all %}
-        #{{ tag.tag }}
+        {{ tag.tag }}
     {% empty %}
-        There are no tags
+        None
     {% endfor %}
     </div>
 </div>
@@ -34,8 +35,10 @@
     </div>
 </div>
 <div class="row">
-    <div id="job_description" class="col-md-12">
-        {{ job.description }}
+    <div class="col-md-12">
+        <div id="job_description">
+            {{ job.description }}
+        </div>
     </div>
 </div>
 <div class="row">
@@ -44,20 +47,28 @@
     </div>
 </div>
 <div class="row">
-    <div class="information_table col-md-12">
+    <div class="col-md-12">
         <table class="table">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Pledged</th>
-                    <th>Date Pledged</th>
-                    <th>Paid</th>
+                    <th id="pledges-last_name" class="sort">Name</th>
+                    <th id="pledges-pledged" class="sort">Pledged</th>
+                    <th id="pledgers-date_pledged" class="sort">Date Pledged</th>
+                    <th id="pledgers-paid" class="sort">Paid</th>
                 </tr>
             </thead>
             <tbody>
             {% for pledge in pledges %}
                 <tr>
-                    <td>{{ pledge.jobuser.user.first_name }}&nbsp;{{ pledge.jobuser.user.last_name }}</td>
+                    <td>
+                        {% if pledge.jobuser.user.is_active %}
+                        <a href="{% url 'user:detail' pledge.jobuser.user.username %}">
+                            {{ pledge.jobuser.user.first_name }}&nbsp;{{ pledge.jobuser.user.last_name }}
+                        </a>
+                        {% else %}
+                        <span>[ Deleted User ]</span>
+                        {% endif %}
+                    </td>
                     <td>{{ pledge.amount }}</td>
                     <td>{{ pledge.date }}</td>
                     <td>{{ pledge.jobuser.amount_paid }}</td>
@@ -81,15 +92,17 @@
     </div>
 </div>
 <div class="row">
-    <div class="information_table col-md-12">
+    <div class="col-md-12">
         <table class="table">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Started</th>
-                    <th>Finished</tH>
-                    <th>Paid</th>
+                    <th id="workers-last_name">Name</th>
+                    <th id="workers-started">Started</th>
+                    <th id="workers-finished">Finished</th>
+                    <th id="workers-paid">Paid</th>
+                    {% if jobuser.pledge_set.all and request.user.username != worker.jobuser.user.username %}
                     <th>Pay This User</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -109,12 +122,12 @@
                         <td>{{ worker.date }}</td>
                         <td>{{ worker.jobuser.finish_set.all.exists }}</td>
                         <td>{{ pledger.paid }}</td>
+                        {% if jobuser.pledge_set.all and request.user.username != worker.jobuser.user.username %}
                         <td>
-                            {% if jobuser.pledge_set.all and request.user.username != worker.jobuser.user.username %}
                             <input id="{{ worker.jobuser.user.username }}-amount_paying" type="text" placeholder="Amount" />
                             <input id="{{ worker.jobuser.user.username }}-pay_button" class="pay_button" type="button" value="Pay" />
-                            {% endif %}
                         </td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
                     <input id="pay_to" type="hidden" name="pay_to" />
@@ -128,7 +141,6 @@
                     <td>{{ workers.count }}</td>
                     <td>Still Working</td>
                     <td>{{ total_working }}</td>
-                    <td></td>
                 </tr>
             </tfoot>
         </table>
@@ -140,18 +152,18 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-12 information_table">
+    <div class="col-md-12">
         <table id="updates_table" class="table">
             <thead>
                 <tr>
                     <th id="last_name" class="sort">User</th>
                     <th id="date" class="sort">Date</th>
                     <th id="title" class="sort">Title</th>
-                    <th id="images" class="sort">Image/s</th>
+                    <th id="update-images" class="sort">Image/s</th>
                 </tr>
             </thead>
-            <tbody id="last_name_ascending">
-            {% for update in updates_last_name %}
+            <tbody id="updates-body" >
+            {% for update in updates %}
                 <tr>
                     <td>
                         {% if update.jobuser.user.is_active %}
@@ -178,155 +190,6 @@
                 <tr><td>No Updates</td></tr>
             {% endfor %}
             </tbody>
-            <tbody id="last_name_descending">
-            {% for update in updates_last_name reversed %}
-                <tr>
-                    <td>
-                        {% if update.jobuser.user.is_active %}
-                        <a href="{% url 'user:detail' update.jobuser.user.username %}">
-                            {{ update.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
-                        </a>
-                        {% else %}
-                        <span>[ Deleted User ]</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ update.date }}</td>
-                    <td>
-                        <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
-                    </td>
-                    <td>
-                    {% if update.image_set.all %}
-                        Yes
-                    {% else %}
-                        No
-                    {% endif %}
-                    </td>
-                </tr>
-            {% empty %}
-                <tr><td>No Updates</td></tr>
-            {% endfor %}
-            </tbody>
-            <tbody id="date_ascending">
-            {% for update in updates_date %}
-                <tr>
-                    <td>
-                        {% if update.jobuser.user.is_active %}
-                        <a href="{% url 'user:detail' update.jobuser.user.username %}">
-                            {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
-                        </a>
-                        {% else %}
-                        <span>[ Deleted User ]</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ update.date }}</td>
-                    <td>
-                        <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
-                    </td>
-                    <td>
-                    {% if update.image_set.all %}
-                        Yes
-                    {% else %}
-                        No
-                    {% endif %}
-                    </td>
-                </tr>
-            {% empty %}
-                <tr><td>No Updates</td></tr>
-            {% endfor %}
-            </tbody>
-            <tbody id="date_descending" >
-            {% for update in updates_date reversed %}
-                <tr>
-                    <td>
-                        {% if update.jobuser.user.is_active %}
-                        <a href="{% url 'user:detail' update.jobuser.user.username %}">
-                            {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
-                        </a>
-                        {% else %}
-                        <span>[ Deleted User ]</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ update.date }}</td>
-                    <td>
-                        <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
-                    </td>
-                    <td>
-                    {% if update.image_set.all %}
-                        Yes
-                    {% else %}
-                        No
-                    {% endif %}
-                    </td>
-                </tr>
-            {% empty %}
-                <tr><td>No Updates</td></tr>
-            {% endfor %}
-            </tbody>
-            <tbody id="title_ascending">
-            {% for update in updates_title %}
-                <tr>
-                    <td>
-                        {% if update.jobuser.user.is_active %}
-                        <a href="{% url 'user:detail' update.jobuser.user.username %}">
-                            {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
-                        </a>
-                        {% else %}
-                        <span>[ Deleted User ]</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ update.date }}</td>
-                    <td>
-                        <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
-                    </td>
-                    <td>
-                    {% if update.image_set.all %}
-                        Yes
-                    {% else %}
-                        No
-                    {% endif %}
-                    </td>
-                </tr>
-            {% empty %}
-                <tr><td>No Updates</td></tr>
-            {% endfor %}
-            </tbody>
-            <tbody id="title_descending">
-            {% for update in updates_title reversed %}
-                <tr>
-                    <td>
-                        {% if update.jobuser.user.is_active %}
-                        <a href="{% url 'user:detail' update.jobuser.user.username %}">
-                            {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
-                        </a>
-                        {% else %}
-                        <span>[ Deleted User ]</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ update.date }}</td>
-                    <td>
-                        <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
-                    </td>
-                    <td>
-                    {% if update.image_set.all %}
-                        Yes
-                    {% else %}
-                        No
-                    {% endif %}
-                    </td>
-                </tr>
-            {% empty %}
-                <tr><td>No Updates</td></tr>
-            {% endfor %}
-            </tbody>
-            {% if ordered_updates %}
-            <tfoot>
-                <tr>
-                    <td></td>
-                    <td>Total:</td>
-                    <td>{{ ordered_updates.count }}</td>
-                </tr>
-            </tfoot>
-            {% endif %}
         </table>
     </div>
 </div>
@@ -362,12 +225,11 @@
         <form action="{{ request.get_full_path }}" method="POST">
             {% csrf_token %}
             {% if user_has_stripe_account %}
-            User has stripe_account
             <input id="work_on_job" class="pledge_work_inputs" type="submit" value="Work" name="work_on_job" />
             {% else %}
             <input id="work_on_job" class="pledge_work_inputs" type="button" value="Work" name="work_on_job" />
             <span id="connect_with_stripe_message">We do not have your Stripe account on record. Please click here to sign-in or create account with Stripe so that you can be properly paid.</span>
-            <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write" id="stripe_connect" class="stripe-connect">
+            <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write&state={{ job.random_string }}" id="stripe_connect" class="stripe-connect">
                 <span>Connect with Stripe</span>
             </a>
             {% endif %}

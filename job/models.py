@@ -1,5 +1,4 @@
 from django.db import models;   
-from django.core.urlresolvers import reverse;
 from django import forms;
 from django.contrib.auth.models import User;
         
@@ -18,7 +17,11 @@ class Job(models.Model):
     random_string = models.CharField(default='', max_length=100);
     
     def __str__(self):  
-        return self.name;    
+        return self.name;   
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('job.views.detail', args=[str(self.random_string)])
 
 class Tag(models.Model):                                            
     tag = models.CharField(max_length=30);                     
