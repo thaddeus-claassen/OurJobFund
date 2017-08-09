@@ -96,7 +96,7 @@ else:
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'ourjobfund',
             'USER': 'root',
-            'PASSWORD': 'FruitsShoichiAoki1!',
+            'PASSWORD': 'FruitsShoichiAoki',
             'HOST': 'localhost',
             'POST': '',
         }

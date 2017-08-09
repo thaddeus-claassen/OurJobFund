@@ -13,7 +13,7 @@ urlpatterns = [
     # /jobuser/update/<update_id>
     url(r'^update/(?P<update_id>[0-9]+)/$', views.view_update, name='view_update'),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT);
+]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT);
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT);
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT);

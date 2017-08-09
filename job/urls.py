@@ -31,7 +31,7 @@ urlpatterns = [
     #/job/<Job Random String>/sort
     url(r'^(?P<job_random_string>[a-zA-Z0-9]+)/sort/$', views.detail_sort),
     
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT);
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT);
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT);

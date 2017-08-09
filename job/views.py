@@ -82,9 +82,9 @@ def findJobs(request):
     if (sort_array[0] == 'created'):
         jobs = jobs.order_by('creation_date');
     elif (sort_array[0] == 'pledged'):
-        jobs = jobs.order_by('money_pledged');
+        jobs = jobs.order_by('pledged');
     elif (sort_array[0] == 'workers'):
-        jobs = jobs.order_by('num_workers');
+        jobs = jobs.order_by('workers');
     else:
         jobs = jobs.extra(select={'case_insensitive_name': 'lower(name)'}).order_by('case_insensitive_name');
     if (sort_array[1] == 'descending'):
