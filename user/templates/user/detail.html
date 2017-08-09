@@ -10,35 +10,25 @@
 <input id="user_id" type="hidden" value="{{ id }}" />
 <div class="row">
     <div class="col-md-12">
-        {% if not detail_user.is_active %}
-        <div class="row">
-            <div class="col-md-12">
-                User is not active.
-            </div>
-        </div>
-        {% endif %}
-        <div class="row">
-            <div class="col-md-12 text-center">
-                {{ detail_user.first_name }}&nbsp;{{ detail_user.last_name }}
-            </div>
-        </div>
         <div class="row">
             <div class="col-md-6">
-                <label for="description">Description</label>
+                <h4>{{ detail_user.first_name }}&nbsp;{{ detail_user.last_name }}</h4>
             </div>
-            {% if user.is_authenticated and user.username == detail_user.username %}
-            <div class="col-md-6 text-right">
-                <input id="save_description" type="submit" value="Save" form="save_description_form" />
+            {% if user.username == detail_user.username %}
+            <div class="col-md-6">
+                <input id="save_description" type="submit" value="Save Description" form="save_description_form" />
             </div>
-            <div class="col-md-6 text-right">
-                <input id="edit_description" type="button" value="Edit" />
+            <div class="col-md-6">
+                <button id="edit_description" type="button">Edit Description</button>
             </div>
             {% endif %}
         </div>
-        {% if user.is_authenticated and user.username == detail_user.username %}
+        {% if user.username == detail_user.username %}
         <div class="row">
-            <div id="description_div" class="col-md-12">
-                <span id="description" form="save_description_form" >{{ detail_user.userprofile.description }}</span>
+            <div class="col-md-12">
+                <div id="description_div"> 
+                    <span id="description" form="save_description_form" >{{ detail_user.userprofile.description }}</span>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -51,8 +41,10 @@
         </div>
         {% else %} 
         <div class="row">
-            <div id="description_div" class="col-md-12">
-                <span id="description">{{ detail_user.userprofile.description }}</span>
+            <div class="col-md-12">
+                <div id="description_div">
+                    <span id="description">{{ detail_user.userprofile.description }}</span>
+                </div>
             </div>
         </div> 
         {% endif %}
@@ -64,31 +56,38 @@
     </div>
 </div>
 <div class="row">
-    <div class="information_table col-md-12">
-        <table id="current" class="table">
+    <div class="col-md-12">
+        <table class="table">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Pledged / Paid</th>
-                    <th>Working</th>
+                    <th class="name">Name</th>
+                    <th class="pledged">Pledged / Paid</th>
+                    <th class="working">Working</th>
                 </tr>
             </thead>
             <tbody>
                 {% for current_jobuser in current_jobusers %}
                 <tr id="current_{{ current_jobuser.job.name }}">
-                    <td><a href="{% url 'job:detail' current_jobuser.job.random_string %}">{{ current_jobuser.job.name }}</a></td>
-                    <td>
+                    <td class="name"><a href="{% url 'job:detail' current_jobuser.job.random_string %}">{{ current_jobuser.job.name }}</a></td>
+                    <td class="pledged">
                         ${{ current_jobuser.amount_pledged }}
-                        / ${{ current_jobuser.amount_paid }}</td>
-                    <td>{{ current_jobuser.work_set.all.exists }}</td>
+                        / ${{ current_jobuser.amount_paid }}
+                    </td>
+                    <td class="working">{{ current_jobuser.work_set.all.exists }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td class="name">No current jobs</td>
+                    <td class="pledged"></td>
+                    <td class="working"></td>
                 </tr>
                 {% endfor %}
             </tbody>
             <tfoot>
                 <tr>
-                    <td></td>
-                    <td>Total:</td>
-                    <td>{{ current_jobusers.count }}</td>
+                    <td class="name">Total:&nbsp;{{ current_jobusers.count }}</td>
+                    <td class="pledged"></td>
+                    <td class="working"></td>
                 </tr>
             </tfoot>
         </table>
@@ -100,20 +99,20 @@
     </div>
 </div>
 <div class="row">
-    <div class="information_table col-md-12">
-        <table id="finished" class="table">
+    <div class="col-md-12">
+        <table class="table">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Pledged / Paid</th>
-                    <th>Worked</th>
+                    <th class="name">Name</th>
+                    <th class="pledged">Pledged / Paid</th>
+                    <th class="working">Worked</th>
                 </tr>
             </thead>
             <tbody>
             {% for finished_jobuser in finished_jobusers %}
                 <tr id="finished_{{ finished_jobuser.job.name }}">
-                    <td><a href="{% url 'job:detail' finished_jobuser.job.random_string %}">{{ finished_jobuser.job.name }}</a></td>
-                    <td>
+                    <td class="name"><a href="{% url 'job:detail' finished_jobuser.job.random_string %}">{{ finished_jobuser.job.name }}</a></td>
+                    <td class="pledged">
                         {% if finished_jobuser.pledge_set.all.exists %}
                             ${{ finished_jobuser.pledge_set.all.first.amount_pledged }}
                         {% else %}
@@ -121,22 +120,31 @@
                         {% endif %}
                         / ${{ finished_jobuser.amount_paid }}
                     </td>
-                    <td>{{ finished_jobuser.work_set.all.exists }}</td>
+                    <td class="working">{{ finished_jobuser.work_set.all.exists }}</td>
                 </tr>
             {% empty %}
-                <tr><td>You have not paid any jobs.</td></tr>
+                <tr>
+                    <td class="name">No finished jobs</td>
+                    <td class="pledged"></td>
+                    <td class="working"></td>
+                </tr>
             {% endfor %}
             </tbody>
-            {% if finished_jobusers %}
             <tfoot>
                 <tr>
-                    <td></td>
-                    <td>Total:</td>
-                    <td>{{ finished_jobusers.count }}</td>
+                    <td class="name">Total:&nbsp;{{ finished_jobusers.count }}</td>
+                    <td class="pledged"></td>
+                    <td class="working"></td>
                 </tr>
             </tfoot>
-            {% endif %}
         </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <form action="{% url 'job:create_job' %}">
+            <input id="create_job" type="submit" value="Create Job" />
+        </form>
     </div>
 </div>
 {% endblock %}

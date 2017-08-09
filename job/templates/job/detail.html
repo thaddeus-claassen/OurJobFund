@@ -3,14 +3,14 @@
 {% load staticfiles %}
 {% block import %}
     <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/detail.css' %}" />
-    <script type="text/javascript" src="{% static 'job/JavaScript/detail.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'job/JavaScript/detail.js' %}"></script>
     <script src="https://checkout.stripe.com/checkout.js"></script>
 {% endblock %}
 
 {% block content %}
-<div class=" row">
+<div class="row">
     <div class="col-md-12">
-        {{ job.name }}
+        <h4 id="job_name">{{ job.name }}</h4>
     </div>
 </div>
 <div class="row">
@@ -43,12 +43,65 @@
 </div>
 <div class="row">
     <div class="col-md-12">
+        <h4>Updates</h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table id="updates_table" class="table">
+            <thead>
+                <tr>
+                    <th id="updates-last_name" class="sort">User</th>
+                    <th id="updates-date" class="sort">Date</th>
+                    <th id="updates-title" class="sort">Title</th>
+                    <th id="updates-images" class="sort">Image/s</th>
+                </tr>
+            </thead>
+            <tbody id="updates-body" >
+            {% for update in updates %}
+                <tr>
+                    <td class="updates-last_name_data">
+                        {% if update.jobuser.user.is_active %}
+                        <a href="{% url 'user:detail' update.jobuser.user.username %}">
+                            {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
+                        </a>
+                        {% else %}
+                        <span>[ Deleted User ]</span>
+                        {% endif %}
+                    </td>
+                    <td class="updates-date_data">{{ update.date }}</td>
+                    <td class="updates-title">
+                        <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
+                    </td>
+                    <td class="updates-images">
+                    {% if update.image_set.all %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>Total:&nbsp;{{ updates.count }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
         <h4>Pledges</h4>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-        <table class="table">
+        <table id="pledges_table" class="table">
             <thead>
                 <tr>
                     <th id="pledges-last_name" class="sort">Name</th>
@@ -77,10 +130,10 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td>Total Pledged</td>
-                    <td>{{ total_pledged }}</td>
-                    <td>Total Paid:</td>
-                    <td>{{ total_paid }}</td>
+                    <td>Total Pledged&nbsp;${{ total_pledged }}</td>
+                    <td>Total Paid:&nbsp;${{ total_paid }}</td>
+                    <td></td>
+                    <td></td>
                 </tr>
             </tfoot>
         </table>
@@ -93,16 +146,18 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <table class="table">
+        <table id="workers_table" class="table">
             <thead>
                 <tr>
                     <th id="workers-last_name">Name</th>
                     <th id="workers-started">Started</th>
                     <th id="workers-finished">Finished</th>
                     <th id="workers-paid">Paid</th>
-                    {% if jobuser.pledge_set.all and request.user.username != worker.jobuser.user.username %}
-                    <th>Pay This User</th>
-                    {% endif %}
+                    <th>
+                        {% if jobuser.pledge_set.all and request.user.username != worker.jobuser.user.username %}
+                        Pay This User
+                        {% endif %}
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -121,13 +176,13 @@
                         </td>
                         <td>{{ worker.date }}</td>
                         <td>{{ worker.jobuser.finish_set.all.exists }}</td>
-                        <td>{{ pledger.paid }}</td>
-                        {% if jobuser.pledge_set.all and request.user.username != worker.jobuser.user.username %}
+                        <td>{{ worker.jobuser.amount_paid }}</td>
                         <td>
-                            <input id="{{ worker.jobuser.user.username }}-amount_paying" type="text" placeholder="Amount" />
+                            {% if worker.jobuser.pledge_set.all and request.user.username != worker.jobuser.user.username %}
+                            $<input id="{{ worker.jobuser.user.username }}-amount_paying" type="text" placeholder="0" size="5" />.00
                             <input id="{{ worker.jobuser.user.username }}-pay_button" class="pay_button" type="button" value="Pay" />
+                            {% endif %}
                         </td>
-                        {% endif %}
                     </tr>
                 {% endfor %}
                     <input id="pay_to" type="hidden" name="pay_to" />
@@ -137,83 +192,38 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td>Total Workers</td>
-                    <td>{{ workers.count }}</td>
-                    <td>Still Working</td>
-                    <td>{{ total_working }}</td>
+                    <td>Currently Working:&nbsp;{{ total_working }}</td>
+                    <td>Finished:&nbsp;{{ total_finished }}</td>
+                    <td>Total: {{ workers.count }}</td>
+                    <td></td>
+                    <td></td>
                 </tr>
             </tfoot>
         </table>
     </div>
 </div>
+{% if jobuser %}
 <div class="row">
     <div class="col-md-12">
-        <h4>Updates</h4>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <table id="updates_table" class="table">
-            <thead>
-                <tr>
-                    <th id="last_name" class="sort">User</th>
-                    <th id="date" class="sort">Date</th>
-                    <th id="title" class="sort">Title</th>
-                    <th id="update-images" class="sort">Image/s</th>
-                </tr>
-            </thead>
-            <tbody id="updates-body" >
-            {% for update in updates %}
-                <tr>
-                    <td>
-                        {% if update.jobuser.user.is_active %}
-                        <a href="{% url 'user:detail' update.jobuser.user.username %}">
-                            {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
-                        </a>
-                        {% else %}
-                        <span>[ Deleted User ]</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ update.date }}</td>
-                    <td>
-                        <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
-                    </td>
-                    <td>
-                    {% if update.image_set.all %}
-                        Yes
-                    {% else %}
-                        No
-                    {% endif %}
-                    </td>
-                </tr>
-            {% empty %}
-                <tr><td>No Updates</td></tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        {% if jobuser %}
         <form action="{% url 'jobuser:post_update' jobuser.id %}">
             <input id="post_update" class="pledge_work_inputs" type="submit" value="Post Update" />
         </form>
-        {% endif %}
     </div>
 </div>
+{% endif %}
 <div class="row">
     {% if not jobuser or not jobuser.pledge_set.all.exists %}
-    <div class="col-md-6">
-        <form action="{{ request.get_full_path }}" method="POST">
+    <div class="col-md-6">  
+        <input id="pledge_money" class="pledge_work_inputs" type="button" value="Pledge"  />
+        <form id="pledge-money-form" action="{{ request.get_full_path }}" method="POST">
             {% csrf_token %}
-            <input id="pledge_money" class="pledge_work_inputs" type="button" value="Pledge"  />
-            <input class="starts_hidden pledge_clicked" type="text" placeholder="Amount" name="pledge_money_to_job" />
-            <input class="starts_hidden pledge_clicked" type="submit" value="Accept"  />
+            $<input type="text" placeholder="Amount" name="pledge_money_to_job">.00
+            <input type="submit" value="Accept"  />
+            <input id="cancel-pledge-money" type="button" value="Cancel" />
         </form>
     </div>
     {% endif %}
-    {% if jobuser and jobuser.work_set.all.exists %}
+    {% if jobuser and jobuser.work_set.all.exists and not jobuser.finish_set.all.exists %}
     <div class="col-md-6">
         <form action="{{ request.get_full_path }}" method="POST">
             {% csrf_token %}

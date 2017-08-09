@@ -13,6 +13,9 @@ urlpatterns = [
     # /user/sign_out
     url(r'^sign_out/&', views.sign_out, name="sign_out"),
     
+    # /user/account
+    url(r'^account/$', views.account, name='account'),
+    
     # /user/<username>
     url(r'^(?P<username>[a-zA-Z0-9]+)/$', views.detail, name='detail'),
     
@@ -21,6 +24,8 @@ urlpatterns = [
     
     # /user/see_more_users
     url(r'^see_more_users/$', views.see_more_users, name='see_more_users'),
+    
+
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

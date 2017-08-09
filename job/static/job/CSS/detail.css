@@ -1,12 +1,55 @@
 
-table {
-    border: 1px solid black;
+#job_description {
     height: 300px;
+    overflow-y: auto;
 }
 
-#job_description {
+table, #job_description {
     border: 1px solid black;
-    height: 300px;
+}
+
+table {
+    width: 100%;
+}
+
+thead, tbody, tfoot, tr, td, th {
+    display: block;
+}
+
+td {
+    word-wrap: break-word;
+}
+
+tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+thead th {
+    height: 30px;
+}
+
+tbody {
+    height: 250px;
+    overflow-x: auto;
+    overflow-y: scroll;
+}
+
+#pledges_table th, #pledges_table td {
+    width: 25%;
+    float: left;
+}
+
+#workers_table th, #workers_table td {
+    width: 20%;
+    float: left;
+}
+
+#updates_table th, #updates_table td {
+    width: 25%;
+    float: left;
 }
 
 .pledge_clicked, #stripe_connect, #connect_with_stripe_message {
@@ -27,4 +70,8 @@ table {
 .image {
     height: 100%;
     display: inline-block;
+}
+
+#pledge-money-form {
+    display: none;
 }

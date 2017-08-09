@@ -1,12 +1,20 @@
 var currSort = 'date-descending';
 
 $('document').ready(function() {
+    changeTHeadTFootWidthToAccountForScrollBar();
+    $(window).resize(function() {
+        changeTHeadTFootWidthToAccountForScrollBar();
+    });
     $('.sort').click(function() {
         sort($(this).attr('id'));
     });
     $('#pledge_money').click(function() {
         $(this).css('display', 'none');
-        $('.pledge_clicked').css('display', 'inline');
+        $('#pledge-money-form').css('display', 'inline');
+    });
+    $('#cancel-pledge-money').click(function() {
+        $('#pledge_money').css('display', 'inline');
+        $('#pledge-money-form').css('display', 'none');
     });
     $('#pay_money').click(function() {
         $(this).css('display', 'none');
@@ -59,6 +67,14 @@ $('document').ready(function() {
         handler.close();
     });
 });
+
+function changeTHeadTFootWidthToAccountForScrollBar() {
+    var oldTableWidth = $('table').width();
+    var newTableWidth = oldTableWidth - 17;
+    var percentageTableWidth = 100 * (newTableWidth / oldTableWidth);
+    $('thead').width(percentageTableWidth.toString() + '%');
+    $('tfoot').width(percentageTableWidth.toString() + '%');
+}// end changeTHeadTFootWidthToAccountForScrollBar()
 
 function sort(sort) {
     ascending_or_descending = 'ascending';

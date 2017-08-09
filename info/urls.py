@@ -6,9 +6,7 @@ from django.conf.urls.static import static;
 app_name = 'info';
 
 urlpatterns = [
-    
-    url(r'^account/$', views.account, name='account'),
-    
+        
     url(r'^about/$', views.about, name='about'),
     
     url(r'^contact/$', views.contact, name='contact'),

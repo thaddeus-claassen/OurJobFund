@@ -2,12 +2,18 @@
     display: none;
 }
 
-#textarea_description {
-    resize: none;
+#description {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+#edit_description, #save_description { 
+    float: right;
 }
 
 #textarea_description {
     text-sizing: border-box;
+    resize: none;
 }
 
 #textarea_description, #description_div {
@@ -17,18 +23,46 @@
     overflow: auto;
 }
 
-.table_div {
-    border: 1px solid black;
-}
-
 table {
-    overflow: auto;
-    height: 100px;
+    border: 1px solid black;
     width: 100%;
 }
 
-.information_table {
+td {
+    word-wrap: break-word;
+}
+
+thead, tbody, tfoot, tr, td, th {
+    display: block;
+}
+
+tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+thead th {
+    height: 30px;
+}
+
+tbody {
     height: 300px;
+    overflow-x: auto;
     overflow-y: scroll;
-    border: 1px solid black;
+}
+
+.name {
+    width: 50%;
+    float: left;
+}
+
+.pledged, .working {
+    width: 25%;
+    float: left;
+}
+
+#create_job {
+    width: 100%;
 }

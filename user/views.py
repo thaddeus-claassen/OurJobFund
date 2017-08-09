@@ -1,37 +1,37 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required;
 from django.shortcuts import render, get_object_or_404, redirect;
 from django.contrib.auth.models import User;
 from django.http import JsonResponse, HttpResponse, Http404;
 from django.core import serializers;
 from django.db.models import Q;
 from django.contrib.auth import authenticate, login, logout;
-from .forms import UserForm, NewUserForm, DescriptionForm;
+from . import forms;
 from .models import UserProfile;
 from job.models import Job;
 from datetime import datetime;
 from random import randint;
 import logging;
 
-
 def sign_in(request):
-    userForm = UserForm();
-    newUserForm = NewUserForm();
+    userForm = forms.UserForm();
+    newUserForm = forms.NewUserForm();
     if (request.user.is_authenticated()):
         return redirect('job:home');
     else: 
         if (request.method == 'POST'):
             if ('sign-in' in request.POST):
-                userForm = UserForm(request.POST);
+                userForm = forms.UserForm(request.POST);
                 if (userForm.is_valid()):
                     email = userForm.cleaned_data['email'];
                     if (email != "" and User.objects.filter(email=email).exists()):
                         user = authenticate(username=User.objects.get(email=email).username, password=userForm.cleaned_data['password']);
                         if (user is not None):
-                            if (user.is_active):
-                                login(request, user);
-                                return redirect('job:home');
+                            if (not user.is_active):
+                                user.is_active = True;
+                            login(request, user);
+                            return redirect('job:home');
             elif ('sign-up' in request.POST):
-                newUserForm = NewUserForm(request.POST);
+                newUserForm = forms.NewUserForm(request.POST);
                 if (newUserForm.is_valid()):
                     user = newUserForm.save(commit=False);
                     first_name = newUserForm.cleaned_data['first_name'];
@@ -46,9 +46,8 @@ def sign_in(request):
                     UserProfile(user=user).save();
                     user = authenticate(username=user.username, password=password);
                     if (user is not None):
-                        if (user.is_active):
-                            login(request, user);
-                            return redirect('job:home');
+                        login(request, user);
+                        return redirect('job:home');
     context = {
         'new_user_form' : newUserForm, 
         'existing_user_form' : userForm,
@@ -69,7 +68,6 @@ def createNewUsername(first_name, last_name):
        lastDigit = lastDigit + 1;
        username = combinedNames + str(lastDigit);
     return username;
-        
 
 @login_required        
 def sign_out(request):
@@ -117,12 +115,51 @@ def detail(request, username):
     if (request.method == 'POST'):
         request.user.userprofile.description = request.POST.get('description');
         request.user.userprofile.save();
+        return redirect('user:detail', username=username);
     context = {
         'detail_user' : user,
         'current_jobusers' : user.jobuser_set.filter(job__is_finished=False),
         'finished_jobusers' : user.jobuser_set.filter(job__is_finished=True),
     }
     return render(request, 'user/detail.html', context);
+    
+@login_required
+def account(request):
+    change_name_form = None;
+    if (request.method == "POST"):
+        if ('change-name' in request.POST):
+            form = forms.ChangeNameForm(request.POST);
+            if (form.is_valid()):
+                request.user.first_name = form.cleaned_data['first_name'];
+                request.user.last_name = form.cleaned_data['last_name'];
+                request.user.userprofile.last_time_name_was_changed = datetime.now();
+                request.user.save();
+                request.user.userprofile.save();
+        elif ('change-email' in request.POST):
+            form = forms.ChangeEmailForm(request.POST);
+            if (form.is_valid()):
+                request.user.email = form.cleaned_data['email'];
+                request.user.save();
+        elif ('change-password' in request.POST):
+            form = forms.ChangePasswordForm(request.POST, user=request.user);
+            if (form.is_valid()):
+                request.user.set_password(form.cleaned_data['new_password']);
+                request.user.save();
+        elif ('delete-account' in request.POST):
+            form = forms.DeactivateAccountForm(request.POST);
+            if (form.is_valid()):
+                request.user.is_active = False;
+                sign_out(request);
+        return redirect('user:account');
+    if ((datetime.now() - request.user.userprofile.last_time_name_was_changed.replace(tzinfo=None)).days >= 180):
+        change_name_form = forms.ChangeNameForm(initial = {'first_name' : request.user.first_name, 'last_name' : request.user.last_name});
+    context = {
+        'change_name_form' : change_name_form,
+        'change_email_form' : forms.ChangeEmailForm(initial = {'email' : request.user.email}),
+        'change_password_form' : forms.ChangePasswordForm(),
+        'deactivate_account_form' : forms.DeactivateAccountForm(),
+    }
+    return render(request, 'user/account.html', context);
     
     
     

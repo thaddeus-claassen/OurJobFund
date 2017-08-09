@@ -1,3 +1,11 @@
-#wirte_comment_modal {
-    display: none;
+#images {
+    width: 100%;
+    height: 150px;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.image {
+    height: 100%;
+    display: inline-block;
 }

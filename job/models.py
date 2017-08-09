@@ -7,13 +7,15 @@ class Job(models.Model):
     name = models.CharField(max_length=100);
     creation_date = models.DateField(auto_now_add=True);
     creation_datetime = models.DateTimeField(auto_now_add=True);
-    num_workers = models.IntegerField(default=0);
-    money_pledged = models.FloatField(default=0.0);      
-    money_paid = models.FloatField(default=0.0);
+    pledged = models.FloatField(default=0.0);      
+    paid = models.FloatField(default=0.0);
+    workers = models.PositiveIntegerField(default=0);
+    finished = models.PositiveIntegerField(default=0);
     location = models.CharField(null=True, blank=True, max_length=1000);
     latitude = models.FloatField(null=True, blank=True);
     longitude = models.FloatField(null=True, blank=True);
     description = models.CharField(default='', max_length=10000, null=True, blank=True);
+    created_by = models.ForeignKey(User, null=True);
     random_string = models.CharField(default='', max_length=100);
     
     def __str__(self):  

@@ -15,7 +15,7 @@ class Pledge(models.Model):
 
 class Pay(models.Model):    
     jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);
-    amount = models.IntegerField(editable=False, null=True, blank=True);
+    amount = models.FloatField(editable=False, null=True, blank=True);
     receiver = models.ForeignKey(User, on_delete=models.CASCADE);
     date = models.DateTimeField(auto_now_add=True);
 

@@ -120,12 +120,19 @@ def detail(request, job_random_string):
                 pledge = Pledge(jobuser=jobuser, amount=amount_pledged);
                 pledge.save();
                 jobuser.amount_pledged = jobuser.amount_pledged + amount_pledged;
+                jobuser.save();
+                job.pledged = jobuser.amount_pledged;
+                job.save();
         elif ('work_on_job' in request.POST):
             work = Work(jobuser=jobuser);
             work.save();
+            job.workers = job.workers + 1;
+            job.save();
         elif ('finish_job' in request.POST):
             finish = Finish(jobuser=jobuser);
             finish.save();
+            job.finished = job.finished + 1;
+            job.save()
         elif ('stripeToken' in request.POST):
             receiver_username = request.POST['pay_to'];
             stripe.api_key = STRIPE_API_KEY;
@@ -142,6 +149,9 @@ def detail(request, job_random_string):
             payment = Pay(jobuser=jobuser, receiver=jobuser.user, amount=float(amount_paying));
             payment.save();
             jobuser.amount_paid = jobuser.amount_paid + amount_paying;
+            jobuser.save();
+            job.paid = job.paid + amount_paying;
+            job.save();
         return redirect('job:detail', job_random_string=job_random_string);
     pledges = Pledge.objects.filter(jobuser__job=job);
     total_pledged = 0;
@@ -153,7 +163,8 @@ def detail(request, job_random_string):
             total_paid = total_paid + payment.amount;
     total_paid = total_paid / 100;
     workers = Work.objects.filter(jobuser__job=job);
-    total_working = workers.count() - Finish.objects.filter(jobuser__job=job).count();
+    total_finished = Finish.objects.filter(jobuser__job=job).count();
+    total_working = workers.count() - total_finished;
     jobuser = None;
     if (JobUser.objects.filter(user=request.user, job=job).exists()):
         jobuser = request.user.jobuser_set.all().get(job=job);
@@ -168,6 +179,7 @@ def detail(request, job_random_string):
         'total_paid' : total_paid,
         'workers' : workers,
         'total_working' : total_working,
+        'total_finished' : total_finished,
         'jobuser' : jobuser,
         'updates' : updates,
         'user_has_stripe_account' : user_has_stripe_account,
@@ -207,7 +219,7 @@ def create_job(request):
             longitude = newJobForm.cleaned_data['longitude'];
             tags = newJobForm.cleaned_data['tags'];
             description = newJobForm.cleaned_data['description'];
-            job = Job(name=name, latitude=latitude, longitude=longitude, description=description, random_string=createRandomString());
+            job = Job(name=name, latitude=latitude, longitude=longitude, description=description, created_by=request.user, random_string=createRandomString());
             job.save();
             tagsArray = tags.split(" ");
             for tagString in tagsArray:
@@ -221,7 +233,7 @@ def create_job(request):
             for image in request.FILES.getlist('images'):
                 image = Image(image=image, job=job);
                 image.save();
-            return redirect('job:home');
+            return redirect('job:detail', job.random_string);
     context = {
         'form' : NewJobForm(), 
     }

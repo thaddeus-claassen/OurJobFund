@@ -18,11 +18,10 @@ def post_update(request, jobuser_id):
             update = Update(jobuser=jobuser, title=title, description=description);
             update.save();
             for image in request.FILES.getlist('images'):
-                print(image);
                 image = Image(image=image, update=update);
                 image.save();
             sendNotifications(update);
-            return redirect('job:detail', job_random_string=jobuser.job.random_string);
+        return redirect('job:detail', job_random_string=jobuser.job.random_string);
     if (jobuser.user == request.user):
         context = {
             'jobuser' : jobuser,

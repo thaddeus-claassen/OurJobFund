@@ -4,6 +4,10 @@ var numSearches = 0;
 var ENTER = 13;
 
 $('document').ready(function() {
+    changeTHeadTFootWidthToAccountForScrollBar();
+    $(window).resize(function() {
+        changeTHeadTFootWidthToAccountForScrollBar();
+    });
     $('.sort').click(function() {
         var by = $(this).attr('id');
         var sort_by_val =  $('#sort').val();
@@ -54,14 +58,22 @@ $('document').ready(function() {
         }// end if-else
         get_total_jobs();
     });
-     $(window).scroll(function(){
-        if ($(window).scrollTop() == $(document).height()-$(window).height()) {
+     $('tbody').scroll(function() {
+        if ($(this).scrollTop() + $(this).height() === $(this)[0].scrollHeight) {
             if (50 * numSearches <= parseInt($('#num-jobs-found').text())) {
                 add_jobs();
             }// end if
         }// end if
     });
 });
+
+function changeTHeadTFootWidthToAccountForScrollBar() {
+    var oldTableWidth = $('table').width();
+    var newTableWidth = oldTableWidth - 17;
+    var percentageTableWidth = 100 * (newTableWidth / oldTableWidth);
+    $('thead').width(percentageTableWidth.toString() + '%');
+    $('tfoot').width(percentageTableWidth.toString() + '%');
+}// end changeTHeadTFootWidthToAccountForScrollBar()
 
 function get_jobs() {
     $.ajax({
@@ -150,11 +162,13 @@ function addJobsToTable(json) {
         for (var index = 0; index < json.length; index++) {
             var job = json[index];
             var fields = job["fields"];
-            var string = "<tr><td><a href='" + fields["random_string"] + "'>";
+            var string = "<tr><td class='name'><a href='" + fields["random_string"] + "'>";
             string = string + fields["name"] + "</a></td>";
-            string = string + "<td>" + fields['creation_date'] + "</td>";
-            string = string + "<td>" + fields['money_pledged'] + "</td>";
-            string = string + "<td>" + fields['num_workers'] + "</td></tr>";
+            string = string + "<td class='date'>" + fields['creation_date'] + "</td>";
+            string = string + "<td class='pledged'>$" + fields['pledged'] + "</td>";
+            string = string + "<td class='paid'>$" + fields['paid'] + "</td>";
+            string = string + "<td class='workers'>" + fields['workers'] + "</td>";
+            string = string + "<td class='finished'>" + fields['finished'] + "</td></tr>";
             $('#main_table_body').append(string);
         }// end for
     }// end if

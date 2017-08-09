@@ -44,18 +44,7 @@
                         <input id="search_jobs" type="text" placeholder="Search Jobs" />
                     </div>
                     <div class="col-md-3">
-                        Jobs: <span id="num-jobs-found">0</span>
-                    </div>
-                </div>
- 
-                <div class="row">
-                    <div class="col-md-9">
                         <input id="search_button" type="button" value="Search" />
-                    </div>
-                    <div class="col-md-3">
-                        <form action="{% url 'job:create_job' %}">
-                            <input id="create_job" type="submit" value="Create Job" />
-                        </form>
                     </div>
                 </div>
 
@@ -66,13 +55,22 @@
                             <thead>
                                 <tr>
                                     <input id="sort" type="hidden" value="created descending" />
-                                    <th id="name" class="sort">Name</th>
-                                    <th id="created" class="sort">Created</th>
-                                    <th id="pledged" class="sort">Pledged</th>
-                                    <th id="workers" class="sort">Workers</th>
+                                    <th id="name" class="name sort">Name</th>
+                                    <th id="created" class="date sort">Created</th>
+                                    <th id="pledged" class="pledged sort">Pledged</th>
+                                    <th id="paid" class="paid sort">Paid</th>
+                                    <th id="workers" class="workers sort">Workers</th>
+                                    <th id="finished" class="finished sort">Finished</th>
                                 </tr>
                             </thead>
                             <tbody id="main_table_body"></tbody>
+                            <tfoot>
+                                <tr>
+                                    <td id="job-number-footer" >Jobs Found:&nbsp;<span id="num-jobs-found">0</span></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
