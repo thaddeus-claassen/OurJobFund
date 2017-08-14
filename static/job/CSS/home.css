@@ -1,0 +1,64 @@
+#wrapper {
+    height: 100%;
+}
+
+#advanced-settings-wrapper {
+    display: none;
+}
+
+#search_jobs, #search_button, #location, #radius, #create_job, table {
+    width: 100%;
+}
+
+table {
+    border: 1px solid black;
+}
+
+thead, tbody, tfoot, tr, td, th {
+    display: block;
+}
+
+td {
+    word-wrap: break-word;
+}
+
+tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+thead th {
+    height: 30px;
+}
+
+tbody {
+    height: 300px;
+    overflow-x: auto;
+    overflow-y: scroll;
+}
+
+.name {
+    width: 35%;
+    float: left;
+}
+
+.date {
+    width: 25%;
+    float: left;
+}
+
+.pledged, .paid, .workers, .finished {
+    width: 10%;
+    float: left;
+}
+
+tfoot td {
+    float: left;
+    width: 1%;
+}
+
+tfoot #job-number-footer {
+    width: 95%;
+}

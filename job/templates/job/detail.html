@@ -15,12 +15,12 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-    Tags:
+    {% if job.tag_set.all.count > 0 %}
+        Tags:
     {% for tag in job.tag_set.all %}
         {{ tag.tag }}
-    {% empty %}
-        None
     {% endfor %}
+    {% endif %}
     </div>
 </div>
 <div class="row">
@@ -37,7 +37,7 @@
 <div class="row">
     <div class="col-md-12">
         <div id="job_description">
-            {{ job.description }}
+            <span id="description">{{ job.description }}</span>
         </div>
     </div>
 </div>

@@ -1,7 +1,15 @@
+#job_name {
+    text-align: center;
+}
 
 #job_description {
     height: 300px;
     overflow-y: auto;
+}
+
+#description {
+    margin-right: 10px;
+    margin-left: 10px;
 }
 
 table, #job_description {
@@ -63,7 +71,7 @@ tbody {
 #images {
     width: 100%;
     height: 150px;
-    overflow-x: auto;
+    overflow-x: scroll;
     white-space: nowrap;
 }
 

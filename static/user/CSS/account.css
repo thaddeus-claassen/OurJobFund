@@ -1,0 +1,5 @@
+#change-name, #change-email, #change-password, #delete-account-clicked {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: none;
+}

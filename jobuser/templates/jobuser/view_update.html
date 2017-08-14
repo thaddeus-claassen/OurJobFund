@@ -10,22 +10,20 @@
 <input id="update_id" type="hidden" value="{{ update.id }}" />
 <div class="row">
     <div class="col-md-12">
-        Job: <a href="{% url 'job:detail' update.jobuser.job.random_string %}">{{ update.jobuser.job.name }}</a>
+        <h4 id="title" >{{ update.title }}</h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        For: <a href="{% url 'job:detail' update.jobuser.job.random_string %}">{{ update.jobuser.job.name }}</a>
+    </div>
+    <div class="col-md-6">
+        Updated: {{ update.date }}
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-        Updated: {{ update.updated }}
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        Title: {{ update.title }}
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        By: {{ update.jobuser.user.username }}
+        By: <a href="{% url 'user:detail' update.jobuser.user.username %}">{{ update.jobuser.user.username }}</a>
     </div>
 </div>
 <div class="row">
@@ -41,7 +39,9 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        Description: {{ update.description }}
+        <div id="description_div">
+            <span id="description">{{ update.description }}</span>
+        </div>
     </div>
 </div>
 {% endblock %}
