@@ -7,18 +7,26 @@
 {% endblock %}
 
 {% block content %}
-<form id="sign-up-form" method="POST" action="{% url 'user:sign_in' %}">
-{% csrf_token %}
-{% for field in new_user_form %}
-    <div class="row">
-        <div class="col-md-12">
-        {% if field.auto_id == "id_age_checkbox"%}
-            {{ field.label }}
-        {% endif %}
-        {{ field }}{{ field.errors }}
-        </div>
+<div class="row">
+    <div class="col-md-12">
+        <form id="sign-up-form" method="POST" action="{% url 'user:sign_in' %}">
+        {% csrf_token %}
+        {% for field in new_user_form %}
+            <div class="row">
+                <div class="col-md-12 sign-up-input">
+                {% if field.auto_id == "id_age_checkbox"%}
+                    {{ field.label }}
+                {% endif %}
+                {{ field }}{{ field.errors }}
+                </div>
+            </div>
+        {% endfor %}
+            <div class="row">
+                <div class="col-md-12 sign-up-input">
+                    <input type="submit" value="Create Account" name="sign-up" />
+                </div>
+            </div>
+        </form>
     </div>
-{% endfor %}
-    <input type="submit" value="Create Account" name="sign-up" />
-</form>
+</div>
 {% endblock %}

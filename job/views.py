@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate, login, logout;
 from .forms import NewJobForm;
 import json, re, math;
 from random import randint;
+from jobuser.forms import PledgeForm;
 from ourjobfund.settings import STRIPE_API_KEY;
 import stripe;
 
@@ -109,19 +110,20 @@ def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_
 @login_required    
 def detail(request, job_random_string):
     job = get_object_or_404(Job, random_string=job_random_string);
+    pledgeForm = PledgeForm(request.POST or None);
     if (request.method == "POST"):
         jobuser = JobUser.objects.filter(user=request.user, job=job).first();
         if (not jobuser):
             jobuser = JobUser(user=request.user, job=job);
             jobuser.save();
         if ('pledge_money_to_job' in request.POST):
-            amount_pledged = float(request.POST.get('pledge_money_to_job'));
-            if (amount_pledged >= 0.5):
+            if (pledgeForm.is_valid()):
+                amount_pledged = pledgeForm.cleaned_data['amount_pledged'];
                 pledge = Pledge(jobuser=jobuser, amount=amount_pledged);
                 pledge.save();
                 jobuser.amount_pledged = jobuser.amount_pledged + amount_pledged;
                 jobuser.save();
-                job.pledged = jobuser.amount_pledged;
+                job.pledged = job.pledged + jobuser.amount_pledged;
                 job.save();
         elif ('work_on_job' in request.POST):
             work = Work(jobuser=jobuser);
@@ -183,6 +185,7 @@ def detail(request, job_random_string):
         'jobuser' : jobuser,
         'updates' : updates,
         'user_has_stripe_account' : user_has_stripe_account,
+        'pledge_form' : pledgeForm,
     }
     return render(request, 'job/detail.html', context);
     

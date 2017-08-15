@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User;
-from .models import Update;
+from .models import Update, Pledge;
 from django import forms;
+import re;
 
 class UpdateForm(forms.ModelForm):
     title = forms.CharField(label="Title:", widget=forms.TextInput(attrs={'placeholder': '(Required)'}), max_length=100);
@@ -24,4 +25,21 @@ class UpdateForm(forms.ModelForm):
         if (len(description) > 10000):
             raise forms.ValidationError('Your description cannot be longer than 10000 character in length');
         return description;
+        
+class PledgeForm(forms.ModelForm):
+    amount = forms.IntegerField(widget=forms.TextInput(attrs={'placeholder': '0'}));
+
+    class Meta:
+        model = Pledge;
+        fields = ['amount'];
+        
+    def clean_pledge(self):
+        pledge = self.cleaned_data.get('pledge');
+        if (not re.match(r'^[0-9]+$', pledge)):
+            raise forms.ValidationError('Only numbers allowed.');
+        if (pledge == '0'):
+            raise forms.ValidationError("You cannot pledge $0. That's nonsense");
+        return pledge;
+        
+
         

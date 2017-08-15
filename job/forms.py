@@ -1,5 +1,6 @@
 from django import forms;
 from .models import Job;
+import re;
 
 class NewJobForm(forms.ModelForm):
     name = forms.CharField(label="Job Title:", widget=forms.TextInput(attrs={'placeholder': '(Required)'}), max_length=100);
@@ -32,7 +33,6 @@ class NewJobForm(forms.ModelForm):
         if (not re.match(r'^[A-Za-z0-9]{1,30}$', tag)):
             raise forms.ValidationError('Each tag may only include alphabetic characters or numbers, separated by spaces.');
         return tags;
-
     
     
     

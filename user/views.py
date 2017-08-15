@@ -13,14 +13,13 @@ from random import randint;
 import logging;
 
 def sign_in(request):
-    userForm = forms.UserForm();
-    newUserForm = forms.NewUserForm();
+    userForm = forms.UserForm(request.POST or None);
+    newUserForm = forms.NewUserForm(request.POST or None);
     if (request.user.is_authenticated()):
         return redirect('job:home');
     else: 
         if (request.method == 'POST'):
             if ('sign-in' in request.POST):
-                userForm = forms.UserForm(request.POST);
                 if (userForm.is_valid()):
                     email = userForm.cleaned_data['email'];
                     if (email != "" and User.objects.filter(email=email).exists()):
@@ -31,7 +30,6 @@ def sign_in(request):
                             login(request, user);
                             return redirect('job:home');
             elif ('sign-up' in request.POST):
-                newUserForm = forms.NewUserForm(request.POST);
                 if (newUserForm.is_valid()):
                     user = newUserForm.save(commit=False);
                     first_name = newUserForm.cleaned_data['first_name'];

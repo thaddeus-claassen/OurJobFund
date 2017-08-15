@@ -15,7 +15,7 @@
 </div>
 <div class="row">
     <div class="col-md-6">
-        <span id="created_by">Created By:&nbsp;{{ job.created_by }}</span>
+        <span id="created_by">Created By:&nbsp;{{ job.created_by.first_name }}&nbsp;{{ job.created_by.last_name }}</span>
     </div>
     <div class="col-md-6">
         <span id="creation_date">Created:&nbsp;{{ job.creation_date }}</span>
@@ -142,16 +142,16 @@
                         <span>[ Deleted User ]</span>
                         {% endif %}
                     </td>
-                    <td>{{ pledge.amount }}</td>
-                    <td>{{ pledge.date }}</td>
+                    <td>${{ pledge.amount }}.00</td>
+                    <td>${{ pledge.date }}.00</td>
                     <td>{{ pledge.jobuser.amount_paid }}</td>
                 </tr>
             {% endfor %}
             </tbody>
             <tfoot>
                 <tr>
-                    <td>Total Pledged&nbsp;${{ total_pledged }}</td>
-                    <td>Total Paid:&nbsp;${{ total_paid }}</td>
+                    <td>Total Pledged&nbsp;${{ total_pledged }}.00</td>
+                    <td>Total Paid:&nbsp;${{ total_paid }}.00</td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -237,7 +237,10 @@
         <input id="pledge_money" class="pledge_work_inputs" type="button" value="Pledge"  />
         <form id="pledge-money-form" action="{{ request.get_full_path }}" method="POST">
             {% csrf_token %}
-            $<input type="text" placeholder="Amount" name="pledge_money_to_job">.00
+            {% for field in pledge_form %}
+            ${{ field }}.00
+            {{ field.errors }}
+            {% endfor %}
             <input type="submit" value="Accept"  />
             <input id="cancel-pledge-money" type="button" value="Cancel" />
         </form>
