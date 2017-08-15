@@ -143,8 +143,8 @@
                         {% endif %}
                     </td>
                     <td>${{ pledge.amount }}.00</td>
-                    <td>${{ pledge.date }}.00</td>
-                    <td>{{ pledge.jobuser.amount_paid }}</td>
+                    <td>{{ pledge.date }}</td>
+                    <td>${{ pledge.jobuser.amount_paid }}.00</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -241,7 +241,7 @@
             ${{ field }}.00
             {{ field.errors }}
             {% endfor %}
-            <input type="submit" value="Accept"  />
+            <input type="submit" value="Accept" name="pledge"  />
             <input id="cancel-pledge-money" type="button" value="Cancel" />
         </form>
     </div>
@@ -250,17 +250,17 @@
     <div class="col-md-6">
         <form action="{{ request.get_full_path }}" method="POST">
             {% csrf_token %}
-            <input id="finish_job" class="pledge_work_inputs" type="submit" value="Finish" name="finish_job" />
+            <input id="finish_job" class="pledge_work_inputs" type="submit" value="Finish" name="finish" />
         </form>
     </div>
-    {% elif not jobuser and not jobuser.work_set.all.exists %}
+    {% elif not jobuser or not jobuser.work_set.all.exists %}
     <div class="col-md-6">
         <form action="{{ request.get_full_path }}" method="POST">
             {% csrf_token %}
             {% if user_has_stripe_account %}
-            <input id="work_on_job" class="pledge_work_inputs" type="submit" value="Work" name="work_on_job" />
+            <input id="work_on_job" class="pledge_work_inputs" type="submit" value="Work" name="work" />
             {% else %}
-            <input id="work_on_job" class="pledge_work_inputs" type="button" value="Work" name="work_on_job" />
+            <input id="work_on_job" class="pledge_work_inputs" type="button" value="Work" name="work" />
             <span id="connect_with_stripe_message">We do not have your Stripe account on record. Please click here to sign-in or create account with Stripe so that you can be properly paid.</span>
             <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write&state={{ job.random_string }}" id="stripe_connect" class="stripe-connect">
                 <span>Connect with Stripe</span>

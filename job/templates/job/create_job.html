@@ -9,54 +9,24 @@
 
 {% block content %}
 <form id="create-job-form" method="POST" action="{% url 'job:create_job' %}" enctype="multipart/form-data">
-    {% csrf_token %}
+{% csrf_token %}
+    {{ form.latitude }}{{ form.latitude.errors }}
+    {{ form.longitude }}{{ form.longitude.errors }}
+{% for field in form %}
+    {% if field.auto_id != "id_longitude" and field.auto_id != "id_latitude" %} 
     <div class="row">
         <div class="col-md-2">
-            {{ form.name.label_tag }}
-         </div>
-        <div class="col-md-10">
-            {{ form.name }}    
-        </div>
-    </div>
-    {{ form.latitude }}
-    {{ form.longitude }}
-    <div class="row">
-        <div class="col-md-2">
-            {{ form.location.label_tag }}
+            {{ field.label_tag }}
         </div>
         <div class="col-md-10">
-            {{ form.location }}
-        </div>
-        <div id="location-validation"></div>
-    </div>
-    <div class="row">
-        <div class="col-md-2">
-            {{ form.tags.label_tag }}
-        </div>
-        <div class="col-md-10">
-            {{ form.tags }}
+            {{ field }}{{ field.errors }}
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-2">
-            {{ form.images.label_tag }}
-        </div>
-        <div class="col-md-10">
-            <span class="optional">(Optional)</span>
-            {{ form.images }}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-2">
-            {{ form.description.label_tag }}
-        </div>
-        <div class="col-md-10">
-            {{ form.description }}
-        </div>
-    </div>
+    {% endif %}
+{% endfor %} 
     <div class="row">
         <div class="col-md-10 col-md-offset-2">
-            <input type="submit" value="Create Job" />
+            <input type="submit" value="Create Job" name="create-job" />
         </div>
     </div>
 </form>

@@ -155,15 +155,6 @@ def detail(request, job_random_string):
             job.paid = job.paid + amount_paying;
             job.save();
         return redirect('job:detail', job_random_string=job_random_string);
-    pledges = Pledge.objects.filter(jobuser__job=job);
-    total_pledged = 0;
-    for pledge in pledges:
-        total_pledged = total_pledged + pledge.amount;
-    total_paid = 0;
-    for pledge in pledges:
-        for payment in pledge.jobuser.pay_set.all():
-            total_paid = total_paid + payment.amount;
-    total_paid = total_paid / 100;
     workers = Work.objects.filter(jobuser__job=job);
     total_finished = Finish.objects.filter(jobuser__job=job).count();
     total_working = workers.count() - total_finished;
@@ -172,19 +163,17 @@ def detail(request, job_random_string):
         jobuser = request.user.jobuser_set.all().get(job=job);
     if (Notification.objects.filter(user=request.user, job=job).exists()): 
         Notification.objects.get(user=request.user, job=job).delete();
-    updates = Update.objects.filter(jobuser__job=job).order_by('-date');
-    user_has_stripe_account = (request.user.userprofile.stripe_account_id != None) and (request.user.userprofile.stripe_account_id != '');
     context = {                                                                     
         'job': job,
-        'pledges' : pledges,
-        'total_pledged' : total_pledged,
-        'total_paid' : total_paid,
+        'pledges' : Pledge.objects.filter(jobuser__job=job),
+        'total_pledged' : int(job.pledged / 100),
+        'total_paid' : int(job.paid / 100),
         'workers' : workers,
         'total_working' : total_working,
         'total_finished' : total_finished,
         'jobuser' : jobuser,
-        'updates' : updates,
-        'user_has_stripe_account' : user_has_stripe_account,
+        'updates' : Update.objects.filter(jobuser__job=job).order_by('-date'),
+        'user_has_stripe_account' : (request.user.userprofile.stripe_account_id != None) and (request.user.userprofile.stripe_account_id != ''),
         'pledge_form' : pledgeForm,
     }
     return render(request, 'job/detail.html', context);
@@ -214,31 +203,34 @@ def detail_sort(request, job_random_string):
     
 @login_required    
 def create_job(request):
+    newJobForm = NewJobForm(request.POST or None);
     if (request.method == 'POST'):
-        newJobForm = NewJobForm(request.POST);
-        if (newJobForm.is_valid()):
-            name = newJobForm.cleaned_data['name'];
-            latitude = newJobForm.cleaned_data['latitude'];
-            longitude = newJobForm.cleaned_data['longitude'];
-            tags = newJobForm.cleaned_data['tags'];
-            description = newJobForm.cleaned_data['description'];
-            job = Job(name=name, latitude=latitude, longitude=longitude, description=description, created_by=request.user, random_string=createRandomString());
-            job.save();
-            tagsArray = tags.split(" ");
-            for tagString in tagsArray:
-                newTag = None;
-                if (Tag.objects.filter(tag__iexact=tagString).exists()):
-                    newTag = Tag.objects.get(tag__iexact=tagString);
-                else:
-                    newTag = Tag(tag=tagString);
-                newTag.save();
-                job.tag_set.add(newTag);
-            for image in request.FILES.getlist('images'):
-                image = Image(image=image, job=job);
-                image.save();
-            return redirect('job:detail', job.random_string);
+        if ('create-job' in request.POST):
+            if (newJobForm.is_valid()):
+                name = newJobForm.cleaned_data['name'];
+                latitude = newJobForm.cleaned_data['latitude'];
+                longitude = newJobForm.cleaned_data['longitude'];
+                tags = newJobForm.cleaned_data['tags'];
+                description = newJobForm.cleaned_data['description'];
+                job = Job(name=name, latitude=latitude, longitude=longitude, description=description, created_by=request.user, random_string=createRandomString());
+                job.save();
+                if (tags != ''):
+                    tagsArray = tags.split(" ");
+                    print("tagsArray: " + str(tagsArray))
+                    for tagString in tagsArray:
+                        newTag = None;
+                        if (Tag.objects.filter(tag__iexact=tagString).exists()):
+                            newTag = Tag.objects.get(tag__iexact=tagString);
+                            newTag.save();
+                        else:
+                            newTag = Tag(tag=tagString);
+                        job.tag_set.add(newTag);
+                for image in request.FILES.getlist('image_set'):
+                    image = Image(image=image, job=job);
+                    image.save();
+                return redirect('job:detail', job.random_string);
     context = {
-        'form' : NewJobForm(), 
+        'form' : newJobForm, 
     }
     return render(request, 'job/create_job.html', context);
     

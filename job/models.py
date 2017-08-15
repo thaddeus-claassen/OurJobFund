@@ -3,15 +3,15 @@ from django import forms;
 from django.contrib.auth.models import User;
 from django.core.validators import RegexValidator; 
         
-alphanumeric = RegexValidator(r'^[0-9a-zA-Z]+$', 'Alphanumeric characters only');        
+alphanumeric = RegexValidator(r'^[0-9a-zA-Z\s]+$', 'Alphanumeric characters only');        
         
 class Job(models.Model):
     is_finished = models.BooleanField(default=False);
     name = models.CharField(max_length=100, validators=[alphanumeric]);
     creation_date = models.DateField(auto_now_add=True);
     creation_datetime = models.DateTimeField(auto_now_add=True);
-    pledged = models.FloatField(default=0.0);      
-    paid = models.FloatField(default=0.0);
+    pledged = models.PositiveIntegerField(default=0);
+    paid = models.PositiveIntegerField(default=0);
     workers = models.PositiveIntegerField(default=0);
     finished = models.PositiveIntegerField(default=0);
     location = models.CharField(null=True, blank=True, max_length=1000);
