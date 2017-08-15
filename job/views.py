@@ -116,21 +116,21 @@ def detail(request, job_random_string):
         if (not jobuser):
             jobuser = JobUser(user=request.user, job=job);
             jobuser.save();
-        if ('pledge_money_to_job' in request.POST):
+        if ('pledge' in request.POST):
             if (pledgeForm.is_valid()):
-                amount_pledged = pledgeForm.cleaned_data['amount_pledged'];
+                amount_pledged = pledgeForm.cleaned_data['amount'];
                 pledge = Pledge(jobuser=jobuser, amount=amount_pledged);
                 pledge.save();
                 jobuser.amount_pledged = jobuser.amount_pledged + amount_pledged;
                 jobuser.save();
                 job.pledged = job.pledged + jobuser.amount_pledged;
                 job.save();
-        elif ('work_on_job' in request.POST):
+        elif ('work' in request.POST):
             work = Work(jobuser=jobuser);
             work.save();
             job.workers = job.workers + 1;
             job.save();
-        elif ('finish_job' in request.POST):
+        elif ('finish' in request.POST):
             finish = Finish(jobuser=jobuser);
             finish.save();
             job.finished = job.finished + 1;
