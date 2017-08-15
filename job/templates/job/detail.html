@@ -14,13 +14,28 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-12">
-    {% if job.tag_set.all.count > 0 %}
-        Tags:
-    {% for tag in job.tag_set.all %}
-        {{ tag.tag }}
-    {% endfor %}
-    {% endif %}
+    <div class="col-md-6">
+        <span id="created_by">Created By:&nbsp;{{ job.created_by }}</span>
+    </div>
+    <div class="col-md-6">
+        <span id="creation_date">Created:&nbsp;{{ job.creation_date }}</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <span id="tags">
+        {% if job.tag_set.all.count > 0 %}
+            Tags:
+        {% for tag in job.tag_set.all %}
+            #{{ tag.tag }}
+        {% endfor %}
+        {% endif %}
+        </span>
+    </div>
+    <div class="col-md-6">
+        {% if job.location %}
+        <span id="location">Location:&nbsp;{{ job.location }}</span>
+        {% endif %}
     </div>
 </div>
 <div class="row">
@@ -28,10 +43,15 @@
     {% if job.image_set.all.count > 0 %}
         <div id="images">
         {% for image in job.image_set.all %}
-            <img src="{{ image.image.url }}" class="img-responsive image">
+            <img src="{{ image.image.url }}" class="img-responsive image" />
         {% endfor %}
         </div>
     {% endif %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h4>Description</h4>
     </div>
 </div>
 <div class="row">

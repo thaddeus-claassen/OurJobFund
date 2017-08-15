@@ -2,6 +2,14 @@
     text-align: center;
 }
 
+#created_by, #tags {
+    float: left;
+}
+
+#creation_date, #location {
+    float: right;
+}
+
 #job_description {
     height: 300px;
     overflow-y: auto;

@@ -1,10 +1,13 @@
 from django.db import models;   
 from django import forms;
 from django.contrib.auth.models import User;
+from django.core.validators import RegexValidator; 
+        
+alphanumeric = RegexValidator(r'^[0-9a-zA-Z]+$', 'Alphanumeric characters only');        
         
 class Job(models.Model):
     is_finished = models.BooleanField(default=False);
-    name = models.CharField(max_length=100);
+    name = models.CharField(max_length=100, validators=[alphanumeric]);
     creation_date = models.DateField(auto_now_add=True);
     creation_datetime = models.DateTimeField(auto_now_add=True);
     pledged = models.FloatField(default=0.0);      
@@ -25,8 +28,8 @@ class Job(models.Model):
         from django.urls import reverse
         return reverse('job.views.detail', args=[str(self.random_string)])
 
-class Tag(models.Model):                                            
-    tag = models.CharField(max_length=30);                     
+class Tag(models.Model):         
+    tag = models.CharField(max_length=30, validators=[alphanumeric]);
     jobs = models.ManyToManyField(Job);
 
     def __str__(self):

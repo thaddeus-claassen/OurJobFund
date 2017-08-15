@@ -47,7 +47,7 @@ def sign_in(request):
                     user = authenticate(username=user.username, password=password);
                     if (user is not None):
                         login(request, user);
-                        return redirect('job:home');
+                        return redirect('user:detail', user.username);
     context = {
         'new_user_form' : newUserForm, 
         'existing_user_form' : userForm,

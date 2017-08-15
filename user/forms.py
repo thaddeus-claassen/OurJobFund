@@ -1,5 +1,4 @@
 from user.models import User, UserProfile;
-from django.core.validators import RegexValidator; 
 from django import forms;
 from django.forms import extras;
 import re;
@@ -11,7 +10,6 @@ class UserForm(forms.ModelForm):
     class Meta: 
         model = User;
         fields = ['email', 'password'];
-            
         
 class NewUserForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'placeholder' : 'First Name'}));
@@ -30,7 +28,7 @@ class NewUserForm(forms.ModelForm):
         if (len(first_name) > 30):
             raise forms.ValidationError('Your first name must not exceed 30 characters.');
         if (not re.match(r'^[A-Za-z]{1,30}$', first_name)):
-            raise forms.ValidationError('Your first name may only include alhabetic characters.');
+            raise forms.ValidationError('Your first name may only include alphabetic characters.');
         return first_name;
 
     def clean_last_name(self):
