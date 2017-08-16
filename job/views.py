@@ -166,8 +166,8 @@ def detail(request, job_random_string):
     context = {                                                                     
         'job': job,
         'pledges' : Pledge.objects.filter(jobuser__job=job),
-        'total_pledged' : int(job.pledged / 100),
-        'total_paid' : int(job.paid / 100),
+        'total_pledged' : int(job.pledged),
+        'total_paid' : int(job.paid),
         'workers' : workers,
         'total_working' : total_working,
         'total_finished' : total_finished,

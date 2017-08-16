@@ -81,7 +81,16 @@ def search_users(request):
         'total' : getTotalNumberOfUsersFromQuery(search),
     };
     return render(request, 'user/users.html', context);
-
+        
+def getUsersFromQuery(search, num_searches):
+    users = User.objects.all();
+    for word in search.split():
+        users = users.filter(Q(first_name__istartswith=word) | Q(last_name__istartswith=word));
+    start = (50 * num_searches);
+    end = start + 50;
+    users = users[start:end];
+    return users;
+    
 def see_more_users(request):
     if (request.is_ajax()):
         search = request.GET['search'];
@@ -91,15 +100,6 @@ def see_more_users(request):
         return HttpResponse(users, content_type="application/json");
     else:
         return Http404();
-        
-def getUsersFromQuery(search, num_searches):
-    users = User.objects.all();
-    for word in search.split():
-        users = users.filter(Q(first_name__startswith=word) | Q(last_name__startswith=word));
-    start = (50 * num_searches);
-    end = start + 50;
-    users = users[start:end];
-    return users;
     
 def getTotalNumberOfUsersFromQuery(search):
     users = User.objects.all();

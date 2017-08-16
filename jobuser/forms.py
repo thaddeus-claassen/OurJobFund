@@ -33,13 +33,16 @@ class PledgeForm(forms.ModelForm):
         model = Pledge;
         fields = ['amount'];
         
-    def clean_pledge(self):
-        pledge = self.cleaned_data.get('pledge');
-        if (not re.match(r'^[0-9]+$', pledge)):
+    def clean_amount(self):
+        amount = self.cleaned_data.get('amount');
+        print(amount)
+        if (not re.match(r'^[0-9]+$', str(amount))):
             raise forms.ValidationError('Only numbers allowed.');
-        if (pledge == '0'):
-            raise forms.ValidationError("You cannot pledge $0. That's nonsense");
-        return pledge;
+        if (amount == 0):
+            raise forms.ValidationError("You cannot pledge $0. That's nonsense.");
+        if (len(str(amount)) > 9):
+            raise forms.ValidationError("You cannot pledge more than $999,999,999");
+        return amount;
         
 
         
