@@ -1,9 +1,9 @@
 var numSearches = 1;
 
 $('document').ready(function() {
-    $(window).scroll(function(){
-        if ($(window).scrollTop() == $(document).height()-$(window).height()) {
-            if (50 * numSearches < parseInt($('#total').val())) {
+    $('tbody').scroll(function() {
+        if ($(this).scrollTop() + $(this).height() === $(this)[0].scrollHeight) {
+            if (50 * numSearches <= parseInt($('#total').val())) {
                 see_more_users();
             }// end if
         }// end if

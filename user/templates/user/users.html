@@ -8,7 +8,6 @@
 
 {% block content %}
 <input id="query" type="hidden" value="{{ search }}" />
-<input id="total-number-of-users-in-query" type="hidden" value="{{ total }}" />
 <div class="row">
     <div class="col-md-12">
         People
@@ -17,15 +16,20 @@
 <div class="row">
     <div class="col-md-12">
         <table id="user-table" class="table">
+            <tbody>
             {% for searched_user in users %}
-            <tr>
-                <td><a href="{% url 'user:detail' searched_user.username %}">{{ searched_user.first_name }}&nbsp;{{ searched_user.last_name }}</a></td>
-            </tr>
+                <tr>
+                    <td><a href="{% url 'user:detail' searched_user.username %}">{{ searched_user.first_name }}&nbsp;{{ searched_user.last_name }}</a></td>
+                </tr>
             {% empty %}
-            <tr>
-                <td>No Users</td>
-            </tr>
+                <tr>
+                    <td>No Users</td>
+                </tr>
             {% endfor %}
+            </tbody>
+            <tfoot>
+                <td>Total:&nbsp;<span id="total">{{ total }}</span></td>
+            </tfoot>
         </table>
     </div>
 </div>

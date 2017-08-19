@@ -66,25 +66,28 @@
             <thead>
                 <tr>
                     <th class="name">Name</th>
-                    <th class="pledged">Pledged / Paid</th>
+                    <th class="pledged">Pledged</th>
+                    <th class="paid">Paid</th>
                     <th class="working">Working</th>
+                    <th class="finished">Finished</th>
                 </tr>
             </thead>
             <tbody>
                 {% for current_jobuser in current_jobusers %}
                 <tr id="current_{{ current_jobuser.job.name }}">
                     <td class="name"><a href="{% url 'job:detail' current_jobuser.job.random_string %}">{{ current_jobuser.job.name }}</a></td>
-                    <td class="pledged">
-                        ${{ current_jobuser.amount_pledged }}
-                        / ${{ current_jobuser.amount_paid }}
-                    </td>
+                    <td class="pledged">${{ current_jobuser.amount_pledged }}.00</td>
+                    <td class="paid">${{ current_jobuser.amount_paid }}.00</td>
                     <td class="working">{{ current_jobuser.work_set.all.exists }}</td>
+                    <td class="finished">{{ current_jobuser.finish_set.all.exists }}</td>
                 </tr>
                 {% empty %}
                 <tr>
                     <td class="name">No current jobs</td>
                     <td class="pledged"></td>
+                    <td class="paid"></td>
                     <td class="working"></td>
+                    <td class="finished"></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -92,7 +95,9 @@
                 <tr>
                     <td class="name">Total:&nbsp;{{ current_jobusers.count }}</td>
                     <td class="pledged"></td>
+                    <td class="paid"></td>
                     <td class="working"></td>
+                    <td class="finished"></td>
                 </tr>
             </tfoot>
         </table>
@@ -109,29 +114,28 @@
             <thead>
                 <tr>
                     <th class="name">Name</th>
-                    <th class="pledged">Pledged / Paid</th>
+                    <th class="pledged">Pledged</th>
+                    <th class="paid">Paid</th>
                     <th class="working">Worked</th>
+                    <th class="finished">Finished</th>
                 </tr>
             </thead>
             <tbody>
             {% for finished_jobuser in finished_jobusers %}
                 <tr id="finished_{{ finished_jobuser.job.name }}">
                     <td class="name"><a href="{% url 'job:detail' finished_jobuser.job.random_string %}">{{ finished_jobuser.job.name }}</a></td>
-                    <td class="pledged">
-                        {% if finished_jobuser.pledge_set.all.exists %}
-                            ${{ finished_jobuser.pledge_set.all.first.amount_pledged }}
-                        {% else %}
-                            $0
-                        {% endif %}
-                        / ${{ finished_jobuser.amount_paid }}
-                    </td>
+                    <td class="pledged">${{ finished_jobuser.amount_pledged }}.00</td>
+                    <td class="paid">${{ finished_jobuser.amount_paid }}</td>
                     <td class="working">{{ finished_jobuser.work_set.all.exists }}</td>
+                    <td class="finished">{{ finished_jobuser.finish_set.exists }}</td>
                 </tr>
             {% empty %}
                 <tr>
                     <td class="name">No finished jobs</td>
                     <td class="pledged"></td>
+                    <td class="paid"></td>
                     <td class="working"></td>
+                    <td class="finished"></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -139,7 +143,9 @@
                 <tr>
                     <td class="name">Total:&nbsp;{{ finished_jobusers.count }}</td>
                     <td class="pledged"></td>
+                    <td class="paid"></td>
                     <td class="working"></td>
+                    <td class="finished"></td>
                 </tr>
             </tfoot>
         </table>

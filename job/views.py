@@ -11,11 +11,12 @@ from .forms import NewJobForm;
 import json, re, math;
 from random import randint;
 from jobuser.forms import PledgeForm;
-from ourjobfund.settings import STRIPE_API_KEY;
+from ourjobfund.settings import STRIPE_API_KEY, STATIC_ROOT;
 import stripe;
 
 @login_required
 def home(request):
+    print(STATIC_ROOT);
     job_random_string = request.GET.get('state', None);
     if (job_random_string is not None):
         job = get_object_or_404(Job, random_string=job_random_string);

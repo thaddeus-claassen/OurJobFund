@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect;
 from django.contrib.auth.models import User;
 from django.http import JsonResponse, HttpResponse, Http404;
 from django.core import serializers;
-from django.db.models import Q;
+from django.db.models import Q, F;
 from django.contrib.auth import authenticate, login, logout;
 from . import forms;
 from .models import UserProfile;
@@ -116,8 +116,8 @@ def detail(request, username):
         return redirect('user:detail', username=username);
     context = {
         'detail_user' : user,
-        'current_jobusers' : user.jobuser_set.filter(job__is_finished=False),
-        'finished_jobusers' : user.jobuser_set.filter(job__is_finished=True),
+        'current_jobusers' : user.jobuser_set.filter(Q(job__pledged=0) | Q(job__pledged__gt=F('job__paid'))),
+        'finished_jobusers' : user.jobuser_set.filter(Q(job__pledged__gt=0) & Q(job__pledged__lte=F('job__paid'))),
     }
     return render(request, 'user/detail.html', context);
     

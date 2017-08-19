@@ -28,11 +28,9 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^user/', include('user.urls')),
     url(r'^job/', include('job.urls')),
-    url(r'^$', include('job.urls')),
     url(r'^jobuser/', include('jobuser.urls')),
     url(r'^info/', include('info.urls')),
-    
-] 
+]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT);

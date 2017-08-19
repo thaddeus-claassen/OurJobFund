@@ -1,0 +1,26 @@
+
+table {
+    width: 100%;
+    border: 1px solid black;
+}
+
+tbody, tfoot, tr, td, th {
+    display: block;
+}
+
+td {
+    word-wrap: break-word;
+}
+
+tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+tbody {
+    height: 250px;
+    overflow-x: auto;
+    overflow-y: scroll;
+}

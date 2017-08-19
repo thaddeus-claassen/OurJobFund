@@ -54,12 +54,12 @@ tbody {
 }
 
 .name {
-    width: 50%;
+    width: 40%;
     float: left;
 }
 
-.pledged, .working {
-    width: 25%;
+.pledged, .paid, .working, .finished {
+    width: 15%;
     float: left;
 }
 
