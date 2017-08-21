@@ -37,7 +37,7 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-8 col-md-offset-2">
+                <div class="col-md-10 col-md-offset-1">
                     {% if user.is_authenticated %}
                     <ul class="nav navbar-nav navbar-left">
                         <li class="navbar_button"><a href="{% url 'user:detail' user.username %}">{{ user.first_name }}</a></li>
@@ -98,14 +98,14 @@
     </nav>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-10 col-md-offset-1">
                 {% block content %}{% endblock %}
             </div>
         </div>
     </div>
     <div id="footer" class="container-fluid footer-div">
         <div class="row footer-div">
-            <div class="col-md-8 col-md-offset-2 footer-div">
+            <div class="col-md-10 col-md-offset-1 footer-div">
                 <div class="row footer-div">
                     <div class="col-md-4 footer-div info_col">
                         <div class="info_link"><a href="{% url 'about:about' %}">About</a></div>

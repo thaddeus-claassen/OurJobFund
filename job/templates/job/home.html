@@ -77,10 +77,12 @@
                 <!-- End job table -->
             </div>
         </div>
-        <div class="col-md-12">
-            <form action="{% url 'job:create_job' %}">
-                <input id="create_job" type="submit" value="Create Job" />
-            </form>
+        <div class="row">
+            <div class="col-md-12">
+                <form action="{% url 'job:create_job' %}">
+                    <input id="create_job" type="submit" value="Create Job" />
+                </form>
+            </div>
         </div>
     </div>
 </div>
