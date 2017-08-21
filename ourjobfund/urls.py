@@ -29,7 +29,9 @@ urlpatterns = [
     url(r'^user/', include('user.urls')),
     url(r'^job/', include('job.urls')),
     url(r'^jobuser/', include('jobuser.urls')),
-    url(r'^info/', include('info.urls')),
+    url(r'^about/', include('about.urls')),
+    url(r'^contact/', include('contact.urls')),
+    url(r'^terms_of_service', include('terms_of_service.urls')),
 ]
 
 if settings.DEBUG:

@@ -6,35 +6,41 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<form id="post_update_form" action="{% url 'jobuser:post_update' jobuser.id %}" method="POST" enctype="multipart/form-data">
+{% csrf_token %}
     <div class="row">
-        <form id="post_update_form" action="{% url 'jobuser:post_update' jobuser.id %}" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="col-md-12">
-                Update for {{ jobuser.job.name }}
-            </div>
-            <div class="col-md-2">
-                {{ form.title.label }}
-            </div>
-            <div class="col-md-10">
-                {{ form.title }}
-            </div>
-            <div class="col-md-2">
-                {{ form.images.label }}
-            </div>
-            <div class="col-md-10">
-                {{ form.images }}
-            </div>
-            <div class="col-md-2">
-                {{ form.description.label }}
-            </div>
-            <div class="col-md-10">
-                {{ form.description }}
-            </div>
-            <div class="col-md-10 col-md-offset-2">
-                <input type="submit" value="Submit" />
-            </div>
-        </form>
+        <div class="col-md-12">
+            Update for {{ jobuser.job.name }}
+        </div>
     </div>
-</div>    
+    <div class="row">
+        <div class="col-md-2">
+            {{ form.title.label }}
+        </div>
+        <div class="col-md-10">
+            {{ form.title }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            {{ form.images.label }}
+        </div>
+        <div class="col-md-10">
+            {{ form.images }}
+        </div>
+    </div>    
+    <div class="row">
+        <div class="col-md-2">
+            {{ form.description.label }}
+        </div>
+        <div class="col-md-10">
+            {{ form.description }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-2">
+            <input type="submit" value="Submit" />
+        </div>
+    </div>
+</form>
 {% endblock %}
