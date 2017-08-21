@@ -12,4 +12,3 @@ urlpatterns = [
     # /jobuser/update/<update_id>
     url(r'^update/(?P<update_id>[0-9]+)/$', views.view_update, name='view_update'),
 ]
-

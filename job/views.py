@@ -16,7 +16,6 @@ import stripe;
 
 @login_required
 def home(request):
-    print(STATIC_ROOT);
     job_random_string = request.GET.get('state', None);
     if (job_random_string is not None):
         job = get_object_or_404(Job, random_string=job_random_string);
