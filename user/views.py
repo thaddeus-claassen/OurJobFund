@@ -12,6 +12,9 @@ from datetime import datetime;
 from random import randint;
 import logging;
 
+def bagel(request):
+    return HttpResponse("<html>Hi</html>");
+
 def sign_in(request):
     if (request.user.is_authenticated()):
         return redirect('job:home');

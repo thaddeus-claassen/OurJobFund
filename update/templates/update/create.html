@@ -2,11 +2,11 @@
 
 {% load staticfiles %}
 {% block import %}
-    <link rel="stylesheet" type="text/css" href="{% static 'jobuser/CSS/post_update.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'update/CSS/create.css' %}" />
 {% endblock %}
 
 {% block content %}
-<form id="post_update_form" action="{% url 'jobuser:post_update' jobuser.id %}" method="POST" enctype="multipart/form-data">
+<form id="post_update_form" action="{% url 'update:create' jobuser.job.random_string %}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
     <div class="row">
         <div class="col-md-12">

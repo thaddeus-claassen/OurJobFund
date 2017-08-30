@@ -93,7 +93,7 @@
                             </td>
                             <td class="updates-date_data">{{ update.date }}</td>
                             <td class="updates-title">
-                                <a href="{% url 'jobuser:view_update' update.id %}">{{ update.title }}</a>
+                                <a href="{% url 'update:detail' update.random_string %}">{{ update.title }}</a>
                             </td>
                             <td class="updates-images">
                             {% if update.image_set.all %}

@@ -12,7 +12,7 @@ from random import randint;
 @login_required
 def create(request, job_random_string):
     job = get_object_or_404(Job, random_string=job_random_string);
-    jobuser = get_object_or_404(JobUser, user=request.user, job=jjob);
+    jobuser = get_object_or_404(JobUser, user=request.user, job=job);
     if (request.method == 'POST'):
         form = UpdateForm(request.POST);
         if (form.is_valid()):
