@@ -1,7 +1,8 @@
-from user.models import User, UserProfile;
+from user.models import User, UserProfile, STATES;
 from django import forms;
 from django.forms import extras;
 import re;
+
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}));
@@ -140,11 +141,44 @@ class ChangePasswordForm(forms.ModelForm):
         return repeat_password;
         
 class DeactivateAccountForm(forms.ModelForm):
-    deactivate = forms.BooleanField(initial=False, required=False);
+    is_active = forms.BooleanField(initial=False, required=False);
     
     class Meta:
         model = User;
         fields = ['is_active'];
+        
+class EditDescriptionForm(forms.ModelForm):
+    description = forms.CharField(widget=forms.Textarea(attrs={'placeholder' : 'This is where you add contact information, social media accounts, and any other information you would like others to know about you'}));
 
+    class Meta:
+        model = UserProfile;
+        fields = ['description'];
+        
+class EditInfoForm(forms.ModelForm):
+    city = forms.CharField(widget=forms.TextInput(), required=False);
+    state = forms.CharField(widget=forms.Select(choices=STATES), required=False);
+    occupation = forms.CharField(widget=forms.TextInput(), required=False);
+        
+    class Meta:
+        model = UserProfile;
+        fields = ['city', 'state', 'occupation'];
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         

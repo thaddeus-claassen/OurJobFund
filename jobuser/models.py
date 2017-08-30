@@ -26,13 +26,3 @@ class Work(models.Model):
 class Finish(models.Model):
     jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);
     date =  models.DateTimeField(auto_now_add=True);
-
-class Update(models.Model):
-    jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);
-    title = models.CharField(max_length=100);
-    description = models.CharField(default="", max_length=10000);
-    date = models.DateTimeField(auto_now_add=True);
-    
-class Image(models.Model):
-    update = models.ForeignKey(Update, on_delete=models.CASCADE, null=True);
-    image = models.ImageField();

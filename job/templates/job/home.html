@@ -2,87 +2,88 @@
 
 {% load static %}
 {% block import %}
+    <!-- Importing Google Maps Libary -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3pteK4Epn8dFH03DGk97K7ICo_FwYht0&callback=initMap" async defer></script>
     <script type="text/javascript" src="{% static 'job/JavaScript/home.js' %}" ></script>
     <link rel="stylesheet" type="text/css" href="{% static 'job/CSS/home.css' %}" />
 {% endblock %}
 
 {% block content %}
-<div id="wrapper">
-    <div id="advanced-settings-wrapper">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>Advanced Settings</h1>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>Coming Soon</h1>
-                </div>
-            </div>
+<div id="advanced-settings-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Advanced Settings</h1>
         </div>
     </div>
-    <div id="content-wrapper">
-        <div class="row">
-            <div class="col-md-12">
-                
-                <!-- Radius -->
-                <div class="row">
-                    <input id="latitude" type="hidden" value="" />
-                    <input id="longitude" type="hidden" value="" />
-                    <div class="col-md-9">
-                        <input id="location" type="text" placeholder="Location" />
-                    </div>
-                    <div class="col-md-3">
-                        <input id="radius" type="text" placeholder="Radius (mi)" />
-                    </div>    
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Coming Soon</h1>
+        </div>
+    </div>
+</div>
+<div id="content-wrapper">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <input id="latitude" type="hidden" value="" />
+                <input id="longitude" type="hidden" value="" />
+                <div class="col-md-12">
+                    <input id="location" class="search" type="text" placeholder="Location" />
                 </div>
-                <!-- End Radius -->
- 
-                <div class="row">
-                    <div class="col-md-9">
-                        <input id="search_jobs" type="text" placeholder="Search Jobs" />
-                    </div>
-                    <div class="col-md-3">
-                        <input id="search_button" type="button" value="Search" />
-                    </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="radius" class="search" type="text" placeholder="Radius" />
+                </div>    
+                <div class="col-md-2">
+                    <label for="mi">Mi:</label>
+                    <input id="mi" type="radio" name="unit" checked="checked" />
                 </div>
-
-                <!-- Job table -->
-                <div id="row-table" class="row">
-                    <div id="table-border" class="col-md-12">
-                        <table id="main_table" class="table">
-                            <thead>
-                                <tr>
-                                    <input id="sort" type="hidden" value="created descending" />
-                                    <th id="name" class="name sort">Name</th>
-                                    <th id="created" class="date sort">Created</th>
-                                    <th id="pledged" class="pledged sort">Pledged</th>
-                                    <th id="paid" class="paid sort">Paid</th>
-                                    <th id="workers" class="workers sort">Workers</th>
-                                    <th id="finished" class="finished sort">Finished</th>
-                                </tr>
-                            </thead>
-                            <tbody id="main_table_body"></tbody>
-                            <tfoot>
-                                <tr>
-                                    <td id="job-number-footer" >Jobs Found:&nbsp;<span id="num-jobs-found">0</span></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+                <div class="col-md-2">
+                    <label for="km">Km:</label>
+                    <input id="km" type="radio" name="unit" />
                 </div>
-                <!-- End job table -->
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <input id="search_jobs" class="search" type="text" placeholder="Search Jobs by Name or Tags" />
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <form action="{% url 'job:create_job' %}">
-                    <input id="create_job" type="submit" value="Create Job" />
-                </form>
-            </div>
+        <div class="col-md-6">
+            <div id="map"></div>
+        </div>
+    </div>
+    <div id="row-table" class="row">
+        <div id="table-border" class="col-md-12">
+            <table id="main_table" class="table">
+                <thead>
+                    <tr>
+                        <input id="sort" type="hidden" value="created descending" />
+                        <th id="name" class="name sort">Name</th>
+                        <th id="created" class="date sort">Created</th>
+                        <th id="pledged" class="pledged sort">Pledged</th>
+                        <th id="paid" class="paid sort">Paid</th>
+                        <th id="workers" class="workers sort">Workers</th>
+                        <th id="finished" class="finished sort">Finished</th>
+                    </tr>
+                </thead>
+                <tbody id="main_table_body"></tbody>
+                <tfoot>
+                    <tr>
+                        <td id="job-number-footer" >Jobs Found:&nbsp;<span id="num-jobs-found">0</span></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form action="{% url 'job:create_job' %}">
+                <input id="create_job" type="submit" value="Create Job" />
+            </form>
         </div>
     </div>
 </div>

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'job',
     'user',
     'jobuser',
+    'update',
     'about',
     'contact',
     'terms_of_service',

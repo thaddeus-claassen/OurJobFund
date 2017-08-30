@@ -3,15 +3,9 @@ $('document').ready(function() {
     $(window).resize(function() {
         changeTHeadTFootWidthToAccountForScrollBar();
     });
-    $('#make_edits').click(function() {
-        makeEdits();
-    });
-    $('#edit_description').click(function() {
-        $('#edit_description').css('display', 'none')
-        $('#description_div').css('display', 'none');
-        $('#textarea_description').css('display', 'inline');
-        $('#textarea_description').text($('#description').text());
-        $('#save_description').css('display', 'inline');
+    $('#edit_info').click(function() {
+        $('.no-change-info-wrapper').css('display', 'none');
+        $('.change-info-wrapper').css('display', 'inline');
     });
 });
 
@@ -22,29 +16,4 @@ function changeTHeadTFootWidthToAccountForScrollBar() {
     $('thead').width(percentageTableWidth.toString() + '%');
     $('tfoot').width(percentageTableWidth.toString() + '%');
 }// end changeTHeadTFootWidthToAccountForScrollBar()
-
-function save_description() {
-    $.ajax({
-        type : "POST",
-        url : "description/",
-        data : {
-            'description' : $('#textarea_description').val(),
-            'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val(),
-        },
-        success : saveDescriptionSuccess,
-    });
-}// end save_description()
-
-function saveDescriptionSuccess() {
-    $('#description_div').css('display', 'inline');
-    $('#description').text($('#textarea_description').val());
-    $('#edit_description').css('display', 'inline');
-    $('#textarea_description').css('display', 'none');
-    $('#save_description').css('display', 'none');
-}// end saveDescriptionSuccess()
-
-function makeEdits() {
-    $('#make_edits_button_div').css('display', 'none');
-    $('#edit_div').css('display', 'inline');
-}// end makeEdits()
 

@@ -1,7 +1,9 @@
-var pi = 3.14159265;
 var center;
 var numSearches = 0;
 var ENTER = 13;
+var map;
+var markers = [];
+var MILES_TO_KILOMETERS = 1.60934;
 
 $('document').ready(function() {
     changeTHeadTFootWidthToAccountForScrollBar();
@@ -27,8 +29,9 @@ $('document').ready(function() {
         $('#sort').val(sort_by_val);
         sort_jobs();
     });
-    $('.related-to-location').keydown(function(event) {
+    $('.search').keydown(function(event) {
         if (event.which == ENTER) {
+            clearMarkers();
             numSearches = 0;
             if ($('#location').val() == "") {
                 get_jobs();
@@ -38,27 +41,7 @@ $('document').ready(function() {
             get_total_jobs();
         }// end if
     });
-    $('#search_jobs').keydown(function(event) {
-        if (event.which == ENTER) {
-            numSearches = 0;
-            if ($('#location').val() == "") {
-                get_jobs();
-            } else {
-                applyLocation();
-            }// end if-else
-            get_total_jobs();
-        }// end if
-    });
-    $('#search_button').click(function(event) {
-        numSearches = 0;
-        if ($('#location').val() == "") {
-            get_jobs();
-        } else {
-            applyLocation();
-        }// end if-else
-        get_total_jobs();
-    });
-     $('tbody').scroll(function() {
+    $('tbody').scroll(function() {
         if ($(this).scrollTop() + $(this).height() === $(this)[0].scrollHeight) {
             if (50 * numSearches <= parseInt($('#num-jobs-found').text())) {
                 add_jobs();
@@ -97,7 +80,7 @@ function add_jobs() {
             'search' : $('#search_jobs').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
-            'radius' : $('#radius').val(),
+            'radius' : getRadius(),
             'sort' : $('#sort').val(),
         },
         success: addJobsSuccess,
@@ -112,7 +95,7 @@ function sort_jobs() {
             'search' : $('#search_jobs').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
-            'radius' : $('#radius').val(),
+            'radius' : getRadius(),
             'sort' : $('#sort').val(),
         },
         success: sortJobsSuccess,
@@ -126,7 +109,7 @@ function get_total_jobs() {
             'search' : $('#search_jobs').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
-            'radius' : $('#radius').val(),
+            'radius' : getRadius(),
             'sort' : $('#sort').val(),
         },
         success: getTotalJobs,
@@ -140,6 +123,7 @@ function getTotalJobs(json) {
 function getJobsSuccess(json) {
     numSearches = 1;
     $('#main_table_body').empty();
+    clearMarkers();
     var numJobs = addJobsToTable(json);
 }// end getJobsSuccess()
 
@@ -170,6 +154,9 @@ function addJobsToTable(json) {
             string = string + "<td class='workers'>" + fields['workers'] + "</td>";
             string = string + "<td class='finished'>" + fields['finished'] + "</td></tr>";
             $('#main_table_body').append(string);
+            if ($('#location').val() != "") {
+                addMarker(new google.maps.LatLng(fields['latitude'],fields['longitude']));    
+            }// end if
         }// end for
     }// end if
     return numJobs;
@@ -194,3 +181,56 @@ function applyLocation() {
         }// end if
     });
 }// end applyLocation()
+
+function getRadius() {
+    var radius = parseFloat($('#radius').val());
+    if (radius == NaN) {
+        radius = 100;
+    } else {
+        if ($('#km').is(':checked')) {
+            radius = MILES_TO_KILOMETERS * radius;
+        }// end if
+    }// end if-else
+    return radius
+}// end getRadius()
+
+function initMap() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(centerMap)
+    } else {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 0, lng: 0},
+            zoom: 1,
+        });
+    }
+}// end initMap()
+
+function centerMap(position) {
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: position.coords.latitude, lng: position.coords.longitude},
+        zoom: 12,
+    });
+}// centerMap()
+
+function addMarker(location) {
+    var marker = new google.maps.Marker({
+        position: location,
+        map: map
+    });
+    markers.push(marker);
+}// end addMarker()
+
+function setMapOnAll(map) {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(map);
+    }// end for
+}// end setMapOnAll()
+
+function clearMarkers() {
+    setMapOnAll(null);
+}// end clearMarkers()
+
+function deleteMarkers() {
+    clearMarkers();
+    markers = [];
+}// end deleteMarkers()

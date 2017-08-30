@@ -3,7 +3,8 @@ from django.shortcuts import render, get_object_or_404, redirect;
 from .models import Job, Tag, User, Image;
 from user.models import Notification;
 from django.db.models import Q;
-from jobuser.models import JobUser, Pledge, Pay, Work, Finish, Update;
+from jobuser.models import JobUser, Pledge, Pay, Work, Finish;
+from update.models import Update;
 from django.http import JsonResponse, HttpResponse, Http404;
 from django.core import serializers;
 from django.contrib.auth import authenticate, login, logout;
@@ -205,30 +206,29 @@ def detail_sort(request, job_random_string):
 def create_job(request):
     newJobForm = NewJobForm(request.POST or None);
     if (request.method == 'POST'):
-        if ('create-job' in request.POST):
-            if (newJobForm.is_valid()):
-                name = newJobForm.cleaned_data['name'];
-                latitude = newJobForm.cleaned_data['latitude'];
-                longitude = newJobForm.cleaned_data['longitude'];
-                tags = newJobForm.cleaned_data['tags'];
-                description = newJobForm.cleaned_data['description'];
-                job = Job(name=name, latitude=latitude, longitude=longitude, description=description, created_by=request.user, random_string=createRandomString());
-                job.save();
-                if (tags != ''):
-                    tagsArray = tags.split(" ");
-                    print("tagsArray: " + str(tagsArray))
-                    for tagString in tagsArray:
-                        newTag = None;
-                        if (Tag.objects.filter(tag__iexact=tagString).exists()):
-                            newTag = Tag.objects.get(tag__iexact=tagString);
-                            newTag.save();
-                        else:
-                            newTag = Tag(tag=tagString);
-                        job.tag_set.add(newTag);
-                for image in request.FILES.getlist('image_set'):
-                    image = Image(image=image, job=job);
-                    image.save();
-                return redirect('job:detail', job.random_string);
+        if (newJobForm.is_valid()):
+            name = newJobForm.cleaned_data['name'];
+            latitude = newJobForm.cleaned_data['latitude'];
+            longitude = newJobForm.cleaned_data['longitude'];
+            location = newJobForm.cleaned_data['location'];
+            tags = newJobForm.cleaned_data['tags'];
+            description = newJobForm.cleaned_data['description'];
+            job = Job(name=name, latitude=latitude, longitude=longitude, location=location, description=description, created_by=request.user, random_string=createRandomString());
+            job.save();
+            if (tags != ''):
+                tagsArray = tags.split(" ");
+                for tagString in tagsArray:
+                    newTag = None;
+                    if (Tag.objects.filter(tag__iexact=tagString).exists()):
+                        newTag = Tag.objects.get(tag__iexact=tagString);
+                        newTag.save();
+                    else:
+                        newTag = Tag(tag=tagString);
+                    job.tag_set.add(newTag);
+            for image in request.FILES.getlist('image_set'):
+                image = Image(image=image, job=job);
+                image.save();
+            return redirect('job:detail', job.random_string);
     context = {
         'form' : newJobForm, 
     }

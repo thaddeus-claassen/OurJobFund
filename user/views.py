@@ -13,11 +13,11 @@ from random import randint;
 import logging;
 
 def sign_in(request):
-    userForm = forms.UserForm(request.POST or None);
-    newUserForm = forms.NewUserForm(request.POST or None);
     if (request.user.is_authenticated()):
         return redirect('job:home');
     else: 
+        userForm = forms.UserForm(request.POST);
+        newUserForm = forms.NewUserForm(request.POST);
         if (request.method == 'POST'):
             if ('sign-in' in request.POST):
                 if (userForm.is_valid()):
@@ -46,11 +46,11 @@ def sign_in(request):
                     if (user is not None):
                         login(request, user);
                         return redirect('user:detail', user.username);
-    context = {
-        'new_user_form' : newUserForm, 
-        'existing_user_form' : userForm,
-    }
-    return render(request, 'user/signup.html', context);
+        context = {
+            'new_user_form' : newUserForm, 
+            'existing_user_form' : userForm,
+        }
+        return render(request, 'user/signup.html', context);
         
 def check_email_is_unused(request):
     emailIsUnused = True;
@@ -110,12 +110,28 @@ def getTotalNumberOfUsersFromQuery(search):
 @login_required    
 def detail(request, username):
     user = get_object_or_404(User, username=username);
-    if (request.method == 'POST'):
-        request.user.userprofile.description = request.POST.get('description');
-        request.user.userprofile.save();
-        return redirect('user:detail', username=username);
+    infoForm = None;
+    descriptionForm = None;
+    print(request.user.userprofile.city);
+    infoForm = forms.EditInfoForm(request.POST, initial={'city' : request.user.userprofile.city, 'state' : request.user.userprofile.state, 'occupation' : user.userprofile.occupation});
+    descriptionForm = forms.EditDescriptionForm(request.POST, initial={'description' : user.userprofile.description});    
+    if (request.method == "POST"):
+        if (infoForm.has_changed()):
+            if (infoForm.is_valid()):
+                user.userprofile.city = infoForm.cleaned_data['city'];
+                user.userprofile.state = infoForm.cleaned_data['state'];
+                user.userprofile.occupation = infoForm.cleaned_data['occupation'];
+                user.userprofile.save();
+                return redirect('user:detail', username=request.user.username);
+        if (descriptionForm.has_changed()):
+            if (descriptionForm.is_valid()):
+                user.userprofile.description = descriptionForm.cleaned_data['description'];
+                user.userprofile.save();
+                return redirect('user:detail', username=request.user.username);
     context = {
         'detail_user' : user,
+        'info_form' : infoForm,
+        'description_form' : descriptionForm,
         'current_jobusers' : user.jobuser_set.filter(Q(job__pledged=0) | Q(job__pledged__gt=F('job__paid'))),
         'finished_jobusers' : user.jobuser_set.filter(Q(job__pledged__gt=0) & Q(job__pledged__lte=F('job__paid'))),
     }
@@ -123,39 +139,40 @@ def detail(request, username):
     
 @login_required
 def account(request):
-    change_name_form = None;
+    changeNameForm = None;
+    changeEmailForm = forms.ChangeEmailForm(request.POST, initial = {'email' : request.user.email});
+    changePasswordForm = forms.ChangePasswordForm(request.POST, user = request.user);
+    deactivateAccountForm = forms.DeactivateAccountForm(request.POST, initial = {'is_active' : True});
+    if ((datetime.now() - request.user.userprofile.last_time_name_was_changed.replace(tzinfo=None)).days >= 180):
+        changeNameForm = forms.ChangeNameForm(request.POST, initial = {'first_name' : request.user.first_name, 'last_name' : request.user.last_name});
     if (request.method == "POST"):
-        if ('change-name' in request.POST):
-            form = forms.ChangeNameForm(request.POST);
-            if (form.is_valid()):
+        if (changeNameForm.has_changed()):
+            if (changeNameForm.is_valid()):
                 request.user.first_name = form.cleaned_data['first_name'];
                 request.user.last_name = form.cleaned_data['last_name'];
                 request.user.userprofile.last_time_name_was_changed = datetime.now();
                 request.user.save();
                 request.user.userprofile.save();
-        elif ('change-email' in request.POST):
-            form = forms.ChangeEmailForm(request.POST);
+                return redirect('user:detail', username=request.user.username);
+        if (changeEmailForm.has_changed()):
             if (form.is_valid()):
                 request.user.email = form.cleaned_data['email'];
                 request.user.save();
-        elif ('change-password' in request.POST):
-            form = forms.ChangePasswordForm(request.POST, user=request.user);
+                return redirect('user:detail', username=request.user.username);
+        if (changePasswordForm.has_changed()):
             if (form.is_valid()):
                 request.user.set_password(form.cleaned_data['new_password']);
                 request.user.save();
-        elif ('delete-account' in request.POST):
-            form = forms.DeactivateAccountForm(request.POST);
+                return redirect('user:detail', username=request.user.username);
+        if (deactivateAccountForm.has_changed()):
             if (form.is_valid()):
                 request.user.is_active = False;
                 sign_out(request);
-        return redirect('user:account');
-    if ((datetime.now() - request.user.userprofile.last_time_name_was_changed.replace(tzinfo=None)).days >= 180):
-        change_name_form = forms.ChangeNameForm(initial = {'first_name' : request.user.first_name, 'last_name' : request.user.last_name});
     context = {
-        'change_name_form' : change_name_form,
-        'change_email_form' : forms.ChangeEmailForm(initial = {'email' : request.user.email}),
-        'change_password_form' : forms.ChangePasswordForm(),
-        'deactivate_account_form' : forms.DeactivateAccountForm(),
+        'change_name_form' : changeNameForm,
+        'change_email_form' : changeEmailForm,
+        'change_password_form' : changePasswordForm,
+        'deactivate_account_form' : deactivateAccountForm,
     }
     return render(request, 'user/account.html', context);
     

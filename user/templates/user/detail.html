@@ -10,140 +10,191 @@
 <input id="user_id" type="hidden" value="{{ id }}" />
 <div class="row">
     <div class="col-md-12">
+        <h4>{{ detail_user.first_name }}&nbsp;{{ detail_user.last_name }}</h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
         <div class="row">
             <div class="col-md-6">
-                <h4>{{ detail_user.first_name }}&nbsp;{{ detail_user.last_name }}</h4>
+                <h4>Info</h4>
+            </div>
+            <div class="col-md-6">
+                {% if user.username == detail_user.username %}
+                <button id="edit_info" class="no-change-info-wrapper" type="button">Edit Info</button>
+                <input id="save_info" class="change-info-wrapper" type="submit" value="Save Info" form="save_info_form" />
+                {% endif %}
+            </div>
+        </div>
+        <div id="info-wrapper">
+            <div class="no-change-info-wrapper"> 
+                <div class="row">
+                    <div class="col-md-12">
+                        Location:
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ detail_user.userprofile.city }},&nbsp;{{ detail_user.userprofile.state }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        Occupation:
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ detail_user.userprofile.occupation }}
+                    </div>
+                </div>
             </div>
             {% if user.username == detail_user.username %}
-            <div class="col-md-6">
-                <input id="save_description" type="submit" value="Save Description" form="save_description_form" />
-            </div>
-            <div class="col-md-6">
-                <button id="edit_description" type="button">Edit Description</button>
+            <div class="change-info-wrapper">
+                <form id="save_info_form" action="{{ request.get_full_path }}" method="POST">
+                {% csrf_token %}
+                {% for field in info_form %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ field }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ field.errors }}
+                        </div>
+                    </div>
+                {% endfor %}
+                </form>
             </div>
             {% endif %}
         </div>
-        {% if user.username == detail_user.username %}
+    </div>
+    <div class="col-md-9">
         <div class="row">
-            <div class="col-md-12">
-                <div id="description_div"> 
-                    <span id="description" form="save_description_form" >{{ detail_user.userprofile.description }}</span>
-                </div>
+            <div class="col-md-6">
+                <h4>Description</h4>
+            </div>
+            <div class="col-md-6">
+                {% if user.username == detail_user.username %}
+                <input id="save_description" type="submit" value="Save Description" form="save_description_form" />
+                <button id="edit_description" type="button">Edit Description</button>
+                {% endif %}
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 form-group">
-                <form id="save_description_form" action="{{ request.get_full_path }}" method="POST">
-                {% csrf_token %}
-                    <textarea id="textarea_description" class="form-control" name="description"></textarea>
-                </form>
+            <div id="description_div"> 
+                <span id="description" form="save_description_form" >{{ detail_user.userprofile.description }}</span>
             </div>
+            {% if user.username == detail_user.username %}
+            <form id="save_description_form" action="{{ request.get_full_path }}" method="POST">
+            {% csrf_token %}
+                <textarea id="textarea_description" class="form-control" name="description"></textarea>
+            </form>
+            {% endif %} 
         </div>
-        {% else %} 
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
         <div class="row">
             <div class="col-md-12">
-                <div id="description_div">
-                    <span id="description">{{ detail_user.userprofile.description }}</span>
-                </div>
+                <h4>Current Jobs</h4>
             </div>
-        </div> 
-        {% endif %}
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="name">Name</th>
+                            <th class="pledged">Pledged</th>
+                            <th class="paid">Paid</th>
+                            <th class="working">Working</th>
+                            <th class="finished">Finished</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for current_jobuser in current_jobusers %}
+                        <tr id="current_{{ current_jobuser.job.name }}">
+                            <td class="name"><a href="{% url 'job:detail' current_jobuser.job.random_string %}">{{ current_jobuser.job.name }}</a></td>
+                            <td class="pledged">${{ current_jobuser.amount_pledged }}.00</td>
+                            <td class="paid">${{ current_jobuser.amount_paid }}.00</td>
+                            <td class="working">{{ current_jobuser.work_set.all.exists }}</td>
+                            <td class="finished">{{ current_jobuser.finish_set.all.exists }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="name">No current jobs</td>
+                            <td class="pledged"></td>
+                            <td class="paid"></td>
+                            <td class="working"></td>
+                            <td class="finished"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="name">Total:&nbsp;{{ current_jobusers.count }}</td>
+                            <td class="pledged"></td>
+                            <td class="paid"></td>
+                            <td class="working"></td>
+                            <td class="finished"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <h3>Current Jobs:</h3>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th class="name">Name</th>
-                    <th class="pledged">Pledged</th>
-                    <th class="paid">Paid</th>
-                    <th class="working">Working</th>
-                    <th class="finished">Finished</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for current_jobuser in current_jobusers %}
-                <tr id="current_{{ current_jobuser.job.name }}">
-                    <td class="name"><a href="{% url 'job:detail' current_jobuser.job.random_string %}">{{ current_jobuser.job.name }}</a></td>
-                    <td class="pledged">${{ current_jobuser.amount_pledged }}.00</td>
-                    <td class="paid">${{ current_jobuser.amount_paid }}.00</td>
-                    <td class="working">{{ current_jobuser.work_set.all.exists }}</td>
-                    <td class="finished">{{ current_jobuser.finish_set.all.exists }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td class="name">No current jobs</td>
-                    <td class="pledged"></td>
-                    <td class="paid"></td>
-                    <td class="working"></td>
-                    <td class="finished"></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td class="name">Total:&nbsp;{{ current_jobusers.count }}</td>
-                    <td class="pledged"></td>
-                    <td class="paid"></td>
-                    <td class="working"></td>
-                    <td class="finished"></td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <h3>Completed Jobs:</h3>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th class="name">Name</th>
-                    <th class="pledged">Pledged</th>
-                    <th class="paid">Paid</th>
-                    <th class="working">Worked</th>
-                    <th class="finished">Finished</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for finished_jobuser in finished_jobusers %}
-                <tr id="finished_{{ finished_jobuser.job.name }}">
-                    <td class="name"><a href="{% url 'job:detail' finished_jobuser.job.random_string %}">{{ finished_jobuser.job.name }}</a></td>
-                    <td class="pledged">${{ finished_jobuser.amount_pledged }}.00</td>
-                    <td class="paid">${{ finished_jobuser.amount_paid }}</td>
-                    <td class="working">{{ finished_jobuser.work_set.all.exists }}</td>
-                    <td class="finished">{{ finished_jobuser.finish_set.exists }}</td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td class="name">No finished jobs</td>
-                    <td class="pledged"></td>
-                    <td class="paid"></td>
-                    <td class="working"></td>
-                    <td class="finished"></td>
-                </tr>
-            {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td class="name">Total:&nbsp;{{ finished_jobusers.count }}</td>
-                    <td class="pledged"></td>
-                    <td class="paid"></td>
-                    <td class="working"></td>
-                    <td class="finished"></td>
-                </tr>
-            </tfoot>
-        </table>
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Completed Jobs</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="name">Name</th>
+                            <th class="pledged">Pledged</th>
+                            <th class="paid">Paid</th>
+                            <th class="working">Worked</th>
+                            <th class="finished">Finished</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for finished_jobuser in finished_jobusers %}
+                        <tr id="finished_{{ finished_jobuser.job.name }}">
+                            <td class="name"><a href="{% url 'job:detail' finished_jobuser.job.random_string %}">{{ finished_jobuser.job.name }}</a></td>
+                            <td class="pledged">${{ finished_jobuser.amount_pledged }}.00</td>
+                            <td class="paid">${{ finished_jobuser.amount_paid }}</td>
+                            <td class="working">{{ finished_jobuser.work_set.all.exists }}</td>
+                            <td class="finished">{{ finished_jobuser.finish_set.exists }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td class="name">No finished jobs</td>
+                            <td class="pledged"></td>
+                            <td class="paid"></td>
+                            <td class="working"></td>
+                            <td class="finished"></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="name">Total:&nbsp;{{ finished_jobusers.count }}</td>
+                            <td class="pledged"></td>
+                            <td class="paid"></td>
+                            <td class="working"></td>
+                            <td class="finished"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
