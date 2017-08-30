@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^about/', include('about.urls')),
     url(r'^contact/', include('contact.urls')),
     url(r'^terms_of_service', include('terms_of_service.urls')),
+    url(r'^$', include('job.urls')),
 ]
 
 if settings.DEBUG:

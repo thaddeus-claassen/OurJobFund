@@ -16,8 +16,8 @@ def sign_in(request):
     if (request.user.is_authenticated()):
         return redirect('job:home');
     else: 
-        userForm = forms.UserForm(request.POST);
-        newUserForm = forms.NewUserForm(request.POST);
+        userForm = forms.UserForm(request.POST or None);
+        newUserForm = forms.NewUserForm(request.POST or None);
         if (request.method == 'POST'):
             if ('sign-in' in request.POST):
                 if (userForm.is_valid()):
@@ -113,8 +113,8 @@ def detail(request, username):
     infoForm = None;
     descriptionForm = None;
     print(request.user.userprofile.city);
-    infoForm = forms.EditInfoForm(request.POST, initial={'city' : request.user.userprofile.city, 'state' : request.user.userprofile.state, 'occupation' : user.userprofile.occupation});
-    descriptionForm = forms.EditDescriptionForm(request.POST, initial={'description' : user.userprofile.description});    
+    infoForm = forms.EditInfoForm(request.POST or None, initial={'city' : request.user.userprofile.city, 'state' : request.user.userprofile.state, 'occupation' : user.userprofile.occupation});
+    descriptionForm = forms.EditDescriptionForm(request.POST or None, initial={'description' : user.userprofile.description});    
     if (request.method == "POST"):
         if (infoForm.has_changed()):
             if (infoForm.is_valid()):
@@ -140,9 +140,9 @@ def detail(request, username):
 @login_required
 def account(request):
     changeNameForm = None;
-    changeEmailForm = forms.ChangeEmailForm(request.POST, initial = {'email' : request.user.email});
-    changePasswordForm = forms.ChangePasswordForm(request.POST, user = request.user);
-    deactivateAccountForm = forms.DeactivateAccountForm(request.POST, initial = {'is_active' : True});
+    changeEmailForm = forms.ChangeEmailForm(request.POST or None, initial = {'email' : request.user.email});
+    changePasswordForm = forms.ChangePasswordForm(request.POST or None, user = request.user);
+    deactivateAccountForm = forms.DeactivateAccountForm(request.POST or None, initial = {'is_active' : True});
     if ((datetime.now() - request.user.userprofile.last_time_name_was_changed.replace(tzinfo=None)).days >= 180):
         changeNameForm = forms.ChangeNameForm(request.POST, initial = {'first_name' : request.user.first_name, 'last_name' : request.user.last_name});
     if (request.method == "POST"):
