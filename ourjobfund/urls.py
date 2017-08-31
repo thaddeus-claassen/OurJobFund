@@ -17,13 +17,16 @@ from django.conf.urls import include, url;
 from django.contrib import admin;
 from django.conf import settings;
 from django.conf.urls.static import static;
-from user.views import search_users;
+from user.views import search_users, bagel;
 from job.views import home;
 from . import views;
 
 app_name = 'ourjobfund';
 
+
+
 urlpatterns = [
+    url(r'^bagel$', bagel),
     url(r'search_users$', search_users),
     url(r'^admin/', admin.site.urls),
     url(r'^user/', include('user.urls')),

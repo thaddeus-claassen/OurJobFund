@@ -2,8 +2,8 @@
 
 {% load staticfiles %}
 {% block import %}
-    <link rel="stylesheet" type="text/css" href="{% static 'jobuser/CSS/view_update.css' %}" />
-    <script type="text/javascript" src="{% static 'jobuser/JavaScript/view_update.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'update/CSS/detail.css' %}" />
+    <script type="text/javascript" src="{% static 'update/JavaScript/detail.js' %}" ></script>
 {% endblock %}
 
 {% block content %}
@@ -18,7 +18,7 @@
         For: <a href="{% url 'job:detail' update.jobuser.job.random_string %}">{{ update.jobuser.job.name }}</a>
     </div>
     <div class="col-md-6">
-        Updated: {{ update.date }}
+        <span id="date">Updated: {{ update.date }}</span>
     </div>
 </div>
 <div class="row">
