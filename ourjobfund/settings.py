@@ -164,7 +164,7 @@ ABSOLUTE_URL_OVERRIDES = {
     'auth.user': lambda u: "/user/%s/" % u.username,
 }
 
-STRIPE_PUBLIC_TEST_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "<your publishable test key>")
-STRIPE_SECRET_TEST_KEY = os.environ.get("STRIPE_SECRET_KEY", "sk_test_JvyyL77qDrRlG90842qXtRZL")
-STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "<your publishable test key>")
-STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "<your secret test key>")
+STRIPE_PUBLIC_TEST_KEY = os.environ.get("STRIPE_PUBLIC_TEST_KEY", "pk_test_DF7zGC0IPpcOQyWr2nWHVLZ6")
+STRIPE_SECRET_TEST_KEY = os.environ.get("STRIPE_SECRET_TEST_KEY", "sk_test_JvyyL77qDrRlG90842qXtRZL")
+STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "pk_live_hnelJiOr7o4nSELeKYU8AcO7")
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "sk_live_j0hce7FALLpVJvrHyfW3Ar77")
