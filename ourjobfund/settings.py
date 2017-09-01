@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'pinax.stripe',
     'rest_framework',
     'job',
     'user',
@@ -52,6 +54,9 @@ INSTALLED_APPS = [
     'contact',
     'terms_of_service',
 ]
+
+# This has something to do with using Stripe.
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -159,4 +164,7 @@ ABSOLUTE_URL_OVERRIDES = {
     'auth.user': lambda u: "/user/%s/" % u.username,
 }
 
-STRIPE_API_KEY = "sk_test_JvyyL77qDrRlG90842qXtRZL";
+STRIPE_PUBLIC_TEST_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "<your publishable test key>")
+STRIPE_SECRET_TEST_KEY = os.environ.get("STRIPE_SECRET_KEY", "sk_test_JvyyL77qDrRlG90842qXtRZL")
+STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "<your publishable test key>")
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "<your secret test key>")

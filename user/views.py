@@ -12,9 +12,6 @@ from datetime import datetime;
 from random import randint;
 import logging;
 
-def bagel(request):
-    return HttpResponse("<html>Hi</html>");
-
 def sign_in(request):
     if (request.user.is_authenticated()):
         return redirect('job:home');
@@ -115,7 +112,6 @@ def detail(request, username):
     user = get_object_or_404(User, username=username);
     infoForm = None;
     descriptionForm = None;
-    print(request.user.userprofile.city);
     infoForm = forms.EditInfoForm(request.POST or None, initial={'city' : request.user.userprofile.city, 'state' : request.user.userprofile.state, 'occupation' : user.userprofile.occupation});
     descriptionForm = forms.EditDescriptionForm(request.POST or None, initial={'description' : user.userprofile.description});    
     if (request.method == "POST"):

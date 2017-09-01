@@ -13,7 +13,7 @@ from .forms import NewJobForm;
 import json, re, math;
 from random import randint;
 from jobuser.forms import PledgeForm;
-from ourjobfund.settings import STRIPE_API_KEY, STATIC_ROOT;
+from ourjobfund.settings import STRIPE_SECRET_TEST_KEY, STATIC_ROOT;
 import stripe;
 
 @login_required
@@ -139,7 +139,7 @@ def detail(request, job_random_string):
             job.save()
         elif ('stripeToken' in request.POST):
             receiver_username = request.POST['pay_to'];
-            stripe.api_key = STRIPE_API_KEY;
+            stripe.api_key = STRIPE_SECRET_TEST_KEY;
             token = request.POST['stripeToken'];
             amount_paying = int(request.POST['pay_amount']);
             charge = stripe.Charge.create(
