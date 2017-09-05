@@ -44,10 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'pinax.stripe',
     'rest_framework',
     'jquery',
-    'bootstrap3',
     'job',
     'user',
     'jobuser',
@@ -57,8 +55,12 @@ INSTALLED_APPS = [
     'terms_of_service',
 ]
 
-# This has something to do with using Stripe.
-SITE_ID = 1
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAdminUser',
+    ],
+    'PAGE_SIZE': 10
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
