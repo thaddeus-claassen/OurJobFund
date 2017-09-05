@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'pinax.stripe',
     'rest_framework',
+    'jquery',
+    'bootstrap3',
     'job',
     'user',
     'jobuser',

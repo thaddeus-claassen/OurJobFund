@@ -22,11 +22,7 @@ class Job(models.Model):
     random_string = models.CharField(default='', max_length=100);
     
     def __str__(self):  
-        return self.name;   
-
-    def get_absolute_url(self):
-        from django.urls import reverse
-        return reverse('job.views.detail', args=[str(self.random_string)])
+        return self.name;
 
 class Tag(models.Model):         
     tag = models.CharField(max_length=30, validators=[alphanumeric]);

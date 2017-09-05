@@ -1,3 +1,17 @@
+#edit_description, #edit_info {
+    float: right;
+}
+
+#info-wrapper {
+    border: 1px solid black;
+    height: 300px;
+    width: 100%;
+}
+
+.change-info-wrapper {
+    display: none;
+}
+
 #edit_div, #textarea_description, #save_description {
     display: none;
 }

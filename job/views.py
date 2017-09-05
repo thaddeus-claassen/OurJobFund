@@ -22,10 +22,19 @@ def home(request):
     if (job_random_string is not None):
         job = get_object_or_404(Job, random_string=job_random_string);
         code = request.GET.get('code', None);
+        print(code);
         request.user.userprofile.stripe_account_id = code;
-        work = Work(jobuser=JobUser.objects.get(user=request.user, job=job));
+        print(request.user.userprofile.stripe_account_id)
+        request.user.userprofile.save();
+        jobuser = None;
+        if (JobUser.objects.filter(user=request.user, job=job).exists()):
+            jobuser = JobUser.objects.get(user=request.user, job=job);
+        else:
+            jobuser = JobUser(user=request.user, job=job);
+            jobuser.save();
+        work = Work(jobuser=jobuser);
         work.save();
-        return redirect(job);
+        return redirect('job:detail', job.random_string);
     return render(request, 'job/home.html');
     
 @login_required
