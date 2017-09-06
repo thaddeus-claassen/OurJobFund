@@ -4,7 +4,7 @@ from django.http import HttpResponse, Http404;
 from django.contrib.auth.models import User;
 from jobuser.models import JobUser;
 from .models import Update;
-from user.models import Notification;
+from notification.models import Notification;
 from job.models import Job;
 from .forms import UpdateForm;
 from random import randint;

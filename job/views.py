@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required;
 from django.shortcuts import render, get_object_or_404, redirect;
 from .models import Job, Tag, User, Image;
 from .serializers import JobSerializer;
-from user.models import Notification;
+from notification.models import Notification;
 from django.db.models import Q;
 from jobuser.models import JobUser, Pledge, Pay, Work, Finish;
 from update.models import Update;
