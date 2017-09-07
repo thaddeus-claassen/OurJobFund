@@ -44,9 +44,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'rest_framework',
-    'jquery',
-    'bootstrap3',
     'job',
     'user',
     'jobuser',
@@ -174,38 +171,3 @@ STRIPE_PUBLIC_TEST_KEY = os.environ.get("STRIPE_PUBLIC_TEST_KEY", "pk_test_DF7zG
 STRIPE_SECRET_TEST_KEY = os.environ.get("STRIPE_SECRET_TEST_KEY", "sk_test_JvyyL77qDrRlG90842qXtRZL")
 STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "pk_live_hnelJiOr7o4nSELeKYU8AcO7")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "sk_live_j0hce7FALLpVJvrHyfW3Ar77")
-
-LOGGING_CONFIG = None
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
-            'datefmt' : "%d/%b/%Y %H:%M:%S"
-        },
-        'simple': {
-            'format': '[%(asctime)s] %(levelname)s %(message)s',
-            'datefmt' : "%d/%b/%Y %H:%M:%S"
-        },
-    },
-    'handlers': {
-        'djangofile': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': 'logs/django.log',
-            'when':'midnight',
-            'backupCount':7,
-            'formatter': 'verbose'
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers':['djangofile'],
-            'propagate': True,
-            'level':'DEBUG',
-        },
-    }
-}
-import logging.config
-logging.config.dictConfig(LOGGING)
