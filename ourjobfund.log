@@ -1,0 +1,96 @@
+(0.000) 
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None
+(0.000) SELECT "django_migrations"."app", "django_migrations"."name" FROM "django_migrations"; args=()
+(0.000) 
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None
+(0.000) SELECT "django_migrations"."app", "django_migrations"."name" FROM "django_migrations"; args=()
+(0.004) SELECT "django_session"."session_key", "django_session"."session_data", "django_session"."expire_date" FROM "django_session" WHERE ("django_session"."expire_date" > '2017-09-08 22:02:42.741757' AND "django_session"."session_key" = 'vmhum4a7nd0ab7yt2elrnwu41pwiimij'); args=('2017-09-08 22:02:42.741757', 'vmhum4a7nd0ab7yt2elrnwu41pwiimij')
+(0.001) SELECT "auth_user"."id", "auth_user"."password", "auth_user"."last_login", "auth_user"."is_superuser", "auth_user"."username", "auth_user"."first_name", "auth_user"."last_name", "auth_user"."email", "auth_user"."is_staff", "auth_user"."is_active", "auth_user"."date_joined" FROM "auth_user" WHERE "auth_user"."id" = 70; args=(70,)
+(0.001) SELECT "job_job"."id", "job_job"."is_finished", "job_job"."name", "job_job"."creation_date", "job_job"."creation_datetime", "job_job"."pledged", "job_job"."paid", "job_job"."workers", "job_job"."finished", "job_job"."location", "job_job"."latitude", "job_job"."longitude", "job_job"."description", "job_job"."created_by_id", "job_job"."random_string" FROM "job_job" WHERE "job_job"."random_string" = 'JmflpzO4kREsrdVqpDD6f0fqc0QV0xuiTif1sXTPGiO2fNM2lK'; args=('JmflpzO4kREsrdVqpDD6f0fqc0QV0xuiTif1sXTPGiO2fNM2lK',)
+(0.001) SELECT "jobuser_jobuser"."id", "jobuser_jobuser"."user_id", "jobuser_jobuser"."job_id", "jobuser_jobuser"."amount_pledged", "jobuser_jobuser"."amount_paid" FROM "jobuser_jobuser" WHERE ("jobuser_jobuser"."job_id" = 1120 AND "jobuser_jobuser"."user_id" = 70); args=(1120, 70)
+(0.001) SELECT "auth_user"."id", "auth_user"."password", "auth_user"."last_login", "auth_user"."is_superuser", "auth_user"."username", "auth_user"."first_name", "auth_user"."last_name", "auth_user"."email", "auth_user"."is_staff", "auth_user"."is_active", "auth_user"."date_joined" FROM "auth_user" WHERE "auth_user"."id" = 70; args=(70,)
+(0.001) SELECT "notification_notification"."id", "notification_notification"."user_id", "notification_notification"."job_id", "notification_notification"."type" FROM "notification_notification" WHERE "notification_notification"."user_id" = 70; args=(70,)
+(0.000) SELECT "notification_notification"."id", "notification_notification"."user_id", "notification_notification"."job_id", "notification_notification"."type" FROM "notification_notification" WHERE "notification_notification"."user_id" = 70; args=(70,)
+(0.001) SELECT "job_job"."id", "job_job"."is_finished", "job_job"."name", "job_job"."creation_date", "job_job"."creation_datetime", "job_job"."pledged", "job_job"."paid", "job_job"."workers", "job_job"."finished", "job_job"."location", "job_job"."latitude", "job_job"."longitude", "job_job"."description", "job_job"."created_by_id", "job_job"."random_string" FROM "job_job" WHERE "job_job"."id" = 1120; args=(1120,)
+"GET /update/create/JmflpzO4kREsrdVqpDD6f0fqc0QV0xuiTif1sXTPGiO2fNM2lK/? HTTP/1.1" 200 5625
+(0.004) SELECT "django_session"."session_key", "django_session"."session_data", "django_session"."expire_date" FROM "django_session" WHERE ("django_session"."expire_date" > '2017-09-08 22:02:45.568414' AND "django_session"."session_key" = 'vmhum4a7nd0ab7yt2elrnwu41pwiimij'); args=('2017-09-08 22:02:45.568414', 'vmhum4a7nd0ab7yt2elrnwu41pwiimij')
+(0.001) SELECT "auth_user"."id", "auth_user"."password", "auth_user"."last_login", "auth_user"."is_superuser", "auth_user"."username", "auth_user"."first_name", "auth_user"."last_name", "auth_user"."email", "auth_user"."is_staff", "auth_user"."is_active", "auth_user"."date_joined" FROM "auth_user" WHERE "auth_user"."id" = 70; args=(70,)
+(0.000) SELECT "notification_notification"."id", "notification_notification"."user_id", "notification_notification"."job_id", "notification_notification"."type" FROM "notification_notification" WHERE "notification_notification"."user_id" = 70; args=(70,)
+(0.001) SELECT "notification_notification"."id", "notification_notification"."user_id", "notification_notification"."job_id", "notification_notification"."type" FROM "notification_notification" WHERE "notification_notification"."user_id" = 70; args=(70,)
+"GET /job/ HTTP/1.1" 200 7519
+(0.003) SELECT "django_session"."session_key", "django_session"."session_data", "django_session"."expire_date" FROM "django_session" WHERE ("django_session"."expire_date" > '2017-09-08 22:02:58.406068' AND "django_session"."session_key" = 'vmhum4a7nd0ab7yt2elrnwu41pwiimij'); args=('2017-09-08 22:02:58.406068', 'vmhum4a7nd0ab7yt2elrnwu41pwiimij')
+(0.000) SELECT "auth_user"."id", "auth_user"."password", "auth_user"."last_login", "auth_user"."is_superuser", "auth_user"."username", "auth_user"."first_name", "auth_user"."last_name", "auth_user"."email", "auth_user"."is_staff", "auth_user"."is_active", "auth_user"."date_joined" FROM "auth_user" WHERE "auth_user"."id" = 70; args=(70,)
+(0.001) SELECT "auth_user"."id", "auth_user"."password", "auth_user"."last_login", "auth_user"."is_superuser", "auth_user"."username", "auth_user"."first_name", "auth_user"."last_name", "auth_user"."email", "auth_user"."is_staff", "auth_user"."is_active", "auth_user"."date_joined" FROM "auth_user" WHERE "auth_user"."username" = 'xx1'; args=('xx1',)
+Internal Server Error: /user/xx1/
+Traceback (most recent call last):
+  File "C:\Users\Thaddeus\AppData\Local\Programs\Python\Python35-32\lib\site-packages\django\core\handlers\exception.py", line 39, in inner
+    response = get_response(request)
+  File "C:\Users\Thaddeus\AppData\Local\Programs\Python\Python35-32\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\Thaddeus\AppData\Local\Programs\Python\Python35-32\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Thaddeus\AppData\Local\Programs\Python\Python35-32\lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Thaddeus\Desktop\ourjobfund\user\views.py", line 115, in detail
+    infoForm = forms.EditInfoForm(request.POST or None, initial={'city' : request.user.userprofile.city, 'state' : request.user.userprofile.state, 'occupation' : user.userprofile.occupation});
+NameError: name 'forms' is not defined
+"GET /user/xx1/ HTTP/1.1" 500 74638
+(0.000) 
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None
+(0.000) SELECT "django_migrations"."app", "django_migrations"."name" FROM "django_migrations"; args=()
+(0.002) SELECT "django_session"."session_key", "django_session"."session_data", "django_session"."expire_date" FROM "django_session" WHERE ("django_session"."expire_date" > '2017-09-08 22:03:29.004451' AND "django_session"."session_key" = 'vmhum4a7nd0ab7yt2elrnwu41pwiimij'); args=('2017-09-08 22:03:29.004451', 'vmhum4a7nd0ab7yt2elrnwu41pwiimij')
+(0.000) SELECT "auth_user"."id", "auth_user"."password", "auth_user"."last_login", "auth_user"."is_superuser", "auth_user"."username", "auth_user"."first_name", "auth_user"."last_name", "auth_user"."email", "auth_user"."is_staff", "auth_user"."is_active", "auth_user"."date_joined" FROM "auth_user" WHERE "auth_user"."id" = 70; args=(70,)
+(0.001) SELECT "auth_user"."id", "auth_user"."password", "auth_user"."last_login", "auth_user"."is_superuser", "auth_user"."username", "auth_user"."first_name", "auth_user"."last_name", "auth_user"."email", "auth_user"."is_staff", "auth_user"."is_active", "auth_user"."date_joined" FROM "auth_user" WHERE "auth_user"."username" = 'xx1'; args=('xx1',)
+(0.000) SELECT "user_userprofile"."id", "user_userprofile"."user_id", "user_userprofile"."description", "user_userprofile"."city", "user_userprofile"."state", "user_userprofile"."occupation", "user_userprofile"."last_time_name_was_changed", "user_userprofile"."stripe_account_id" FROM "user_userprofile" WHERE "user_userprofile"."user_id" = 70; args=(70,)
+(0.000) SELECT "user_userprofile"."id", "user_userprofile"."user_id", "user_userprofile"."description", "user_userprofile"."city", "user_userprofile"."state", "user_userprofile"."occupation", "user_userprofile"."last_time_name_was_changed", "user_userprofile"."stripe_account_id" FROM "user_userprofile" WHERE "user_userprofile"."user_id" = 70; args=(70,)
+(0.001) SELECT "notification_notification"."id", "notification_notification"."user_id", "notification_notification"."job_id", "notification_notification"."type" FROM "notification_notification" WHERE "notification_notification"."user_id" = 70; args=(70,)
+(0.000) SELECT "notification_notification"."id", "notification_notification"."user_id", "notification_notification"."job_id", "notification_notification"."type" FROM "notification_notification" WHERE "notification_notification"."user_id" = 70; args=(70,)
+(0.000) SELECT "jobuser_jobuser"."id", "jobuser_jobuser"."user_id", "jobuser_jobuser"."job_id", "jobuser_jobuser"."amount_pledged", "jobuser_jobuser"."amount_paid" FROM "jobuser_jobuser" INNER JOIN "job_job" ON ("jobuser_jobuser"."job_id" = "job_job"."id") WHERE ("jobuser_jobuser"."user_id" = 70 AND ("job_job"."pledged" = 0 OR "job_job"."pledged" > ("job_job"."paid"))) LIMIT 21; args=(70, 0)
+(0.000) SELECT "jobuser_jobuser"."id", "jobuser_jobuser"."user_id", "jobuser_jobuser"."job_id", "jobuser_jobuser"."amount_pledged", "jobuser_jobuser"."amount_paid" FROM "jobuser_jobuser" INNER JOIN "job_job" ON ("jobuser_jobuser"."job_id" = "job_job"."id") WHERE ("jobuser_jobuser"."user_id" = 70 AND "job_job"."pledged" > 0 AND "job_job"."pledged" <= ("job_job"."paid")) LIMIT 21; args=(70, 0)
+Exception while resolving variable 'id' in template 'user/detail.html'.
+Traceback (most recent call last):
+  File "C:\Users\Thaddeus\AppData\Local\Programs\Python\Python35-32\lib\site-packages\django\template\base.py", line 885, in _resolve_lookup
+    current = current[bit]
+  File "C:\Users\Thaddeus\AppData\Local\Programs\Python\Python35-32\lib\site-packages\django\template\context.py", line 75, in __getitem__
+    raise KeyError(key)
+KeyError: 'id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Thaddeus\AppData\Local\Programs\Python\Python35-32\lib\site-packages\django\template\base.py", line 891, in _resolve_lookup
+    if isinstance(current, BaseContext) and getattr(type(current), bit):
+AttributeError: type object 'RequestContext' has no attribute 'id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Thaddeus\AppData\Local\Programs\Python\Python35-32\lib\site-packages\django\template\base.py", line 900, in _resolve_lookup
+    current = current[int(bit)]
+ValueError: invalid literal for int() with base 10: 'id'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Thaddeus\AppData\Local\Programs\Python\Python35-32\lib\site-packages\django\template\base.py", line 907, in _resolve_lookup
+    (bit, current))  # missing attribute
+django.template.base.VariableDoesNotExist: Failed lookup for key [id] in '[{\'True\': True, \'None\': None, \'False\': False}, {\'messages\': <django.contrib.messages.storage.fallback.FallbackStorage object at 0x04D4FDD0>, \'perms\': <django.contrib.auth.context_processors.PermWrapper object at 0x05A0A450>, \'csrf_token\': <SimpleLazyObject: <function csrf.<locals>._get_val at 0x0534A930>>, \'DEFAULT_MESSAGE_LEVELS\': {\'ERROR\': 40, \'SUCCESS\': 25, \'INFO\': 20, \'WARNING\': 30, \'DEBUG\': 10}, \'user\': <SimpleLazyObject: <User: xx1>>, \'request\': <WSGIRequest: GET \'/user/xx1/\'>}, {}, {\'current_jobusers\': <QuerySet [<JobUser: JobUser object>, <JobUser: JobUser object>, <JobUser: JobUser object>]>, \'info_form\': <EditInfoForm bound=False, valid=Unknown, fields=(city;state;occupation)>, \'description_form\': <EditDescriptionForm bound=False, valid=Unknown, fields=(description)>, \'finished_jobusers\': <QuerySet []>, \'detail_user\': <User: xx1>}, {\'block\': <Block Node: content. Contents: [<TextNode: \'\\n<input id="user_id" type\'>, <Variable Node: id>, <TextNode: \'" />\\n<div class="row">\\n  \'>, <Variable Node: detail_user.first_name>, <TextNode: \'&nbsp;\'>, <Variable Node: detail_user.last_name>, <TextNode: \'</h4>\\n    </div>\\n</div>\\n<\'>, <IfNode>, <TextNode: \'\\n            </div>\\n     \'>, <Variable Node: detail_user.userprofile.city>, <TextNode: \'\\n                    </di\'>, <Variable Node: detail_user.userprofile.state>, <TextNode: \'\\n                    </di\'>, <Variable Node: detail_user.userprofile.occupation>, <TextNode: \'\\n                    </di\'>, <IfNode>, <TextNode: \'\\n        </div>\\n    </div\'>, <IfNode>, <TextNode: \'\\n            </div>\\n     \'>, <Variable Node: detail_user.userprofile.description>, <TextNode: \'</span>\\n                <\'>, <IfNode>, <TextNode: \' \\n            </div>\\n    \'>, <For Node: for current_jobuser in current_jobusers, tail_len: 15>, <TextNode: \'\\n                    </tb\'>, <Variable Node: current_jobusers.count>, <TextNode: \'</td>\\n                   \'>, <For Node: for finished_jobuser in finished_jobusers, tail_len: 15>, <TextNode: \'\\n                    </tb\'>, <Variable Node: finished_jobusers.count>, <TextNode: \'</td>\\n                   \'>]>}]'
+(0.000) SELECT "jobuser_jobuser"."id", "jobuser_jobuser"."user_id", "jobuser_jobuser"."job_id", "jobuser_jobuser"."amount_pledged", "jobuser_jobuser"."amount_paid" FROM "jobuser_jobuser" INNER JOIN "job_job" ON ("jobuser_jobuser"."job_id" = "job_job"."id") WHERE ("jobuser_jobuser"."user_id" = 70 AND ("job_job"."pledged" = 0 OR "job_job"."pledged" > ("job_job"."paid"))); args=(70, 0)
+(0.000) SELECT "job_job"."id", "job_job"."is_finished", "job_job"."name", "job_job"."creation_date", "job_job"."creation_datetime", "job_job"."pledged", "job_job"."paid", "job_job"."workers", "job_job"."finished", "job_job"."location", "job_job"."latitude", "job_job"."longitude", "job_job"."description", "job_job"."created_by_id", "job_job"."random_string" FROM "job_job" WHERE "job_job"."id" = 1112; args=(1112,)
+(0.000) SELECT (1) AS "a" FROM "jobuser_work" WHERE "jobuser_work"."jobuser_id" = 19 LIMIT 1; args=(19,)
+(0.000) SELECT (1) AS "a" FROM "jobuser_finish" WHERE "jobuser_finish"."jobuser_id" = 19 LIMIT 1; args=(19,)
+(0.000) SELECT "job_job"."id", "job_job"."is_finished", "job_job"."name", "job_job"."creation_date", "job_job"."creation_datetime", "job_job"."pledged", "job_job"."paid", "job_job"."workers", "job_job"."finished", "job_job"."location", "job_job"."latitude", "job_job"."longitude", "job_job"."description", "job_job"."created_by_id", "job_job"."random_string" FROM "job_job" WHERE "job_job"."id" = 1119; args=(1119,)
+(0.000) SELECT (1) AS "a" FROM "jobuser_work" WHERE "jobuser_work"."jobuser_id" = 26 LIMIT 1; args=(26,)
+(0.000) SELECT (1) AS "a" FROM "jobuser_finish" WHERE "jobuser_finish"."jobuser_id" = 26 LIMIT 1; args=(26,)
+(0.000) SELECT "job_job"."id", "job_job"."is_finished", "job_job"."name", "job_job"."creation_date", "job_job"."creation_datetime", "job_job"."pledged", "job_job"."paid", "job_job"."workers", "job_job"."finished", "job_job"."location", "job_job"."latitude", "job_job"."longitude", "job_job"."description", "job_job"."created_by_id", "job_job"."random_string" FROM "job_job" WHERE "job_job"."id" = 1120; args=(1120,)
+(0.000) SELECT (1) AS "a" FROM "jobuser_work" WHERE "jobuser_work"."jobuser_id" = 27 LIMIT 1; args=(27,)
+(0.000) SELECT (1) AS "a" FROM "jobuser_finish" WHERE "jobuser_finish"."jobuser_id" = 27 LIMIT 1; args=(27,)
+(0.000) SELECT "jobuser_jobuser"."id", "jobuser_jobuser"."user_id", "jobuser_jobuser"."job_id", "jobuser_jobuser"."amount_pledged", "jobuser_jobuser"."amount_paid" FROM "jobuser_jobuser" INNER JOIN "job_job" ON ("jobuser_jobuser"."job_id" = "job_job"."id") WHERE ("jobuser_jobuser"."user_id" = 70 AND "job_job"."pledged" > 0 AND "job_job"."pledged" <= ("job_job"."paid")); args=(70, 0)
+"GET /user/xx1/ HTTP/1.1" 200 14587
+"GET /static/user/CSS/detail.css HTTP/1.1" 304 0
