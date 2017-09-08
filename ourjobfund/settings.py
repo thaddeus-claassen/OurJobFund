@@ -167,6 +167,48 @@ ABSOLUTE_URL_OVERRIDES = {
     'auth.user': lambda u: "/user/%s/" % u.username,
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'applogfile': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'ourjobfund.log'),
+            'maxBytes': 1024*1024*15, # 15MB
+            'backupCount': 10,
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'ourjobfund': {
+            'handlers': ['applogfile',],
+            'level': 'DEBUG',
+        },
+    },
+}
+
 STRIPE_PUBLIC_TEST_KEY = os.environ.get("STRIPE_PUBLIC_TEST_KEY", "pk_test_DF7zGC0IPpcOQyWr2nWHVLZ6")
 STRIPE_SECRET_TEST_KEY = os.environ.get("STRIPE_SECRET_TEST_KEY", "sk_test_JvyyL77qDrRlG90842qXtRZL")
 STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "pk_live_hnelJiOr7o4nSELeKYU8AcO7")
