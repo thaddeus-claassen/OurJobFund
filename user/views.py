@@ -41,7 +41,8 @@ def sign_in(request):
                     user.set_password(password);
                     user.username = createNewUsername(first_name, last_name);
                     user.save();
-                    UserProfile(user=user).save();
+                    profile = UserProfile(user=user);
+                    profile.save();
                     user = authenticate(username=user.username, password=password);
                     if (user is not None):
                         login(request, user);
