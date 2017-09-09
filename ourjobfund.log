@@ -94,3 +94,8 @@ django.template.base.VariableDoesNotExist: Failed lookup for key [id] in '[{\'Tr
 (0.000) SELECT "jobuser_jobuser"."id", "jobuser_jobuser"."user_id", "jobuser_jobuser"."job_id", "jobuser_jobuser"."amount_pledged", "jobuser_jobuser"."amount_paid" FROM "jobuser_jobuser" INNER JOIN "job_job" ON ("jobuser_jobuser"."job_id" = "job_job"."id") WHERE ("jobuser_jobuser"."user_id" = 70 AND "job_job"."pledged" > 0 AND "job_job"."pledged" <= ("job_job"."paid")); args=(70, 0)
 "GET /user/xx1/ HTTP/1.1" 200 14587
 "GET /static/user/CSS/detail.css HTTP/1.1" 304 0
+(0.003) 
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None
+(0.000) SELECT "django_migrations"."app", "django_migrations"."name" FROM "django_migrations"; args=()
