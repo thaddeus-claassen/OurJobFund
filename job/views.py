@@ -15,6 +15,9 @@ from random import randint;
 from jobuser.forms import PledgeForm;
 from ourjobfund.settings import STRIPE_SECRET_TEST_KEY, STATIC_ROOT;
 import stripe;
+import logging;
+
+logger = logging.getLogger(__name__);
 
 @login_required
 def home(request):
@@ -227,13 +230,18 @@ def create_job(request):
             job.save();
             if (tags != ''):
                 tagsArray = tags.split(" ");
+                print("Number of tags: " + str(len(tagsArray)))
+                for tag in tagsArray:
+                    print(tag);
                 for tagString in tagsArray:
                     newTag = None;
                     if (Tag.objects.filter(tag__iexact=tagString).exists()):
+                        print("The tag already exists");
                         newTag = Tag.objects.get(tag__iexact=tagString);
-                        newTag.save();
                     else:
+                        print("The tag does not already exist")
                         newTag = Tag(tag=tagString);
+                        newTag.save();
                     job.tag_set.add(newTag);
             for image in request.FILES.getlist('image_set'):
                 image = Image(image=image, job=job);

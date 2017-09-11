@@ -52,6 +52,9 @@ INSTALLED_APPS = [
     'about',
     'contact',
     'terms_of_service',
+    'django_static_jquery',
+    'bootstrap3',
+    'rest_framework',
 ]
 
 REST_FRAMEWORK = {
