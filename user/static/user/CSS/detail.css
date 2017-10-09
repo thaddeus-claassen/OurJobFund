@@ -1,18 +1,15 @@
-#edit_description, #edit_info {
+#edit_description, #edit_info, #save_description, #save_info {
     float: right;
+    cursor: pointer;
 }
 
-#info-wrapper {
+#info-wrapper, #description-wrapper {
     border: 1px solid black;
     height: 300px;
     width: 100%;
 }
 
-.change-info-wrapper {
-    display: none;
-}
-
-#edit_div, #textarea_description, #save_description {
+.change-info-wrapper, .change-description-wrapper {
     display: none;
 }
 
@@ -21,8 +18,8 @@
     margin-left: 10px;
 }
 
-#edit_description, #save_description { 
-    float: right;
+textarea {
+    resize: none;
 }
 
 #textarea_description {
@@ -31,9 +28,6 @@
 }
 
 #textarea_description, #description_div {
-    border: 1px solid black;
-    width: 100%;
-    height: 300px;
     overflow: auto;
 }
 

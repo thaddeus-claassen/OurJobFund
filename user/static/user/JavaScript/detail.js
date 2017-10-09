@@ -7,6 +7,10 @@ $('document').ready(function() {
         $('.no-change-info-wrapper').css('display', 'none');
         $('.change-info-wrapper').css('display', 'inline');
     });
+    $('#edit_description').click(function() {
+        $('.no-change-description-wrapper').css('display', 'none');
+        $('.change-description-wrapper').css('display', 'inline');
+    });
 });
 
 function changeTHeadTFootWidthToAccountForScrollBar() {

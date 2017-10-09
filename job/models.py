@@ -24,9 +24,9 @@ class Job(models.Model):
     def __str__(self):  
         return self.name;
 
-class Tag(models.Model):         
+class Tag(models.Model):
+    jobs = models.ManyToManyField(Job);    
     tag = models.CharField(max_length=30, validators=[alphanumeric]);
-    jobs = models.ManyToManyField(Job);
 
     def __str__(self):
         return self.tag;

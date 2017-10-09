@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required;
 from django.shortcuts import render, get_object_or_404, redirect;
 from .models import Job, Tag, User, Image;
-#from .serializers import JobSerializer;
+from .serializers import JobSerializer;
 from notification.models import Notification;
 from django.db.models import Q;
 from jobuser.models import JobUser, Pledge, Pay, Work, Finish;
@@ -9,15 +9,14 @@ from update.models import Update;
 from django.http import JsonResponse, HttpResponse, Http404;
 from django.core import serializers;
 from django.contrib.auth import authenticate, login, logout;
+from rest_framework.renderers import JSONRenderer;
+from filter.forms import PledgeFilterForm, WorkerFilterForm;
 from .forms import NewJobForm;
 import json, re, math;
 from random import randint;
 from jobuser.forms import PledgeForm;
 from ourjobfund.settings import STRIPE_SECRET_TEST_KEY, STATIC_ROOT;
 import stripe;
-import logging;
-
-logger = logging.getLogger(__name__);
 
 @login_required
 def home(request):
@@ -25,9 +24,7 @@ def home(request):
     if (job_random_string is not None):
         job = get_object_or_404(Job, random_string=job_random_string);
         code = request.GET.get('code', None);
-        print(code);
         request.user.userprofile.stripe_account_id = code;
-        print(request.user.userprofile.stripe_account_id)
         request.user.userprofile.save();
         jobuser = None;
         if (JobUser.objects.filter(user=request.user, job=job).exists()):
@@ -38,15 +35,21 @@ def home(request):
         work = Work(jobuser=jobuser);
         work.save();
         return redirect('job:detail', job.random_string);
-    return render(request, 'job/home.html');
+    context = {
+        'pledge_filter_form' : PledgeFilterForm(instance=request.user.pledgefilter),
+        'worker_filter_form' : WorkerFilterForm(instance=request.user.workerfilter),
+    };
+    return render(request, 'job/home.html', context);
+    
     
 @login_required
 def get_jobs(request):
     if (request.is_ajax()):
         jobs = findJobs(request);
         jobs = jobs[0:50];
-        jobs = serializers.serialize('json', jobs);
-        return HttpResponse(jobs, content_type="application/json");
+        serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
+        json = JSONRenderer().render(serializer.data);
+        return HttpResponse(json, content_type="application/json");
     else:
         return Http404();
 

@@ -145,22 +145,23 @@ function addJobsToTable(json) {
     if (numJobs > 0) {
         for (var index = 0; index < json.length; index++) {
             var job = json[index];
-            var fields = job["fields"];
-            var string = "<tr><td class='name'><a href='" + fields["random_string"] + "'>";
-            string = string + fields["name"] + "</a></td>";
-            string = string + "<td class='date'>" + fields['creation_date'] + "</td>";
-            string = string + "<td class='pledged'>$" + fields['pledged'] + "</td>";
-            string = string + "<td class='paid'>$" + fields['paid'] + "</td>";
-            string = string + "<td class='workers'>" + fields['workers'] + "</td>";
-            string = string + "<td class='finished'>" + fields['finished'] + "</td></tr>";
+            var string = "<tr><td class='name'><a href='" + job["random_string"] + "'>";
+            string = string + job["name"] + "</a></td>";
+            string = string + "<td class='date'>" + job['creation_date'] + "</td>";
+            string = string + "<td class='pledged'>$" + job['pledged'] + "</td>";
+            string = string + "<td class='expected_pay'>$" + job['expected_pay'] + "</td>";
+            string = string + "<td class='paid'>$" + job['paid'] + "</td>";
+            string = string + "<td class='workers'>" + job['workers'] + "</td>";
+            string = string + "<td class='expected_workers'>" + job['expected_workers'] + "</td>";
+            string = string + "<td class='finished'>" + job['finished'] + "</td></tr>";
             $('#main_table_body').append(string);
             if ($('#location').val() != "") {
-                addMarker(new google.maps.LatLng(fields['latitude'],fields['longitude']));    
+                addMarker(new google.maps.LatLng(job['latitude'],job['longitude']));    
             }// end if
         }// end for
     }// end if
     return numJobs;
-}// end addJobsToTable
+}// end addJobsToTable()
 
 function toggleAdvancedSearch() {
     $('#toggle-advanced-settings').click(function(event) {

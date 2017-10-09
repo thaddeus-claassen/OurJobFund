@@ -37,16 +37,16 @@ tbody {
 }
 
 .name {
-    width: 35%;
-    float: left;
-}
-
-.date {
     width: 25%;
     float: left;
 }
 
-.pledged, .paid, .workers, .finished {
+.date {
+    width: 15%;
+    float: left;
+}
+
+.expected_pay, .expected_workers, .pledged, .paid, .workers, .finished {
     width: 10%;
     float: left;
 }
@@ -57,10 +57,11 @@ tfoot td {
 }
 
 tfoot #job-number-footer {
-    width: 95%;
+    width: 86%;
 }
 
 #map {
     height: 200px;
     width: 100%;
+    border: 1px solid black;
 }

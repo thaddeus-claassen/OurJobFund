@@ -3,6 +3,7 @@ from django.contrib.auth.models import User;
 from job.models import Job;
 from django.urls import reverse;
 from django.core.validators import RegexValidator; 
+from annoying.fields import AutoOneToOneField;
 
 alphabetic = RegexValidator(r'^[a-zA-Z\s]+$', 'Alphabetic characters only');   
 
@@ -16,7 +17,7 @@ STATES = (
 );
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE);
+    user = AutoOneToOneField(User, primary_key=True);
     description = models.CharField(max_length=10000, blank=True);
     city = models.CharField(default="", max_length=100, blank=True, validators=[alphabetic]);
     state = models.CharField(default="", max_length=2, choices=STATES, blank=True);

@@ -81,22 +81,28 @@
             </div>
             <div class="col-md-6">
                 {% if user.username == detail_user.username %}
-                <button id="edit_description" type="button">&#9998;</button>
-                <input id="save_description" type="submit" value="Save Description" form="save_description_form" />
+                <span id="edit_description" class="no-change-description-wrapper">&#9998;</span>
+                <input id="save_description" class="change-description-wrapper" type="submit" value="Save Description" form="save_description_form" />
                 {% endif %}
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div id="description_div"> 
-                    <span id="description" form="save_description_form" >{{ detail_user.userprofile.description }}</span>
+        <div id="description-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="no-change-description-wrapper">
+                        <div id="description_div"> 
+                            <span id="description">{{ detail_user.userprofile.description }}</span>
+                        </div>
+                    </div>
+                    {% if user.username == detail_user.username %}
+                    <div class="change-description-wrapper">
+                        <form id="save_description_form" action="{{ request.get_full_path }}" method="POST">
+                        {% csrf_token %}
+                            <textarea class="form-control" name="description"></textarea>
+                        </form>
+                    </div>
+                    {% endif %} 
                 </div>
-                {% if user.username == detail_user.username %}
-                <form id="save_description_form" action="{{ request.get_full_path }}" method="POST">
-                {% csrf_token %}
-                    <textarea id="textarea_description" class="form-control" name="description"></textarea>
-                </form>
-                {% endif %} 
             </div>
         </div>
     </div>

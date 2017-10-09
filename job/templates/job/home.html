@@ -11,21 +11,80 @@
 {% block content %}
 <div id="advanced-settings-wrapper">
     <div class="row">
-        <div class="col-md-12">
-            <h1>Advanced Settings</h1>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>Pledge Filter</h4>
+                </div>
+            </div>
+        {% for field in pledge_filter_form %}
+            {% if field.auto_id == "id_not_been_active_in_the_last_n_days" %}
+            <div class="row">
+                <div class="col-md-4">
+                    Not been active in
+                </div>
+                <div class="col-md-4">
+                    {{ field }}
+                </div>
+                <div class="col-md-4">
+                    days
+                </div>
+            </div>
+            {% elif field.auto_id == "id_paid_at_least_n_times" %}
+            <div class="row">
+                <div class="col-md-4">
+                    Paid at least
+                </div>
+                <div class="col-md-4">
+                    {{ field }}
+                </div>
+                <div class="col-md-4">
+                    times
+                </div>
+            </div>
+            {% elif field.auto_id == "id_paid_at_least_n_amount_in_total" %}
+            <div class="row">
+                <div class="col-md-4">
+                    Paid at least $
+                </div>
+                <div class="col-md-4">
+                    {{ field }}
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <h1>Coming Soon</h1>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>Worker Filter</h4>
+                </div>
+            </div>
+        {% for field in worker_filter_form %}
+           {% if field.auto_id == "id_not_been_active_in_the_last_n_days" %}
+            <div class="row">
+                <div class="col-md-4">
+                    Not been active in
+                </div>
+                <div class="col-md-4">
+                    {{ field }}
+                </div>
+                <div class="col-md-4">
+                    days
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
         </div>
     </div>
 </div>
 <div id="content-wrapper">
+    <a id="show_filter">Show Filter</a>
+    <a id="hide_filter">Hide Filter</a>
     <div class="row">
         <div class="col-md-6">
-            <div class="row">
                 <input id="latitude" type="hidden" value="" />
+            <div class="row">
                 <input id="longitude" type="hidden" value="" />
                 <div class="col-md-12">
                     <input id="location" class="search" type="text" placeholder="Location" />
@@ -63,8 +122,10 @@
                         <th id="name" class="name sort">Name</th>
                         <th id="created" class="date sort">Created</th>
                         <th id="pledged" class="pledged sort">Pledged</th>
+                        <th id="expected_pay" class="expected_pay sort">Expected Pay</th>
                         <th id="paid" class="paid sort">Paid</th>
                         <th id="workers" class="workers sort">Workers</th>
+                        <th id="expected_workers" class="expected_workers sort">Expected Workers</th>
                         <th id="finished" class="finished sort">Finished</th>
                     </tr>
                 </thead>
@@ -72,6 +133,11 @@
                 <tfoot>
                     <tr>
                         <td id="job-number-footer" >Jobs Found:&nbsp;<span id="num-jobs-found">0</span></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                     </tr>

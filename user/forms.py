@@ -1,4 +1,5 @@
-from user.models import User, UserProfile, STATES;
+from django.contrib.auth.models import User;
+from user.models import UserProfile, STATES;
 from django import forms;
 from django.forms import extras;
 import re;
@@ -116,7 +117,7 @@ class ChangePasswordForm(forms.ModelForm):
         fields = ['password'];
         
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user',None)
+        self.user = kwargs.pop('user', None)
         super(ChangePasswordForm, self).__init__(*args, **kwargs)
             
     def clean_password(self):
