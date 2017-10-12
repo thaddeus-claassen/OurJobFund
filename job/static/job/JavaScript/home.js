@@ -166,7 +166,7 @@ function addJobsToTable(json) {
             string = string + "<td class='finished'>" + job['finished'] + "</td></tr>";
             $('#main_table_body').append(string);
             if ($('#location').val() != "") {
-                addMarker(new google.maps.LatLng(job['latitude'],job['longitude']));    
+                addMarker(new google.maps.LatLng(job['latitude'], job['longitude']));    
             }// end if
         }// end for
     }// end if

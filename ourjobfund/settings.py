@@ -32,7 +32,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '9b4+u#&_7u83+*85ff0x%_00hym40j5&^r-0g4__c(y)f5%co5'
+SECRET_KEY = open(os.path.join(BASE_DIR, '.django/secret_key.txt'), 'r').read();
 
 
 # Application definition
@@ -192,7 +192,7 @@ if not DEBUG:
         },
     }
 
-STRIPE_PUBLIC_TEST_KEY = os.environ.get("STRIPE_PUBLIC_TEST_KEY", "pk_test_DF7zGC0IPpcOQyWr2nWHVLZ6")
-STRIPE_SECRET_TEST_KEY = os.environ.get("STRIPE_SECRET_TEST_KEY", "sk_test_JvyyL77qDrRlG90842qXtRZL")
-STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "pk_live_hnelJiOr7o4nSELeKYU8AcO7")
-STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "sk_live_j0hce7FALLpVJvrHyfW3Ar77")
+STRIPE_PUBLIC_TEST_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_public_test_key.txt'), 'r').read();
+STRIPE_SECRET_TEST_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_test_key.txt'), 'r').read();
+STRIPE_PUBLIC_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_public_key.txt'), 'r').read();
+STRIPE_SECRET_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_key.txt'), 'r').read();

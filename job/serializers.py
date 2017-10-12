@@ -10,7 +10,7 @@ class JobSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Job;
-        fields = ['name', 'creation_date', 'pledged', 'paid', 'workers', 'finished', 'expected_pay', 'expected_workers'];
+        fields = ['name', 'creation_date', 'pledged', 'paid', 'workers', 'finished', 'expected_pay', 'expected_workers', 'random_string', 'latitude', 'longitude'];
             
     def get_expected_pay(self, job):
         pledges = Pledge.objects.filter(jobuser__job=job);

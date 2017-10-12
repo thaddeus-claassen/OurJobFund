@@ -202,7 +202,7 @@
                                 <td>{{ worker.jobuser.finish_set.all.exists }}</td>
                                 <td>{{ worker.jobuser.amount_paid }}</td>
                                 <td>
-                                    {% if worker.jobuser.pledge_set.all and request.user.username != worker.jobuser.user.username %}
+                                    {% if jobuser.pledge_set.all.exists and request.user.username != worker.jobuser.user.username %}
                                     $<input id="{{ worker.jobuser.user.username }}-amount_paying" type="text" placeholder="0" size="5" />.00
                                     <input id="{{ worker.jobuser.user.username }}-pay_button" class="pay_button" type="button" value="Pay" />
                                     {% endif %}
