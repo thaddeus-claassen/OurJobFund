@@ -7,6 +7,23 @@
     width: 100%;
 }
 
+#show_filter {
+    cursor: pointer;
+}
+
+#hide_filter {
+    display: none;
+    cursor: pointer;
+}
+
+.filter_label {
+    float: right;
+}
+
+.filter_unit {
+    float: left;
+}
+
 table {
     border: 1px solid black;
 }
