@@ -20,35 +20,35 @@
         {% for field in pledge_filter_form %}
             {% if field.auto_id == "id_not_been_active_in_the_last_n_days" %}
             <div class="row">
-                <div class="col-md-4">
-                    Not been active in
+                <div class="col-md-6">
+                    <span class="filter_label">Not been active in</span>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-2">
                     {{ field }}
                 </div>
                 <div class="col-md-4">
-                    days
+                    <span class="filter_unit">days</span>
                 </div>
             </div>
             {% elif field.auto_id == "id_paid_at_least_n_times" %}
             <div class="row">
-                <div class="col-md-4">
-                    Paid at least
+                <div class="col-md-6">
+                    <span class="filter_label">Paid at least</span>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-2">
                     {{ field }}
                 </div>
                 <div class="col-md-4">
-                    times
+                    <span class="filter_unit">times</span>
                 </div>
             </div>
             {% elif field.auto_id == "id_paid_at_least_n_amount_in_total" %}
             <div class="row">
-                <div class="col-md-4">
-                    Paid at least $
+                <div class="col-md-6">
+                    <span class="filter_label">Paid at least $</span>
                 </div>
-                <div class="col-md-4">
-                    {{ field }}
+                <div class="col-md-2">
+                    <span class="filter_unit">{{ field }}</span>
                 </div>
             </div>
             {% endif %}
@@ -63,14 +63,14 @@
         {% for field in worker_filter_form %}
            {% if field.auto_id == "id_not_been_active_in_the_last_n_days" %}
             <div class="row">
-                <div class="col-md-4">
-                    Not been active in
+                <div class="col-md-6">
+                    <span class="filter_label">Not been active in</span>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-2">
                     {{ field }}
                 </div>
                 <div class="col-md-4">
-                    days
+                    <span class="filter_unit">days</span>
                 </div>
             </div>
             {% endif %}

@@ -178,7 +178,7 @@
                             <th id="workers-finished">Finished</th>
                             <th id="workers-paid">Paid</th>
                             <th>
-                                {% if jobuser.pledge_set.all and request.user.username != worker.jobuser.user.username %}
+                                {% if jobuser.pledge_set.all.exists and request.user.username != worker.jobuser.user.username %}
                                 Pay This User
                                 {% endif %}
                             </th>
