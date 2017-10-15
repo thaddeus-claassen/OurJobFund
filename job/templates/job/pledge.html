@@ -1,0 +1,60 @@
+{% extends 'job/home.html' %}
+
+{% load static %}
+{% block additional_imports %}
+    <script type="text/javascript" src="{% static 'job/js/pledge.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'job/css/pledge.css' %}" />
+{% endblock %}
+
+{% block filter %}
+<div class="row">
+    <div class="col-md-12">
+        <h4>Worker Filter</h4>
+    </div>
+</div>
+{% for field in worker_filter_form %}
+{% if field.auto_id == "id_not_been_active_in_the_last_n_days" %}
+<div class="row">
+    <div class="col-md-6">
+        <span class="filter_label">Not been active in</span>
+    </div>
+    <div class="col-md-2">
+        {{ field }}
+    </div>
+    <div class="col-md-4">
+        <span class="filter_unit">days</span>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endblock %}
+
+{% block table %}
+<table id="main_table" class="table">
+    <thead>
+        <tr>
+            <input id="sort" type="hidden" value="created descending" />
+            <th id="name" class="name sort">Name</th>
+            <th id="created" class="date sort">Created</th>
+            <th id="pledged" class="pledged sort">Pledged</th>
+            <th id="paid" class="paid sort">Paid</th>
+            <th id="workers" class="workers sort">Workers</th>
+            <th id="expected_workers" class="expected_workers sort">Expected Workers</th>
+            <th id="finished" class="finished sort">Finished</th>
+        </tr>
+    </thead>
+    <tbody id="main_table_body"></tbody>
+        <tfoot>
+            <tr>
+                <td id="job-number-footer" >Jobs Found:&nbsp;<span id="num-jobs-found">0</span></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+{% endblock %}

@@ -54,16 +54,16 @@ tbody {
 }
 
 .name {
-    width: 25%;
+    width: 30%;
     float: left;
 }
 
 .date {
-    width: 15%;
+    width: 20%;
     float: left;
 }
 
-.expected_pay, .expected_workers, .pledged, .paid, .workers, .finished {
+.pledged, .paid, .workers, .finished {
     width: 10%;
     float: left;
 }

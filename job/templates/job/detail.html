@@ -228,16 +228,14 @@
         </div>
     </div>
 </div>
-{% if jobuser %}
 <div class="row">
-    <div class="col-md-12">
+{% if jobuser %}
+    <div class="col-md-6">
         <form action="{% url 'update:create' job.random_string %}">
             <input id="post_update" class="pledge_work_inputs" type="submit" value="Post Update" />
         </form>
     </div>
-</div>
 {% endif %}
-<div class="row">
     {% if jobuser %}
     {% if jobuser.work_set.all.exists and not jobuser.finish_set.all.exists %}
     <div class="col-md-6">

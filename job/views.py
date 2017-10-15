@@ -8,7 +8,6 @@ from jobuser.models import JobUser, Pledge, Pay, Work, Finish;
 from update.models import Update;
 from django.http import JsonResponse, HttpResponse, Http404;
 from django.core import serializers;
-from django.contrib.auth import authenticate, login, logout;
 from rest_framework.renderers import JSONRenderer;
 from filter.forms import PledgeFilterForm, WorkerFilterForm;
 from .forms import NewJobForm;
@@ -19,7 +18,23 @@ from ourjobfund.settings import STRIPE_SECRET_TEST_KEY, STATIC_ROOT;
 import stripe;
 
 @login_required
-def home(request):
+def pledge(request):
+    get_stripe_info(request);
+    context = {
+        'worker_filter_form' : WorkerFilterForm(instance=request.user.workerfilter),
+    };
+    return render(request, 'job/pledge.html', context);
+
+@login_required
+def work(request):
+    get_stripe_info(request);
+    context = {
+        'pledge_filter_form' : PledgeFilterForm(instance=request.user.pledgefilter),
+    };
+    return render(request, 'job/work.html', context);
+
+@login_required
+def get_stripe_info(request):
     job_random_string = request.GET.get('state', None);
     if (job_random_string is not None):
         job = get_object_or_404(Job, random_string=job_random_string);
@@ -35,12 +50,6 @@ def home(request):
         work = Work(jobuser=jobuser);
         work.save();
         return redirect('job:detail', job.random_string);
-    context = {
-        'pledge_filter_form' : PledgeFilterForm(instance=request.user.pledgefilter),
-        'worker_filter_form' : WorkerFilterForm(instance=request.user.workerfilter),
-    };
-    return render(request, 'job/home.html', context);
-    
     
 @login_required
 def get_jobs(request):

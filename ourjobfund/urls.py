@@ -18,7 +18,6 @@ from django.contrib import admin;
 from django.conf import settings;
 from django.conf.urls.static import static;
 from user.views import search_users;
-from job.views import home;
 from . import views;
 
 app_name = 'ourjobfund';
@@ -32,7 +31,7 @@ urlpatterns = [
     url(r'^about/', include('about.urls')),
     url(r'^contact/', include('contact.urls')),
     url(r'^terms_of_service', include('terms_of_service.urls')),
-    url(r'^$', include('job.urls')),
+    url(r'^$', include('user.urls')),
 ]
 
 if settings.DEBUG:

@@ -6,6 +6,8 @@ from django.conf.urls.static import static;
 app_name = 'user';
 
 urlpatterns = [
+    # /user/
+    url(r'^$', views.home),
 
     # /user/sign_in
     url(r'^sign_in/$', views.sign_in, name="sign_in"),

@@ -108,6 +108,10 @@ def getTotalNumberOfUsersFromQuery(search):
         users = users.filter(Q(first_name__startswith=word) | Q(last_name__startswith=word));
     return users.count();
          
+@login_required
+def home(request):
+    return redirect('user:detail', username=request.user.username);
+
 @login_required    
 def detail(request, username):
     user = get_object_or_404(User, username=username);
@@ -116,18 +120,13 @@ def detail(request, username):
     infoForm = forms.EditInfoForm(request.POST or None, initial={'city' : request.user.userprofile.city, 'state' : request.user.userprofile.state, 'occupation' : user.userprofile.occupation});
     descriptionForm = forms.EditDescriptionForm(request.POST or None, initial={'description' : user.userprofile.description});    
     if (request.method == "POST"):
-        print(request.POST)
-        print("Request is POST")
         if (infoForm.has_changed()):
-            print("Infoform has changed")
             if (infoForm.is_valid()):
-                print("Info form is valid")
                 user.userprofile.city = infoForm.cleaned_data['city'];
                 user.userprofile.state = infoForm.cleaned_data['state'];
                 user.userprofile.occupation = infoForm.cleaned_data['occupation'];
                 user.userprofile.save();
                 return redirect('user:detail', username=request.user.username);
-        print("Description form has changed: " + str(descriptionForm.has_changed()));
         if (descriptionForm.has_changed()):
             if (descriptionForm.is_valid()):
                 user.userprofile.description = descriptionForm.cleaned_data['description'];
