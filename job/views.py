@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required;
 from django.shortcuts import render, get_object_or_404, redirect;
+from annoying.functions import get_object_or_None
 from .models import Job, Tag, User, Image;
 from .serializers import JobSerializer;
 from notification.models import Notification;
@@ -19,7 +20,6 @@ import stripe;
 
 @login_required
 def pledge(request):
-    get_stripe_info(request);
     context = {
         'worker_filter_form' : WorkerFilterForm(instance=request.user.workerfilter),
     };
@@ -27,7 +27,6 @@ def pledge(request):
 
 @login_required
 def work(request):
-    get_stripe_info(request);
     context = {
         'pledge_filter_form' : PledgeFilterForm(instance=request.user.pledgefilter),
     };
@@ -35,21 +34,22 @@ def work(request):
 
 @login_required
 def get_stripe_info(request):
+    print(request);
     job_random_string = request.GET.get('state', None);
     if (job_random_string is not None):
         job = get_object_or_404(Job, random_string=job_random_string);
         code = request.GET.get('code', None);
         request.user.userprofile.stripe_account_id = code;
         request.user.userprofile.save();
-        jobuser = None;
-        if (JobUser.objects.filter(user=request.user, job=job).exists()):
-            jobuser = JobUser.objects.get(user=request.user, job=job);
-        else:
+        jobuser = get_object_or_None(JobUser, user=request.user, job=job);
+        if (not jobuser):
             jobuser = JobUser(user=request.user, job=job);
             jobuser.save();
         work = Work(jobuser=jobuser);
         work.save();
         return redirect('job:detail', job.random_string);
+    else:
+        return Http404();
     
 @login_required
 def get_jobs(request):
@@ -184,9 +184,7 @@ def detail(request, job_random_string):
     workers = Work.objects.filter(jobuser__job=job);
     total_finished = Finish.objects.filter(jobuser__job=job).count();
     total_working = workers.count() - total_finished;
-    jobuser = None;
-    if (JobUser.objects.filter(user=request.user, job=job).exists()):
-        jobuser = request.user.jobuser_set.all().get(job=job);
+    jobuser = get_object_or_None(JobUser, user=request.user, job=job)
     if (Notification.objects.filter(user=request.user, job=job).exists()): 
         Notification.objects.get(user=request.user, job=job).delete();
     context = {                                                                     
@@ -242,16 +240,9 @@ def create_job(request):
             job.save();
             if (tags != ''):
                 tagsArray = tags.split(" ");
-                print("Number of tags: " + str(len(tagsArray)))
-                for tag in tagsArray:
-                    print(tag);
                 for tagString in tagsArray:
-                    newTag = None;
-                    if (Tag.objects.filter(tag__iexact=tagString).exists()):
-                        print("The tag already exists");
-                        newTag = Tag.objects.get(tag__iexact=tagString);
-                    else:
-                        print("The tag does not already exist")
+                    newTag = get_object_or_None(Tag, tag=tagString)
+                    if (not newTag):
                         newTag = Tag(tag=tagString);
                         newTag.save();
                     job.tag_set.add(newTag);

@@ -27,7 +27,7 @@
         {% if job.tag_set.all.count > 0 %}
             Tags:
         {% for tag in job.tag_set.all %}
-            #{{ tag.tag }}
+            {{ tag.tag }}
         {% endfor %}
         {% endif %}
         </span>
@@ -154,9 +154,9 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td>Total Pledge</td>
+                            <td>Total Pledged:</td>
                             <td>${{ total_pledged }}.00</td>
-                            <td>Total Paid</td>
+                            <td>Total Paid:</td>
                             <td>${{ total_paid }}.00</td>
                         </tr>
                     </tfoot>
