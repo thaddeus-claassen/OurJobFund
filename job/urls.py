@@ -8,7 +8,7 @@ app_name = 'job';
 urlpatterns = [
 
     # /job/
-    url(r'^/$', views.get_stripe_info),
+    url(r'^$', views.get_stripe_info),
 
     # /job/pledge
     url(r'^pledge$', views.pledge, name='pledge'),
