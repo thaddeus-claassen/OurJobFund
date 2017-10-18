@@ -179,7 +179,6 @@ def detail(request, job_random_string):
             stripe.api_key = STRIPE_SECRET_TEST_KEY;
             token = request.POST['stripeToken'];
             amount_paying = int(request.POST['pay_amount']);
-            return HttpResponse("Pay to: " + str(receiver_username) + "  stripe API key: " + str(stripe.api_key) + "   token: " + str(token) + "   amount_paying: " + str(amount_paying));
             charge = stripe.Charge.create(
                 amount = amount_paying,
                 currency = "usd",
@@ -188,6 +187,7 @@ def detail(request, job_random_string):
                     'account' : jobuser.user.userprofile.stripe_account_id,
                 },
             );
+            return HttpResponse("Charge created: " + str(charge));
             payment = Pay(jobuser=jobuser, receiver=jobuser.user, amount=float(amount_paying));
             payment.save();
             jobuser.amount_paid = jobuser.amount_paid + amount_paying;
