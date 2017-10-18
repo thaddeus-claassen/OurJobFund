@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     'rest_framework',
     'annoying',
+    'stripe',
 ]
 
 REST_FRAMEWORK = {
