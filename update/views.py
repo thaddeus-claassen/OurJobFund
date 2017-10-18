@@ -31,7 +31,7 @@ def create(request, job_random_string):
             'form' : UpdateForm(),
         }
         return render(request, 'update/create.html', context);
-    return redirect('/job/' + jobuser.job.random_string);
+    return redirect('job:detail', job_random_string=job.random_string);
     
 @login_required
 def detail(request, update_random_string):

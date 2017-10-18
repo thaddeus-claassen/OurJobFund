@@ -11,6 +11,12 @@ $('document').ready(function() {
         $('.no-change-description-wrapper').css('display', 'none');
         $('.change-description-wrapper').css('display', 'inline');
     });
+    $('#save_info').click(function() {
+        $('#save_info_form').submit();
+    });
+    $('#save_description').click(function() {
+        $('#save_description_form').submit();
+    });
 });
 
 function changeTHeadTFootWidthToAccountForScrollBar() {

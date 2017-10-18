@@ -76,7 +76,7 @@ tbody {
     display: none;
 }
 
-#post_update, #pay_money, #pledge_money, #finish_job, #work_on_job {
+.pledge_work_inputs {
     width: 100%;
 }
 

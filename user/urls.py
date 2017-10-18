@@ -7,7 +7,7 @@ app_name = 'user';
 
 urlpatterns = [
     # /user/
-    url(r'^$', views.home),
+    url(r'^$', views.sign_in),
 
     # /user/sign_in
     url(r'^sign_in/$', views.sign_in, name="sign_in"),

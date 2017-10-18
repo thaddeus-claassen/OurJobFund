@@ -20,8 +20,8 @@
             </div>
             <div class="col-md-6">
                 {% if user.username == detail_user.username %}
-                <span id="edit_info" class="no-change-info-wrapper">&#9998;</span>
-                <input id="save_info" class="change-info-wrapper" type="submit" value="Save Info" form="save_info_form" />
+                <span id="edit_info" class="no-change-info-wrapper">Edit</span>
+                <span id="save_info" class="change-info-wrapper">Save</span>
                 {% endif %}
             </div>
         </div>
@@ -81,8 +81,8 @@
             </div>
             <div class="col-md-6">
                 {% if user.username == detail_user.username %}
-                <span id="edit_description" class="no-change-description-wrapper">&#9998;</span>
-                <input id="save_description" class="change-description-wrapper" type="submit" value="Save Description" form="save_description_form" />
+                <span id="edit_description" class="no-change-description-wrapper">Edit</span>
+                <span id="save_description" class="change-description-wrapper">Save</span>
                 {% endif %}
             </div>
         </div>
@@ -122,8 +122,7 @@
                             <th class="name">Name</th>
                             <th class="pledged">Pledged</th>
                             <th class="paid">Paid</th>
-                            <th class="working">Working</th>
-                            <th class="finished">Finished</th>
+                            <th class="status">Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -132,16 +131,14 @@
                             <td class="name"><a href="{% url 'job:detail' current_jobuser.job.random_string %}">{{ current_jobuser.job.name }}</a></td>
                             <td class="pledged">${{ current_jobuser.amount_pledged }}.00</td>
                             <td class="paid">${{ current_jobuser.amount_paid }}.00</td>
-                            <td class="working">{{ current_jobuser.work_set.all.exists }}</td>
-                            <td class="finished">{{ current_jobuser.finish_set.all.exists }}</td>
+                            <td class="status">{% if current_jobuser.work_set.all.count == current_jobuser.finish_set.all.count %}Finished{% else %}Working{% endif %}</td>
                         </tr>
                         {% empty %}
                         <tr>
                             <td class="name">No current jobs</td>
                             <td class="pledged"></td>
                             <td class="paid"></td>
-                            <td class="working"></td>
-                            <td class="finished"></td>
+                            <td class="status"></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -150,8 +147,7 @@
                             <td class="name">Total:&nbsp;{{ current_jobusers.count }}</td>
                             <td class="pledged"></td>
                             <td class="paid"></td>
-                            <td class="working"></td>
-                            <td class="finished"></td>
+                            <td class="status"></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -172,8 +168,7 @@
                             <th class="name">Name</th>
                             <th class="pledged">Pledged</th>
                             <th class="paid">Paid</th>
-                            <th class="working">Worked</th>
-                            <th class="finished">Finished</th>
+                            <th class="status">Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -182,16 +177,14 @@
                             <td class="name"><a href="{% url 'job:detail' finished_jobuser.job.random_string %}">{{ finished_jobuser.job.name }}</a></td>
                             <td class="pledged">${{ finished_jobuser.amount_pledged }}.00</td>
                             <td class="paid">${{ finished_jobuser.amount_paid }}</td>
-                            <td class="working">{{ finished_jobuser.work_set.all.exists }}</td>
-                            <td class="finished">{{ finished_jobuser.finish_set.exists }}</td>
+                            <td class="status">{% if current_jobuser.work_set.all.count == current_jobuser.finish_set.all.count %}Finished{% else %}Working{% endif %}</td>
                         </tr>
                     {% empty %}
                         <tr>
                             <td class="name">No finished jobs</td>
                             <td class="pledged"></td>
                             <td class="paid"></td>
-                            <td class="working"></td>
-                            <td class="finished"></td>
+                            <td class="status"></td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -200,8 +193,7 @@
                             <td class="name">Total:&nbsp;{{ finished_jobusers.count }}</td>
                             <td class="pledged"></td>
                             <td class="paid"></td>
-                            <td class="working"></td>
-                            <td class="finished"></td>
+                            <td class="status"></td>
                         </tr>
                     </tfoot>
                 </table>

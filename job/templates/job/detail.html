@@ -199,7 +199,7 @@
                                     {% endif %}
                                 </td>
                                 <td>{{ worker.date }}</td>
-                                <td>{{ worker.jobuser.finish_set.all.exists }}</td>
+                                <td>{% if worker.jobuser.work_set.all.count == worker.jobuser.finish_set.all.count %}True{% else %}False{% endif %}</td>
                                 <td>{{ worker.jobuser.amount_paid }}</td>
                                 <td>
                                     {% if jobuser and jobuser.pledge_set.all.exists and request.user.username != worker.jobuser.user.username %}
@@ -229,23 +229,18 @@
     </div>
 </div>
 <div class="row">
-{% if jobuser %}
+    <!-- Update Button -->
+    {% if jobuser %}
     <div class="col-md-6">
         <form action="{% url 'update:create' job.random_string %}">
             <input id="post_update" class="pledge_work_inputs" type="submit" value="Post Update" />
         </form>
     </div>
-{% endif %}
-    {% if jobuser %}
-    {% if jobuser.work_set.all.exists and not jobuser.finish_set.all.exists %}
-    <div class="col-md-6">
-        <form action="{{ request.get_full_path }}" method="POST">
-        {% csrf_token %}
-            <input id="finish_job" class="pledge_work_inputs" type="submit" value="Finish" name="finish" />
-        </form>
-    </div>
     {% endif %}
-    {% else %}
+    <!-- End Update Button -->
+    
+    <!-- Pledge Button -->
+    {% if not jobuser and not jobuser.pledge_set.all.exists %}
     <div class="col-md-6">  
         <input id="pledge_money" class="pledge_work_inputs" type="button" value="Pledge" />
         <form id="pledge-money-form" action="{{ request.get_full_path }}" method="POST">
@@ -258,6 +253,11 @@
             <input id="cancel-pledge-money" type="button" value="Cancel" />
         </form>
     </div>
+    {% endif %}
+    <!-- End Pledge Button -->
+    
+    <!-- Work-Finish-Unfinish Button -->
+    {% if not jobuser and not jobuser.work_set.all.exists %}
     <div class="col-md-6">
         <form action="{{ request.get_full_path }}" method="POST">
         {% csrf_token %}
@@ -272,6 +272,22 @@
             {% endif %}
         </form>
     </div>
+    {% elif jobuser and jobuser.work_set.all.count > jobuser.finish_set.all.count %}
+    <div class="col-md-6">
+        <form action="{{ request.get_full_path }}" method="POST">
+        {% csrf_token %}
+            <input id="finish_job" class="pledge_work_inputs" type="submit" value="Finish" name="finish" />
+        </form>
+    </div>
+    {% elif jobuser and jobuser.work_set.all.count == jobuser.finish_set.all.count %}
+    <div class="col-md-6">
+        <form action="{{ request.get_full_path }}" method="POST">
+        {% csrf_token %}
+            <input id="unfinish_job" class="pledge_work_inputs" type="submit" value="Unfinish" name="unfinish" />
+        </form>
+    </div>
     {% endif %}
+    <!-- End Work-Finish-Unfinish Button -->
+
 </div>  
 {% endblock %}

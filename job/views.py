@@ -1,10 +1,10 @@
 from django.contrib.auth.decorators import login_required;
 from django.shortcuts import render, get_object_or_404, redirect;
-from annoying.functions import get_object_or_None
+from annoying.functions import get_object_or_None;
 from .models import Job, Tag, User, Image;
 from .serializers import JobSerializer;
 from notification.models import Notification;
-from django.db.models import Q;
+from django.db.models import Q, F;
 from jobuser.models import JobUser, Pledge, Pay, Work, Finish;
 from update.models import Update;
 from django.http import JsonResponse, HttpResponse, Http404;
@@ -13,6 +13,7 @@ from rest_framework.renderers import JSONRenderer;
 from filter.forms import PledgeFilterForm, WorkerFilterForm;
 from .forms import NewJobForm;
 import json, re, math;
+from itertools import chain;
 from random import randint;
 from jobuser.forms import PledgeForm;
 from ourjobfund.settings import STRIPE_SECRET_TEST_KEY, STATIC_ROOT;
@@ -68,7 +69,8 @@ def add_jobs(request):
         numSearches =  int(request.GET['numSearches']);
         jobs = findJobs(request);
         jobs = jobs[50 * numSearches:50 * (numSearches + 1)];
-        jobs = serializers.serialize('json', jobs);
+        serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
+        json = JSONRenderer().render(serializer.data);
         return HttpResponse(jobs, content_type="application/json");
     else:
         return Http404();
@@ -79,7 +81,8 @@ def sort_jobs(request):
         numSearches =  int(request.GET['numSearches']);
         jobs = findJobs(request);
         jobs = jobs[0:50 * numSearches];
-        jobs = serializers.serialize('json', jobs);
+        serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
+        json = JSONRenderer().render(serializer.data);
         return HttpResponse(jobs, content_type="application/json");
     else:
         return Http404();
@@ -156,11 +159,22 @@ def detail(request, job_random_string):
             work.save();
             job.workers = job.workers + 1;
             job.save();
+            jobuser.newest_work_date = work.date;
+            jobuser.save();
         elif ('finish' in request.POST):
             finish = Finish(jobuser=jobuser);
             finish.save();
             job.finished = job.finished + 1;
-            job.save()
+            job.save();
+            jobuser.newest_finish_date = finish.date;
+            jobuser.save()
+        elif ('unfinish' in request.POST):
+            unfinish = Work(jobuser=jobuser);
+            unfinish.save();
+            job.finished = job.finished - 1;
+            job.save();
+            jobuser.newest_work_date = unfinish.date;
+            jobuser.save();
         elif ('stripeToken' in request.POST):
             receiver_username = request.POST['pay_to'];
             stripe.api_key = STRIPE_SECRET_TEST_KEY;
@@ -181,10 +195,12 @@ def detail(request, job_random_string):
             job.paid = job.paid + amount_paying;
             job.save();
         return redirect('job:detail', job_random_string=job_random_string);
-    workers = Work.objects.filter(jobuser__job=job);
-    total_finished = Finish.objects.filter(jobuser__job=job).count();
+    workers = Work.objects.filter(Q(jobuser__job=job) & Q(date__exact=F('jobuser__newest_work_date'))).order_by('-date');
+    total_finished = 0;
+    for jobuser in JobUser.objects.filter(job=job):
+        if (jobuser.work_set.all().count() == jobuser.finish_set.all().count()):
+            total_finished = total_finished + 1;
     total_working = workers.count() - total_finished;
-    jobuser = get_object_or_None(JobUser, user=request.user, job=job)
     if (Notification.objects.filter(user=request.user, job=job).exists()): 
         Notification.objects.get(user=request.user, job=job).delete();
     context = {                                                                     
@@ -195,14 +211,14 @@ def detail(request, job_random_string):
         'workers' : workers,
         'total_working' : total_working,
         'total_finished' : total_finished,
-        'jobuser' : jobuser,
+        'jobuser' : get_object_or_None(JobUser, user=request.user, job=job),
         'updates' : Update.objects.filter(jobuser__job=job).order_by('-date'),
         'user_has_stripe_account' : (request.user.userprofile.stripe_account_id != None) and (request.user.userprofile.stripe_account_id != ''),
         'pledge_form' : pledgeForm,
     }
     return render(request, 'job/detail.html', context);
-    
-@login_required    
+
+@login_required
 def detail_sort(request, job_random_string):
     rows = None;
     if (request.is_ajax()):
@@ -224,8 +240,8 @@ def detail_sort(request, job_random_string):
         return HttpResponse(rows, content_type="application/json");
     else:
         return Http404();
-    
-@login_required    
+
+@login_required
 def create_job(request):
     newJobForm = NewJobForm(request.POST or None);
     if (request.method == 'POST'):

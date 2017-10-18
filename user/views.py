@@ -14,7 +14,7 @@ import logging;
 
 def sign_in(request):
     if (request.user.is_authenticated()):
-        return redirect('job:home');
+        return redirect('user:detail', username=request.user.username);
     else: 
         userForm = forms.UserForm(request.POST or None);
         newUserForm = forms.NewUserForm(request.POST or None);
@@ -28,7 +28,7 @@ def sign_in(request):
                             if (not user.is_active):
                                 user.is_active = True;
                             login(request, user);
-                            return redirect('job:home');
+                            return redirect('user:detail', username=user.username);
             elif ('sign-up' in request.POST):
                 if (newUserForm.is_valid()):
                     user = newUserForm.save(commit=False);
@@ -48,8 +48,8 @@ def sign_in(request):
                         login(request, user);
                         return redirect('user:detail', user.username);
         context = {
-            'new_user_form' : newUserForm, 
             'existing_user_form' : userForm,
+            'new_user_form' : newUserForm, 
         }
         return render(request, 'user/signup.html', context);
         
@@ -107,10 +107,6 @@ def getTotalNumberOfUsersFromQuery(search):
     for word in search.split():
         users = users.filter(Q(first_name__startswith=word) | Q(last_name__startswith=word));
     return users.count();
-         
-@login_required
-def home(request):
-    return redirect('user:detail', username=request.user.username);
 
 @login_required    
 def detail(request, username):

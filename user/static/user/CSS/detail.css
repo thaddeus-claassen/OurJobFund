@@ -1,7 +1,12 @@
 #edit_description, #edit_info, #save_description, #save_info {
     float: right;
-    cursor: pointer;
+    color: #0000EE;
 }
+
+#edit_description:hover, #save_description:hover, #edit_info:hover, #save_info:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}    
 
 #info-wrapper, #description-wrapper {
     border: 1px solid black;
@@ -66,8 +71,8 @@ tbody {
     float: left;
 }
 
-.pledged, .paid, .working, .finished {
-    width: 15%;
+.pledged, .paid, .status {
+    width: 20%;
     float: left;
 }
 
