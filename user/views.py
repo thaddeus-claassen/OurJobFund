@@ -49,10 +49,10 @@ def sign_in(request):
                         return redirect('user:detail', user.username);
         context = {
             'existing_user_form' : userForm,
-            'new_user_form' : newUserForm, 
+            'new_user_form' : newUserForm,
         }
         return render(request, 'user/signup.html', context);
-        
+
 def check_email_is_unused(request):
     emailIsUnused = True;
     if (request.is_ajax()):
