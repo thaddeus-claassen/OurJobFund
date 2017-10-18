@@ -35,7 +35,6 @@ def work(request):
 
 @login_required
 def get_stripe_info(request):
-    return HttpResponse("Got into get_stripe_info")
     job_random_string = request.GET.get('state', None);
     if (job_random_string is not None):
         job = get_object_or_404(Job, random_string=job_random_string);
@@ -180,6 +179,7 @@ def detail(request, job_random_string):
             stripe.api_key = STRIPE_SECRET_TEST_KEY;
             token = request.POST['stripeToken'];
             amount_paying = int(request.POST['pay_amount']);
+            return HttpResponse("Pay to: " + str(receiver_username) + "  stripe API key: " + str(stripe.api_key) + "   token: " + str(token) + "   amount_paying: " + str(amount_paying));
             charge = stripe.Charge.create(
                 amount = amount_paying,
                 currency = "usd",
