@@ -131,7 +131,17 @@
                             <td class="name"><a href="{% url 'job:detail' current_jobuser.job.random_string %}">{{ current_jobuser.job.name }}</a></td>
                             <td class="pledged">${{ current_jobuser.amount_pledged }}.00</td>
                             <td class="paid">${{ current_jobuser.amount_paid }}.00</td>
-                            <td class="status">{% if current_jobuser.work_set.all.count == current_jobuser.finish_set.all.count %}Finished{% else %}Working{% endif %}</td>
+                            <td class="status">
+                                {% if current_jobuser.work_set.all.exists %}
+                                {% if current_jobuser.work_set.all.count == current_jobuser.finish_set.all.count %}
+                                Finished
+                                {% else %}
+                                Working
+                                {% endif %}
+                                {% else %}
+                                Not Working
+                                {% endif %}
+                            </td>
                         </tr>
                         {% empty %}
                         <tr>
@@ -177,7 +187,17 @@
                             <td class="name"><a href="{% url 'job:detail' finished_jobuser.job.random_string %}">{{ finished_jobuser.job.name }}</a></td>
                             <td class="pledged">${{ finished_jobuser.amount_pledged }}.00</td>
                             <td class="paid">${{ finished_jobuser.amount_paid }}</td>
-                            <td class="status">{% if current_jobuser.work_set.all.count == current_jobuser.finish_set.all.count %}Finished{% else %}Working{% endif %}</td>
+                            <td class="status">
+                                {% if finished_jobuser.work_set.all.exists %}
+                                {% if finished_jobuser.work_set.all.count == finished_jobuser.finish_set.all.count %}
+                                Finished
+                                {% else %}
+                                Working
+                                {% endif %}
+                                {% else %}
+                                Not Working
+                                {% endif %}
+                            </td>
                         </tr>
                     {% empty %}
                         <tr>
