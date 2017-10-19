@@ -95,10 +95,10 @@
                         </div>
                     </div>
                     {% if user.username == detail_user.username %}
-                    <div class="change-description-wrapper">
+                    <div id="textarea_div" class="change-description-wrapper">
                         <form id="save_description_form" action="{{ request.get_full_path }}" method="POST">
                         {% csrf_token %}
-                            <textarea class="form-control" name="description"></textarea>
+                            <textarea id="description_textarea" class="form-control" name="description">{{ detail_user.userprofile.description }}</textarea>
                         </form>
                     </div>
                     {% endif %} 
