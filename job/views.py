@@ -179,21 +179,25 @@ def detail(request, job_random_string):
             stripe.api_key = STRIPE_SECRET_TEST_KEY;
             token = request.POST['stripeToken'];
             amount_paying = int(request.POST['pay_amount']);
-            charge = stripe.Charge.create(
-                amount = amount_paying,
-                currency = "usd",
-                source = token,
-                destination = {
-                    'account' : jobuser.user.userprofile.stripe_account_id,
-                },
-            );
-            return HttpResponse("Charge created: " + str(charge));
-            payment = Pay(jobuser=jobuser, receiver=jobuser.user, amount=float(amount_paying));
-            payment.save();
-            jobuser.amount_paid = jobuser.amount_paid + amount_paying;
-            jobuser.save();
-            job.paid = job.paid + amount_paying;
-            job.save();
+            try:
+                charge = stripe.Charge.create(
+                    amount = amount_paying,
+                    currency = "usd",
+                    source = token,
+                    description = "Does this charge work?",
+                    #destination = {
+                    #    'account' : jobuser.user.userprofile.stripe_account_id,
+                    #},
+                );
+                payment = Pay(jobuser=jobuser, receiver=jobuser.user, amount=float(amount_paying));
+                payment.save();
+                jobuser.amount_paid = jobuser.amount_paid + amount_paying;
+                jobuser.save();
+                job.paid = job.paid + amount_paying;
+                job.save();
+            except Exception, e:
+                HttpResponse("There was an exception: " + str(e));
+                
         return redirect('job:detail', job_random_string=job_random_string);
     workers = Work.objects.filter(Q(jobuser__job=job) & Q(date__exact=F('jobuser__newest_work_date'))).order_by('-date');
     total_finished = 0;
