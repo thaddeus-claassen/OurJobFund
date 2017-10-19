@@ -23,6 +23,7 @@ from . import views;
 app_name = 'ourjobfund';
 
 urlpatterns = [
+    url(r'^payments/', include('djstripe.urls', namespace="djstripe")),
     url(r'search_users$', search_users),
     url(r'^admin/', admin.site.urls),
     url(r'^user/', include('user.urls')),
@@ -32,6 +33,7 @@ urlpatterns = [
     url(r'^contact/', include('contact.urls')),
     url(r'^terms_of_service', include('terms_of_service.urls')),
     url(r'^$', include('user.urls')),
+    
 ]
 
 if settings.DEBUG:

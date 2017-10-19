@@ -279,7 +279,7 @@
             <input id="finish_job" class="pledge_work_inputs" type="submit" value="Finish" name="finish" />
         </form>
     </div>
-    {% elif jobuser and jobuser.work_set.all.count == jobuser.finish_set.all.count %}
+    {% elif jobuser and not jobuser.pledge_set.all.exists and jobuser.work_set.all.count == jobuser.finish_set.all.count %}
     <div class="col-md-6">
         <form action="{{ request.get_full_path }}" method="POST">
         {% csrf_token %}

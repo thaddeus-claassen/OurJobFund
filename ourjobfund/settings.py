@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     'rest_framework',
     'annoying',
-    'stripe',
+    'djstripe',
 ]
 
 REST_FRAMEWORK = {
@@ -192,8 +192,9 @@ if not DEBUG:
             },
         },
     }
-
-STRIPE_PUBLIC_TEST_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_public_test_key.txt'), 'r').read();
-STRIPE_SECRET_TEST_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_test_key.txt'), 'r').read();
-STRIPE_PUBLIC_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_public_key.txt'), 'r').read();
-STRIPE_SECRET_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_key.txt'), 'r').read();
+    
+STRIPE_TEST_PUBLIC_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_public_test_key.txt'), 'r').read();
+STRIPE_TEST_SECRET_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_test_key.txt'), 'r').read();
+STRIPE_LIVE_PUBLIC_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_public_key.txt'), 'r').read();
+STRIPE_LIVE_SECRET_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_key.txt'), 'r').read();
+STRIPE_LIVE_MODE = False;
