@@ -57,8 +57,10 @@ INSTALLED_APPS = [
     'bootstrap3',
     'rest_framework',
     'annoying',
-    'djstripe',
+    'pinax.stripe',
 ]
+
+SITE_ID = 1;
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -192,9 +194,10 @@ if not DEBUG:
             },
         },
     }
+PINAX_STRIPE_PUBLIC_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_public_key.txt'), 'r').read();
+PINAX_STRIPE_SECRET_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_key.txt'), 'r').read();   
     
 STRIPE_TEST_PUBLIC_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_public_test_key.txt'), 'r').read();
 STRIPE_TEST_SECRET_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_test_key.txt'), 'r').read();
 STRIPE_LIVE_PUBLIC_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_public_key.txt'), 'r').read();
 STRIPE_LIVE_SECRET_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_key.txt'), 'r').read();
-STRIPE_LIVE_MODE = False;
