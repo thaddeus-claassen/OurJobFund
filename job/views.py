@@ -195,7 +195,7 @@ def detail(request, job_random_string):
                 job.paid = job.paid + amount_paying;
                 job.save();
             except:
-                return HttpResponse(stripe.Charge);
+                return HttpResponse("receiver_username: " + str(receiver_username) + "    stripe.api_key: " + str(stripe.api_key) + "   token: " + str(token) + "    description: " + description);
         return redirect('job:detail', job_random_string=job_random_string);
     workers = Work.objects.filter(Q(jobuser__job=job) & Q(date__exact=F('jobuser__newest_work_date'))).order_by('-date');
     total_finished = 0;
