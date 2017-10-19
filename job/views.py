@@ -175,7 +175,7 @@ def detail(request, job_random_string):
             jobuser.save();
         elif ('stripeToken' in request.POST):
             receiver_username = request.POST['pay_to'];
-            stripe.api_key = STRIPE_SECRET_TEST_KEY;
+            stripe.api_key = STRIPE_TEST_SECRET_KEY;
             token = request.POST['stripeToken'];
             amount_paying = int(request.POST['pay_amount']);
             try:
