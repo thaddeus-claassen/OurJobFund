@@ -47,5 +47,26 @@ Temporary Items
 .apdisk
 
 
+#Hidden files
 .stripe
 .django
+
+# Database stuff
+db.sqlite3
+filter/migrations
+job/migrations
+jobuser/migrations
+update/migrations
+user/migrations
+
+# ./__pycache__ stuff
+about/__pycache__
+contact/__pycache__
+filter/__pycache__
+job/__pycache__
+jobuser/__pycache__
+notification/__pycache__
+ourjobfund/__pycache__
+terms_of_service/__pycache__
+update/__pycache__
+user/__pycache__
