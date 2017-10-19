@@ -23,16 +23,18 @@
     margin-left: 10px;
 }
 
+#textarea_div {
+    height: 300px;
+    width: 100%;
+}
+
 textarea {
+    height: 300px;
     resize: none;
+    overflow: auto;
 }
 
-#textarea_description {
-    text-sizing: border-box;
-    resize: none;
-}
-
-#textarea_description, #description_div {
+#description_div {
     overflow: auto;
 }
 
