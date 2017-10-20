@@ -244,7 +244,6 @@
         <div id="pay_clicked">
             <form id="pay_form" action="{{ request.get_full_path }}" method="POST">
             {% csrf_token %}
-                <input id="pay_button" type="button" value="Pay" />
                 <select id="pay_to" name="pay_to">
                     <option value="(default)" selected="selected">(Choose a Worker)</option>
                 {% for w in workers %}
@@ -253,7 +252,10 @@
                 &nbsp;$<input id="pay_amount" type="text" placeholder="0" size="5" name="pay_amount" />.00
                 </select>
                 <span id="pay_to_error"></span><span id="pay_amount_error"></span>
-                <input id="cancel_pay" type="button" value="Cancel" />
+                <span id="pay_cancel">
+                    <input id="pay_button" type="button" value="Pay" />
+                    <input id="cancel_pay" type="button" value="Cancel" />
+                </span>
                 <input id="stripe_token" type="hidden" name="stripeToken" />
             </form>
         </div>

@@ -122,7 +122,7 @@
                             <th class="name">Name</th>
                             <th class="pledged">Pledged</th>
                             <th class="paid">Paid</th>
-                            <th class="status">Status</th>
+                            <th class="received">received</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -131,24 +131,14 @@
                             <td class="name"><a href="{% url 'job:detail' current_jobuser.job.random_string %}">{{ current_jobuser.job.name }}</a></td>
                             <td class="pledged">${{ current_jobuser.amount_pledged }}.00</td>
                             <td class="paid">${{ current_jobuser.amount_paid }}.00</td>
-                            <td class="status">
-                                {% if current_jobuser.work_set.all.exists %}
-                                {% if current_jobuser.work_set.all.count == current_jobuser.finish_set.all.count %}
-                                Finished
-                                {% else %}
-                                Working
-                                {% endif %}
-                                {% else %}
-                                Not Working
-                                {% endif %}
-                            </td>
+                            <td class="received">${{ current_jobuser.amount_received }}.00</td>
                         </tr>
                         {% empty %}
                         <tr>
                             <td class="name">No current jobs</td>
                             <td class="pledged"></td>
                             <td class="paid"></td>
-                            <td class="status"></td>
+                            <td class="received"></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -178,7 +168,7 @@
                             <th class="name">Name</th>
                             <th class="pledged">Pledged</th>
                             <th class="paid">Paid</th>
-                            <th class="status">Status</th>
+                            <th class="received">Received</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -187,24 +177,14 @@
                             <td class="name"><a href="{% url 'job:detail' finished_jobuser.job.random_string %}">{{ finished_jobuser.job.name }}</a></td>
                             <td class="pledged">${{ finished_jobuser.amount_pledged }}.00</td>
                             <td class="paid">${{ finished_jobuser.amount_paid }}</td>
-                            <td class="status">
-                                {% if finished_jobuser.work_set.all.exists %}
-                                {% if finished_jobuser.work_set.all.count == finished_jobuser.finish_set.all.count %}
-                                Finished
-                                {% else %}
-                                Working
-                                {% endif %}
-                                {% else %}
-                                Not Working
-                                {% endif %}
-                            </td>
+                            <td class="received">${{ finished_jobuser.jobuser.amount_received }}.00</td>
                         </tr>
                     {% empty %}
                         <tr>
                             <td class="name">No finished jobs</td>
                             <td class="pledged"></td>
                             <td class="paid"></td>
-                            <td class="status"></td>
+                            <td class="received"></td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -213,7 +193,7 @@
                             <td class="name">Total:&nbsp;{{ finished_jobusers.count }}</td>
                             <td class="pledged"></td>
                             <td class="paid"></td>
-                            <td class="status"></td>
+                            <td class="received"></td>
                         </tr>
                     </tfoot>
                 </table>

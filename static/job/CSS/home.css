@@ -54,17 +54,17 @@ tbody {
 }
 
 .name {
-    width: 30%;
-    float: left;
-}
-
-.date {
     width: 20%;
     float: left;
 }
 
-.pledged, .paid, .workers, .finished {
+.date {
     width: 10%;
+    float: left;
+}
+
+.pledged, .paid, .workers, .finished {
+    width: 15%;
     float: left;
 }
 
