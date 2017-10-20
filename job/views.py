@@ -191,6 +191,11 @@ def detail(request, job_random_string):
             payment.save();
             jobuser.amount_paid = jobuser.amount_paid + amount_paying;
             jobuser.save();
+            receiver_jobuser = JobUser.objects.get(user=User.objects.get(username=receiver_username), job=job);
+            print("Before: " + str(receiver_jobuser.amount_received));
+            receiver_jobuser.amount_received = receiver_jobuser.amount_received + amount_paying;
+            print("After: " + str(receiver_jobuser.amount_received));
+            receiver_jobuser.save();
             job.paid = job.paid + amount_paying;
             job.save();
         return redirect('job:detail', job_random_string=job_random_string);

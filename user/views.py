@@ -15,11 +15,12 @@ import logging;
 def sign_in(request):
     if (request.user.is_authenticated()):
         return redirect('user:detail', username=request.user.username);
-    else: 
-        userForm = forms.UserForm(request.POST or None);
-        newUserForm = forms.NewUserForm(request.POST or None);
+    else:
+        userForm = forms.UserForm();
+        newUserForm = forms.NewUserForm();
         if (request.method == 'POST'):
             if ('sign-in' in request.POST):
+                userForm = forms.UserForm(request.POST or None);
                 if (userForm.is_valid()):
                     email = userForm.cleaned_data['email'];
                     if (email != "" and User.objects.filter(email=email).exists()):
@@ -30,6 +31,7 @@ def sign_in(request):
                             login(request, user);
                             return redirect('user:detail', username=user.username);
             elif ('sign-up' in request.POST):
+                newUserForm = forms.NewUserForm(request.POST or None);
                 if (newUserForm.is_valid()):
                     user = newUserForm.save(commit=False);
                     first_name = newUserForm.cleaned_data['first_name'];

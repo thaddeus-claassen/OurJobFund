@@ -177,15 +177,9 @@
                             <th id="workers-started">Started</th>
                             <th id="workers-finished">Finished</th>
                             <th id="workers-paid">Paid</th>
-                            <th>
-                                {% if jobuser and jobuser.pledge_set.all.exists and request.user.username != worker.jobuser.user.username %}
-                                Pay This User
-                                {% endif %}
-                            </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <form id="pay_form" action="{{ request.get_full_path }}" method="POST" >
                         {% csrf_token %}
                         {% for worker in workers %}
                             <tr>
@@ -200,26 +194,15 @@
                                 </td>
                                 <td>{{ worker.date }}</td>
                                 <td>{% if worker.jobuser.work_set.all.count == worker.jobuser.finish_set.all.count %}True{% else %}False{% endif %}</td>
-                                <td>{{ worker.jobuser.amount_paid }}</td>
-                                <td>
-                                    {% if jobuser and jobuser.pledge_set.all.exists and request.user.username != worker.jobuser.user.username %}
-                                    $<input id="{{ worker.jobuser.user.username }}-amount_paying" type="text" placeholder="0" size="5" />.00
-                                    <input id="{{ worker.jobuser.user.username }}-pay_button" class="pay_button" type="button" value="Pay" />
-                                    {% endif %}
-                                </td>
+                                <td>${{ worker.jobuser.amount_received }}</td>
                             </tr>
                         {% endfor %}
-                            <input id="pay_to" type="hidden" name="pay_to" />
-                            <input id="pay_amount" type="hidden" name="pay_amount" /> 
-                            <input id="stripe_token" type="hidden" name="stripeToken" />
-                        </form>
                     </tbody>
                     <tfoot>
                         <tr>
                             <td>Total: {{ workers.count }}</td>
                             <td>Working:&nbsp;{{ total_working }}</td>
                             <td>Finished:&nbsp;{{ total_finished }}</td>
-                            <td></td>
                             <td></td>
                         </tr>
                     </tfoot>
@@ -252,6 +235,28 @@
             <input type="submit" value="Accept" name="pledge"  />
             <input id="cancel-pledge-money" type="button" value="Cancel" />
         </form>
+    </div>
+    {% elif jobuser and jobuser.pledge_set.all.exists %}
+    <div class="col-md-6">
+        <div id="pay_unclicked">
+            <input id="pay_money" class="pledge_work_inputs" type="button" value="Pay" />
+        </div>
+        <div id="pay_clicked">
+            <form id="pay_form" action="{{ request.get_full_path }}" method="POST">
+            {% csrf_token %}
+                <input id="pay_button" type="button" value="Pay" />
+                <select id="pay_to" name="pay_to">
+                    <option value="(default)" selected="selected">(Choose a Worker)</option>
+                {% for w in workers %}
+                    <option value="{{ w.jobuser.user.username }}">{{ w.jobuser.user.first_name }}&nbsp;{{ w.jobuser.user.last_name }}</option>
+                {% endfor %}
+                &nbsp;$<input id="pay_amount" type="text" placeholder="0" size="5" name="pay_amount" />.00
+                </select>
+                <span id="pay_to_error"></span><span id="pay_amount_error"></span>
+                <input id="cancel_pay" type="button" value="Cancel" />
+                <input id="stripe_token" type="hidden" name="stripeToken" />
+            </form>
+        </div>
     </div>
     {% endif %}
     <!-- End Pledge Button -->

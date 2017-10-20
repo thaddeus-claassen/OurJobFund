@@ -17,7 +17,7 @@ $('document').ready(function() {
         $('#pledge-money-form').css('display', 'none');
     });
     $('#pay_money').click(function() {
-        $(this).css('display', 'none');
+        $('#pay_unclicked').css('display', 'none');
         $('#pay_clicked').css('display', 'inline');
     });
     $('#work_on_job').click(function() {
@@ -27,40 +27,37 @@ $('document').ready(function() {
             $('#stripe_connect').css('display', 'inline');
         }// end if
     });
-    $('.pay_worker').click(function() {
-        $(this).css('display', 'none');
-        var name = $(this).attr('id').split('_');
-        $('#paying_' + name[1]).css('display', 'inline');
-    });
     var handler = StripeCheckout.configure({
         key: 'pk_test_DF7zGC0IPpcOQyWr2nWHVLZ6',
         locale: 'auto',
         name: 'OurJobFund',
-        description: 'One-time donation',
+        description: 'One-time donation to the selected worker',
         token: function(token) {
             $('#stripe_token').val(token.id);
             $('#pay_form').submit();
         }
     });
-    $('.pay_button').click(function(e) {
-        e.preventDefault();
-        $('#error_explanation').html('');
-        var username = $(this).attr('id').split("-")[0];
-        var amount = $('#' + username + '-amount_paying').val();
-        amount = amount.replace(/\$/g, '').replace(/\,/g, '')
-        amount = parseFloat(amount);
-        if (isNaN(amount)) {
-            $('#error_explanation').html('<p>Please enter a valid amount in USD ($).</p>');
-        } else if (amount < 5.00) {
-            $('#error_explanation').html('<p>Donation amount must be at least $1.</p>');
+    $('#pay_button').click(function(e) {
+        $('#pay_to_error').text('');
+        var username = $('#pay_to').val();
+        if (username === "(default)") {
+            $('#pay_to_error').text('Please select a vaild worker to pay.');
         } else {
-            amount = Math.round(amount * 100); // Needs to be an integer!
-            $('#pay_amount').val(amount);
-            $('#pay_to').val(username);
-            handler.open({
-                amount: amount
-            });
-        }
+            $('#pay_amount_error').text('');
+            var amount = $('#pay_amount').val();
+            amount = amount.replace(/\$/g, '').replace(/\,/g, '')
+            amount = parseFloat(amount);
+            if (isNaN(amount)) {
+                $('#pay_amount_error').text('<p>Please enter a valid amount in USD ($).</p>');
+            } else if (amount < 1.00) {
+                $('#pay_amount_error').text('<p>Donation amount must be at least $1.</p>');
+            } else {
+                amount = Math.round(amount * 100); // Needs to be an integer!
+                handler.open({
+                    amount: amount,
+                });
+            }// end if-else
+        }// end if-else
     });
     // Close Checkout on page navigation
     $(window).on('popstate', function() {

@@ -10,6 +10,7 @@ class JobUser(models.Model):
     amount_paid = models.PositiveIntegerField(default=0);
     newest_work_date = models.DateTimeField(default=None, null=True, blank=True);
     newest_finish_date = models.DateTimeField(default=None, null=True, blank=True);
+    amount_received = models.PositiveIntegerField(default=0);
 
 class Pledge(models.Model):
     jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);
