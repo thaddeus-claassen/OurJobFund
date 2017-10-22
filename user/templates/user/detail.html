@@ -122,7 +122,7 @@
                             <th class="name">Name</th>
                             <th class="pledged">Pledged</th>
                             <th class="paid">Paid</th>
-                            <th class="received">received</th>
+                            <th class="received">Received</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -176,8 +176,8 @@
                         <tr id="finished_{{ finished_jobuser.job.name }}">
                             <td class="name"><a href="{% url 'job:detail' finished_jobuser.job.random_string %}">{{ finished_jobuser.job.name }}</a></td>
                             <td class="pledged">${{ finished_jobuser.amount_pledged }}.00</td>
-                            <td class="paid">${{ finished_jobuser.amount_paid }}</td>
-                            <td class="received">${{ finished_jobuser.jobuser.amount_received }}.00</td>
+                            <td class="paid">${{ finished_jobuser.amount_paid }}.00</td>
+                            <td class="received">${{ finished_jobuser.amount_received }}.00</td>
                         </tr>
                     {% empty %}
                         <tr>
