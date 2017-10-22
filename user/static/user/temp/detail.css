@@ -1,0 +1,83 @@
+#edit_description, #edit_info, #save_description, #save_info {
+    float: right;
+    color: #0000EE;
+}
+
+#edit_description:hover, #save_description:hover, #edit_info:hover, #save_info:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}    
+
+#info-wrapper, #description-wrapper {
+    border: 1px solid black;
+    height: 300px;
+    width: 100%;
+}
+
+.change-info-wrapper, .change-description-wrapper {
+    display: none;
+}
+
+#description {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+#textarea_div {
+    height: 300px;
+    width: 100%;
+}
+
+textarea {
+    height: 300px;
+    resize: none;
+    overflow: auto;
+}
+
+#description_div {
+    overflow: auto;
+}
+
+table {
+    border: 1px solid black;
+    width: 100%;
+}
+
+td {
+    word-wrap: break-word;
+}
+
+thead, tbody, tfoot, tr, td, th {
+    display: block;
+}
+
+tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+thead th {
+    height: 30px;
+}
+
+tbody {
+    height: 300px;
+    overflow-x: auto;
+    overflow-y: scroll;
+}
+
+.name {
+    width: 40%;
+    float: left;
+}
+
+.pledged, .paid, .status, .received {
+    width: 20%;
+    float: left;
+}
+
+#create_job {
+    width: 100%;
+}

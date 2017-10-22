@@ -20,6 +20,10 @@ $('document').ready(function() {
         $('#pay_unclicked').css('display', 'none');
         $('#pay_clicked').css('display', 'inline');
     });
+    $('#cancel_pay').click(function() {
+        $('#pay_clicked').css('display', 'none');
+        $('#pay_unclicked').css('display', 'inline');
+    });
     $('#work_on_job').click(function() {
         if ($(this).attr('type') === 'button') {
             $(this).css('display', 'none');

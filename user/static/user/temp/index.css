@@ -1,0 +1,13 @@
+html, body {
+    height: 100%;
+}
+
+.max-height {
+    height: 100%;
+}
+
+#description {
+    border: solid 1px;
+    overflow: auto;
+    height: 90%;
+}
