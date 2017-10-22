@@ -73,7 +73,7 @@ tbody {
     float: left;
 }
 
-.pledged, .paid, .status {
+.pledged, .paid, .status, .received {
     width: 20%;
     float: left;
 }
