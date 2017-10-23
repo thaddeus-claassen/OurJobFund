@@ -20,7 +20,7 @@
 <div id="content-wrapper">
     <a id="show_filter">Show Filter</a>
     <a id="hide_filter">Hide Filter</a>
-    <div class="use-location row">
+    <div class="row">
         <div class="col-md-6">
             <input id="latitude" type="hidden" value="" />
             <div class="row">
@@ -43,8 +43,23 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-md-3">
+                    <label for="basic">Basic:</label>
+                    <input id="basic" type="radio" name="search" value="basic" checked="checked" />
+                </div>
+                <div class="col-md-3">
+                    <label for="custom">Custom:</label>
+                    <input id="custom" type="radio" name="search" value="custom" />
+                </div>
+            </div>
+            <div id="basic_search" class="row">
                 <div class="col-md-12">
-                    <input id="search_jobs" class="search" type="text" placeholder="Search Jobs by Name or Tags" />
+                    <input id="basic_search_jobs" class="search" type="text" placeholder="Search Jobs by Name or Tags, separated by spaces" />
+                </div>
+            </div>
+            <div id="custom_search" class="row">
+                <div class="col-md-12">
+                    <textarea id="custom_search_jobs" class="search" placeholder='Search Jobs by combining tags with "&" (AND operator), "|" (OR operator), "~" (NOT operator), and "()" (precedence grouping)'></textarea>
                 </div>
             </div>
         </div>

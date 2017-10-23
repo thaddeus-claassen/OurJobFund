@@ -20,6 +20,26 @@ $('document').ready(function() {
         $('#show_filter').css('display', 'inline');
         $('#advanced-settings-wrapper').css('display', 'none');
     });
+    $('#basic').click(function() {
+        $('#basic_search_jobs').css('display', 'inline');
+        $('#custom_search_jobs').css('display', 'none');
+    });
+    $('#custom').click(function() {
+        $('#basic_search_jobs').css('display', 'none');
+        $('#custom_search_jobs').css('display', 'inline');
+    });
+    $('.search').keydown(function(event) {
+        if (event.which == ENTER) {
+            clearMarkers();
+            numSearches = 0;
+            if ($('#location').val() == "") {
+                get_jobs();
+            } else {
+                applyLocation();
+            }// end if-else
+            get_total_jobs();
+        }// end if
+    });
     $('.sort').click(function() {
         var by = $(this).attr('id');
         var sort_by_val =  $('#sort').val();
@@ -39,18 +59,6 @@ $('document').ready(function() {
         $('#sort').val(sort_by_val);
         sort_jobs();
     });
-    $('.search').keydown(function(event) {
-        if (event.which == ENTER) {
-            clearMarkers();
-            numSearches = 0;
-            if ($('#location').val() == "") {
-                get_jobs();
-            } else {
-                applyLocation();
-            }// end if-else
-            get_total_jobs();
-        }// end if
-    });
     $('tbody').scroll(function() {
         if ($(this).scrollTop() + $(this).height() === $(this)[0].scrollHeight) {
             if (50 * numSearches <= parseInt($('#num-jobs-found').text())) {
@@ -69,10 +77,12 @@ function changeTHeadTFootWidthToAccountForScrollBar() {
 }// end changeTHeadTFootWidthToAccountForScrollBar()
 
 function get_jobs() {
+    var search_type = $("input[name='search']:checked").val();
     $.ajax({
         url : 'get_jobs',
         data : {
-            'search' : $('#search_jobs').val(),
+            'search_type' : search_type,
+            'search' : $('#' + search_type + '_search_jobs').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
             'radius' : $('#radius').val(),
@@ -113,10 +123,12 @@ function sort_jobs() {
 }// end sort_jobs()
 
 function get_total_jobs() {
+    var search_type = $("input[name='search']:checked").val();
     $.ajax({
         url : 'get_total_jobs',
         data : {
-            'search' : $('#search_jobs').val(),
+            'search_type' : search_type,
+            'search' : $('#' + search_type + '_search_jobs').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
             'radius' : getRadius(),

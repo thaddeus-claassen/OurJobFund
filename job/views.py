@@ -96,17 +96,20 @@ def get_total_jobs(request):
         return Http404();
         
 def findJobs(request):
-    search_array = request.GET['search'].split(" "); 
+    search_type = request.GET['search_type'];
+    search = request.GET['search'];
+    if (search_type == 'basic'):
+        for word in search.split(" "):
+            jobs = jobs.filter(Q(name__contains=word) | Q(tag__tag__contains=word));
+    elif (search_type == "custom"):
+        jobs = get_jobs_from_custom_search(search);
+    jobs = jobs.distinct();
     sort_array = request.GET['sort'].split(" ");
     latitude_in_degrees_as_string = request.GET['latitude'];
     longitude_in_degrees_as_string = request.GET['longitude'];
     radius_in_miles_as_string = request.GET['radius'];
-    jobs = Job.objects.all();
     if (latitude_in_degrees_as_string != "" and longitude_in_degrees_as_string != "" and radius_in_miles_as_string != ""):
         jobs = findJobsByRadius(jobs, float(latitude_in_degrees_as_string), float(longitude_in_degrees_as_string), float(radius_in_miles_as_string));
-    for word in search_array:
-        jobs = jobs.filter(Q(name__contains=word) | Q(tag__tag__contains=word));
-    jobs = jobs.distinct();
     if (sort_array[0] == 'created'):
         jobs = jobs.order_by('creation_date');
     elif (sort_array[0] == 'pledged'):
@@ -118,7 +121,10 @@ def findJobs(request):
     if (sort_array[1] == 'descending'):
         jobs = jobs[::-1];
     return jobs;
-
+    
+def get_jobs_from_custom_search(tags):
+    return eval("Job.objects.filter(" + re.sub(r'([a-zA-Z0-9]+)', "Q(tag__tag__iexact='" + r'\1' + "')", tags) + ")");
+    
 def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_miles):
     radius_in_degrees = radius_in_miles / 69;
     latitude_in_radians = latitude_in_degrees * math.pi / 180;

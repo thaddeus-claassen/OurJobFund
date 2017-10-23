@@ -1,9 +1,9 @@
 
-#advanced-settings-wrapper {
+#advanced-settings-wrapper, #custom_search_jobs {
     display: none;
 }
 
-#search_jobs, #search_button, #location, #radius, #create_job, table {
+.search, #search_button, #location, #radius, #create_job, table {
     width: 100%;
 }
 
@@ -22,6 +22,17 @@
 
 .filter_unit {
     float: left;
+}
+
+.height_100 {
+    height: 100%;
+    border: 1px solid black;
+}
+
+#custom_search_jobs {
+    width: 100%;
+    resize: none;
+    height: 120px;
 }
 
 table {
