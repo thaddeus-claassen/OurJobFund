@@ -16,7 +16,7 @@ urlpatterns = [
     url(r'^get_total_jobs/$', views.get_total_jobs),
     url(r'^(?P<job_random_string>[a-zA-Z0-9]+)/$', views.detail, name='detail'),
     url(r'^(?P<job_random_string>[a-zA-Z0-9]+)/sort/$', views.detail_sort),
-    url(r'^confirmation/(?P<job_random_string>[a-zA-Z0-9]+)', views.payment_confirmation, name='confirmation');
+    url(r'^confirmation/(?P<job_random_string>[a-zA-Z0-9]+)', views.payment_confirmation, name='confirmation'),
 ]
 
 if settings.DEBUG:
