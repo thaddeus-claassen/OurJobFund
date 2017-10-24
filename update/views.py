@@ -13,8 +13,8 @@ from random import randint;
 def create(request, job_random_string):
     job = get_object_or_404(Job, random_string=job_random_string);
     jobuser = get_object_or_404(JobUser, user=request.user, job=job);
+    form = UpdateForm(request.POST or None);
     if (request.method == 'POST'):
-        form = UpdateForm(request.POST);
         if (form.is_valid()):
             title = form.cleaned_data['title'];
             description = form.cleaned_data['description'];
@@ -25,13 +25,11 @@ def create(request, job_random_string):
                 image.save();
             sendNotifications(update);
         return redirect('job:detail', job_random_string=job.random_string);
-    if (jobuser.user == request.user):
-        context = {
-            'jobuser' : jobuser,
-            'form' : UpdateForm(),
-        }
-        return render(request, 'update/create.html', context);
-    return redirect('job:detail', job_random_string=job.random_string);
+    context = {
+        'jobuser' : jobuser,
+        'form' : form,
+    }
+    return render(request, 'update/create.html', context);
     
 @login_required
 def detail(request, update_random_string):

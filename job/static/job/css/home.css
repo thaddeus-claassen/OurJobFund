@@ -1,5 +1,5 @@
 
-#advanced-settings-wrapper, #custom_search_jobs {
+#advanced-settings-wrapper, #custom_search_jobs, .show_location {
     display: none;
 }
 
@@ -7,16 +7,16 @@
     width: 100%;
 }
 
-#show_filter {
+#show_filter, #show_location {
     cursor: pointer;
 }
 
-#hide_filter {
+#hide_filter, #hide_location {
     display: none;
     cursor: pointer;
 }
 
-.filter_label {
+.filter_label, #show_filter, #show_location, #hide_filter, #hide_location {
     float: right;
 }
 
@@ -82,6 +82,10 @@ tbody {
 tfoot td {
     float: left;
     width: 1%;
+}
+
+#header {
+    height: 200px;
 }
 
 tfoot #job-number-footer {

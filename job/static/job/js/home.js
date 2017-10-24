@@ -17,8 +17,18 @@ $('document').ready(function() {
     });
     $('#hide_filter').click(function() {
         $(this).css('display', 'none');
-        $('#show_filter').css('display', 'inline');
+        $('#show_filter').css('display', 'block');
         $('#advanced-settings-wrapper').css('display', 'none');
+    });
+    $('#show_location').click(function() {
+        $(this).css('display', 'none');
+        $('.show_location').css('display', 'block');
+        $('#hide_location').css('display', 'block');
+    });
+    $('#hide_location').click(function() {
+        $(this).css('display', 'none');
+        $('.show_location').css('display', 'none');
+        $('#show_location').css('display', 'block');
     });
     $('#basic').click(function() {
         $('#basic_search_jobs').css('display', 'inline');

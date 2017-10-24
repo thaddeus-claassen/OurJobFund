@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% block import %}
+    <link rel="stylesheet" type="text/css" href="{% static 'job/css/confirmation.css' %}" />
+{% endblock %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        Payment confirmed.
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <a href="{% url 'job:detail' job.random_string %}">Return to {{ job.name }}</a>
+    </div>
+</div>
+{% endblock %}

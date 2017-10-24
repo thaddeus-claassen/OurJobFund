@@ -99,6 +99,7 @@ def findJobs(request):
     search_type = request.GET['search_type'];
     search = request.GET['search'];
     if (search_type == 'basic'):
+        jobs = Job.objects.all();
         for word in search.split(" "):
             jobs = jobs.filter(Q(name__contains=word) | Q(tag__tag__contains=word));
     elif (search_type == "custom"):
@@ -198,12 +199,11 @@ def detail(request, job_random_string):
             jobuser.amount_paid = jobuser.amount_paid + amount_paying;
             jobuser.save();
             receiver_jobuser = JobUser.objects.get(user=User.objects.get(username=receiver_username), job=job);
-            print("Before: " + str(receiver_jobuser.amount_received));
             receiver_jobuser.amount_received = receiver_jobuser.amount_received + amount_paying;
-            print("After: " + str(receiver_jobuser.amount_received));
             receiver_jobuser.save();
             job.paid = job.paid + amount_paying;
             job.save();
+            return redirect('job:confirmation', job_random_string = job_random_string);
         return redirect('job:detail', job_random_string=job_random_string);
     workers = Work.objects.filter(Q(jobuser__job=job) & Q(date__exact=F('jobuser__newest_work_date'))).order_by('-date');
     total_finished = 0;
@@ -227,6 +227,14 @@ def detail(request, job_random_string):
         'pledge_form' : pledgeForm,
     }
     return render(request, 'job/detail.html', context);
+
+@login_required
+def payment_confirmation(request, job_random_string):
+    job = get_object_or_404(Job, random_string = job_random_string);
+    context = {
+        'job' : job,
+    }
+    return render(request, 'job/confirmation.html', context);
 
 @login_required
 def detail_sort(request, job_random_string):
@@ -277,7 +285,7 @@ def create_job(request):
                 image.save();
             return redirect('job:detail', job.random_string);
     context = {
-        'form' : newJobForm, 
+        'form' : newJobForm,
     }
     return render(request, 'job/create_job.html', context);
     
