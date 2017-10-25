@@ -132,7 +132,7 @@ class DeactivateAccountForm(forms.ModelForm):
         fields = ['is_active'];
         
 class DescriptionForm(forms.ModelForm):
-    description = forms.CharField(widget=forms.Textarea(attrs={'placeholder' : 'This is where you add contact information, social media accounts, and any other information you would like others to know about you'}));
+    description = forms.CharField(widget=forms.Textarea(attrs={'placeholder' : 'This is where you add contact information, social media accounts, and any other information you would like others to know about you'}), required=False);
 
     class Meta:
         model = UserProfile;

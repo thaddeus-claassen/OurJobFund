@@ -112,7 +112,7 @@ def detail(request, username):
     infoForm = None;
     descriptionForm = None;
     #infoForm = forms.InfoForm(request.POST or None);
-    descriptionForm = forms.DescriptionForm(request.POST or None, initial={'description' : user.userprofile.description});    
+    descriptionForm = forms.DescriptionForm(request.POST or None, initial={'description' : user.userprofile.description});
     if (request.method == "POST"):
         #if (infoForm.has_changed()):
             #if (infoForm.is_valid()):
