@@ -2,8 +2,8 @@
 
 {% load staticfiles %}
 {% block import %}
-    <script type="text/javascript" src="{% static 'user/js/users.js' %}" ></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'user/css/users.css' %}" />
+    <script type="text/javascript" src="{% static 'user/js/search.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'user/css/search.css' %}" />
 {% endblock %}
 
 {% block content %}
@@ -19,7 +19,7 @@
             <tbody>
             {% for searched_user in users %}
                 <tr>
-                    <td><a href="{% url 'user:detail' searched_user.username %}">{{ searched_user.first_name }}&nbsp;{{ searched_user.last_name }}</a></td>
+                    <td><a href="{% url 'user:detail' searched_user.username %}">{{ searched_user.username }}</a></td>
                 </tr>
             {% empty %}
                 <tr>

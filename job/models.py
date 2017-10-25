@@ -33,5 +33,5 @@ class Tag(models.Model):
 
 class Image(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE, null=True);
-    image = models.ImageField(); 
+    image = models.ImageField();
 

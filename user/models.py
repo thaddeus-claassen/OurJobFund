@@ -19,13 +19,36 @@ STATES = (
 class UserProfile(models.Model):
     user = AutoOneToOneField(User, primary_key=True);
     description = models.CharField(max_length=10000, blank=True);
-    city = models.CharField(default="", max_length=100, blank=True, validators=[alphabetic]);
-    state = models.CharField(default="", max_length=2, choices=STATES, blank=True);
-    occupation = models.CharField(default="", max_length=100, blank=True, validators=[alphabetic]);
     last_time_name_was_changed = models.DateTimeField(default="2000-01-01");
     stripe_account_id = models.CharField(null=True, blank=True, max_length=100);
     
     def get_absolute_url(self):
         return reverse("user.views.detail", args=[self.random_string]);
+        
+class UserInfo(models.Model):
+    userprofile = models.ForeignKey(UserProfile, on_delete=models.CASCADE);
+    title = models.CharField(max_length=20);
+    info = models.CharField(max_length=100);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     

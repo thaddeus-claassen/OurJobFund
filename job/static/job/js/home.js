@@ -38,17 +38,13 @@ $('document').ready(function() {
         $('#basic_search_jobs').css('display', 'none');
         $('#custom_search_jobs').css('display', 'inline');
     });
-    $('.search').keydown(function(event) {
+    $('#basic_search_jobs').keydown(function(event) {
         if (event.which == ENTER) {
-            clearMarkers();
-            numSearches = 0;
-            if ($('#location').val() == "") {
-                get_jobs();
-            } else {
-                applyLocation();
-            }// end if-else
-            get_total_jobs();
+            search();
         }// end if
+    });
+    $('#search_button').click(function() {
+        search();
     });
     $('.sort').click(function() {
         var by = $(this).attr('id');
@@ -77,6 +73,17 @@ $('document').ready(function() {
         }// end if
     });
 });
+
+function search() {
+    clearMarkers();
+    numSearches = 0;
+    if ($('#location').val() == "") {
+        get_jobs();
+    } else {
+        applyLocation();
+    }// end if-else
+    get_total_jobs();
+}// end search()
 
 function changeTHeadTFootWidthToAccountForScrollBar() {
     var oldTableWidth = $('table').width();
@@ -209,10 +216,15 @@ function initMap() {
 }// end initMap()
 
 function centerMap(position) {
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0; i < markers.length; i++) {
+        bounds.extend(markers[i].getPosition());
+    }// end for
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: position.coords.latitude, lng: position.coords.longitude},
         zoom: 12,
     });
+    map.fitBounds(bounds);
 }// centerMap()
 
 function addMarker(location) {

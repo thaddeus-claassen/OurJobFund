@@ -15,7 +15,7 @@
 </div>
 <div class="row">
     <div class="col-md-6">
-        <span id="created_by">Created By:&nbsp;<a href="{% url 'user:detail' job.created_by.username %}">{{ job.created_by.first_name }}&nbsp;{{ job.created_by.last_name }}</a></span>
+        <span id="created_by">Created By:&nbsp;<a href="{% url 'user:detail' job.created_by.username %}">{{ job.created_by.username }}</a></span>
     </div>
     <div class="col-md-6">
         <span id="creation_date">Created:&nbsp;{{ job.creation_date }}</span>
@@ -85,7 +85,7 @@
                             <td class="updates-last_name_data">
                                 {% if update.jobuser.user.is_active %}
                                 <a href="{% url 'user:detail' update.jobuser.user.username %}">
-                                    {{ update.jobuser.user.first_name }}&nbsp;{{ update.jobuser.user.last_name }}
+                                    {{ update.jobuser.user.username }}
                                 </a>
                                 {% else %}
                                 <span>[ Deleted User ]</span>
@@ -140,7 +140,7 @@
                             <td>
                                 {% if pledge.jobuser.user.is_active %}
                                 <a href="{% url 'user:detail' pledge.jobuser.user.username %}">
-                                    {{ pledge.jobuser.user.first_name }}&nbsp;{{ pledge.jobuser.user.last_name }}
+                                    {{ pledge.jobuser.user.username }}
                                 </a>
                                 {% else %}
                                 <span>[ Deleted User ]</span>
@@ -186,7 +186,7 @@
                                 <td>
                                     {% if worker.jobuser.user.is_active %}
                                     <a href="{% url 'user:detail' worker.jobuser.user.username %}">
-                                        {{ worker.jobuser.user.first_name }}&nbsp;{{ worker.jobuser.user.last_name }}
+                                        {{ worker.jobuser.user.username }}
                                     </a>
                                     {% else %}
                                     <span>[ Deleted User ]</span>
@@ -222,7 +222,7 @@
     {% endif %}
     <!-- End Update Button -->
     
-    <!-- Pledge Button -->
+    <!-- Pledge-Pay Button -->
     {% if not jobuser and not jobuser.pledge_set.all.exists %}
     <div class="col-md-6">  
         <input id="pledge_money" class="pledge_work_inputs" type="button" value="Pledge" />
@@ -247,7 +247,7 @@
                 <select id="pay_to" name="pay_to">
                     <option value="(default)" selected="selected">(Choose a Worker)</option>
                 {% for w in workers %}
-                    <option value="{{ w.jobuser.user.username }}">{{ w.jobuser.user.first_name }}&nbsp;{{ w.jobuser.user.last_name }}</option>
+                    <option value="{{ w.jobuser.user.username }}">{{ w.jobuser.user.username }}</option>
                 {% endfor %}
                 &nbsp;$<input id="pay_amount" type="text" placeholder="0" size="5" name="pay_amount" />.00
                 </select>
@@ -261,7 +261,7 @@
         </div>
     </div>
     {% endif %}
-    <!-- End Pledge Button -->
+    <!-- End Pledge-Pay Button -->
     
     <!-- Work-Finish-Unfinish Button -->
     {% if not jobuser and not jobuser.work_set.all.exists %}

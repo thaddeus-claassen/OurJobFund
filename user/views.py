@@ -34,14 +34,10 @@ def sign_in(request):
                 newUserForm = forms.NewUserForm(request.POST or None);
                 if (newUserForm.is_valid()):
                     user = newUserForm.save(commit=False);
-                    first_name = newUserForm.cleaned_data['first_name'];
-                    last_name = newUserForm.cleaned_data['last_name'];
-                    user.first_name = first_name;
-                    user.last_name = last_name;
                     user.email = newUserForm.cleaned_data['email'];
+                    user.username = newUserForm.cleaned_data['username'];
                     password = newUserForm.cleaned_data['password'];
                     user.set_password(password);
-                    user.username = createNewUsername(first_name, last_name);
                     user.save();
                     profile = UserProfile(user=user);
                     profile.save();
@@ -83,7 +79,7 @@ def search_users(request):
         'search' : search,
         'total' : getTotalNumberOfUsersFromQuery(search),
     };
-    return render(request, 'user/users.html', context);
+    return render(request, 'user/search.html', context);
         
 def getUsersFromQuery(search, num_searches):
     users = User.objects.all();
@@ -115,16 +111,16 @@ def detail(request, username):
     user = get_object_or_404(User, username=username);
     infoForm = None;
     descriptionForm = None;
-    infoForm = forms.EditInfoForm(request.POST or None, initial={'city' : request.user.userprofile.city, 'state' : request.user.userprofile.state, 'occupation' : user.userprofile.occupation});
-    descriptionForm = forms.EditDescriptionForm(request.POST or None, initial={'description' : user.userprofile.description});    
+    #infoForm = forms.InfoForm(request.POST or None);
+    descriptionForm = forms.DescriptionForm(request.POST or None, initial={'description' : user.userprofile.description});    
     if (request.method == "POST"):
-        if (infoForm.has_changed()):
-            if (infoForm.is_valid()):
-                user.userprofile.city = infoForm.cleaned_data['city'];
-                user.userprofile.state = infoForm.cleaned_data['state'];
-                user.userprofile.occupation = infoForm.cleaned_data['occupation'];
-                user.userprofile.save();
-                return redirect('user:detail', username=request.user.username);
+        #if (infoForm.has_changed()):
+            #if (infoForm.is_valid()):
+            #    user.userprofile.city = infoForm.cleaned_data['city'];
+            #    user.userprofile.state = infoForm.cleaned_data['state'];
+            #    user.userprofile.occupation = infoForm.cleaned_data['occupation'];
+            #    user.userprofile.save();
+            #    return redirect('user:detail', username=request.user.username);
         if (descriptionForm.has_changed()):
             if (descriptionForm.is_valid()):
                 user.userprofile.description = descriptionForm.cleaned_data['description'];

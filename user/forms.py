@@ -6,40 +6,31 @@ import re;
 
 
 class UserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}));
-    email = forms.EmailField(label='Email', widget=forms.TextInput(attrs={'class': 'form-control'}));
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder' : 'Password'}));
+    email = forms.EmailField(label='Email', widget=forms.TextInput(attrs={'placeholder' : 'Email'}));
 
     class Meta: 
         model = User;
         fields = ['email', 'password'];
         
 class NewUserForm(forms.ModelForm):
-    first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'placeholder' : 'First Name'}));
-    last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'placeholder' : 'Last Name'}));
     email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder' : 'Email'}));
+    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder' : 'Username'}));
     password = forms.CharField(label='Password:', widget=forms.PasswordInput(attrs={'placeholder' : 'Password'}));
     repeat_password = forms.CharField(label='Repeat Password:', widget=forms.PasswordInput(attrs={'placeholder' : 'Repeat Password'}));
     age_checkbox = forms.BooleanField(label='Check here to verify you are at least 13 years old:');
     
     class Meta: 
         model = User;
-        fields = ['first_name', 'last_name', 'email', 'password'];
+        fields = ['username', 'email', 'password'];
         
-    def clean_first_name(self):
-        first_name = self.cleaned_data.get('first_name');
-        if (len(first_name) > 30):
-            raise forms.ValidationError('Your first name must not exceed 30 characters.');
-        if (not re.match(r'^[A-Za-z]{1,30}$', first_name)):
-            raise forms.ValidationError('Your first name may only include alphabetic characters.');
-        return first_name;
-
-    def clean_last_name(self):
-        last_name = self.cleaned_data.get('last_name');
-        if (len(last_name) > 30):
-            raise forms.ValidationError('Your last name must not exceed 30 characters.');
-        if (not re.match(r'^[A-Za-z]{1,30}$', last_name)):
-            raise forms.ValidationError('Your first name may only include alphabetic characters.');
-        return last_name;    
+    def clean_username(self):
+        username = self.cleaned_data.get('username');
+        if (len(username) > 150):
+            raise forms.ValidationError('Your first name must not exceed 150 characters.');
+        if (not re.match(r'^[A-Za-z0-9]+$', username)):
+            raise forms.ValidationError('Your username may only include alphanumeric characters.');
+        return username;
         
     def clean_email(self):
         email = self.cleaned_data.get('email');
@@ -61,14 +52,6 @@ class NewUserForm(forms.ModelForm):
         if (not repeat_password or password != repeat_password):
             raise forms.ValidationError("Passwords do not match");
         return repeat_password;
-        
-
-class DescriptionForm(forms.ModelForm):
-        description = forms.CharField(label="Description:", widget=forms.Textarea, max_length=10000);
-        
-        class Meta:
-            model = UserProfile;
-            fields = ['description'];
             
 class ChangeNameForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30, required=False);
@@ -148,21 +131,13 @@ class DeactivateAccountForm(forms.ModelForm):
         model = User;
         fields = ['is_active'];
         
-class EditDescriptionForm(forms.ModelForm):
+class DescriptionForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea(attrs={'placeholder' : 'This is where you add contact information, social media accounts, and any other information you would like others to know about you'}));
 
     class Meta:
         model = UserProfile;
         fields = ['description'];
-        
-class EditInfoForm(forms.ModelForm):
-    city = forms.CharField(widget=forms.TextInput(), required=False);
-    state = forms.CharField(widget=forms.Select(choices=STATES), required=False);
-    occupation = forms.CharField(widget=forms.TextInput(), required=False);
-        
-    class Meta:
-        model = UserProfile;
-        fields = ['city', 'state', 'occupation'];
+
         
         
         
