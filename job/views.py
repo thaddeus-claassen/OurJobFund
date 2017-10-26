@@ -7,6 +7,7 @@ from notification.models import Notification;
 from django.db.models import Q, F;
 from jobuser.models import JobUser, Pledge, Pay, Work, Finish;
 from update.models import Update;
+from update.views import create_update_by_finishing, create_update_by_paying, create_update_by_unfinishing;
 from django.http import JsonResponse, HttpResponse, Http404;
 from django.core import serializers;
 from rest_framework.renderers import JSONRenderer;
@@ -164,7 +165,7 @@ def detail(request, job_random_string):
             work.save();
             job.workers = job.workers + 1;
             job.save();
-            jobuser.newest_work_date = work.date;
+            jobuser.oldest_work_date = work.date;
             jobuser.save();
         elif ('finish' in request.POST):
             finish = Finish(jobuser=jobuser);
@@ -172,14 +173,14 @@ def detail(request, job_random_string):
             job.finished = job.finished + 1;
             job.save();
             jobuser.newest_finish_date = finish.date;
-            jobuser.save()
+            jobuser.save();
+            create_update_by_finishing(finish);
         elif ('unfinish' in request.POST):
             unfinish = Work(jobuser=jobuser);
             unfinish.save();
             job.finished = job.finished - 1;
             job.save();
-            jobuser.newest_work_date = unfinish.date;
-            jobuser.save();
+            create_update_by_unfinishing(unfinish);
         elif ('stripeToken' in request.POST):
             receiver_username = request.POST['pay_to'];
             stripe.api_key = STRIPE_TEST_SECRET_KEY;
@@ -203,9 +204,10 @@ def detail(request, job_random_string):
             receiver_jobuser.save();
             job.paid = job.paid + amount_paying;
             job.save();
+            create_update_by_paying(payment);
             return redirect('job:confirmation', job_random_string = job_random_string);
         return redirect('job:detail', job_random_string=job_random_string);
-    workers = Work.objects.filter(Q(jobuser__job=job) & Q(date__exact=F('jobuser__newest_work_date'))).order_by('-date');
+    workers = Work.objects.filter(Q(jobuser__job=job) & Q(date__exact=F('jobuser__oldest_work_date'))).order_by('-date');
     total_finished = 0;
     for jobuser in JobUser.objects.filter(job=job):
         if (jobuser.work_set.all().count() == jobuser.finish_set.all().count()):

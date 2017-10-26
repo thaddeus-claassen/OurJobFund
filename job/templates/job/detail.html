@@ -73,7 +73,7 @@
                 <table id="updates_table" class="table">
                     <thead>
                         <tr>
-                            <th id="updates-last_name" class="sort">User</th>
+                            <th id="updates-last_name" class="sort">Username</th>
                             <th id="updates-date" class="sort">Date</th>
                             <th id="updates-title" class="sort">Title</th>
                             <th id="updates-images" class="sort">Image/s</th>
@@ -93,7 +93,11 @@
                             </td>
                             <td class="updates-date_data">{{ update.date }}</td>
                             <td class="updates-title">
+                                {% if update.description %}
                                 <a href="{% url 'update:detail' update.random_string %}">{{ update.title }}</a>
+                                {% else %}
+                                {{ update.title }}
+                                {% endif %}
                             </td>
                             <td class="updates-images">
                             {% if update.image_set.all %}
@@ -128,7 +132,7 @@
                 <table id="pledges_table" class="table">
                     <thead>
                         <tr>
-                            <th id="pledges-last_name" class="sort">Name</th>
+                            <th id="pledges-last_name" class="sort">Username</th>
                             <th id="pledges-pledged" class="sort">Pledged</th>
                             <th id="pledgers-date_pledged" class="sort">Date Pledged</th>
                             <th id="pledgers-paid" class="sort">Paid</th>
@@ -173,14 +177,13 @@
                 <table id="workers_table" class="table">
                     <thead>
                         <tr>
-                            <th id="workers-last_name">Name</th>
+                            <th id="workers-last_name">Username</th>
                             <th id="workers-started">Started</th>
                             <th id="workers-finished">Finished</th>
                             <th id="workers-received">Received</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% csrf_token %}
                         {% for worker in workers %}
                             <tr>
                                 <td>

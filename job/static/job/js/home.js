@@ -24,6 +24,7 @@ $('document').ready(function() {
         $(this).css('display', 'none');
         $('.show_location').css('display', 'block');
         $('#hide_location').css('display', 'block');
+        google.maps.event.trigger(map, 'resize');
     });
     $('#hide_location').click(function() {
         $(this).css('display', 'none');
