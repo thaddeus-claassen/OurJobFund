@@ -53,7 +53,7 @@
     <div class="col-md-6">
         <div class="row">
             <div class="col-md-12">
-                <h4>Description</h4>
+                <span>Description</span>
             </div>
         </div>
         <div class="row">
@@ -64,9 +64,16 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
-                <h4 id="updates_title">Updates</h4>
+            <div class="col-md-6">
+                <span id="updates_title">Updates</span>
             </div>
+            {% if jobuser %}
+            <div class="col-md-6">
+                <form action="{% url 'update:create' job.random_string %}">
+                    <input id="post_update" class="pledge_work_inputs" type="submit" value="Post Update" />
+                </form>
+            </div>
+            {% endif %}
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -123,9 +130,47 @@
     </div>
     <div class="col-md-6">
         <div class="row">
-            <div class="col-md-12">
-                <h4>Pledges</h4>
+            <div class="col-md-6">
+                <span>Pledges</span>
             </div>
+            {% if not jobuser.pledge_set.all.exists %}
+            <div class="col-md-6">  
+                <input id="pledge_money" class="pledge_work_inputs" type="button" value="Pledge" />
+                <form id="pledge-money-form" action="{{ request.get_full_path }}" method="POST">
+                {% csrf_token %}
+                {% for field in pledge_form %}
+                    ${{ field }}.00
+                    {{ field.errors }}
+                {% endfor %}
+                    <input type="submit" value="Accept" name="pledge"  />
+                    <input id="cancel-pledge-money" type="button" value="Cancel" />
+                </form>
+            </div>
+            {% elif jobuser.pledge_set.all.exists %}
+            <div class="col-md-6">
+                <div id="pay_unclicked">
+                    <input id="pay_money" class="pledge_work_inputs" type="button" value="Pay" />
+                </div>
+                <div id="pay_clicked">
+                    <form id="pay_form" action="{{ request.get_full_path }}" method="POST">
+                    {% csrf_token %}
+                        <select id="pay_to" name="pay_to">
+                            <option value="(default)" selected="selected">(Choose a Worker)</option>
+                        {% for w in workers %}
+                            <option value="{{ w.jobuser.user.username }}">{{ w.jobuser.user.username }}</option>
+                        {% endfor %}
+                        &nbsp;$<input id="pay_amount" type="text" placeholder="0" size="5" name="pay_amount" />.00
+                        </select>
+                        <span id="pay_to_error"></span><span id="pay_amount_error"></span>
+                        <span id="pay_cancel">
+                            <input id="pay_button" type="button" value="Pay" />
+                            <input id="cancel_pay" type="button" value="Cancel" />
+                        </span>
+                        <input id="stripe_token" type="hidden" name="stripeToken" />
+                    </form>
+                </div>
+            </div>
+            {% endif %}
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -168,9 +213,39 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
-                <h4>Workers</h4>
+            <div class="col-md-6">
+                <span>Workers</span>
             </div>
+            {% if not jobuser.work_set.all.exists %}
+            <div class="col-md-6">
+                <form action="{{ request.get_full_path }}" method="POST">
+                {% csrf_token %}
+                {% if user_has_stripe_account %}
+                    <input id="work_on_job" class="pledge_work_inputs" type="submit" value="Work" name="work" />
+                {% else %}
+                    <input id="work_on_job" class="pledge_work_inputs" type="button" value="Work" name="work" />
+                    <span id="connect_with_stripe_message">We do not have your Stripe account on record. Please click here to sign-in or create account with Stripe so that you can be properly paid.</span>
+                    <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write&state={{ job.random_string }}" id="stripe_connect" class="stripe-connect">
+                        <span>Connect with Stripe</span>
+                    </a>
+                    {% endif %}
+                </form>
+            </div>
+            {% elif jobuser.work_set.all.count > jobuser.finish_set.all.count %}
+            <div class="col-md-6">
+                <form action="{{ request.get_full_path }}" method="POST">
+                {% csrf_token %}
+                    <input id="finish_job" class="pledge_work_inputs" type="submit" value="Finish" name="finish" />
+                </form>
+            </div>
+            {% elif jobuser.work_set.all.count == jobuser.finish_set.all.count %}
+            <div class="col-md-6">
+                <form action="{{ request.get_full_path }}" method="POST">
+                {% csrf_token %}
+                    <input id="unfinish_job" class="pledge_work_inputs" type="submit" value="Unfinish" name="unfinish" />
+                </form>
+            </div>
+            {% endif %}
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -214,90 +289,4 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <!-- Update Button -->
-    {% if jobuser %}
-    <div class="col-md-6">
-        <form action="{% url 'update:create' job.random_string %}">
-            <input id="post_update" class="pledge_work_inputs" type="submit" value="Post Update" />
-        </form>
-    </div>
-    {% endif %}
-    <!-- End Update Button -->
-    
-    <!-- Pledge-Pay Button -->
-    {% if not jobuser and not jobuser.pledge_set.all.exists %}
-    <div class="col-md-6">  
-        <input id="pledge_money" class="pledge_work_inputs" type="button" value="Pledge" />
-        <form id="pledge-money-form" action="{{ request.get_full_path }}" method="POST">
-        {% csrf_token %}
-        {% for field in pledge_form %}
-            ${{ field }}.00
-            {{ field.errors }}
-        {% endfor %}
-            <input type="submit" value="Accept" name="pledge"  />
-            <input id="cancel-pledge-money" type="button" value="Cancel" />
-        </form>
-    </div>
-    {% elif jobuser and jobuser.pledge_set.all.exists %}
-    <div class="col-md-6">
-        <div id="pay_unclicked">
-            <input id="pay_money" class="pledge_work_inputs" type="button" value="Pay" />
-        </div>
-        <div id="pay_clicked">
-            <form id="pay_form" action="{{ request.get_full_path }}" method="POST">
-            {% csrf_token %}
-                <select id="pay_to" name="pay_to">
-                    <option value="(default)" selected="selected">(Choose a Worker)</option>
-                {% for w in workers %}
-                    <option value="{{ w.jobuser.user.username }}">{{ w.jobuser.user.username }}</option>
-                {% endfor %}
-                &nbsp;$<input id="pay_amount" type="text" placeholder="0" size="5" name="pay_amount" />.00
-                </select>
-                <span id="pay_to_error"></span><span id="pay_amount_error"></span>
-                <span id="pay_cancel">
-                    <input id="pay_button" type="button" value="Pay" />
-                    <input id="cancel_pay" type="button" value="Cancel" />
-                </span>
-                <input id="stripe_token" type="hidden" name="stripeToken" />
-            </form>
-        </div>
-    </div>
-    {% endif %}
-    <!-- End Pledge-Pay Button -->
-    
-    <!-- Work-Finish-Unfinish Button -->
-    {% if not jobuser and not jobuser.work_set.all.exists %}
-    <div class="col-md-6">
-        <form action="{{ request.get_full_path }}" method="POST">
-        {% csrf_token %}
-            {% if user_has_stripe_account %}
-            <input id="work_on_job" class="pledge_work_inputs" type="submit" value="Work" name="work" />
-            {% else %}
-            <input id="work_on_job" class="pledge_work_inputs" type="button" value="Work" name="work" />
-            <span id="connect_with_stripe_message">We do not have your Stripe account on record. Please click here to sign-in or create account with Stripe so that you can be properly paid.</span>
-            <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write&state={{ job.random_string }}" id="stripe_connect" class="stripe-connect">
-                <span>Connect with Stripe</span>
-            </a>
-            {% endif %}
-        </form>
-    </div>
-    {% elif jobuser and jobuser.work_set.all.count > jobuser.finish_set.all.count %}
-    <div class="col-md-6">
-        <form action="{{ request.get_full_path }}" method="POST">
-        {% csrf_token %}
-            <input id="finish_job" class="pledge_work_inputs" type="submit" value="Finish" name="finish" />
-        </form>
-    </div>
-    {% elif jobuser and not jobuser.pledge_set.all.exists and jobuser.work_set.all.count == jobuser.finish_set.all.count %}
-    <div class="col-md-6">
-        <form action="{{ request.get_full_path }}" method="POST">
-        {% csrf_token %}
-            <input id="unfinish_job" class="pledge_work_inputs" type="submit" value="Unfinish" name="unfinish" />
-        </form>
-    </div>
-    {% endif %}
-    <!-- End Work-Finish-Unfinish Button -->
-
-</div>  
 {% endblock %}

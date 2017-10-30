@@ -17,5 +17,8 @@ function addJobsToTable(json) {
             }// end if
         }// end for
     }// end if
+    if ($('#show_location').css('display') == "none") {
+        addBounds();
+    }// end if
     return numJobs;
 }// end addJobsToTable()

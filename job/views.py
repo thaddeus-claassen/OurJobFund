@@ -70,7 +70,7 @@ def add_jobs(request):
         jobs = jobs[50 * numSearches:50 * (numSearches + 1)];
         serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
         json = JSONRenderer().render(serializer.data);
-        return HttpResponse(jobs, content_type="application/json");
+        return HttpResponse(json, content_type="application/json");
     else:
         return Http404();
 
@@ -82,7 +82,7 @@ def sort_jobs(request):
         jobs = jobs[0:50 * numSearches];
         serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
         json = JSONRenderer().render(serializer.data);
-        return HttpResponse(jobs, content_type="application/json");
+        return HttpResponse(json, content_type="application/json");
     else:
         return Http404();
         
@@ -262,7 +262,7 @@ def detail_sort(request, job_random_string):
         return Http404();
 
 @login_required
-def create_job(request):
+def create(request):
     newJobForm = NewJobForm(request.POST or None);
     if (request.method == 'POST'):
         if (newJobForm.is_valid()):
@@ -285,11 +285,13 @@ def create_job(request):
             for image in request.FILES.getlist('image_set'):
                 image = Image(image=image, job=job);
                 image.save();
+            jobuser = JobUser(user=request.user, job=job);
+            jobuser.save();
             return redirect('job:detail', job.random_string);
     context = {
         'form' : newJobForm,
     }
-    return render(request, 'job/create_job.html', context);
+    return render(request, 'job/create.html', context);
     
 def createRandomString():
     random_string = '';

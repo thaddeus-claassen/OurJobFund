@@ -55,7 +55,7 @@ tr:after {
 }
 
 thead th {
-    height: 30px;
+    height: 50px;
 }
 
 tbody {
@@ -96,4 +96,8 @@ tfoot #job-number-footer {
     height: 200px;
     width: 100%;
     border: 1px solid black;
+}
+
+th {
+    text-align: center;
 }

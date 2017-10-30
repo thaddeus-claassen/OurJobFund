@@ -9,7 +9,7 @@ urlpatterns = [
     url(r'^$', views.get_stripe_info),
     url(r'^pledge$', views.pledge, name='pledge'),
     url(r'^work$', views.work, name='work'),
-    url(r'^create_job/$', views.create_job, name='create_job'),
+    url(r'^create/$', views.create, name='create'),
     url(r'^get_jobs/$', views.get_jobs),
     url(r'^add_jobs/$', views.add_jobs),
     url(r'^sort_jobs/$', views.sort_jobs),

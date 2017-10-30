@@ -12,10 +12,13 @@ function addJobsToTable(json) {
             string = string + "<td class='expected_workers'>" + job['expected_workers'] + "</td>";
             string = string + "<td class='finished'>" + job['finished'] + "</td></tr>";
             $('#main_table_body').append(string);
-            if ($('#location').val() != "") {
+            if ($('#show_location').css('display') == "none") {
                 addMarker(new google.maps.LatLng(job['latitude'], job['longitude']));    
             }// end if
         }// end for
+    }// end if
+    if ($('#show_location').css('display') == "none") {
+        addBounds();
     }// end if
     return numJobs;
 }// end addJobsToTable()

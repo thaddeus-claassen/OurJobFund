@@ -78,7 +78,7 @@ $('document').ready(function() {
 function search() {
     clearMarkers();
     numSearches = 0;
-    if ($('#location').val() == "") {
+    if ($('#show_location').css('display') == "block") {
         get_jobs();
     } else {
         applyLocation();
@@ -211,27 +211,31 @@ function initMap() {
     } else {
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 0, lng: 0},
-            zoom: 1,
+            zoom: 8,
         });
     }
 }// end initMap()
 
 function centerMap(position) {
-    var bounds = new google.maps.LatLngBounds();
-    for (var i = 0; i < markers.length; i++) {
-        bounds.extend(markers[i].getPosition());
-    }// end for
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: position.coords.latitude, lng: position.coords.longitude},
         zoom: 12,
     });
-    map.fitBounds(bounds);
 }// centerMap()
+
+function addBounds() {
+    map.zoom = 1;
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0; i < markers.length; i++) {
+        bounds.extend(markers[i].position);
+        map.fitBounds(bounds);
+    }// end for
+}// end addBounds()
 
 function addMarker(location) {
     var marker = new google.maps.Marker({
         position: location,
-        map: map
+        map: map,
     });
     markers.push(marker);
 }// end addMarker()
