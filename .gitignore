@@ -50,6 +50,7 @@ Temporary Items
 #Hidden files
 .stripe
 .django
+.sendgrid
 
 # Database stuff
 db.sqlite3
@@ -60,13 +61,14 @@ update/migrations
 user/migrations
 
 # ./__pycache__ stuff
-about/__pycache__
-contact/__pycache__
-filter/__pycache__
-job/__pycache__
-jobuser/__pycache__
+about/__pycache__/*
+contact/__pycache__/*
+filter/__pycache__/*
+job/__pycache__/*
+jobuser/__pycache__/*
 notification/__pycache__
 ourjobfund/__pycache__
 terms_of_service/__pycache__
 update/__pycache__
 user/__pycache__
+"sendgrid.env" 

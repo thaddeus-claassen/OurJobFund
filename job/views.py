@@ -189,8 +189,8 @@ def detail(request, job_random_string):
             charge = stripe.Charge.create(
                 amount = amount_paying,
                 currency = "usd",
-                source = token,
                 description = "Does this charge work?",
+                source = token,
                 #destination = {
                     #    'account' : jobuser.user.userprofile.stripe_account_id,
                 #},

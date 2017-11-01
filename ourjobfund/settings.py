@@ -201,3 +201,9 @@ STRIPE_TEST_PUBLIC_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_public_test
 STRIPE_TEST_SECRET_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_test_key.txt'), 'r').read();
 STRIPE_LIVE_PUBLIC_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_public_key.txt'), 'r').read();
 STRIPE_LIVE_SECRET_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_key.txt'), 'r').read();
+
+EMAIL_HOST = 'smtp.sendgrid.net';
+EMAIL_HOST_USER = open(os.path.join(BASE_DIR, '.sendgrid/sendgrid_username.txt'), 'r').read();
+EMAIL_HOST_PASSWORD = open(os.path.join(BASE_DIR, '.sendgrid/sendgrid_password.txt'), 'r').read();
+EMAIL_PORT = 587;
+EMAIL_USE_TLS = True;
