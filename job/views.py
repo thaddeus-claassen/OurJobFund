@@ -147,7 +147,7 @@ def detail(request, job_random_string):
     job = get_object_or_404(Job, random_string=job_random_string);
     pledgeForm = PledgeForm(request.POST or None);
     if (request.method == "POST"):
-        jobuser = JobUser.objects.filter(user=request.user, job=job).first();
+        jobuser = get_object_or_None(JobUser, job=job, user=request.user);
         if (not jobuser):
             jobuser = JobUser(user=request.user, job=job);
             jobuser.save();
@@ -185,15 +185,12 @@ def detail(request, job_random_string):
             receiver_username = request.POST['pay_to'];
             stripe.api_key = STRIPE_TEST_SECRET_KEY;
             token = request.POST['stripeToken'];
-            amount_paying = int(request.POST['pay_amount']);
+            amount_paying = int(request.POST['pay_amount']) * 100;
             charge = stripe.Charge.create(
                 amount = amount_paying,
                 currency = "usd",
                 description = "Does this charge work?",
                 source = token,
-                #destination = {
-                    #    'account' : jobuser.user.userprofile.stripe_account_id,
-                #},
             );
             payment = Pay(jobuser=jobuser, receiver=jobuser.user, amount=float(amount_paying));
             payment.save();

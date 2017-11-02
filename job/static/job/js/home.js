@@ -111,11 +111,13 @@ function get_jobs() {
 }// end get_jobs()
 
 function add_jobs() {
+    var search_type = $("input[name='search']:checked").val();
     $.ajax({
         url : 'add_jobs',
         data : {
             'numSearches' : numSearches,
-            'search' : $('#search_jobs').val(),
+            'search_type' : search_type,
+            'search' : $('#' + search_type + '_search_jobs').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
             'radius' : getRadius(),
@@ -126,11 +128,13 @@ function add_jobs() {
 }// end add_jobs()
 
 function sort_jobs() {
+    var search_type = $("input[name='search']:checked").val();
     $.ajax({
         url : 'sort_jobs',
         data : {
             'numSearches' : numSearches,
-            'search' : $('#search_jobs').val(),
+            'search_type' : search_type,
+            'search' : $('#' + search_type + '_search_jobs').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
             'radius' : getRadius(),

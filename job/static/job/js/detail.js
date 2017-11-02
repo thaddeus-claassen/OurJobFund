@@ -52,9 +52,9 @@ $('document').ready(function() {
             amount = amount.replace(/\$/g, '').replace(/\,/g, '')
             amount = parseFloat(amount);
             if (isNaN(amount)) {
-                $('#pay_amount_error').text('<p>Please enter a valid amount in USD ($).</p>');
+                $('#pay_amount_error').text('Please enter a valid amount in USD ($).');
             } else if (amount < 1.00) {
-                $('#pay_amount_error').text('<p>Donation amount must be at least $1.</p>');
+                $('#pay_amount_error').text('Donation amount must be at least $1.');
             } else {
                 amount = Math.round(amount * 100); // Needs to be an integer!
                 handler.open({

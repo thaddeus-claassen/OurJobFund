@@ -20,7 +20,7 @@ class Pledge(models.Model):
 class Pay(models.Model):    
     jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);
     amount = models.PositiveIntegerField(editable=False, null=True, blank=True);
-    receiver = models.OneToOneField(User, on_delete=models.CASCADE);
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE);
     date = models.DateTimeField(auto_now_add=True);
 
 class Work(models.Model):    
