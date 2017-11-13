@@ -204,9 +204,9 @@
                     <tfoot>
                         <tr>
                             <td>Total Pledged:</td>
-                            <td>${{ total_pledged }}.00</td>
+                            <td>${{ job.pledged }}.00</td>
                             <td>Total Paid:</td>
-                            <td>${{ total_paid }}.00</td>
+                            <td>${{ job.paid }}.00</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -278,10 +278,10 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td>Total: {{ workers.count }}</td>
-                            <td>Working:&nbsp;{{ total_working }}</td>
-                            <td>Finished:&nbsp;{{ total_finished }}</td>
-                            <td></td>
+                            <td>Total:</td>
+                            <td>{{ workers.count }}</td>
+                            <td>Finished:</td>
+                            <td>{{ job.finished }}</td>
                         </tr>
                     </tfoot>
                 </table>

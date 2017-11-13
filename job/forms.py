@@ -7,7 +7,7 @@ class NewJobForm(forms.ModelForm):
     location = forms.CharField(label="Location:", widget=forms.TextInput(attrs={'placeholder': '(Optional)'}), max_length=1000, required=False);
     latitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
     longitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
-    tags = forms.CharField(label="Tags:", widget=forms.TextInput(attrs={'placeholder': '(Optional, separated by spaces, alphanumeric characters only)'}), max_length=1000, required=False);
+    tags = forms.CharField(label="Tags:", widget=forms.TextInput(attrs={'placeholder': '(Optional, separated by spaces, alphanumeric characters or "_" only)'}), max_length=1000, required=False);
     image_set = forms.ImageField(label="Images:", widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False);
     description = forms.CharField(label="Description:", widget=forms.Textarea(attrs={'placeholder': '(Required)'}), max_length=10000);
 
@@ -19,8 +19,6 @@ class NewJobForm(forms.ModelForm):
         name = self.cleaned_data.get('name');
         if (len(name) > 100):
             raise forms.ValidationError('The name cannot have more than 100 characters.');
-        if (not re.match(r'^[\sa-zA-Z0-9]{1,100}$', name)):
-            raise forms.ValidationError('Alphanumeric characters only.');
         return name;
         
     def clean_tags(self):
@@ -30,8 +28,8 @@ class NewJobForm(forms.ModelForm):
             if (len(tag) > 30):
                 raise forms.ValidationError('Each tag must have 30 characters or fewer.');
                 break;
-            if (not re.match(r'^[A-Za-z0-9]*$', tag)):
-                raise forms.ValidationError('Each tag may only include alphabetic characters or numbers, separated by spaces.');
+            if (not re.match(r'^[A-Za-z0-9_]*$', tag)):
+                raise forms.ValidationError('Each tag may only include alphabetic characters, numbers, and "_", separated by spaces.');
         return tags;
     
     

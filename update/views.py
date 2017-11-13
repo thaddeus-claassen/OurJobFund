@@ -1,20 +1,30 @@
 from django.contrib.auth.decorators import login_required;
 from django.shortcuts import render, get_object_or_404, redirect;
+from django.utils.decorators import method_decorator;
 from django.http import HttpResponse, Http404;
 from django.contrib.auth.models import User;
 from jobuser.models import JobUser;
 from .models import Update;
 from notification.views import sendNotifications;
+from django.views.generic import TemplateView;
 from job.models import Job;
 from .forms import UpdateForm;
 from random import randint;
-
-@login_required
-def create(request, job_random_string):
-    job = get_object_or_404(Job, random_string=job_random_string);
-    jobuser = get_object_or_404(JobUser, user=request.user, job=job);
-    form = UpdateForm(request.POST or None);
-    if (request.method == 'POST'):
+    
+class CreateView(TemplateView):
+    template_name = 'update/create.html';
+    form = UpdateForm;
+    
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        jobuser = get_object_or_404(JobUser, user=request.user, job=get_object_or_404(Job, random_string=kwargs['job_random_string']));
+        return render(request, self.template_name, self.get_context_data(jobuser=jobuser, form=self.form));
+    
+    @method_decorator(login_required)    
+    def post(self, request, *args, **kwargs):
+        job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
+        jobuser = get_object_or_404(JobUser, user=request.user, job=job);
+        form = self.form(request.POST);
         if (form.is_valid()):
             title = form.cleaned_data['title'];
             description = form.cleaned_data['description'];
@@ -24,12 +34,17 @@ def create(request, job_random_string):
                 image = Image(image=image, update=update);
                 image.save();
             sendNotifications(update);
-        return redirect('job:detail', job_random_string=job.random_string);
-    context = {
-        'jobuser' : jobuser,
-        'form' : form,
-    }
-    return render(request, 'update/create.html', context);
+            return redirect(job);
+        else:
+            return render(request, self.template_name, self.get_context_data(jobuser=jobuser, form=form));
+    
+    def get_context_data(self, **kwargs):
+        context = {
+            'jobuser' : kwargs['jobuser'],
+            'form' : kwargs['form'],
+        }
+        return context;
+    
     
 def create_update_by_paying(payment):
     update = Update(jobuser=payment.jobuser, title="Paid " + str(payment.receiver.username) + " $" + str(payment.amount / 100) + ".00", random_string=createRandomString());

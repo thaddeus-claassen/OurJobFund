@@ -9,7 +9,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <form id="sign-up-form" method="POST" action="{% url 'user:sign_in' %}">
+        <form id="sign-up-form" method="POST" action="{% url 'user:sign_up' %}">
         {% csrf_token %}
         {% for field in new_user_form %}
             <div class="row">

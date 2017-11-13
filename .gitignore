@@ -51,6 +51,7 @@ Temporary Items
 .stripe
 .django
 .sendgrid
+.zoho
 
 # Database stuff
 db.sqlite3

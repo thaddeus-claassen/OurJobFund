@@ -1,5 +1,7 @@
 from django.contrib.auth.decorators import login_required;
+from django.utils.decorators import method_decorator;
 from django.shortcuts import render, get_object_or_404, redirect;
+from django.views.generic import TemplateView;
 from annoying.functions import get_object_or_None;
 from .models import Job, Tag, User, Image;
 from .serializers import JobSerializer;
@@ -8,7 +10,7 @@ from django.db.models import Q, F;
 from jobuser.models import JobUser, Pledge, Pay, Work, Finish;
 from update.models import Update;
 from update.views import create_update_by_finishing, create_update_by_paying, create_update_by_unfinishing;
-from django.http import JsonResponse, HttpResponse, Http404;
+from django.http import HttpResponse, Http404;
 from django.core import serializers;
 from rest_framework.renderers import JSONRenderer;
 from filter.forms import PledgeFilterForm, WorkerFilterForm;
@@ -47,7 +49,7 @@ def get_stripe_info(request):
             jobuser.save();
         work = Work(jobuser=jobuser);
         work.save();
-        return redirect('job:detail', job.random_string);
+        return redirect(job);
     else:
         return Http404();
     
@@ -141,92 +143,107 @@ def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_
         if (distance > radius_in_miles):
             jobs = jobs.exclude(id=job.id);
     return jobs;
-
-@login_required    
-def detail(request, job_random_string):
-    job = get_object_or_404(Job, random_string=job_random_string);
-    pledgeForm = PledgeForm(request.POST or None);
-    if (request.method == "POST"):
+    
+class DetailView(TemplateView):
+    template_name = 'job/detail.html';
+    form = PledgeForm;
+    
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
+        if (Notification.objects.filter(user=request.user, job=job).exists()): 
+            Notification.objects.get(user=request.user, job=job).delete();
+        return render(request, self.template_name, self.get_context_data(request, job=job))
+    
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
         jobuser = get_object_or_None(JobUser, job=job, user=request.user);
         if (not jobuser):
             jobuser = JobUser(user=request.user, job=job);
             jobuser.save();
         if ('pledge' in request.POST):
-            if (pledgeForm.is_valid()):
-                amount_pledged = pledgeForm.cleaned_data['amount'];
-                pledge = Pledge(jobuser=jobuser, amount=amount_pledged);
-                pledge.save();
-                jobuser.amount_pledged = jobuser.amount_pledged + amount_pledged;
-                jobuser.save();
-                job.pledged = job.pledged + jobuser.amount_pledged;
-                job.save();
+            self.pledge(self.form(request.POST), job, jobuser);
         elif ('work' in request.POST):
-            work = Work(jobuser=jobuser);
-            work.save();
-            job.workers = job.workers + 1;
-            job.save();
-            jobuser.oldest_work_date = work.date;
-            jobuser.save();
+            self.work(job, jobuser);
         elif ('finish' in request.POST):
-            finish = Finish(jobuser=jobuser);
-            finish.save();
-            job.finished = job.finished + 1;
-            job.save();
-            jobuser.newest_finish_date = finish.date;
-            jobuser.save();
-            create_update_by_finishing(finish);
+            self.finish(job, jobuser);
         elif ('unfinish' in request.POST):
-            unfinish = Work(jobuser=jobuser);
-            unfinish.save();
-            job.finished = job.finished - 1;
-            job.save();
-            create_update_by_unfinishing(unfinish);
+            self.unfinish(job, jobuser);
         elif ('stripeToken' in request.POST):
-            receiver_username = request.POST['pay_to'];
-            stripe.api_key = STRIPE_TEST_SECRET_KEY;
-            token = request.POST['stripeToken'];
-            amount_paying = int(request.POST['pay_amount']) * 100;
-            charge = stripe.Charge.create(
-                amount = amount_paying,
-                currency = "usd",
-                description = "Does this charge work?",
-                source = token,
-            );
-            payment = Pay(jobuser=jobuser, receiver=jobuser.user, amount=float(amount_paying));
-            payment.save();
-            jobuser.amount_paid = jobuser.amount_paid + amount_paying;
+            self.pay(request, job, jobuser);
+            return redirect('job:confirmation', job_random_string=job.random_string);
+        return redirect(job);
+    
+    def get_context_data(self, request, **kwargs):
+        job = kwargs['job'];
+        context = {                                                                     
+            'job': job,
+            'pledges' : Pledge.objects.filter(jobuser__job=job),
+            'workers' : Work.objects.filter(Q(jobuser__job=job) & Q(date__exact=F('jobuser__oldest_work_date'))).order_by('-date'),
+            'jobuser' : get_object_or_None(JobUser, user=request.user, job=job),
+            'updates' : Update.objects.filter(jobuser__job=job).order_by('-date'),
+            'user_has_stripe_account' : (request.user.userprofile.stripe_account_id != None) and (request.user.userprofile.stripe_account_id != ''),
+            'pledge_form' : self.form,
+        }
+        return context;
+        
+    def pledge(self, form, job, jobuser):
+        if (form.is_valid()):
+            amount_pledged = form.cleaned_data['amount'];
+            pledge = Pledge(jobuser=jobuser, amount=amount_pledged);
+            pledge.save();
+            jobuser.amount_pledged = jobuser.amount_pledged + amount_pledged;
             jobuser.save();
-            receiver_jobuser = JobUser.objects.get(user=User.objects.get(username=receiver_username), job=job);
-            receiver_jobuser.amount_received = receiver_jobuser.amount_received + amount_paying;
-            receiver_jobuser.save();
-            job.paid = job.paid + amount_paying;
+            job.pledged = job.pledged + jobuser.amount_pledged;
             job.save();
-            create_update_by_paying(payment);
-            return redirect('job:confirmation', job_random_string = job_random_string);
-        return redirect('job:detail', job_random_string=job_random_string);
-    workers = Work.objects.filter(Q(jobuser__job=job) & Q(date__exact=F('jobuser__oldest_work_date'))).order_by('-date');
-    total_finished = 0;
-    for jobuser in JobUser.objects.filter(job=job):
-        if (jobuser.work_set.all().count() == jobuser.finish_set.all().count()):
-            total_finished = total_finished + 1;
-    total_working = workers.count() - total_finished;
-    if (Notification.objects.filter(user=request.user, job=job).exists()): 
-        Notification.objects.get(user=request.user, job=job).delete();
-    context = {                                                                     
-        'job': job,
-        'pledges' : Pledge.objects.filter(jobuser__job=job),
-        'total_pledged' : int(job.pledged),
-        'total_paid' : int(job.paid),
-        'workers' : workers,
-        'total_working' : total_working,
-        'total_finished' : total_finished,
-        'jobuser' : get_object_or_None(JobUser, user=request.user, job=job),
-        'updates' : Update.objects.filter(jobuser__job=job).order_by('-date'),
-        'user_has_stripe_account' : (request.user.userprofile.stripe_account_id != None) and (request.user.userprofile.stripe_account_id != ''),
-        'pledge_form' : pledgeForm,
-    }
-    return render(request, 'job/detail.html', context);
-
+            
+    def work(self, job, jobuser):
+        work = Work(jobuser=jobuser);
+        work.save();
+        jobuser.oldest_work_date = work.date;
+        jobuser.save();
+        job.workers = job.workers + 1;
+        job.save();
+            
+    def finish(self, job, jobuser):
+        finish = Finish(jobuser=jobuser);
+        finish.save();
+        job.finished = job.finished + 1;
+        job.save();
+        jobuser.newest_finish_date = finish.date;
+        jobuser.save();
+        create_update_by_finishing(finish);
+        
+    def unfinish(self, job, jobuser):
+        unfinish = Work(jobuser=jobuser);
+        unfinish.save();
+        job.finished = job.finished - 1;
+        job.save();
+        create_update_by_unfinishing(unfinish);
+    
+    def pay(self, request, job, jobuser):
+        receiver_username = request.POST['pay_to'];
+        stripe.api_key = STRIPE_TEST_SECRET_KEY;
+        token = request.POST['stripeToken'];
+        amount_paying = int(request.POST['pay_amount']) * 100;
+        charge = stripe.Charge.create(
+            amount = amount_paying,
+            currency = "usd",
+            description = "Does this charge work?",
+            source = token,
+        );
+        payment = Pay(jobuser=jobuser, receiver=jobuser.user, amount=float(amount_paying));
+        payment.save();
+        jobuser.amount_paid = jobuser.amount_paid + amount_paying;
+        jobuser.save();
+        receiver_jobuser = JobUser.objects.get(user=User.objects.get(username=receiver_username), job=job);
+        receiver_jobuser.amount_received = receiver_jobuser.amount_received + amount_paying;
+        receiver_jobuser.save();
+        job.paid = job.paid + amount_paying;
+        job.save();
+        create_update_by_paying(payment);
+            
 @login_required
 def payment_confirmation(request, job_random_string):
     job = get_object_or_404(Job, random_string = job_random_string);
@@ -237,7 +254,6 @@ def payment_confirmation(request, job_random_string):
 
 @login_required
 def detail_sort(request, job_random_string):
-    rows = None;
     if (request.is_ajax()):
         job = get_object_or_404(Job, random_string=job_random_string);
         sort = request.GET.get('sort');
@@ -258,17 +274,24 @@ def detail_sort(request, job_random_string):
     else:
         return Http404();
 
-@login_required
-def create(request):
-    newJobForm = NewJobForm(request.POST or None);
-    if (request.method == 'POST'):
-        if (newJobForm.is_valid()):
-            name = newJobForm.cleaned_data['name'];
-            latitude = newJobForm.cleaned_data['latitude'];
-            longitude = newJobForm.cleaned_data['longitude'];
-            location = newJobForm.cleaned_data['location'];
-            tags = newJobForm.cleaned_data['tags'];
-            description = newJobForm.cleaned_data['description'];
+class CreateView(TemplateView):
+    template_name = 'job/create.html'; 
+    form = NewJobForm;
+
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, self.get_context_data(form=self.form));
+    
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        form = self.form(request.POST);
+        if (form.is_valid()):
+            name = form.cleaned_data['name'];
+            latitude = form.cleaned_data['latitude'];
+            longitude = form.cleaned_data['longitude'];
+            location = form.cleaned_data['location'];
+            tags = form.cleaned_data['tags'];
+            description = form.cleaned_data['description'];
             job = Job(name=name, latitude=latitude, longitude=longitude, location=location, description=description, created_by=request.user, random_string=createRandomString());
             job.save();
             if (tags != ''):
@@ -284,11 +307,14 @@ def create(request):
                 image.save();
             jobuser = JobUser(user=request.user, job=job);
             jobuser.save();
-            return redirect('job:detail', job.random_string);
-    context = {
-        'form' : newJobForm,
-    }
-    return render(request, 'job/create.html', context);
+            return redirect(job);
+        return render(request, self.template_name, self.get_context_data(form=form));
+        
+    def get_context_data(self, **kwargs):
+        context = {
+            'form' : kwargs['form'],
+        }
+        return context
     
 def createRandomString():
     random_string = '';

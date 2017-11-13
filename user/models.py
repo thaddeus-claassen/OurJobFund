@@ -4,6 +4,7 @@ from job.models import Job;
 from django.urls import reverse;
 from django.core.validators import RegexValidator; 
 from annoying.fields import AutoOneToOneField;
+import datetime, pytz;
 
 alphabetic = RegexValidator(r'^[a-zA-Z\s]+$', 'Alphabetic characters only');   
 
@@ -19,7 +20,7 @@ STATES = (
 class UserProfile(models.Model):
     user = AutoOneToOneField(User, primary_key=True);
     description = models.CharField(max_length=10000, blank=True);
-    last_time_name_was_changed = models.DateTimeField(default="2000-01-01");
+    last_time_name_was_changed = models.DateTimeField(default=pytz.utc.localize(datetime.datetime(2000, 1, 1)));
     stripe_account_id = models.CharField(null=True, blank=True, max_length=100);
     
     def get_absolute_url(self):

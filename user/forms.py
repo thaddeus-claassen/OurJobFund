@@ -4,8 +4,7 @@ from django import forms;
 from django.forms import extras;
 import re;
 
-
-class UserForm(forms.ModelForm):
+class LoginForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder' : 'Password'}));
     email = forms.EmailField(label='Email', widget=forms.TextInput(attrs={'placeholder' : 'Email'}));
 
@@ -28,8 +27,8 @@ class NewUserForm(forms.ModelForm):
         username = self.cleaned_data.get('username');
         if (len(username) > 150):
             raise forms.ValidationError('Your first name must not exceed 150 characters.');
-        if (not re.match(r'^[A-Za-z0-9]+$', username)):
-            raise forms.ValidationError('Your username may only include alphanumeric characters.');
+        if (not re.match(r'^[A-Za-z0-9_]+$', username)):
+            raise forms.ValidationError('Your username may only include alphanumeric characters, "_", or "-".');
         return username;
         
     def clean_email(self):
@@ -65,8 +64,8 @@ class ChangeNameForm(forms.ModelForm):
         first_name = self.cleaned_data.get('first_name');
         if (len(first_name) > 30):
             raise forms.ValidationError('Your first name must not exceed 30 characters.');
-        if (not re.match(r'^[A-Za-z]{1,30}$', first_name)):
-            raise forms.ValidationError('Your first name may only include alhabetic characters.');
+        if (not re.match(r'^[A-Za-z-]{1,30}$', first_name)):
+            raise forms.ValidationError('Your first name may only include alphabetic characters or "-".');
         return first_name;
 
     def clean_last_name(self):
@@ -74,7 +73,7 @@ class ChangeNameForm(forms.ModelForm):
         if (len(last_name) > 30):
             raise forms.ValidationError('Your last name must not exceed 30 characters.');
         if (not re.match(r'^[A-Za-z]{1,30}$', last_name)):
-            raise forms.ValidationError('Your first name may only include alphabetic characters.');
+            raise forms.ValidationError('Your first name may only include alphabetic characters or "-".');
         return last_name;    
         
 class ChangeEmailForm(forms.ModelForm):
@@ -137,24 +136,3 @@ class DescriptionForm(forms.ModelForm):
     class Meta:
         model = UserProfile;
         fields = ['description'];
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        

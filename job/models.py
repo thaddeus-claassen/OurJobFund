@@ -3,11 +3,11 @@ from django import forms;
 from django.contrib.auth.models import User;
 from django.core.validators import RegexValidator; 
         
-alphanumeric = RegexValidator(r'^[0-9a-zA-Z\s]+$', 'Alphanumeric characters only');        
+alphanumeric = RegexValidator(r'^[0-9a-zA-Z\s_]+$', 'Alphanumeric characters only');        
         
 class Job(models.Model):
     is_finished = models.BooleanField(default=False);
-    name = models.CharField(max_length=100, validators=[alphanumeric]);
+    name = models.CharField(max_length=100);
     creation_date = models.DateField(auto_now_add=True);
     creation_datetime = models.DateTimeField(auto_now_add=True);
     pledged = models.PositiveIntegerField(default=0);
@@ -23,6 +23,9 @@ class Job(models.Model):
     
     def __str__(self):  
         return self.name;
+        
+    def get_absolute_url(self):
+        return "/job/%i/" % self.random_string;
 
 class Tag(models.Model):
     jobs = models.ManyToManyField(Job);    

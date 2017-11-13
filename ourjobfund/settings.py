@@ -92,6 +92,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'user.context_processors.login_form'
             ],
         },
     },
@@ -144,35 +145,37 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-us';
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'UTC';
 
-USE_I18N = True
+USE_I18N = True;
 
-USE_L10N = True
+USE_L10N = True;
 
-USE_TZ = True
+USE_TZ = True;
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/static/';
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static');
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'base/static'),
 ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media');
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/media/';
 
-LOGIN_URL = '/user/sign_in/'
+LOGOUT_URL = '/user/log_out/'
+
+LOGIN_URL = '/user/sign_up/';
 
 ABSOLUTE_URL_OVERRIDES = {
-    'auth.user': lambda u: "/user/%s/" % u.username,
+    'auth.user': lambda u: '/user/%s/' % u.username,
 }
 
 if not DEBUG:
@@ -194,16 +197,18 @@ if not DEBUG:
             },
         },
     }
-PINAX_STRIPE_PUBLIC_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_public_key.txt'), 'r').read();
-PINAX_STRIPE_SECRET_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_key.txt'), 'r').read();   
-    
-STRIPE_TEST_PUBLIC_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_public_test_key.txt'), 'r').read();
-STRIPE_TEST_SECRET_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_test_key.txt'), 'r').read();
-STRIPE_LIVE_PUBLIC_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_public_key.txt'), 'r').read();
-STRIPE_LIVE_SECRET_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_key.txt'), 'r').read();
+   
+STRIPE_TEST_PUBLIC_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_public_test_key.txt'), 'r').read().rstrip();
+STRIPE_TEST_SECRET_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_test_key.txt'), 'r').read().rstrip();
+STRIPE_LIVE_PUBLIC_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_public_key.txt'), 'r').read().rstrip();
+STRIPE_LIVE_SECRET_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_key.txt'), 'r').read().rstrip();
 
-EMAIL_HOST = 'smtp.sendgrid.net';
-EMAIL_HOST_USER = open(os.path.join(BASE_DIR, '.sendgrid/sendgrid_username.txt'), 'r').read();
-EMAIL_HOST_PASSWORD = open(os.path.join(BASE_DIR, '.sendgrid/sendgrid_password.txt'), 'r').read();
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend';
+EMAIL_HOST = 'smtp.zoho.com';
+EMAIL_HOST_USER = open(os.path.join(BASE_DIR, '.zoho/zoho_username.txt'), 'r').read().rstrip();
+EMAIL_HOST_PASSWORD = open(os.path.join(BASE_DIR, '.zoho/zoho_password.txt'), 'r').read().rstrip();
 EMAIL_PORT = 587;
 EMAIL_USE_TLS = True;
+DEFAULT_FROM_EMAIL = 'admin@ourjobfund.com';
+
