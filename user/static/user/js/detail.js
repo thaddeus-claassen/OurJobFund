@@ -7,12 +7,12 @@ $('document').ready(function() {
         $('.no-change-info-wrapper').css('display', 'none');
         $('.change-info-wrapper').css('display', 'inline');
     });
+    $('#save_info').click(function() {
+        $('#save_info_form').submit();
+    });
     $('#edit_description').click(function() {
         $('.no-change-description-wrapper').css('display', 'none');
         $('.change-description-wrapper').css('display', 'inline');
-    });
-    $('#save_info').click(function() {
-        $('#save_info_form').submit();
     });
     $('#save_description').click(function() {
         $('#save_description_form').submit();

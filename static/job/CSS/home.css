@@ -1,27 +1,38 @@
 
-#advanced-settings-wrapper {
+#advanced-settings-wrapper, #custom_search_jobs, .show_location {
     display: none;
 }
 
-#search_jobs, #search_button, #location, #radius, #create_job, table {
+.search, #search_button, #location, #radius, #create_job, table {
     width: 100%;
 }
 
-#show_filter {
+#show_filter, #show_location {
     cursor: pointer;
 }
 
-#hide_filter {
+#hide_filter, #hide_location {
     display: none;
     cursor: pointer;
 }
 
-.filter_label {
+.filter_label, #show_filter, #show_location, #hide_filter, #hide_location {
     float: right;
 }
 
 .filter_unit {
     float: left;
+}
+
+.height_100 {
+    height: 100%;
+    border: 1px solid black;
+}
+
+#custom_search_jobs {
+    width: 100%;
+    resize: none;
+    height: 120px;
 }
 
 table {
@@ -44,7 +55,7 @@ tr:after {
 }
 
 thead th {
-    height: 30px;
+    height: 50px;
 }
 
 tbody {
@@ -54,12 +65,12 @@ tbody {
 }
 
 .name {
-    width: 20%;
+    width: 15%;
     float: left;
 }
 
 .date {
-    width: 10%;
+    width: 5%;
     float: left;
 }
 
@@ -68,17 +79,35 @@ tbody {
     float: left;
 }
 
+.expected_workers {
+    width: 10%;
+    float: left;
+}
+
+.expected_pay {
+    width: 10%;
+    float: left;
+}
+
 tfoot td {
     float: left;
     width: 1%;
 }
 
+#header {
+    height: 200px;
+}
+
 tfoot #job-number-footer {
-    width: 86%;
+    width: 90%;
 }
 
 #map {
     height: 200px;
     width: 100%;
     border: 1px solid black;
+}
+
+th {
+    text-align: center;
 }

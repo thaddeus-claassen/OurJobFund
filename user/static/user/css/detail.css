@@ -8,10 +8,25 @@
     text-decoration: underline;
 }    
 
-#info-wrapper, #description-wrapper {
+#description-wrapper {
     border: 1px solid black;
     height: 300px;
     width: 100%;
+}
+
+#info-wrapper {
+    height: 300px;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.info_title {
+    float: left;
+}
+
+.info_info {
+    float: right;
 }
 
 .change-info-wrapper, .change-description-wrapper {

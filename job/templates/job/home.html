@@ -13,7 +13,69 @@
 <div id="advanced-settings-wrapper">
     <div class="row">
         <div class="col-md-6">
-            {% block filter %}{% endblock %}
+            <div class="row">
+                <div class="col-md-12">
+                    Ignore workers who have:
+                </div>
+            </div>
+        {% for field in worker_filter_form %}
+            {% if field.auto_id == "id_not_been_active_in_the_last_n_days" %}
+            <div class="row">
+                <div class="col-md-6">
+                    <span class="filter_label">Not been active in</span>
+                </div>
+                <div class="col-md-2">
+                {{ field }}
+                </div>
+                <div class="col-md-4">
+                    <span class="filter_unit">days</span>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    Ignore pledges from people who have:
+                </div>
+            </div>
+        {% for field in pledge_filter_form %}
+            {% if field.auto_id == "id_not_been_active_in_the_last_n_days" %}
+            <div class="row">
+                <div class="col-md-6">
+                    <span class="filter_label">Not been active in</span>
+                </div>
+                <div class="col-md-2">
+                    {{ field }}
+                </div>
+                <div class="col-md-4">
+                    <span class="filter_unit">days</span>
+                </div>
+            </div>
+            {% elif field.auto_id == "id_paid_at_least_n_times" %}
+            <div class="row">
+                <div class="col-md-6">
+                    <span class="filter_label">Paid at least</span>
+                </div>
+                <div class="col-md-2">
+                    {{ field }}
+                </div>
+                <div class="col-md-4">
+                    <span class="filter_unit">times</span>
+                </div>
+            </div>
+            {% elif field.auto_id == "id_paid_at_least_n_amount_in_total" %}
+            <div class="row">
+                <div class="col-md-6">
+                    <span class="filter_label">Paid at least $</span>
+                </div>
+                <div class="col-md-2">
+                    <span class="filter_unit">{{ field }}</span>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
         </div>
     </div>
 </div>
@@ -82,7 +144,35 @@
     </div>
     <div id="row-table" class="row">
         <div id="table-border" class="col-md-12">
-            {% block table %}{% endblock %}
+            <table id="main_table" class="table">
+                <thead>
+                    <tr>
+                        <input id="sort" type="hidden" value="created descending" />
+                        <th id="name" class="name sort">Name</th>
+                        <th id="created" class="date sort">Created</th>
+                        <th id="pledged" class="pledged sort">Pledged</th>
+                        <th id="paid" class="paid sort">Paid</th>
+                        <th id="workers" class="workers sort">Workers</th>
+                        <th id="expected_workers" class="expected_workers sort">Expected Workers</th>
+                        <th id="expected_pay" class="expected_pay sort">Expected Pay</th>
+                        <th id="finished" class="finished sort">Finished</th>
+                    </tr>
+                </thead>
+                <tbody id="main_table_body"></tbody>
+                    <tfoot>
+                        <tr>
+                            <td id="job-number-footer" >Jobs Found:&nbsp;<span id="num-jobs-found">0</span></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     </div>
     <div class="row">

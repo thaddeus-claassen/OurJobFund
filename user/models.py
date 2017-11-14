@@ -20,6 +20,10 @@ STATES = (
 class UserProfile(models.Model):
     user = AutoOneToOneField(User, primary_key=True);
     description = models.CharField(max_length=10000, blank=True);
+    city = models.CharField(max_length=100, blank=True);
+    state = models.CharField(max_length=2, choices=STATES, default='');
+    occupation = models.CharField(max_length=100, blank=True);
+    education = models.CharField(max_length=100, blank=True);
     last_time_name_was_changed = models.DateTimeField(default=pytz.utc.localize(datetime.datetime(2000, 1, 1)));
     stripe_account_id = models.CharField(null=True, blank=True, max_length=100);
     

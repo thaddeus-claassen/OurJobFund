@@ -22,18 +22,12 @@ from ourjobfund.settings import STRIPE_TEST_SECRET_KEY, STATIC_ROOT;
 import stripe;
 
 @login_required
-def pledge(request):
+def home(request):
     context = {
         'worker_filter_form' : WorkerFilterForm(instance=request.user.workerfilter),
-    };
-    return render(request, 'job/pledge.html', context);
-
-@login_required
-def work(request):
-    context = {
         'pledge_filter_form' : PledgeFilterForm(instance=request.user.pledgefilter),
     };
-    return render(request, 'job/work.html', context);
+    return render(request, 'job/home.html', context);
 
 @login_required
 def get_stripe_info(request):

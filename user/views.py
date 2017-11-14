@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required;
 from django.utils.decorators import method_decorator;
+from django.forms import formset_factory
 from django.shortcuts import render, get_object_or_404, redirect;
 from annoying.functions import get_object_or_None;
 from django.views.generic import TemplateView;
@@ -9,7 +10,7 @@ from django.core import serializers;
 from django.db.models import Q, F;
 from django.contrib.auth import authenticate, login, logout;
 from .forms import ChangePasswordForm, ChangeNameForm, ChangeEmailForm, LoginForm, NewUserForm, DeactivateAccountForm, DescriptionForm;
-from .models import UserProfile;
+from .models import UserProfile, UserInfo;
 from job.models import Job;
 from datetime import datetime;
 from random import randint;
@@ -30,7 +31,7 @@ class LoginView(TemplateView):
                     if (user is not None):
                         user.is_active = True;
                         login(request, user);
-                        return redirect(user);
+                        return redirect('job:home');
         return redirect('user:sign_up');
 
 class SignUpView(TemplateView):
@@ -56,14 +57,12 @@ class SignUpView(TemplateView):
                 password = form.cleaned_data['password'];
                 user.set_password(password);
                 user.save();
-                profile = UserProfile(user=user);
-                profile.save();
                 user = authenticate(username=user.username, password=password);
                 if (user is not None):
                     login(request, user);
                     return redirect(user);
         return render(request, self.template_name, self.get_context_data(new_user_form=form));
-            
+        
     def get_context_data(self, **kwargs):
         context = super(SignUpView, self).get_context_data(**kwargs);
         context['new_user_form'] = kwargs['new_user_form'];
@@ -116,12 +115,12 @@ class DetailView(TemplateView):
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(User, username=kwargs['username']);
-        descriptionForm = self.descriptionForm(initial={'description' : user.userprofile.description});
+        self.descriptionForm = self.descriptionForm(initial={'description' : user.userprofile.description});
         return render(request, self.template_name, self.get_context_data());
     
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        if ('description' in request.POST):
+        if ('description_form' in request.POST):
             self.descriptionForm = self.descriptionForm(request.POST);
             if (self.descriptionForm.is_valid()):
                 request.user.userprofile.description = self.descriptionForm.cleaned_data['description'];
@@ -129,11 +128,10 @@ class DetailView(TemplateView):
                 return redirect(request.user);
         return render(request, self.template_name, self.get_context_data({'username' : kwargs['username']}));
         
-    def get_context_data(self):
-        user = get_object_or_None(User, username=self.kwargs['username'])
+    def get_context_data(self, *args, **kwargs):
+        user = get_object_or_None(User, username=self.kwargs['username']);
         context = {
             'detail_user' : user,
-            'info_form' : None,
             'description_form' : self.descriptionForm,
             'current_jobusers' : user.jobuser_set.filter(Q(job__pledged=0) | Q(job__pledged__gt=F('job__paid'))),
             'finished_jobusers' : user.jobuser_set.filter(Q(job__pledged__gt=0) & Q(job__pledged__lte=F('job__paid'))),

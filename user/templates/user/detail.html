@@ -13,17 +13,53 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Info</h4>
+            </div>
+            {% if user.username == detail_user.username %}
+            <div class="col-md-6">
+                <span id="edit_info" class="no-change-info-wrapper">Edit</span>
+                <span id="save_info" class="change-info-wrapper">Save</span>
+            </div>
+            {% endif %}
+        </div>
+        <div id="info-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="no-change-info-wrapper">
+                    {% for info in detail_user.userprofile.userinfo_set.all %}
+                        {% if info.info %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="info_title">{{ info.title }}</span>
+                                <span class="info_info">{{ info.info }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                    {% if user.username == detail_user.username %}
+                    <div class="change-info-wrapper">
+                        
+                    </div>
+                    {% endif %} 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
         <div class="row">
             <div class="col-md-6">
                 <h4>Description</h4>
             </div>
+            {% if user.username == detail_user.username %}
             <div class="col-md-6">
-                {% if user.username == detail_user.username %}
                 <span id="edit_description" class="no-change-description-wrapper">Edit</span>
                 <span id="save_description" class="change-description-wrapper">Save</span>
-                {% endif %}
             </div>
+            {% endif %}
         </div>
         <div id="description-wrapper">
             <div class="row">
@@ -35,7 +71,7 @@
                     </div>
                     {% if user.username == detail_user.username %}
                     <div id="textarea_div" class="change-description-wrapper">
-                        <form id="save_description_form" action="{{ request.get_full_path }}" method="POST">
+                        <form id="save_description_form" action="{{ request.get_full_path }}" method="POST" name="description_form">
                         {% csrf_token %}
                             <textarea id="description_textarea" class="form-control" name="description">{{ detail_user.userprofile.description }}</textarea>
                         </form>

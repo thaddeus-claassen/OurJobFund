@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User;
-from user.models import UserProfile, STATES;
+from user.models import UserProfile, UserInfo;
 from django import forms;
 from django.forms import extras;
 import re;
@@ -51,6 +51,13 @@ class NewUserForm(forms.ModelForm):
         if (not repeat_password or password != repeat_password):
             raise forms.ValidationError("Passwords do not match");
         return repeat_password;
+            
+class DescriptionForm(forms.ModelForm):
+    description = forms.CharField(widget=forms.Textarea(attrs={'placeholder' : 'This is where you add contact information, social media accounts, and any other information you would like others to know about you'}), required=False);
+
+    class Meta:
+        model = UserProfile;
+        fields = ['description'];        
             
 class ChangeNameForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30, required=False);
@@ -129,10 +136,3 @@ class DeactivateAccountForm(forms.ModelForm):
     class Meta:
         model = User;
         fields = ['is_active'];
-        
-class DescriptionForm(forms.ModelForm):
-    description = forms.CharField(widget=forms.Textarea(attrs={'placeholder' : 'This is where you add contact information, social media accounts, and any other information you would like others to know about you'}), required=False);
-
-    class Meta:
-        model = UserProfile;
-        fields = ['description'];
