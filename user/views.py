@@ -9,7 +9,7 @@ from django.http import JsonResponse, HttpResponse, Http404;
 from django.core import serializers;
 from django.db.models import Q, F;
 from django.contrib.auth import authenticate, login, logout;
-from .forms import ChangePasswordForm, ChangeNameForm, ChangeEmailForm, LoginForm, NewUserForm, DeactivateAccountForm, DescriptionForm;
+from .forms import ChangePasswordForm, ChangeNameForm, ChangeEmailForm, LoginForm, NewUserForm, DeactivateAccountForm, ProfileForm, DescriptionForm;
 from .models import UserProfile, UserInfo;
 from job.models import Job;
 from datetime import datetime;
@@ -110,17 +110,41 @@ def getTotalNumberOfUsersFromQuery(search):
  
 class DetailView(TemplateView):
     template_name = 'user/detail.html';
+    nameForm = ChangeNameForm;
+    profileForm = ProfileForm;
     descriptionForm = DescriptionForm;
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(User, username=kwargs['username']);
+        self.nameForm = self.nameForm(initial={'first_name' : user.first_name, 'last_name' : user.last_name });
+        self.profileForm = self.profileForm(initial={
+            'city' : user.userprofile.city, 
+            'state' : user.userprofile.state,
+            'occupation' : user.userprofile.occupation,
+            'education' : user.userprofile.education,
+        });
         self.descriptionForm = self.descriptionForm(initial={'description' : user.userprofile.description});
         return render(request, self.template_name, self.get_context_data());
     
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        if ('description_form' in request.POST):
+        if ('first_name' in request.POST):
+            self.nameForm = self.nameForm(request.POST);
+            self.profileForm = self.profileForm(request.POST);
+            print("Name form is valid: " + str(self.nameForm.is_valid()));
+            print("Profile form is valid: " + str(self.profileForm.is_valid()));
+            if (self.nameForm.is_valid() and self.profileForm.is_valid()):
+                request.user.first_name = self.nameForm.cleaned_data['first_name'];
+                request.user.last_name = self.nameForm.cleaned_data['last_name'];
+                request.user.save();
+                request.user.userprofile.city = self.profileForm.cleaned_data['city'];
+                request.user.userprofile.state = self.profileForm.cleaned_data['state'];
+                request.user.userprofile.occupation = self.profileForm.cleaned_data['occupation'];
+                request.user.userprofile.education = self.profileForm.cleaned_data['education'];
+                request.user.userprofile.save();
+                return redirect(request.user);
+        if ('description' in request.POST):
             self.descriptionForm = self.descriptionForm(request.POST);
             if (self.descriptionForm.is_valid()):
                 request.user.userprofile.description = self.descriptionForm.cleaned_data['description'];
@@ -132,6 +156,8 @@ class DetailView(TemplateView):
         user = get_object_or_None(User, username=self.kwargs['username']);
         context = {
             'detail_user' : user,
+            'name_form' : self.nameForm,
+            'profile_form' : self.profileForm,
             'description_form' : self.descriptionForm,
             'current_jobusers' : user.jobuser_set.filter(Q(job__pledged=0) | Q(job__pledged__gt=F('job__paid'))),
             'finished_jobusers' : user.jobuser_set.filter(Q(job__pledged__gt=0) & Q(job__pledged__lte=F('job__paid'))),

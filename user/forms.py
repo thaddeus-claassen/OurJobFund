@@ -52,6 +52,12 @@ class NewUserForm(forms.ModelForm):
             raise forms.ValidationError("Passwords do not match");
         return repeat_password;
             
+class ProfileForm(forms.ModelForm):
+    
+    class Meta:
+        model = UserProfile;
+        fields = ['city', 'state', 'education', 'occupation'];
+            
 class DescriptionForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea(attrs={'placeholder' : 'This is where you add contact information, social media accounts, and any other information you would like others to know about you'}), required=False);
 

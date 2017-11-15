@@ -29,20 +29,44 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="no-change-info-wrapper">
-                    {% for info in detail_user.userprofile.userinfo_set.all %}
-                        {% if info.info %}
+                    {% for name in name_form %}
                         <div class="row">
                             <div class="col-md-12">
-                                <span class="info_title">{{ info.title }}</span>
-                                <span class="info_info">{{ info.info }}</span>
+                                <span class="info_title">{{ name.label }}</span>
+                                <span class="info_info">{{ name.value }}</span>
                             </div>
                         </div>
-                        {% endif %}
+                    {% endfor %}
+                    {% for info in profile_form %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="info_title">{{ info.label }}</span>
+                                <span class="info_info">{{ info.value }}</span>
+                            </div>
+                        </div>
                     {% endfor %}
                     </div>
                     {% if user.username == detail_user.username %}
                     <div class="change-info-wrapper">
-                        
+                        <form id="info_form" action="{{ request.get_full_path }}" method="POST" name="info_form">
+                        {% csrf_token %}
+                        {% for name in name_form %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span class="info_title">{{ name.label }}</span>
+                                    <span class="info_info">{{ name }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% for info in profile_form %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span class="info_title">{{ info.label }}</span>
+                                    <span class="info_info">{{ info }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        </form>
                     </div>
                     {% endif %} 
                 </div>
@@ -71,7 +95,7 @@
                     </div>
                     {% if user.username == detail_user.username %}
                     <div id="textarea_div" class="change-description-wrapper">
-                        <form id="save_description_form" action="{{ request.get_full_path }}" method="POST" name="description_form">
+                        <form id="description_form" action="{{ request.get_full_path }}" method="POST" name="description_form">
                         {% csrf_token %}
                             <textarea id="description_textarea" class="form-control" name="description">{{ detail_user.userprofile.description }}</textarea>
                         </form>
