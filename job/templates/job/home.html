@@ -6,10 +6,10 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3pteK4Epn8dFH03DGk97K7ICo_FwYht0&callback=initMap" async defer></script>
     <script type="text/javascript" src="{% static 'job/js/home.js' %}" ></script>
     <link rel="stylesheet" type="text/css" href="{% static 'job/css/home.css' %}" />
-    {% block additional_imports %}{% endblock %}
 {% endblock %}
 
 {% block content %}
+{% if request.user.is_authenticated %}
 <div id="advanced-settings-wrapper">
     <div class="row">
         <div class="col-md-6">
@@ -79,13 +79,16 @@
         </div>
     </div>
 </div>
+{% endif %}
 <div id="content-wrapper">
+    {% if request.user.is_authenticated %}
     <div class="row">
         <div class="col-md-12">
             <a id="show_filter">Show Filter</a>
             <a id="hide_filter">Hide Filter</a>
         </div>
     </div>
+    {% endif %}
     <div id="header" class="row">
         <div class="col-md-6">
             <input id="latitude" type="hidden" value="" />
@@ -95,9 +98,10 @@
                     <input id="location" class="search" type="text" placeholder="Location" />
                 </div>
             </div>
+            <div><span id="search_error"></span></div>
             <div class="row show_location">
                 <div class="col-md-6">
-                    <input id="radius" class="search" type="text" placeholder="Radius" />
+                    <input id="radius" class="search" type="text" placeholder="Radius (default: 10)" />
                 </div>    
                 <div class="col-md-2">
                     <label for="mi">Mi:</label>
@@ -151,30 +155,30 @@
                         <th id="name" class="name sort">Name</th>
                         <th id="created" class="date sort">Created</th>
                         <th id="pledged" class="pledged sort">Pledged</th>
+                        <th id="expected_pay" class="expected_pay sort">Expected Pay</th>
                         <th id="paid" class="paid sort">Paid</th>
                         <th id="workers" class="workers sort">Workers</th>
                         <th id="expected_workers" class="expected_workers sort">Expected Workers</th>
-                        <th id="expected_pay" class="expected_pay sort">Expected Pay</th>
                         <th id="finished" class="finished sort">Finished</th>
                     </tr>
                 </thead>
                 <tbody id="main_table_body"></tbody>
-                    <tfoot>
-                        <tr>
-                            <td id="job-number-footer" >Jobs Found:&nbsp;<span id="num-jobs-found">0</span></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
+                <tfoot>
+                    <tr>
+                        <td id="job-number-footer" >Jobs Found:&nbsp;<span id="num-jobs-found">0</span></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
+    {% if request.user.is_authenticated %}
     <div class="row">
         <div class="col-md-12">
             <form action="{% url 'job:create' %}">
@@ -182,5 +186,6 @@
             </form>
         </div>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

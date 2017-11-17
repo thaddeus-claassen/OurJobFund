@@ -67,7 +67,7 @@
             <div class="col-md-6">
                 <span id="updates_title">Updates</span>
             </div>
-            {% if jobuser %}
+            {% if request.user.is_authenticated and jobuser %}
             <div class="col-md-6">
                 <form action="{% url 'update:create' job.random_string %}">
                     <input id="post_update" class="pledge_work_inputs" type="submit" value="Post Update" />
@@ -91,9 +91,13 @@
                         <tr>
                             <td class="updates-last_name_data">
                                 {% if update.jobuser.user.is_active %}
+                                {% if request.user.is_authenticated %}
                                 <a href="{% url 'user:detail' update.jobuser.user.username %}">
                                     {{ update.jobuser.user.username }}
                                 </a>
+                                {% else %}
+                                <span>{{ update.jobuser.user.username }}</span>
+                                {% endif %}
                                 {% else %}
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
@@ -133,7 +137,8 @@
             <div class="col-md-6">
                 <span>Pledges</span>
             </div>
-            {% if not jobuser.pledge_set.all.exists %}
+            {% if request.user.is_authenticated %}
+            {% if not jobuser.pledge_set.all.exists and not jobuser.work_set.all.exists %}
             <div class="col-md-6">  
                 <input id="pledge_money" class="pledge_work_inputs" type="button" value="Pledge" />
                 <form id="pledge-money-form" action="{{ request.get_full_path }}" method="POST">
@@ -171,6 +176,7 @@
                 </div>
             </div>
             {% endif %}
+            {% endif %}
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -188,9 +194,13 @@
                         <tr>
                             <td>
                                 {% if pledge.jobuser.user.is_active %}
+                                {% if request.user.is_authenticated %}
                                 <a href="{% url 'user:detail' pledge.jobuser.user.username %}">
                                     {{ pledge.jobuser.user.username }}
                                 </a>
+                                {% else %}
+                                <span>{{ pledge.jobuser.user.username }}</span>
+                                {% endif %}
                                 {% else %}
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
@@ -216,7 +226,8 @@
             <div class="col-md-6">
                 <span>Workers</span>
             </div>
-            {% if not jobuser.work_set.all.exists %}
+            {% if request.user.is_authenticated %}
+            {% if not jobuser.work_set.all.exists and not jobuser.pledge_set.all.exists %}
             <div class="col-md-6">
                 <form action="{{ request.get_full_path }}" method="POST">
                 {% csrf_token %}
@@ -246,6 +257,7 @@
                 </form>
             </div>
             {% endif %}
+            {% endif %}
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -263,9 +275,13 @@
                             <tr>
                                 <td>
                                     {% if worker.jobuser.user.is_active %}
+                                    {% if request.user.is_authenticated %}
                                     <a href="{% url 'user:detail' worker.jobuser.user.username %}">
                                         {{ worker.jobuser.user.username }}
                                     </a>
+                                    {% else %}
+                                    <span>{{ worker.jobuser.user.username }}
+                                    {% endif %}
                                     {% else %}
                                     <span>[ Deleted User ]</span>
                                     {% endif %}

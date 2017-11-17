@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'annoying',
     'pinax.stripe',
+    'tinymce',
 ]
 
 SITE_ID = 1;
@@ -203,12 +204,14 @@ STRIPE_TEST_SECRET_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_test
 STRIPE_LIVE_PUBLIC_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_public_key.txt'), 'r').read().rstrip();
 STRIPE_LIVE_SECRET_KEY = open(os.path.join(BASE_DIR, '.stripe/stripe_secret_key.txt'), 'r').read().rstrip();
 
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend';
-EMAIL_HOST = 'smtp.zoho.com';
-EMAIL_HOST_USER = open(os.path.join(BASE_DIR, '.zoho/zoho_username.txt'), 'r').read().rstrip();
-EMAIL_HOST_PASSWORD = open(os.path.join(BASE_DIR, '.zoho/zoho_password.txt'), 'r').read().rstrip();
-EMAIL_PORT = 587;
-EMAIL_USE_TLS = True;
-DEFAULT_FROM_EMAIL = 'admin@ourjobfund.com';
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend';
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend';
+    EMAIL_HOST = 'smtp.zoho.com';
+    EMAIL_HOST_USER = open(os.path.join(BASE_DIR, '.zoho/zoho_username.txt'), 'r').read().rstrip();
+    EMAIL_HOST_PASSWORD = open(os.path.join(BASE_DIR, '.zoho/zoho_password.txt'), 'r').read().rstrip();
+    EMAIL_PORT = 587;
+    EMAIL_USE_TLS = True;
+    DEFAULT_FROM_EMAIL = 'admin@ourjobfund.com';
 

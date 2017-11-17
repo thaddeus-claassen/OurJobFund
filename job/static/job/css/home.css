@@ -3,6 +3,10 @@
     display: none;
 }
 
+#search_error {
+    color: red;
+}
+
 .search, #search_button, #location, #radius, #create_job, table {
     width: 100%;
 }
@@ -65,17 +69,22 @@ tbody {
 }
 
 .name {
-    width: 15%;
+    width: 30%;
     float: left;
 }
 
 .date {
-    width: 5%;
+    width: 10%;
     float: left;
 }
 
-.pledged, .paid, .workers, .finished {
-    width: 15%;
+.pledged, .paid {
+    width: 10%;
+    float: left;
+}
+
+.workers, .finished {
+    width: 10%;
     float: left;
 }
 

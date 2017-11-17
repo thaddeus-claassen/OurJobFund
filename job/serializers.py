@@ -7,6 +7,7 @@ from django.db.models import Count, Q
 class JobSerializer(serializers.ModelSerializer):
     expected_pay = serializers.SerializerMethodField();
     expected_workers = serializers.SerializerMethodField();
+    
 
     class Meta:
         model = Job;
@@ -14,9 +15,10 @@ class JobSerializer(serializers.ModelSerializer):
             
     def get_expected_pay(self, job):
         pledges = Pledge.objects.filter(jobuser__job=job);
-        pledges = self.notBeenActiveInTheLastNDays(pledges, self.context['user'].pledgefilter.not_been_active_in_the_last_n_days);
-        pledges = self.paidAtLeastNTimes(pledges, self.context['user'].pledgefilter.paid_at_least_n_times);
-        pledges = self.paidAtLeastNAmountInTotal(pledges, self.context['user'].pledgefilter.paid_at_least_n_amount_in_total);
+        if (self.context['user'].is_authenticated()):
+            pledges = self.notBeenActiveInTheLastNDays(pledges, self.context['user'].pledgefilter.not_been_active_in_the_last_n_days);
+            pledges = self.paidAtLeastNTimes(pledges, self.context['user'].pledgefilter.paid_at_least_n_times);
+            pledges = self.paidAtLeastNAmountInTotal(pledges, self.context['user'].pledgefilter.paid_at_least_n_amount_in_total);
         return self.calculateExpectedPledged(pledges);
     
     def notBeenActiveInTheLastNDays(self, queryset, n):
@@ -47,6 +49,7 @@ class JobSerializer(serializers.ModelSerializer):
         
     def get_expected_workers(self, job):
         workers = Work.objects.filter(jobuser__job=job);
-        workers = self.notBeenActiveInTheLastNDays(workers, self.context['user'].workerfilter.not_been_active_in_the_last_n_days);
+        if (self.context['user'].is_authenticated()):
+            workers = self.notBeenActiveInTheLastNDays(workers, self.context['user'].workerfilter.not_been_active_in_the_last_n_days);
         return workers.count();
         

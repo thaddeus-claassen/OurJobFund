@@ -61,7 +61,6 @@ def create_update_by_unfinishing(unfinish):
     update.save();
     sendNotifications(update);
     
-@login_required
 def detail(request, update_random_string):
     update = get_object_or_404(Update, random_string=update_random_string);
     context = {

@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User;
-from user.models import UserProfile, UserInfo;
+from user.models import UserProfile
 from django import forms;
-from django.forms import extras;
 import re;
 
 class LoginForm(forms.ModelForm):
@@ -53,21 +52,25 @@ class NewUserForm(forms.ModelForm):
         return repeat_password;
             
 class ProfileForm(forms.ModelForm):
+    city = forms.CharField(widget=forms.TextInput(attrs={'size' : '12'}));
+    education = forms.CharField(widget=forms.TextInput(attrs={'size' : '12'}));
+    occupation = forms.CharField(widget=forms.TextInput(attrs={'size' : '12'}));
+    other = forms.CharField(widget=forms.Textarea(attrs={'style' : '{width:100%;height:10px}', 'cols' : '0'}));
     
     class Meta:
         model = UserProfile;
-        fields = ['city', 'state', 'education', 'occupation'];
+        fields = ['city', 'state', 'education', 'occupation', 'other'];
             
 class DescriptionForm(forms.ModelForm):
-    description = forms.CharField(widget=forms.Textarea(attrs={'placeholder' : 'This is where you add contact information, social media accounts, and any other information you would like others to know about you'}), required=False);
+    description = forms.CharField(widget=forms.Textarea(attrs={'placeholder' : 'This is where you add contact information, social media accounts, and any other information you would like others to know about you'}));
 
     class Meta:
         model = UserProfile;
         fields = ['description'];        
             
 class ChangeNameForm(forms.ModelForm):
-    first_name = forms.CharField(max_length=30, required=False);
-    last_name = forms.CharField(max_length=30, required=False);
+    first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'size' : '12'}));
+    last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'size' : '12'}));
 
     class Meta: 
         model = User;

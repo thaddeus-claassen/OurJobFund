@@ -21,12 +21,16 @@ from jobuser.forms import PledgeForm;
 from ourjobfund.settings import STRIPE_TEST_SECRET_KEY, STATIC_ROOT;
 import stripe;
 
-@login_required
+def redirect_to_home(request):
+    return redirect('job:home');
+
 def home(request):
-    context = {
-        'worker_filter_form' : WorkerFilterForm(instance=request.user.workerfilter),
-        'pledge_filter_form' : PledgeFilterForm(instance=request.user.pledgefilter),
-    };
+    context = None;
+    if (request.user.is_authenticated()):
+        context = {
+            'worker_filter_form' : WorkerFilterForm(instance=request.user.workerfilter),
+            'pledge_filter_form' : PledgeFilterForm(instance=request.user.pledgefilter),
+        };
     return render(request, 'job/home.html', context);
 
 @login_required
@@ -47,7 +51,6 @@ def get_stripe_info(request):
     else:
         return Http404();
     
-@login_required
 def get_jobs(request):
     if (request.is_ajax()):
         jobs = findJobs(request);
@@ -58,7 +61,6 @@ def get_jobs(request):
     else:
         return Http404();
 
-@login_required
 def add_jobs(request):
     if (request.is_ajax()):
         numSearches =  int(request.GET['numSearches']);
@@ -69,8 +71,7 @@ def add_jobs(request):
         return HttpResponse(json, content_type="application/json");
     else:
         return Http404();
-
-@login_required        
+        
 def sort_jobs(request):
     if (request.is_ajax()):
         numSearches =  int(request.GET['numSearches']);
@@ -82,7 +83,6 @@ def sort_jobs(request):
     else:
         return Http404();
         
-@login_required
 def get_total_jobs(request):
     if (request.is_ajax()):
         jobs = findJobs(request);
@@ -106,6 +106,7 @@ def findJobs(request):
     latitude_in_degrees_as_string = request.GET['latitude'];
     longitude_in_degrees_as_string = request.GET['longitude'];
     radius_in_miles_as_string = request.GET['radius'];
+    print("Radius: " + str(radius_in_miles_as_string));
     if (latitude_in_degrees_as_string != "" and longitude_in_degrees_as_string != "" and radius_in_miles_as_string != ""):
         jobs = findJobsByRadius(jobs, float(latitude_in_degrees_as_string), float(longitude_in_degrees_as_string), float(radius_in_miles_as_string));
     if (sort_array[0] == 'created'):
@@ -142,11 +143,11 @@ class DetailView(TemplateView):
     template_name = 'job/detail.html';
     form = PledgeForm;
     
-    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
-        if (Notification.objects.filter(user=request.user, job=job).exists()): 
-            Notification.objects.get(user=request.user, job=job).delete();
+        if (request.user.is_authenticated()):
+            if (Notification.objects.filter(user=request.user, job=job).exists()): 
+                Notification.objects.get(user=request.user, job=job).delete();
         return render(request, self.template_name, self.get_context_data(request, job=job))
     
     @method_decorator(login_required)
@@ -175,11 +176,13 @@ class DetailView(TemplateView):
             'job': job,
             'pledges' : Pledge.objects.filter(jobuser__job=job),
             'workers' : Work.objects.filter(Q(jobuser__job=job) & Q(date__exact=F('jobuser__oldest_work_date'))).order_by('-date'),
-            'jobuser' : get_object_or_None(JobUser, user=request.user, job=job),
+            
             'updates' : Update.objects.filter(jobuser__job=job).order_by('-date'),
-            'user_has_stripe_account' : (request.user.userprofile.stripe_account_id != None) and (request.user.userprofile.stripe_account_id != ''),
-            'pledge_form' : self.form,
         }
+        if (request.user.is_authenticated()):
+            context['jobuser'] = get_object_or_None(JobUser, user=request.user, job=job);
+            context['user_has_stripe_account'] = (request.user.userprofile.stripe_account_id != None) and (request.user.userprofile.stripe_account_id != '');
+            context['pledge_form'] = self.form;
         return context;
         
     def pledge(self, form, job, jobuser):

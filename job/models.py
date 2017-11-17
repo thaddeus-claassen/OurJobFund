@@ -1,7 +1,8 @@
 from django.db import models;   
 from django import forms;
 from django.contrib.auth.models import User;
-from django.core.validators import RegexValidator; 
+from django.core.validators import RegexValidator;
+from tinymce.models import HTMLField;
         
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z\s_]+$', 'Alphanumeric characters only');        
         

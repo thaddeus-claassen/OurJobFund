@@ -6,7 +6,7 @@ from . import views;
 app_name = 'job';
 
 urlpatterns = [
-    url(r'^$', views.get_stripe_info),
+    url(r'^$', views.redirect_to_home),
     url(r'^home$', views.home, name='home'),
     url(r'^create/$', views.CreateView.as_view(), name='create'),
     url(r'^get_jobs/$', views.get_jobs),

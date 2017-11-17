@@ -59,12 +59,25 @@
                             </div>
                         {% endfor %}
                         {% for info in profile_form %}
+                            {% if info.auto_id == 'id_other' %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span>{{ info.label }}</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span>{{ info }}</span>
+                                </div>
+                            </div>
+                            {% else %}
                             <div class="row">
                                 <div class="col-md-12">
                                     <span class="info_title">{{ info.label }}</span>
                                     <span class="info_info">{{ info }}</span>
                                 </div>
                             </div>
+                            {% endif %}
                         {% endfor %}
                         </form>
                     </div>

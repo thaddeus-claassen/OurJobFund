@@ -10,7 +10,7 @@ from django.core import serializers;
 from django.db.models import Q, F;
 from django.contrib.auth import authenticate, login, logout;
 from .forms import ChangePasswordForm, ChangeNameForm, ChangeEmailForm, LoginForm, NewUserForm, DeactivateAccountForm, ProfileForm, DescriptionForm;
-from .models import UserProfile, UserInfo;
+from .models import UserProfile;
 from job.models import Job;
 from datetime import datetime;
 from random import randint;
@@ -116,6 +116,7 @@ class DetailView(TemplateView):
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
+        print("Got into user profile.")
         user = get_object_or_404(User, username=kwargs['username']);
         self.nameForm = self.nameForm(initial={'first_name' : user.first_name, 'last_name' : user.last_name });
         self.profileForm = self.profileForm(initial={
@@ -123,6 +124,7 @@ class DetailView(TemplateView):
             'state' : user.userprofile.state,
             'occupation' : user.userprofile.occupation,
             'education' : user.userprofile.education,
+            'other' : user.userprofile.other,
         });
         self.descriptionForm = self.descriptionForm(initial={'description' : user.userprofile.description});
         return render(request, self.template_name, self.get_context_data());
@@ -132,8 +134,6 @@ class DetailView(TemplateView):
         if ('first_name' in request.POST):
             self.nameForm = self.nameForm(request.POST);
             self.profileForm = self.profileForm(request.POST);
-            print("Name form is valid: " + str(self.nameForm.is_valid()));
-            print("Profile form is valid: " + str(self.profileForm.is_valid()));
             if (self.nameForm.is_valid() and self.profileForm.is_valid()):
                 request.user.first_name = self.nameForm.cleaned_data['first_name'];
                 request.user.last_name = self.nameForm.cleaned_data['last_name'];
@@ -142,6 +142,7 @@ class DetailView(TemplateView):
                 request.user.userprofile.state = self.profileForm.cleaned_data['state'];
                 request.user.userprofile.occupation = self.profileForm.cleaned_data['occupation'];
                 request.user.userprofile.education = self.profileForm.cleaned_data['education'];
+                request.user.userprofile.other = self.profileForm.cleaned_data['other'];
                 request.user.userprofile.save();
                 return redirect(request.user);
         if ('description' in request.POST):
@@ -190,12 +191,12 @@ class AccountView(TemplateView):
             self.emailForm = self.changeEmail(self.emailForm(request.POST));
             return redirect(request.user);
         elif ('change-password' in request.POST):
-            self.passwordForm = self.passwordForm(request.POST);
-            self.changePassword(self.passwordForm(request.POST));
+            self.passwordForm = self.changePassword(self.passwordForm(request.POST, user=request.user));
+            print("Password should be set correctly.");
             return redirect(request.user);
         elif ('deactivate-account' in request.POST):
             self.deactivateForm = self.deactivateAccount(self.deactivateForm(request.POST));
-            return redirect('sign_out')
+            return redirect('sign_out');
         return render(request, self.template_name, self.get_context_data(request));
         
     def get_context_data(self, request):
@@ -211,8 +212,8 @@ class AccountView(TemplateView):
         if (form.is_valid()):
             self.request.user.first_name = form.cleaned_data['first_name'];
             self.request.user.last_name = form.cleaned_data['last_name'];
-            self.request.user.userprofile.last_time_name_was_changed = datetime.now();
             self.request.user.save();
+            self.request.user.userprofile.last_time_name_was_changed = datetime.now();
             self.request.user.userprofile.save();
         return form;
         

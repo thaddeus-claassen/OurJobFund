@@ -103,7 +103,7 @@ function get_jobs() {
             'search' : $('#' + search_type + '_search_jobs').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
-            'radius' : $('#radius').val(),
+            'radius' : getRadius(),
             'sort' : $('#sort').val(),
         },
         success: getJobsSuccess,
@@ -193,10 +193,10 @@ function addJobsToTable(json) {
             string = string + job["name"] + "</a></td>";
             string = string + "<td class='date'>" + job['creation_date'] + "</td>";
             string = string + "<td class='pledged'>$" + job['pledged'] + "</td>";
+            string = string + "<td class='expected_pay'>$" + job['expected_pay'] + "</td>"
             string = string + "<td class='paid'>$" + job['paid'] + "</td>";
             string = string + "<td class='workers'>" + job['workers'] + "</td>";
             string = string + "<td class='expected_workers'>" + job['expected_workers'] + "</td>";
-            string = string + "<td class='expected_pay'>" + job['expected_pay'] + "</td>"
             string = string + "<td class='finished'>" + job['finished'] + "</td></tr>";
             $('#main_table_body').append(string);
             if ($('#show_location').css('display') == "none") {
@@ -212,26 +212,32 @@ function addJobsToTable(json) {
 
 function applyLocation() {
     var address = $('#location').val();
-    var geocoder = new google.maps.Geocoder();
-    geocoder.geocode( { 'address': address}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            center = results[0].geometry.location;
-            $('#latitude').val(center.lat());
-            $('#longitude').val(center.lng());
-            get_jobs();
-        }// end if
-    });
+    if (address === "") {
+        $('#search_error').text("Please add a location");
+    } else {
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode( { 'address': address}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                center = results[0].geometry.location;
+                $('#latitude').val(center.lat());
+                $('#longitude').val(center.lng());
+                get_jobs();
+                $('#search_error').text("");
+            } else {
+                $('#search_error').text("Google Maps does not recognize the location.");
+            }// end if-else
+        });
+    }// end if-else
 }// end applyLocation()
 
 function getRadius() {
     var radius = parseFloat($('#radius').val());
-    if (radius == NaN) {
-        radius = 100;
-    } else {
-        if ($('#km').is(':checked')) {
-            radius = MILES_TO_KILOMETERS * radius;
-        }// end if
-    }// end if-else
+    if (isNaN(radius)) {
+        radius = 10;
+    }// end if
+    if ($('#km').is(':checked')) {
+        radius = MILES_TO_KILOMETERS * radius;
+    }// end if
     return radius
 }// end getRadius()
 
@@ -254,12 +260,13 @@ function centerMap(position) {
 }// centerMap()
 
 function addBounds() {
-    map.zoom = 1;
+    map.setZoom(1)
     var bounds = new google.maps.LatLngBounds();
     for (var i = 0; i < markers.length; i++) {
         bounds.extend(markers[i].position);
         map.fitBounds(bounds);
     }// end for
+    if (map.zoom > 17) mapsetZoom(17);
 }// end addBounds()
 
 function addMarker(location) {
