@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'annoying',
     'pinax.stripe',
-    'tinymce',
 ]
 
 SITE_ID = 1;

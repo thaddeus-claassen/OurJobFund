@@ -7,7 +7,7 @@ class LoginForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder' : 'Password'}));
     email = forms.EmailField(label='Email', widget=forms.TextInput(attrs={'placeholder' : 'Email'}));
 
-    class Meta: 
+    class Meta:
         model = User;
         fields = ['email', 'password'];
         
@@ -18,7 +18,7 @@ class NewUserForm(forms.ModelForm):
     repeat_password = forms.CharField(label='Repeat Password:', widget=forms.PasswordInput(attrs={'placeholder' : 'Repeat Password'}));
     age_checkbox = forms.BooleanField(label='Check here to verify you are at least 13 years old:');
     
-    class Meta: 
+    class Meta:
         model = User;
         fields = ['username', 'email', 'password'];
         
@@ -52,25 +52,25 @@ class NewUserForm(forms.ModelForm):
         return repeat_password;
             
 class ProfileForm(forms.ModelForm):
-    city = forms.CharField(widget=forms.TextInput(attrs={'size' : '12'}));
-    education = forms.CharField(widget=forms.TextInput(attrs={'size' : '12'}));
-    occupation = forms.CharField(widget=forms.TextInput(attrs={'size' : '12'}));
-    other = forms.CharField(widget=forms.Textarea(attrs={'style' : '{width:100%;height:10px}', 'cols' : '0'}));
+    city = forms.CharField(widget=forms.TextInput(attrs={'size' : '12', 'readonly' : 'true'}), required=False);
+    education = forms.CharField(widget=forms.TextInput(attrs={'size' : '12', 'readonly' : 'true'}), required=False);
+    occupation = forms.CharField(widget=forms.TextInput(attrs={'size' : '12', 'readonly' : 'true'}), required=False);
+    other = forms.CharField(widget=forms.Textarea(attrs={'style' : '{height:100%;width:100%;overflow-y:auto; overflow-x:hidden}'}), required=False);
     
     class Meta:
         model = UserProfile;
         fields = ['city', 'state', 'education', 'occupation', 'other'];
             
 class DescriptionForm(forms.ModelForm):
-    description = forms.CharField(widget=forms.Textarea(attrs={'placeholder' : 'This is where you add contact information, social media accounts, and any other information you would like others to know about you'}));
+    description = forms.CharField(widget=forms.Textarea(attrs={'readonly' : 'true'}), required=False);
 
     class Meta:
         model = UserProfile;
         fields = ['description'];        
             
 class ChangeNameForm(forms.ModelForm):
-    first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'size' : '12'}));
-    last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'size' : '12'}));
+    first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'size' : '12', 'readonly' : 'true'}), required=False);
+    last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'size' : '12', 'readonly' : 'true'}), required=False);
 
     class Meta: 
         model = User;

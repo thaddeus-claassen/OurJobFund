@@ -179,7 +179,7 @@
         </div>
     </div>
     {% if request.user.is_authenticated %}
-    <div class="row">
+    <div id="create_job_row" class="row">
         <div class="col-md-12">
             <form action="{% url 'job:create' %}">
                 <input id="create_job" type="submit" value="Create Job" />

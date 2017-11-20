@@ -2,7 +2,6 @@ from django.db import models;
 from django import forms;
 from django.contrib.auth.models import User;
 from django.core.validators import RegexValidator;
-from tinymce.models import HTMLField;
         
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z\s_]+$', 'Alphanumeric characters only');        
         
@@ -26,7 +25,7 @@ class Job(models.Model):
         return self.name;
         
     def get_absolute_url(self):
-        return "/job/%i/" % self.random_string;
+        return "/job/%s/" % self.random_string;
 
 class Tag(models.Model):
     jobs = models.ManyToManyField(Job);    

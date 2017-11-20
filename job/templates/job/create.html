@@ -15,7 +15,7 @@
     {{ form.longitude }}{{ form.longitude.errors }}
 {% for field in form %}
     {% if field.auto_id != "id_longitude" and field.auto_id != "id_latitude" %} 
-    <div class="row">
+    <div class="row info_row">
         <div class="col-md-2">
             {{ field.label_tag }}
         </div>
@@ -25,7 +25,7 @@
     </div>
     {% endif %}
 {% endfor %} 
-    <div class="row">
+    <div class="row info_row">
         <div class="col-md-10 col-md-offset-2">
             <input type="submit" value="Create Job" name="create-job" />
         </div>

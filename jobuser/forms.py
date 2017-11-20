@@ -3,7 +3,7 @@ from django import forms;
 import re;
 
 class PledgeForm(forms.ModelForm):
-    amount = forms.IntegerField(widget=forms.TextInput(attrs={'placeholder': '0'}));
+    amount = forms.IntegerField(widget=forms.TextInput(attrs={'placeholder': '0', 'size': '6'}));
 
     class Meta:
         model = Pledge;
@@ -11,7 +11,6 @@ class PledgeForm(forms.ModelForm):
         
     def clean_amount(self):
         amount = self.cleaned_data.get('amount');
-        print(amount)
         if (not re.match(r'^[0-9]+$', str(amount))):
             raise forms.ValidationError('Only numbers allowed.');
         if (amount == 0):

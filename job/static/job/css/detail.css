@@ -1,3 +1,8 @@
+.info_row {
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
 #job_name {
     text-align: center;
 }
@@ -53,6 +58,10 @@ tbody {
     overflow-y: scroll;
 }
 
+#pledge_span {
+    float: right;
+}
+
 #pledges_table th, #pledges_table td {
     width: 25%;
     float: left;
@@ -72,7 +81,7 @@ tbody {
     float: left;
 }
 
-#pay_clicked, #pledge_clicked, #stripe_connect, #connect_with_stripe_message {
+#pay_clicked, #pledge_clicked {
     display: none;
 }
 
@@ -82,6 +91,10 @@ tbody {
 
 .pledge_work_inputs {
     width: 100%;
+}
+
+#no_stripe_account {
+    color: red;
 }
 
 #images {

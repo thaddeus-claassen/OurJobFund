@@ -30,6 +30,7 @@ $('document').ready(function() {
         $(this).css('display', 'none');
         $('.show_location').css('display', 'none');
         $('#show_location').css('display', 'block');
+        $('#search_error').text("0");
     });
     $('#basic').click(function() {
         $('#basic_search_jobs').css('display', 'inline');

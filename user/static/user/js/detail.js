@@ -4,15 +4,17 @@ $('document').ready(function() {
         changeTHeadTFootWidthToAccountForScrollBar();
     });
     $('#edit_info').click(function() {
-        $('.no-change-info-wrapper').css('display', 'none');
-        $('.change-info-wrapper').css('display', 'inline');
+        $(this).css('display', 'none');
+        $('#save_info').css('dispaly', 'inline');
+        removeInfoReadOnlyAttributes();
     });
     $('#save_info').click(function() {
         $('#info_form').submit();
     });
     $('#edit_description').click(function() {
-        $('.no-change-description-wrapper').css('display', 'none');
-        $('.change-description-wrapper').css('display', 'inline');
+        $(this).css('display', 'none');
+        $('#save_description').css('display', 'inline');
+        $('#id_description').removeAttr('readonly');
     });
     $('#save_description').click(function() {
         $('#description_form').submit();
@@ -27,3 +29,12 @@ function changeTHeadTFootWidthToAccountForScrollBar() {
     $('tfoot').width(percentageTableWidth.toString() + '%');
 }// end changeTHeadTFootWidthToAccountForScrollBar()
 
+function removeInfoReadOnlyAttributes() {
+    $('#id_first_name').removeAttr('readonly');
+    $('#id_last_name').removeAttr('readonly');
+    $('#id_city').removeAttr('readonly');
+    $('#id_state').removeAttr('readonly');
+    $('#id_education').removeAttr('readonly');
+    $('#id_occupation').removeAttr('readonly');
+    $('#id_other').removeAttr('readonly');
+}// end removeInfoReadOnlyAttributes()

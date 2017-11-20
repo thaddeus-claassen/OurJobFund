@@ -1,3 +1,7 @@
+#username {
+    text-align: center;
+}
+
 #edit_description, #edit_info, #save_description, #save_info {
     float: right;
     color: #0000EE;
@@ -6,19 +10,25 @@
 #edit_description:hover, #save_description:hover, #edit_info:hover, #save_info:hover {
     cursor: pointer;
     text-decoration: underline;
-}    
+}
 
-#description-wrapper {
-    border: 1px solid black;
+#id_description {
     height: 300px;
     width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    resize: none;
+}
+
+#other_span {
+    width: 100%;
+    height: 100%;
 }
 
 #info-wrapper {
     height: 300px;
     width: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
     word-wrap: break-word;
 }
 
@@ -30,28 +40,8 @@
     float: right;
 }
 
-.change-info-wrapper, .change-description-wrapper {
+.change-info-wrapper, #save_description {
     display: none;
-}
-
-#description {
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-#textarea_div {
-    height: 300px;
-    width: 100%;
-}
-
-textarea {
-    height: 300px;
-    resize: none;
-    overflow: auto;
-}
-
-#description_div {
-    overflow: auto;
 }
 
 table {

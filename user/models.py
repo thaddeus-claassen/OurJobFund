@@ -19,6 +19,7 @@ STATES = (
 
 class UserProfile(models.Model):
     user = AutoOneToOneField(User, primary_key=True);
+    type_of_account = models.CharField(default="personal", max_length=10);
     description = models.CharField(default='', max_length=10000, blank=True);
     city = models.CharField(default='', max_length=100, blank=True);
     state = models.CharField(default='', max_length=2, choices=STATES);

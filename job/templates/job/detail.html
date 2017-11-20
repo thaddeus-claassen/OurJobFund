@@ -8,12 +8,12 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
+<div class="row info_row">
     <div class="col-md-12">
         <h4 id="job_name">{{ job.name }}</h4>
     </div>
 </div>
-<div class="row">
+<div class="row info_row">
     <div class="col-md-6">
         <span id="created_by">Created By:&nbsp;<a href="{% url 'user:detail' job.created_by.username %}">{{ job.created_by.username }}</a></span>
     </div>
@@ -21,7 +21,7 @@
         <span id="creation_date">Created:&nbsp;{{ job.creation_date }}</span>
     </div>
 </div>
-<div class="row">
+<div class="row info_row">
     <div class="col-md-6">
         <span id="tags">
         {% if job.tag_set.all.count > 0 %}
@@ -38,7 +38,7 @@
         {% endif %}
     </div>
 </div>
-<div class="row">
+<div class="row info_row">
     <div class="col-md-12">
     {% if job.image_set.all.count > 0 %}
         <div id="images">
@@ -51,19 +51,116 @@
 </div>
 <div class="row">
     <div class="col-md-6">
-        <div class="row">
+        <div class="row info_row">
             <div class="col-md-12">
                 <span>Description</span>
             </div>
         </div>
-        <div class="row">
+        <div class="row info_row">
             <div class="col-md-12">
                 <div id="job_description">
                     <span id="description">{{ job.description }}</span>
                 </div>
             </div>
         </div>
-        <div class="row">
+    </div>
+    <div class="col-md-6">
+        <div class="row info_row">
+            <div class="col-md-6">
+                <span>Pledges</span>
+            </div>
+            {% if request.user.is_authenticated %}
+            {% if not jobuser.pledge_set.all.exists and not jobuser.work_set.all.exists %}
+            <div class="col-md-6">  
+                <input id="pledge_money" class="pledge_work_inputs" type="button" value="Pledge" />
+                <form id="pledge-money-form" action="{{ request.get_full_path }}" method="POST">
+                {% csrf_token %}
+                    <span id="pledge_span">
+                    {% for field in pledge_form %}
+                        ${{ field }}.00
+                        {{ field.errors }}
+                    {% endfor %}
+                        <input type="submit" value="Accept" name="pledge"  />
+                        <input id="cancel-pledge-money" type="button" value="Cancel" />
+                    </span>
+                </form>
+            </div>
+            {% elif jobuser.pledge_set.all.exists %}
+            <div class="col-md-6">
+                <div id="pay_unclicked">
+                    <input id="pay_money" class="pledge_work_inputs" type="button" value="Pay" />
+                </div>
+                <div id="pay_clicked">
+                    <form id="pay_form" action="{{ request.get_full_path }}" method="POST">
+                    {% csrf_token %}
+                        <select id="pay_to" name="pay_to">
+                            <option value="(default)" selected="selected">(Choose a Worker)</option>
+                        {% for w in workers %}
+                            <option value="{{ w.jobuser.user.username }}">{{ w.jobuser.user.username }}</option>
+                        {% endfor %}
+                        &nbsp;$<input id="pay_amount" type="text" placeholder="0" size="5" name="pay_amount" />.00
+                        </select>
+                        <span id="pay_to_error"></span><span id="pay_amount_error"></span>
+                        <span id="pay_cancel">
+                            <input id="pay_button" type="button" value="Pay" />
+                            <input id="cancel_pay" type="button" value="Cancel" />
+                        </span>
+                        <input id="stripe_token" type="hidden" name="stripeToken" />
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+            {% endif %}
+        </div>
+        <div class="row info_row">
+            <div class="col-md-12">
+                <table id="pledges_table" class="table">
+                    <thead>
+                        <tr>
+                            <th id="pledges-last_name" class="sort">Username</th>
+                            <th id="pledges-pledged" class="sort">Pledged</th>
+                            <th id="pledgers-date_pledged" class="sort">Date Pledged</th>
+                            <th id="pledgers-paid" class="sort">Paid</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for pledge in pledges %}
+                        <tr>
+                            <td>
+                                {% if pledge.jobuser.user.is_active %}
+                                {% if request.user.is_authenticated %}
+                                <a href="{% url 'user:detail' pledge.jobuser.user.username %}">
+                                    {{ pledge.jobuser.user.username }}
+                                </a>
+                                {% else %}
+                                <span>{{ pledge.jobuser.user.username }}</span>
+                                {% endif %}
+                                {% else %}
+                                <span>[ Deleted User ]</span>
+                                {% endif %}
+                            </td>
+                            <td>${{ pledge.amount }}.00</td>
+                            <td>{{ pledge.date }}</td>
+                            <td>${{ pledge.jobuser.amount_paid }}.00</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>Total Pledged:</td>
+                            <td>${{ job.pledged }}.00</td>
+                            <td>Total Paid:</td>
+                            <td>${{ job.paid }}.00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="row info_row">
             <div class="col-md-6">
                 <span id="updates_title">Updates</span>
             </div>
@@ -75,7 +172,7 @@
             </div>
             {% endif %}
         </div>
-        <div class="row">
+        <div class="row info_row">
             <div class="col-md-12">
                 <table id="updates_table" class="table">
                     <thead>
@@ -133,96 +230,7 @@
         </div>
     </div>
     <div class="col-md-6">
-        <div class="row">
-            <div class="col-md-6">
-                <span>Pledges</span>
-            </div>
-            {% if request.user.is_authenticated %}
-            {% if not jobuser.pledge_set.all.exists and not jobuser.work_set.all.exists %}
-            <div class="col-md-6">  
-                <input id="pledge_money" class="pledge_work_inputs" type="button" value="Pledge" />
-                <form id="pledge-money-form" action="{{ request.get_full_path }}" method="POST">
-                {% csrf_token %}
-                {% for field in pledge_form %}
-                    ${{ field }}.00
-                    {{ field.errors }}
-                {% endfor %}
-                    <input type="submit" value="Accept" name="pledge"  />
-                    <input id="cancel-pledge-money" type="button" value="Cancel" />
-                </form>
-            </div>
-            {% elif jobuser.pledge_set.all.exists %}
-            <div class="col-md-6">
-                <div id="pay_unclicked">
-                    <input id="pay_money" class="pledge_work_inputs" type="button" value="Pay" />
-                </div>
-                <div id="pay_clicked">
-                    <form id="pay_form" action="{{ request.get_full_path }}" method="POST">
-                    {% csrf_token %}
-                        <select id="pay_to" name="pay_to">
-                            <option value="(default)" selected="selected">(Choose a Worker)</option>
-                        {% for w in workers %}
-                            <option value="{{ w.jobuser.user.username }}">{{ w.jobuser.user.username }}</option>
-                        {% endfor %}
-                        &nbsp;$<input id="pay_amount" type="text" placeholder="0" size="5" name="pay_amount" />.00
-                        </select>
-                        <span id="pay_to_error"></span><span id="pay_amount_error"></span>
-                        <span id="pay_cancel">
-                            <input id="pay_button" type="button" value="Pay" />
-                            <input id="cancel_pay" type="button" value="Cancel" />
-                        </span>
-                        <input id="stripe_token" type="hidden" name="stripeToken" />
-                    </form>
-                </div>
-            </div>
-            {% endif %}
-            {% endif %}
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <table id="pledges_table" class="table">
-                    <thead>
-                        <tr>
-                            <th id="pledges-last_name" class="sort">Username</th>
-                            <th id="pledges-pledged" class="sort">Pledged</th>
-                            <th id="pledgers-date_pledged" class="sort">Date Pledged</th>
-                            <th id="pledgers-paid" class="sort">Paid</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for pledge in pledges %}
-                        <tr>
-                            <td>
-                                {% if pledge.jobuser.user.is_active %}
-                                {% if request.user.is_authenticated %}
-                                <a href="{% url 'user:detail' pledge.jobuser.user.username %}">
-                                    {{ pledge.jobuser.user.username }}
-                                </a>
-                                {% else %}
-                                <span>{{ pledge.jobuser.user.username }}</span>
-                                {% endif %}
-                                {% else %}
-                                <span>[ Deleted User ]</span>
-                                {% endif %}
-                            </td>
-                            <td>${{ pledge.amount }}.00</td>
-                            <td>{{ pledge.date }}</td>
-                            <td>${{ pledge.jobuser.amount_paid }}.00</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>Total Pledged:</td>
-                            <td>${{ job.pledged }}.00</td>
-                            <td>Total Paid:</td>
-                            <td>${{ job.paid }}.00</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-        <div class="row">
+        <div class="row info_row">
             <div class="col-md-6">
                 <span>Workers</span>
             </div>
@@ -231,15 +239,7 @@
             <div class="col-md-6">
                 <form action="{{ request.get_full_path }}" method="POST">
                 {% csrf_token %}
-                {% if user_has_stripe_account %}
                     <input id="work_on_job" class="pledge_work_inputs" type="submit" value="Work" name="work" />
-                {% else %}
-                    <input id="work_on_job" class="pledge_work_inputs" type="button" value="Work" name="work" />
-                    <span id="connect_with_stripe_message">We do not have your Stripe account on record. Please click here to sign-in or create account with Stripe so that you can be properly paid.</span>
-                    <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write&state={{ job.random_string }}" id="stripe_connect" class="stripe-connect">
-                        <span>Connect with Stripe</span>
-                    </a>
-                    {% endif %}
                 </form>
             </div>
             {% elif jobuser.work_set.all.count > jobuser.finish_set.all.count %}
@@ -259,7 +259,7 @@
             {% endif %}
             {% endif %}
         </div>
-        <div class="row">
+        <div class="row info_row">
             <div class="col-md-12">
                 <table id="workers_table" class="table">
                     <thead>
@@ -271,26 +271,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for worker in workers %}
-                            <tr>
-                                <td>
-                                    {% if worker.jobuser.user.is_active %}
-                                    {% if request.user.is_authenticated %}
-                                    <a href="{% url 'user:detail' worker.jobuser.user.username %}">
-                                        {{ worker.jobuser.user.username }}
-                                    </a>
-                                    {% else %}
-                                    <span>{{ worker.jobuser.user.username }}
-                                    {% endif %}
-                                    {% else %}
-                                    <span>[ Deleted User ]</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{ worker.date }}</td>
-                                <td>{% if worker.jobuser.work_set.all.count == worker.jobuser.finish_set.all.count %}True{% else %}False{% endif %}</td>
-                                <td>${{ worker.jobuser.amount_received }}</td>
-                            </tr>
-                        {% endfor %}
+                    {% for worker in workers %}
+                        <tr>
+                            <td>
+                                {% if worker.jobuser.user.is_active %}
+                                {% if request.user.is_authenticated %}
+                                <a href="{% url 'user:detail' worker.jobuser.user.username %}">
+                                    {{ worker.jobuser.user.username }}
+                                </a>
+                                {% else %}
+                                <span>{{ worker.jobuser.user.username }}
+                                {% endif %}
+                                {% else %}
+                                <span>[ Deleted User ]</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ worker.date }}</td>
+                            <td>{% if worker.jobuser.work_set.all.count == worker.jobuser.finish_set.all.count %}True{% else %}False{% endif %}</td>
+                            <td>${{ worker.jobuser.amount_received }}</td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                     <tfoot>
                         <tr>

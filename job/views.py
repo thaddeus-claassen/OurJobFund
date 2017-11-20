@@ -106,7 +106,6 @@ def findJobs(request):
     latitude_in_degrees_as_string = request.GET['latitude'];
     longitude_in_degrees_as_string = request.GET['longitude'];
     radius_in_miles_as_string = request.GET['radius'];
-    print("Radius: " + str(radius_in_miles_as_string));
     if (latitude_in_degrees_as_string != "" and longitude_in_degrees_as_string != "" and radius_in_miles_as_string != ""):
         jobs = findJobsByRadius(jobs, float(latitude_in_degrees_as_string), float(longitude_in_degrees_as_string), float(radius_in_miles_as_string));
     if (sort_array[0] == 'created'):
@@ -176,7 +175,6 @@ class DetailView(TemplateView):
             'job': job,
             'pledges' : Pledge.objects.filter(jobuser__job=job),
             'workers' : Work.objects.filter(Q(jobuser__job=job) & Q(date__exact=F('jobuser__oldest_work_date'))).order_by('-date'),
-            
             'updates' : Update.objects.filter(jobuser__job=job).order_by('-date'),
         }
         if (request.user.is_authenticated()):
