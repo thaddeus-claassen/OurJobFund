@@ -1,9 +1,9 @@
 $('document').ready(function() {
-    $('#name').click(function() {
-        changeName();
+    $('#username').click(function() {
+        changeUsername();
     });
-    $('#cancel-name').click(function() {
-        cancelName();
+    $('#cancel-username').click(function() {
+        cancelUsername();
     });
     $('#email').click(function() {
         changeEmail();
@@ -25,14 +25,14 @@ $('document').ready(function() {
     });
 });
 
-function changeName() {
-    $('#current-name').css('display', 'none');
-    $('#change-name').css('display', 'block');
+function changeUsername() {
+    $('#current-username').css('display', 'none');
+    $('#change-username').css('display', 'block');
 }// end changeName()
 
-function cancelName() {
-    $('#current-name').css('display', 'block');
-    $('#change-name').css('display', 'none');
+function cancelUsername() {
+    $('#current-username').css('display', 'block');
+    $('#change-username').css('display', 'none');
 }// end cancelName()
 
 function changeEmail() {

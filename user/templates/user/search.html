@@ -16,19 +16,42 @@
 <div class="row">
     <div class="col-md-12">
         <table id="user-table" class="table">
+            <thead>
+                <tr>
+                    <th class="username">Username</th>
+                    <th class="first_name">First Name</th>
+                    <th class="last_name">Last Name</th>
+                    <th class="location">Location</th>
+                </tr>
+            </thead>
             <tbody>
             {% for searched_user in users %}
                 <tr>
-                    <td><a href="{% url 'user:detail' searched_user.username %}">{{ searched_user.username }}</a></td>
+                    <td class="username"><a href="{% url 'user:detail' searched_user.username %}">{{ searched_user.username }}</a></td>
+                    <td class="first_name">{{ searched_user.first_name }}</td>
+                    <td class="last_name">{{ searched_user.last_name }}</td>
+                    <td class="location">
+                        {{ searched_user.userprofile.city }}
+                        {% if searched_user.userprofile.city and searched_user.userprofile.state %}
+                        ,
+                        {% endif %}
+                        {{ searched_user.userprofile.state }}
+                    </td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td>No Users</td>
+                    <td class="username">No Users</td>
+                    <td class="first_name"></td>
+                    <td class="last_name"></td>
+                    <td class="location"></td>
                 </tr>
             {% endfor %}
             </tbody>
             <tfoot>
-                <td>Total:&nbsp;<span id="total">{{ total }}</span></td>
+                <td class="username">Total:&nbsp;<span id="total">{{ total }}</span></td>
+                <td class="first_name"></td>
+                <td class="last_name"></td>
+                <td class="location"></td>
             </tfoot>
         </table>
     </div>

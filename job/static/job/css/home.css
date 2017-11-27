@@ -11,13 +11,11 @@
     width: 100%;
 }
 
-#show_filter, #show_location {
-    cursor: pointer;
-}
-
-#hide_filter, #hide_location {
-    display: none;
-    cursor: pointer;
+#worker-filter-wrapper, #pledge-filter-wrapper {
+    height: 150px;
+    border: 1px solid black;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .filter_label, #show_filter, #show_location, #hide_filter, #hide_location {
@@ -63,44 +61,36 @@ thead th {
 }
 
 tbody {
-    height: 300px;
+    height: 400px;
     overflow-x: auto;
     overflow-y: scroll;
 }
 
 .name {
-    width: 30%;
+    width: 40%;
     float: left;
 }
 
 .date {
-    width: 10%;
+    width: 20%;
     float: left;
+    text-align: center;
 }
 
-.pledged, .paid {
-    width: 10%;
+.pledged-paid {
+    width: 20%;
     float: left;
+    text-align: center;
 }
 
-.workers, .finished {
-    width: 10%;
+.workers-finished {
+    width: 20%;
     float: left;
-}
-
-.expected_workers {
-    width: 10%;
-    float: left;
-}
-
-.expected_pay {
-    width: 10%;
-    float: left;
+    text-align: center;
 }
 
 tfoot td {
     float: left;
-    width: 1%;
 }
 
 #header {

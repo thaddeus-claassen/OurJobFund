@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block content %}
+<input id="this_user" type="hidden" value="{{ request.user.username }}"/>
 <div class="row">
     <div class="col-md-12">
         <h4 id="username">{{ detail_user.username }}</h4>
@@ -18,20 +19,22 @@
             <div class="col-md-6">
                 <h4>Info</h4>
             </div>
-            {% if user.username == detail_user.username %}
             <div class="col-md-6">
-                <span id="edit_info" class="no-change-info-wrapper">Edit</span>
-                <span id="save_info" class="change-info-wrapper">Save</span>
+                {% if request.user.username == detail_user.username %}
+                <span id="edit_info" class="change-info-description">Edit</span>
+                <span id="cancel_info" class="change-info-description">Cancel</span>
+                <span class="change-info-description">&nbsp;&nbsp;</span>
+                <span id="save_info" class="change-info-description">Save</span>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
         <div id="info-wrapper">
-            <div class="row">
-                <div class="col-md-12">
-                    <form id="info_form" action="{{ request.get_full_path }}" method="POST" name="info_form">
+            <div class="row info">
+                <div class="col-md-12 info">
+                    <form id="info_form" class="info" action="{{ request.get_full_path }}" method="POST" name="info_form">
                     {% csrf_token %}
                     {% for name in name_form %}
-                        <div class="row">
+                        <div class="row info_row">
                             <div class="col-md-12">
                                 <span class="info_title">{{ name.label }}</span>
                                 <span class="info_info">{{ name }}</span>
@@ -39,25 +42,12 @@
                         </div>
                     {% endfor %}
                     {% for info in profile_form %}
-                        {% if info.auto_id == 'id_other' %}
-                        <div class="row">
-                            <div class="col-md-12">
-                                <span>{{ info.label }}</span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <span id="other_span">{{ info }}</span>
-                            </div>
-                        </div>
-                        {% else %}
-                        <div class="row">
+                        <div class="row info_row">
                             <div class="col-md-12">
                                 <span class="info_title">{{ info.label }}</span>
                                 <span class="info_info">{{ info }}</span>
                             </div>
                         </div>
-                        {% endif %}
                     {% endfor %}
                     </form>         
                 </div>
@@ -69,12 +59,14 @@
             <div class="col-md-6">
                 <h4>Description</h4>
             </div>
-            {% if user.username == detail_user.username %}
             <div class="col-md-6">
-                <span id="edit_description">Edit</span>
-                <span id="save_description">Save</span>
+                {% if request.user.username == detail_user.username %}
+                <span id="edit_description" class="change-info-description">Edit</span>
+                <span id="cancel_description" class="change-info-description">Cancel</span>
+                <span class="change-info-description">&nbsp;&nbsp;</span>
+                <span id="save_description" class="change-info-description">Save</span>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
         {{ description_form.description.errors }}
         <div class="row">

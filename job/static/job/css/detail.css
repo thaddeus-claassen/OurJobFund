@@ -3,26 +3,27 @@
     margin-bottom: 3px;
 }
 
+#info-wrapper {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 #job_name {
     text-align: center;
 }
 
-#created_by, #tags {
+.info_title {
     float: left;
 }
 
-#creation_date, #location {
+.info_info {
     float: right;
 }
 
 #job_description {
     height: 312px;
     overflow-y: auto;
-}
-
-#description {
-    margin-right: 10px;
-    margin-left: 10px;
+    overflow-x: hidden;
 }
 
 table, #job_description {
@@ -48,12 +49,12 @@ tr:after {
     clear: both;
 }
 
-thead th, tfoot td {
+thead th {
     height: 30px;
 }
 
 tbody {
-    height: 250px;
+    height: 280px;
     overflow-x: auto;
     overflow-y: scroll;
 }
@@ -77,7 +78,7 @@ tbody {
 }
 
 #updates_table th, #updates_table td {
-    width: 25%;
+    width: 33%;
     float: left;
 }
 

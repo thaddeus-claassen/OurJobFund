@@ -4,12 +4,12 @@ table {
     border: 1px solid black;
 }
 
-tbody, tfoot, tr, td, th {
-    display: block;
-}
-
 td {
     word-wrap: break-word;
+}
+
+thead, tbody, tfoot, tr, td, th {
+    display: block;
 }
 
 tr:after {
@@ -19,8 +19,17 @@ tr:after {
     clear: both;
 }
 
+thead th {
+    height: 30px;
+}
+
 tbody {
-    height: 250px;
+    height: 300px;
     overflow-x: auto;
     overflow-y: scroll;
+}
+
+.username, .first_name, .last_name, .location {
+    width: 25%;
+    float: left;
 }

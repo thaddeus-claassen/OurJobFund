@@ -53,6 +53,7 @@ def get_stripe_info(request):
     
 def get_jobs(request):
     if (request.is_ajax()):
+        print("Got into get_jobs");
         jobs = findJobs(request);
         jobs = jobs[0:50];
         serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
@@ -93,14 +94,10 @@ def get_total_jobs(request):
         return Http404();
         
 def findJobs(request):
-    search_type = request.GET['search_type'];
     search = request.GET['search'];
-    if (search_type == 'basic'):
-        jobs = Job.objects.all();
-        for word in search.split(" "):
-            jobs = jobs.filter(Q(name__contains=word) | Q(tag__tag__contains=word));
-    elif (search_type == "custom"):
-        jobs = get_jobs_from_custom_search(search);
+    jobs = Job.objects.all();
+    for word in search.split(" "):
+        jobs = jobs.filter(Q(name__contains=word) | Q(tag__tag__contains=word));
     jobs = jobs.distinct();
     sort_array = request.GET['sort'].split(" ");
     latitude_in_degrees_as_string = request.GET['latitude'];

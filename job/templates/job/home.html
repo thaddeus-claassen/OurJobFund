@@ -9,10 +9,71 @@
 {% endblock %}
 
 {% block content %}
-{% if request.user.is_authenticated %}
-<div id="advanced-settings-wrapper">
-    <div class="row">
-        <div class="col-md-6">
+<div class="row">
+    <div class="col-md-7">
+        <div class="row"> 
+            <div class="col-md-3">
+                <input id="search_button" type="button" value="Search" />
+            </div>
+            <div class="col-md-3">
+                Total:&nbsp;<span id="num-jobs-found">0</span>
+            </div>
+        </div>
+        <div id="basic_search" class="row">
+            <div class="col-md-12">
+                <input id="basic_search_jobs" class="search" type="text" placeholder="Search Jobs by Name or Tags, separated by spaces" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table id="main_table" class="table">
+                    <thead>
+                        <tr>
+                            <input id="sort" type="hidden" value="created descending" />
+                            <th id="name" class="name sort">Name</th>
+                            <th id="created" class="date sort">Created</th>
+                            <th id="pledged-paid" class="pledged-paid sort"><sup>Pledged</sup>&frasl;<sub>Paid</sub></th>
+                            <th id="workers-finished" class="workers-finished sort"><sup>Workers</sup>&frasl;<sub>Finished</sub></th>
+                        </tr>
+                    </thead>
+                    <tbody id="main_table_body"></tbody>
+                </table>
+            </div>
+        </div>
+        {% if request.user.is_authenticated %}
+        <div id="create_job_row" class="row">
+            <div class="col-md-12">
+                <form action="{% url 'job:create' %}">
+                    <input id="create_job" type="submit" value="Create Job" />
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-5">
+        <div id="location-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <input id="location" class="search" type="text" placeholder="Location" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <input id="radius" class="search" type="text" placeholder="Radius (default: 10)" />
+                </div>
+                <div class="col-md-3">
+                    mile/s
+                </div>
+            </div>
+            <input id="latitude" type="hidden" value="" />
+            <input id="longitude" type="hidden" value="" />
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+        <div id="worker-filter-wrapper">
             <div class="row">
                 <div class="col-md-12">
                     Ignore workers who have:
@@ -34,7 +95,7 @@
             {% endif %}
         {% endfor %}
         </div>
-        <div class="col-md-6">
+        <div id="pledge-filter-wrapper">
             <div class="row">
                 <div class="col-md-12">
                     Ignore pledges from people who have:
@@ -79,113 +140,5 @@
         </div>
     </div>
 </div>
-{% endif %}
-<div id="content-wrapper">
-    {% if request.user.is_authenticated %}
-    <div class="row">
-        <div class="col-md-12">
-            <a id="show_filter">Show Filter</a>
-            <a id="hide_filter">Hide Filter</a>
-        </div>
-    </div>
-    {% endif %}
-    <div id="header" class="row">
-        <div class="col-md-6">
-            <input id="latitude" type="hidden" value="" />
-            <div class="row show_location">
-                <input id="longitude" type="hidden" value="" />
-                <div class="col-md-12">
-                    <input id="location" class="search" type="text" placeholder="Location" />
-                </div>
-            </div>
-            <div><span id="search_error"></span></div>
-            <div class="row show_location">
-                <div class="col-md-6">
-                    <input id="radius" class="search" type="text" placeholder="Radius (default: 10)" />
-                </div>    
-                <div class="col-md-2">
-                    <label for="mi">Mi:</label>
-                    <input id="mi" type="radio" name="unit" checked="checked" />
-                </div>
-                <div class="col-md-2">
-                    <label for="km">Km:</label>
-                    <input id="km" type="radio" name="unit" />
-                </div>
-            </div>
-            <div id="search_wrapper">
-                <div id="search_options" class="row">
-                    <div class="col-md-3">
-                        <label for="basic">Basic:</label>
-                        <input id="basic" type="radio" name="search" value="basic" checked="checked" />
-                    </div>
-                    <div class="col-md-3">
-                        <label for="custom">Custom:</label>
-                        <input id="custom" type="radio" name="search" value="custom" />
-                    </div>
-                    <div class="col-md-3">
-                        <input id="search_button" type="button" value="Search" />
-                    </div>
-                    <div class="col-md-3">
-                        <a id="show_location">Show Location</a>
-                        <a id="hide_location">Hide Location</a>
-                    </div>
-                </div>
-                <div id="basic_search" class="row">
-                    <div class="col-md-12">
-                        <input id="basic_search_jobs" class="search" type="text" placeholder="Search Jobs by Name or Tags, separated by spaces" />
-                    </div>
-                </div>
-                <div id="custom_search" class="row">
-                    <div class="col-md-12">
-                        <textarea id="custom_search_jobs" class="search" placeholder='Search Jobs by combining tags with "&" (AND operator), "|" (OR operator), "~" (NOT operator), and "()" (precedence grouping)'></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 show_location">
-            <div id="map"></div>
-        </div>
-    </div>
-    <div id="row-table" class="row">
-        <div id="table-border" class="col-md-12">
-            <table id="main_table" class="table">
-                <thead>
-                    <tr>
-                        <input id="sort" type="hidden" value="created descending" />
-                        <th id="name" class="name sort">Name</th>
-                        <th id="created" class="date sort">Created</th>
-                        <th id="pledged" class="pledged sort">Pledged</th>
-                        <th id="expected_pay" class="expected_pay sort">Expected Pay</th>
-                        <th id="paid" class="paid sort">Paid</th>
-                        <th id="workers" class="workers sort">Workers</th>
-                        <th id="expected_workers" class="expected_workers sort">Expected Workers</th>
-                        <th id="finished" class="finished sort">Finished</th>
-                    </tr>
-                </thead>
-                <tbody id="main_table_body"></tbody>
-                <tfoot>
-                    <tr>
-                        <td id="job-number-footer" >Jobs Found:&nbsp;<span id="num-jobs-found">0</span></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    </div>
-    {% if request.user.is_authenticated %}
-    <div id="create_job_row" class="row">
-        <div class="col-md-12">
-            <form action="{% url 'job:create' %}">
-                <input id="create_job" type="submit" value="Create Job" />
-            </form>
-        </div>
-    </div>
-    {% endif %}
-</div>
+
 {% endblock %}

@@ -3,42 +3,11 @@ var numSearches = 0;
 var ENTER = 13;
 var map;
 var markers = [];
-var MILES_TO_KILOMETERS = 1.60934;
 
 $('document').ready(function() {
     changeTHeadTFootWidthToAccountForScrollBar();
     $(window).resize(function() {
         changeTHeadTFootWidthToAccountForScrollBar();
-    });
-    $('#show_filter').click(function() {
-        $(this).css('display', 'none');
-        $('#advanced-settings-wrapper').css('display', 'inline');
-        $('#hide_filter').css('display', 'inline');
-    });
-    $('#hide_filter').click(function() {
-        $(this).css('display', 'none');
-        $('#show_filter').css('display', 'block');
-        $('#advanced-settings-wrapper').css('display', 'none');
-    });
-    $('#show_location').click(function() {
-        $(this).css('display', 'none');
-        $('.show_location').css('display', 'block');
-        $('#hide_location').css('display', 'block');
-        google.maps.event.trigger(map, 'resize');
-    });
-    $('#hide_location').click(function() {
-        $(this).css('display', 'none');
-        $('.show_location').css('display', 'none');
-        $('#show_location').css('display', 'block');
-        $('#search_error').text("0");
-    });
-    $('#basic').click(function() {
-        $('#basic_search_jobs').css('display', 'inline');
-        $('#custom_search_jobs').css('display', 'none');
-    });
-    $('#custom').click(function() {
-        $('#basic_search_jobs').css('display', 'none');
-        $('#custom_search_jobs').css('display', 'inline');
     });
     $('#basic_search_jobs').keydown(function(event) {
         if (event.which == ENTER) {
@@ -79,12 +48,7 @@ $('document').ready(function() {
 function search() {
     clearMarkers();
     numSearches = 0;
-    if ($('#show_location').css('display') == "block") {
-        get_jobs();
-    } else {
-        applyLocation();
-    }// end if-else
-    get_total_jobs();
+    applyLocation();
 }// end search()
 
 function changeTHeadTFootWidthToAccountForScrollBar() {
@@ -96,12 +60,10 @@ function changeTHeadTFootWidthToAccountForScrollBar() {
 }// end changeTHeadTFootWidthToAccountForScrollBar()
 
 function get_jobs() {
-    var search_type = $("input[name='search']:checked").val();
     $.ajax({
         url : 'get_jobs',
         data : {
-            'search_type' : search_type,
-            'search' : $('#' + search_type + '_search_jobs').val(),
+            'search' : $('#basic_search_jobs').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
             'radius' : getRadius(),
@@ -112,13 +74,11 @@ function get_jobs() {
 }// end get_jobs()
 
 function add_jobs() {
-    var search_type = $("input[name='search']:checked").val();
     $.ajax({
         url : 'add_jobs',
         data : {
             'numSearches' : numSearches,
-            'search_type' : search_type,
-            'search' : $('#' + search_type + '_search_jobs').val(),
+            'search' : $('#basic_search_jobs').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
             'radius' : getRadius(),
@@ -129,13 +89,11 @@ function add_jobs() {
 }// end add_jobs()
 
 function sort_jobs() {
-    var search_type = $("input[name='search']:checked").val();
     $.ajax({
         url : 'sort_jobs',
         data : {
             'numSearches' : numSearches,
-            'search_type' : search_type,
-            'search' : $('#' + search_type + '_search_jobs').val(),
+            'search' : $('#basic_search_jobs').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
             'radius' : getRadius(),
@@ -146,12 +104,10 @@ function sort_jobs() {
 }// end sort_jobs()
 
 function get_total_jobs() {
-    var search_type = $("input[name='search']:checked").val();
     $.ajax({
         url : 'get_total_jobs',
         data : {
-            'search_type' : search_type,
-            'search' : $('#' + search_type + '_search_jobs').val(),
+            'search' : $('#basic_search_jobs').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
             'radius' : getRadius(),
@@ -193,19 +149,15 @@ function addJobsToTable(json) {
             var string = "<tr><td class='name'><a href='" + job["random_string"] + "'>";
             string = string + job["name"] + "</a></td>";
             string = string + "<td class='date'>" + job['creation_date'] + "</td>";
-            string = string + "<td class='pledged'>$" + job['pledged'] + "</td>";
-            string = string + "<td class='expected_pay'>$" + job['expected_pay'] + "</td>"
-            string = string + "<td class='paid'>$" + job['paid'] + "</td>";
-            string = string + "<td class='workers'>" + job['workers'] + "</td>";
-            string = string + "<td class='expected_workers'>" + job['expected_workers'] + "</td>";
-            string = string + "<td class='finished'>" + job['finished'] + "</td></tr>";
+            string = string + "<td class='pledged-paid'><sup>$" + job['pledged'] + "</sup>&frasl;<sub>$" + job['paid'] + "</sub></td>";
+            string = string + "<td class='workers'><sup>" + job['workers'] + "</sup>&frasl;<sub>" + job['finished'] + "</sub></td></tr>";
             $('#main_table_body').append(string);
-            if ($('#show_location').css('display') == "none") {
+            if ($('#location').val() != "") {
                 addMarker(new google.maps.LatLng(job['latitude'], job['longitude']));    
             }// end if
         }// end for
     }// end if
-    if ($('#show_location').css('display') == "none") {
+    if ($('#location').val() != "") {
         addBounds();
     }// end if
     return numJobs;
@@ -213,31 +165,25 @@ function addJobsToTable(json) {
 
 function applyLocation() {
     var address = $('#location').val();
-    if (address === "") {
-        $('#search_error').text("Please add a location");
-    } else {
-        var geocoder = new google.maps.Geocoder();
-        geocoder.geocode( { 'address': address}, function(results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                center = results[0].geometry.location;
-                $('#latitude').val(center.lat());
-                $('#longitude').val(center.lng());
-                get_jobs();
-                $('#search_error').text("");
-            } else {
-                $('#search_error').text("Google Maps does not recognize the location.");
-            }// end if-else
-        });
-    }// end if-else
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            center = results[0].geometry.location;
+            $('#latitude').val(center.lat());
+            $('#longitude').val(center.lng());
+            get_jobs();
+            get_total_jobs();
+        } else {
+            get_jobs();
+            get_total_jobs();
+        }// end if-else
+    });
 }// end applyLocation()
 
 function getRadius() {
     var radius = parseFloat($('#radius').val());
     if (isNaN(radius)) {
         radius = 10;
-    }// end if
-    if ($('#km').is(':checked')) {
-        radius = MILES_TO_KILOMETERS * radius;
     }// end if
     return radius
 }// end getRadius()

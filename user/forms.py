@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User;
 from user.models import UserProfile
 from django import forms;
+from .choices import STATES;
 import re;
 
 class LoginForm(forms.ModelForm):
@@ -53,13 +54,14 @@ class NewUserForm(forms.ModelForm):
             
 class ProfileForm(forms.ModelForm):
     city = forms.CharField(widget=forms.TextInput(attrs={'size' : '12', 'readonly' : 'true'}), required=False);
+    state = forms.ChoiceField(choices=STATES, widget=forms.Select(attrs={'disabled' : 'disabled'}), required=False);
     education = forms.CharField(widget=forms.TextInput(attrs={'size' : '12', 'readonly' : 'true'}), required=False);
     occupation = forms.CharField(widget=forms.TextInput(attrs={'size' : '12', 'readonly' : 'true'}), required=False);
-    other = forms.CharField(widget=forms.Textarea(attrs={'style' : '{height:100%;width:100%;overflow-y:auto; overflow-x:hidden}'}), required=False);
+    contact = forms.CharField(widget=forms.TextInput(attrs={'size' : '12', 'readonly' : 'true'}), required=False);
     
     class Meta:
         model = UserProfile;
-        fields = ['city', 'state', 'education', 'occupation', 'other'];
+        fields = ['city', 'state', 'education', 'occupation', 'contact'];
             
 class DescriptionForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea(attrs={'readonly' : 'true'}), required=False);

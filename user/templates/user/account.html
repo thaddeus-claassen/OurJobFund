@@ -10,14 +10,14 @@
 <div id="name-wrapper">
     <div id="current-name" class="row">
         <div class="col-md-4">
-            Name:
+            Username:
         </div>
         <div class="col-md-4">
-            {{ user.first_name }}&nbsp;{{ user.last_name }}
+            {{ user.username }}
         </div>
         <div class="col-md-4">
              {% if change_name_form %} 
-             <button id="name" type="button" >Edit</button>
+             <button id="name" type="button">Edit</button>
              {% endif %}
         </div>
     </div>

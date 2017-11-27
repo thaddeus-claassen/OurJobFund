@@ -123,7 +123,7 @@ class DetailView(TemplateView):
             'state' : user.userprofile.state,
             'occupation' : user.userprofile.occupation,
             'education' : user.userprofile.education,
-            'other' : user.userprofile.other,
+            'contact' : user.userprofile.contact,
         });
         self.descriptionForm = self.descriptionForm(initial={'description' : user.userprofile.description});
         return render(request, self.template_name, self.get_context_data());
@@ -146,9 +146,7 @@ class DetailView(TemplateView):
                 return redirect(request.user);
         if ('description' in request.POST):
             self.descriptionForm = self.descriptionForm(request.POST);
-            print("Description Form is valid: " + str(self.descriptionForm.is_valid()));
             if (self.descriptionForm.is_valid()):
-                print("New description: " + str(self.descriptionForm.cleaned_data['description']))
                 request.user.userprofile.description = self.descriptionForm.cleaned_data['description'];
                 request.user.userprofile.save();
                 return redirect(request.user);
