@@ -12,16 +12,23 @@
 <div class="row">
     <div class="col-md-7">
         <div class="row"> 
-            <div class="col-md-3">
+            <div class="col-md-9">
                 <input id="search_button" type="button" value="Search" />
+            </div>
+            {% if request.user.is_authenticated %}
+            <div class="col-md-3">
+                <form action="{% url 'job:create' %}">
+                    <input id="create_job" type="submit" value="Create Job" />
+                </form>
+            </div>
+            {% endif %}
+        </div>
+        <div id="basic_search" class="row">
+            <div class="col-md-9">
+                <input id="basic_search_jobs" class="search" type="text" placeholder="Search Jobs by Name or Tags, separated by spaces" />
             </div>
             <div class="col-md-3">
                 Total:&nbsp;<span id="num-jobs-found">0</span>
-            </div>
-        </div>
-        <div id="basic_search" class="row">
-            <div class="col-md-12">
-                <input id="basic_search_jobs" class="search" type="text" placeholder="Search Jobs by Name or Tags, separated by spaces" />
             </div>
         </div>
         <div class="row">
@@ -32,7 +39,7 @@
                             <input id="sort" type="hidden" value="created descending" />
                             <th id="name" class="name sort">Name</th>
                             <th id="created" class="date sort">Created</th>
-                            <th id="pledged-paid" class="pledged-paid sort"><sup>Pledged</sup>&frasl;<sub>Paid</sub></th>
+                            <th id="pledged-paid" class="pledged-paid sort">$&nbsp;<sup>Pledged</sup>&frasl;<sub>Paid</sub></th>
                             <th id="workers-finished" class="workers-finished sort"><sup>Workers</sup>&frasl;<sub>Finished</sub></th>
                         </tr>
                     </thead>
@@ -40,15 +47,6 @@
                 </table>
             </div>
         </div>
-        {% if request.user.is_authenticated %}
-        <div id="create_job_row" class="row">
-            <div class="col-md-12">
-                <form action="{% url 'job:create' %}">
-                    <input id="create_job" type="submit" value="Create Job" />
-                </form>
-            </div>
-        </div>
-        {% endif %}
     </div>
     <div class="col-md-5">
         <div id="location-wrapper">

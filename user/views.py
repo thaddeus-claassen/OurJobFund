@@ -141,7 +141,7 @@ class DetailView(TemplateView):
                 request.user.userprofile.state = self.profileForm.cleaned_data['state'];
                 request.user.userprofile.occupation = self.profileForm.cleaned_data['occupation'];
                 request.user.userprofile.education = self.profileForm.cleaned_data['education'];
-                request.user.userprofile.other = self.profileForm.cleaned_data['other'];
+                request.user.userprofile.contact = self.profileForm.cleaned_data['contact'];
                 request.user.userprofile.save();
                 return redirect(request.user);
         if ('description' in request.POST):
@@ -163,7 +163,7 @@ class DetailView(TemplateView):
             'finished_jobusers' : user.jobuser_set.filter(Q(job__pledged__gt=0) & Q(job__pledged__lte=F('job__paid'))),
         }
         return context;
-    
+        
 class AccountView(TemplateView):
     template_name = 'user/account.html';
     nameForm = None;

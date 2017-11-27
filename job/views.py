@@ -175,9 +175,12 @@ class DetailView(TemplateView):
             'updates' : Update.objects.filter(jobuser__job=job).order_by('-date'),
         }
         if (request.user.is_authenticated()):
+            serializer = JobSerializer(Job.objects.filter(pk=job.pk), many=True, context={'user' : request.user});
             context['jobuser'] = get_object_or_None(JobUser, user=request.user, job=job);
             context['user_has_stripe_account'] = (request.user.userprofile.stripe_account_id != None) and (request.user.userprofile.stripe_account_id != '');
             context['pledge_form'] = self.form;
+            context['expected_pay'] = serializer.data[0]['expected_pay'];
+            context['expected_workers'] = serializer.data[0]['expected_workers'];
         return context;
         
     def pledge(self, form, job, jobuser):
