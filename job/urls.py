@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^$', views.redirect_to_home),
     url(r'^home$', views.home, name='home'),
     url(r'^create/$', views.CreateView.as_view(), name='create'),
+    url(r'^save_filter/$', views.save_filter),
     url(r'^get_jobs/$', views.get_jobs),
     url(r'^add_jobs/$', views.add_jobs),
     url(r'^sort_jobs/$', views.sort_jobs),

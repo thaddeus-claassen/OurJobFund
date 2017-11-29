@@ -29,29 +29,34 @@
             </div>
         </div>
         <div id="info-wrapper">
-            <div class="row info">
-                <div class="col-md-12 info">
-                    <form id="info_form" class="info" action="{{ request.get_full_path }}" method="POST" name="info_form">
-                    {% csrf_token %}
-                    {% for name in name_form %}
-                        <div class="row info_row">
-                            <div class="col-md-12">
-                                <span class="info_title">{{ name.label }}</span>
-                                <span class="info_info">{{ name }}</span>
-                            </div>
-                        </div>
-                    {% endfor %}
-                    {% for info in profile_form %}
-                        <div class="row info_row">
-                            <div class="col-md-12">
-                                <span class="info_title">{{ info.label }}</span>
-                                <span class="info_info">{{ info }}</span>
-                            </div>
-                        </div>
-                    {% endfor %}
-                    </form>         
+            <div class="row">
+                <div class="col-md-12">
+                    {% if detail_user.userprofile.stripe_account_id %}
+                    <span>Connected to Stripe</span>
+                    {% endif  %}
+                    <span>Not connected to String</span>
+                    {% endif %}
                 </div>
             </div>
+            <form id="info_form" class="info" action="{{ request.get_full_path }}" method="POST" name="info_form">
+            {% csrf_token %}
+            {% for name in name_form %}
+                <div class="row info_row">
+                    <div class="col-md-12">
+                        <span class="info_title">{{ name.label }}</span>
+                        <span class="info_info">{{ name }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+            {% for info in profile_form %}
+                <div class="row info_row">
+                    <div class="col-md-12">
+                        <span class="info_title">{{ info.label }}</span>
+                        <span class="info_info">{{ info }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+            </form>         
         </div>
     </div>
     <div class="col-md-9">

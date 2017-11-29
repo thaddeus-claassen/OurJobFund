@@ -2,7 +2,8 @@ from rest_framework import serializers;
 from .models import Job;
 from jobuser.models import JobUser, Pledge, Work, Pay;
 import datetime;
-from django.db.models import Count, Q
+from django.db.models import Count, Q;
+from django.utils import timezone;
 
 class JobSerializer(serializers.ModelSerializer):
     expected_pay = serializers.SerializerMethodField();
@@ -22,7 +23,7 @@ class JobSerializer(serializers.ModelSerializer):
         return self.calculateExpectedPledged(pledges);
     
     def notBeenActiveInTheLastNDays(self, queryset, n):
-        return queryset.exclude(jobuser__user__last_login__lte=(datetime.datetime.now() - datetime.timedelta(days=n)));
+        return queryset.exclude(jobuser__user__last_login__lte=(timezone.now() - datetime.timedelta(days=n)));
         
     def paidAtLeastNTimes(self, pledges, n):
         for pledge in pledges:

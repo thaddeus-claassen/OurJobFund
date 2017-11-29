@@ -73,3 +73,12 @@ terms_of_service/__pycache__/*
 update/__pycache__/*
 user/__pycache__/*
 sendgrid.env
+
+# static stuff
+static/admin/*
+static/job/*
+static/jobuser/*
+static/rest_framework/*
+static/static_jquery/*
+static/update/*
+static/user/*

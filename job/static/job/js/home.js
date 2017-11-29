@@ -43,6 +43,10 @@ $('document').ready(function() {
             }// end if
         }// end if
     });
+    $('.filter').change(function() {
+        save_filter($(this));
+        sort_jobs();
+    });
 });
 
 function search() {
@@ -58,6 +62,18 @@ function changeTHeadTFootWidthToAccountForScrollBar() {
     $('thead').width(percentageTableWidth.toString() + '%');
     $('tfoot').width(percentageTableWidth.toString() + '%');
 }// end changeTHeadTFootWidthToAccountForScrollBar()
+
+function save_filter(changed_filter) {
+    $.ajax({
+        type : 'POST',
+        url : '/job/save_filter/',
+        data : {
+            'changed_filter' : $(changed_filter).attr('id'),
+            'value' : $(changed_filter).val(),
+            csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
+        },
+    });
+}// end save_filter()
 
 function get_jobs() {
     $.ajax({
@@ -146,11 +162,12 @@ function addJobsToTable(json) {
     if (numJobs > 0) {
         for (var index = 0; index < json.length; index++) {
             var job = json[index];
-            var string = "<tr><td class='name'><a href='" + job["random_string"] + "'>";
-            string = string + job["name"] + "</a></td>";
+            var string = "<tr>"
+            string = string + "<td class='name'><a href='" + job["random_string"] + "'>" + job["name"] + "</a></td>";
             string = string + "<td class='date'>" + job['creation_date'] + "</td>";
-            string = string + "<td class='pledged-paid'><sup>$" + job['pledged'] + "</sup>&frasl;<sub>$" + job['paid'] + "</sub></td>";
-            string = string + "<td class='workers'><sup>" + job['workers'] + "</sup>&frasl;<sub>" + job['finished'] + "</sub></td></tr>";
+            string = string + "<td class='pledged-paid'><sup>$" + job['expected_pay'] + "</sup>&frasl;<sub>$" + job['paid'] + "</sub></td>";
+            string = string + "<td class='workers-finished'><sup>" + job['expected_workers'] + "</sup>&frasl;<sub>" + job['finished'] + "</sub></td>"
+            string = string + "</tr>";
             $('#main_table_body').append(string);
             if ($('#location').val() != "") {
                 addMarker(new google.maps.LatLng(job['latitude'], job['longitude']));    
@@ -196,7 +213,7 @@ function initMap() {
             center: {lat: 0, lng: 0},
             zoom: 8,
         });
-    }
+    }// end if-else
 }// end initMap()
 
 function centerMap(position) {

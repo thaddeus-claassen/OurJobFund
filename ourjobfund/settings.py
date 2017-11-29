@@ -79,7 +79,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'ourjobfund.urls'
+ROOT_URLCONF = 'ourjobfund.urls';
+
+USER_TZ = True;
 
 TEMPLATES = [
     {

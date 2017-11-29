@@ -25,13 +25,7 @@ def redirect_to_home(request):
     return redirect('job:home');
 
 def home(request):
-    context = None;
-    if (request.user.is_authenticated()):
-        context = {
-            'worker_filter_form' : WorkerFilterForm(instance=request.user.workerfilter),
-            'pledge_filter_form' : PledgeFilterForm(instance=request.user.pledgefilter),
-        };
-    return render(request, 'job/home.html', context);
+    return render(request, 'job/home.html');
 
 @login_required
 def get_stripe_info(request):
@@ -53,7 +47,6 @@ def get_stripe_info(request):
     
 def get_jobs(request):
     if (request.is_ajax()):
-        print("Got into get_jobs");
         jobs = findJobs(request);
         jobs = jobs[0:50];
         serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
@@ -90,6 +83,20 @@ def get_total_jobs(request):
         total = {};
         total['total'] = len(jobs)
         return HttpResponse(json.dumps(total), content_type="application/json");
+    else:
+        return Http404();
+        
+def save_filter(request):
+    if (request.is_ajax()):
+        changed_filter = request.POST['changed_filter'];
+        filter = changed_filter.split("-")[0];
+        row = changed_filter.split("-")[1];
+        value = request.POST['value'];
+        if (value == ''):
+            value = 0;
+        exec("request.user." + str(filter) + "filter." + row + " = " + str(value));
+        exec("request.user." + str(filter) + "filter.save()");
+        return HttpResponse("");
     else:
         return Http404();
         
