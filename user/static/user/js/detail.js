@@ -12,6 +12,7 @@ $('document').ready(function() {
     $(window).resize(function() {
         changeTHeadTFootWidthToAccountForScrollBar();
     });
+    initInfoAndDescription();
     $('#edit_info').click(function() {
         removeReadonlyInfoAttributes();
         $('#edit_info').css('display', 'none');
@@ -39,8 +40,7 @@ $('document').ready(function() {
         $('#edit_description').css('display', 'inline');
         $('#save_description').css('display', 'none');
         $('#cancel_description').css('display', 'none');
-        $('#id_description').text();
-        
+        $('#id_description').text(); 
     });
     $('#save_description').click(function() {
         $('#description_form').submit();

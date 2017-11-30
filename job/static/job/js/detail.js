@@ -93,17 +93,6 @@ function sort(sort) {
     });
 }// end sort()
 
-function sortSuccess(json) {
-    //$('#update-body').empty();
-    //var num = Object.keys(json).length;
-    //if (num > 0) {
-    //    for (var index = 0; index < json.length; index++) {
-    //        var update = json[index];
-    //        var fields = job["fields"];
-    //    }// end for
-    //}// end if
-}// end sortSuccess()
-
 function correctFormat() {
     var errorMessage = "";
     var amount = parseFloat($('#pledge_amount').val());

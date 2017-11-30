@@ -78,21 +78,25 @@
                     Ignore workers who have:
                 </div>
             </div>
-            <ul>
-                <li>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <span class="filter_label">not been active in</span>
+            <div class="row">
+                <div class="col-md-12">
+                    <ul>
+                        <div class="row">
+                            <li>
+                                <div class="col-md-6">
+                                    <span class="filter_label">not been active in</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <input id="worker-not_been_active_in_the_last_n_days" class="filter" type="number" min="0" value="{{ request.user.workerfilter.not_been_active_in_the_last_n_days }}" />
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="filter_unit">or more days</span>
+                                </div>
+                            </li>
                         </div>
-                        <div class="col-md-2">
-                            <input id="worker-not_been_active_in_the_last_n_days" class="filter" type="number" min="0" value="{{ request.user.workerfilter.not_been_active_in_the_last_n_days }}" />
-                        </div>
-                        <div class="col-md-4">
-                            <span class="filter_unit">days or more</span>
-                        </div>
-                    </div>
-                </li>
-            </ul>
+                    </ul>
+                </div>
+            </div>
         </div>
         <div id="pledge-filter-wrapper">
             <div class="row">
@@ -100,44 +104,48 @@
                     Ignore pledges from people who have:
                 </div>
             </div>
-            <ul>
-                <li>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <span class="filter_label">not been active in</span>
+            <div class="row">
+                <div class="col-md-12">
+                    <ul>
+                        <div class="row">
+                            <li>
+                                <div class="col-md-6">
+                                    <span class="filter_label">not been active in</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <input id="pledge-not_been_active_in_the_last_n_days" class="filter" type="number" min="0" value="{{ request.user.pledgefilter.not_been_active_in_the_last_n_days }}"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="filter_unit">or more days</span>
+                                </div>
+                            </li>
                         </div>
-                        <div class="col-md-2">
-                            <input id="pledge-not_been_active_in_the_last_n_days" class="filter" type="number" min="0" value="{{ request.user.pledgefilter.not_been_active_in_the_last_n_days }}"/>
+                        <div class="row">
+                            <li>
+                                <div class="col-md-6">
+                                    <span class="filter_label">paid fewer than</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <input id="pledge-paid_at_least_n_times" class="filter" type="number" min="0" value="{{ request.user.pledgefilter.paid_at_least_n_times }}" />
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="filter_unit">times</span>
+                                </div>
+                            </li>
                         </div>
-                        <div class="col-md-4">
-                            <span class="filter_unit">days or more</span>
+                        <div class="row">
+                            <li>
+                                <div class="col-md-6">
+                                    <span class="filter_label">Paid less than $</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <input id="pledge-paid_at_least_n_amount_in_total" class="filter" type="number" value="{{ request.user.pledgefilter.paid_at_least_n_amount_in_total }}" />
+                                </div>
+                            </li>
                         </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <span class="filter_label">paid fewer than</span>
-                        </div>
-                        <div class="col-md-2">
-                            <input id="pledge-paid_at_least_n_times" class="filter" type="number" min="0" value="{{ request.user.pledgefilter.paid_at_least_n_times }}" />
-                        </div>
-                        <div class="col-md-4">
-                            <span class="filter_unit">times</span>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <span class="filter_label">Paid less than $</span>
-                        </div>
-                        <div class="col-md-2">
-                            <input id="pledge-paid_at_least_n_amount_in_total" class="filter" type="number" value="{{ request.user.pledgefilter.paid_at_least_n_amount_in_total }}" />
-                        </div>
-                    </div>
-                </li>
-            </ul>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>
