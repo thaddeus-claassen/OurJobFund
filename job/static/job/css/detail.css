@@ -3,6 +3,10 @@
     margin-bottom: 3px;
 }
 
+.header {
+    height: 30px;
+}
+
 #info-wrapper {
     overflow-y: auto;
     overflow-x: hidden;

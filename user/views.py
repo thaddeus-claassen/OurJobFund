@@ -86,7 +86,7 @@ def search_users(request):
 def getUsersFromQuery(search, num_searches):
     users = User.objects.all();
     for word in search.split():
-        users = users.filter(Q(first_name__istartswith=word) | Q(last_name__istartswith=word));
+        users = users.filter(Q(username__contains=word) | Q(first_name__istartswith=word) | Q(last_name__istartswith=word));
     start = (50 * num_searches);
     end = start + 50;
     users = users[start:end];

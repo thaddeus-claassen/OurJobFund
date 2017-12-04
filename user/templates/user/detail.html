@@ -34,7 +34,12 @@
                     {% if detail_user.userprofile.stripe_account_id %}
                     <span>Connected to Stripe</span>
                     {% else %}
-                    <span>Not connected to Stripe</span>
+                    <span>
+                        Not connected to 
+                        <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write&state={{ job.random_string }}" id="stripe_connect" class="stripe-connect">
+                            <span>Stripe</span>
+                        </a>
+                    </span>
                     {% endif %}
                 </div>
             </div>

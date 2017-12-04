@@ -1,3 +1,6 @@
+var canSubmitPledge = true;
+var canSubmitWork = true;
+
 var currSort = 'date-descending';
 
 $('document').ready(function() {
@@ -30,6 +33,42 @@ $('document').ready(function() {
             $('#connect_with_stripe_message').css('display', 'inline');
             $('#stripe_connect').css('display', 'inline');
         }// end if
+    });
+    $('#pledge-money-form').submit(function() {
+        if (canSubmitPledge) {
+            canSubmitPledge = false;
+        } else {
+            canSubmitPledge = true;
+        }// end if-else
+    });
+    $('#pledge-money-form').submit(function(e) {
+        if (canSubmitPledge) {
+            canSubmitPledge = false;
+        } else {
+            e.preventDefault();
+        }// end if-else
+    });
+    $('#work-form').submit(function(e) {
+        if (canSubmitWork) {
+            canSubmitWork = false;
+        } else {
+            e.preventDefault();
+        }// end if-else
+    });
+    $('#finish-form').submit(function(e) {
+        console.log("canSubmitWork: " + canSubmitWork.toString());
+        if (canSubmitWork) {
+            canSubmitWork = false;
+        } else {
+            e.preventDefault();
+        }// end if-else
+    });
+    $('#unfinish-form').submit(function(e) {
+        if (canSubmitWork) {
+            canSubmitWork = false;
+        } else {
+            e.preventDefault();
+        }// end if-else
     });
     var handler = StripeCheckout.configure({
         key: 'pk_test_DF7zGC0IPpcOQyWr2nWHVLZ6',

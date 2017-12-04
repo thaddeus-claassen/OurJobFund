@@ -1,12 +1,19 @@
+var canSubmit = true;
+
 $('document').ready(function() {
     $('#create-job-form').submit(function(event) {
-        if ($('#id_latitude').val() == 0 || $('#id_longitude').val() == 0) {
-            var loc = $('#id_location').val();
-            if (loc.length > 0) {
-                event.preventDefault();
-                applyLocation(loc);
+        if (canSubmit) {
+            if ($('#id_latitude').val() == 0 || $('#id_longitude').val() == 0) {
+                var loc = $('#id_location').val();
+                if (loc.length > 0) {
+                    event.preventDefault();
+                    applyLocation(loc);
+                }// end if
             }// end if
-        }// end if
+            canSubmit = false;
+        } else {
+            event.preventDefault();
+        }// end if-else
     });
 });
 

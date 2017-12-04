@@ -39,7 +39,7 @@
 <div class="row">
     <div class="col-md-2">
         <div id="info-wrapper">
-            <div class="row">
+            <div class="row header">
                 <div class="col-md-12">
                     <span>Info</span>
                 </div>
@@ -68,7 +68,7 @@
                     </span>
                 </div>
             </div>
-            <div class="row">
+            <div class="row header">
                 <div class="col-md-12">
                     <span class="info_title">Updates</span>
                     <span class="info_info">{{ updates.count }}</span>
@@ -115,7 +115,7 @@
     <div class="col-md-10">
         <div class="row">
             <div class="col-md-6">
-                <div class="row">
+                <div class="row header">
                     <div class="col-md-12">
                         <span>Description</span>
                     </div>
@@ -129,7 +129,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="row">
+                <div class="row header">
                     <div class="col-md-6">
                         <span id="updates_title">Updates</span>
                     </div>
@@ -187,7 +187,7 @@
 </div>
 <div class="row">
     <div class="col-md-6">
-        <div class="row info_row">
+        <div class="row info_row header">
             <div class="col-md-6">
                 <span>Pledges</span>
             </div>
@@ -202,8 +202,8 @@
                         ${{ field }}.00
                         {{ field.errors }}
                     {% endfor %}
-                        <input type="submit" value="Accept" name="pledge"  />
-                        <input id="cancel-pledge-money" type="button" value="Cancel" />
+                        <input type="submit" value="Accept" name="pledge"/>
+                        <input id="cancel-pledge-money" type="button" value="Cancel"/>
                     </span>
                 </form>
             </div>
@@ -272,28 +272,28 @@
         </div>
     </div>
     <div class="col-md-6">
-        <div class="row info_row">
+        <div class="row info_row header">
             <div class="col-md-6">
                 <span>Workers</span>
             </div>
             {% if request.user.is_authenticated %}
             {% if not jobuser.work_set.all.exists and not jobuser.pledge_set.all.exists %}
             <div class="col-md-6">
-                <form action="{{ request.get_full_path }}" method="POST">
+                <form id="work-form" action="{{ request.get_full_path }}" method="POST">
                 {% csrf_token %}
                     <input id="work_on_job" class="pledge_work_inputs" type="submit" value="Work" name="work" />
                 </form>
             </div>
             {% elif jobuser.work_set.all.count > jobuser.finish_set.all.count %}
             <div class="col-md-6">
-                <form action="{{ request.get_full_path }}" method="POST">
+                <form id="finish-form" action="{{ request.get_full_path }}" method="POST">
                 {% csrf_token %}
                     <input id="finish_job" class="pledge_work_inputs" type="submit" value="Finish" name="finish" />
                 </form>
             </div>
             {% elif jobuser.work_set.all.count == jobuser.finish_set.all.count %}
             <div class="col-md-6">
-                <form action="{{ request.get_full_path }}" method="POST">
+                <form id="unfinish-form" action="{{ request.get_full_path }}" method="POST">
                 {% csrf_token %}
                     <input id="unfinish_job" class="pledge_work_inputs" type="submit" value="Unfinish" name="unfinish" />
                 </form>

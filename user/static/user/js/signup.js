@@ -1,6 +1,13 @@
+var canSubmit = true;
 
 $('document').ready(function() {
-   
+    $('#sign-up-form').submit(function(e) {
+        if (canSubmit) {
+            canSubmit = false;
+        } else {
+            e.preventDefault();
+        }// end if-else
+    });
 });
 
 function createSpansAboveInputsForErrorMessages() {

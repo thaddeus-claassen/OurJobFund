@@ -12,7 +12,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-7">
-        <div id="basic_search" class="row">
+        <div id="basic_search" class="row margin-row">
             <div class="col-md-9">
                 <input id="basic_search_jobs" class="search" type="text" placeholder="Search Jobs by Name or Tags, separated by spaces" />
             </div>
@@ -20,7 +20,7 @@
                 Total:&nbsp;<span id="num-jobs-found">0</span>
             </div>
         </div>
-        <div class="row"> 
+        <div class="row margin-row"> 
             <div class="col-md-9">
                 <input id="search_button" type="button" value="Search" />
             </div>
@@ -32,7 +32,7 @@
             </div>
             {% endif %}
         </div>
-        <div class="row">
+        <div class="row margin-row">
             <div class="col-md-12">
                 <table id="main_table" class="table">
                     <thead>
@@ -51,12 +51,12 @@
     </div>
     <div class="col-md-5">
         <div id="location-wrapper">
-            <div class="row">
+            <div class="row margin-row">
                 <div class="col-md-12">
                     <input id="location" class="search" type="text" placeholder="Location" />
                 </div>
             </div>
-            <div class="row">
+            <div class="row margin-row">
                 <div class="col-md-6">
                     <input id="radius" class="search" type="text" placeholder="Radius (default: 10)" />
                 </div>
@@ -66,13 +66,13 @@
             </div>
             <input id="latitude" type="hidden" value="" />
             <input id="longitude" type="hidden" value="" />
-            <div class="row">
+            <div class="row margin-row">
                 <div class="col-md-12">
                     <div id="map"></div>
                 </div>
             </div>
         </div>
-        <div id="worker-filter-wrapper">
+        <div id="worker-filter-wrapper" class="margin-row">
             <div class="row">
                 <div class="col-md-12">
                     Ignore workers who have:
@@ -98,7 +98,7 @@
                 </div>
             </div>
         </div>
-        <div id="pledge-filter-wrapper">
+        <div id="pledge-filter-wrapper" class="margin-row">
             <div class="row">
                 <div class="col-md-12">
                     Ignore pledges from people who have:
