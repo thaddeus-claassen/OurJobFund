@@ -53,7 +53,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <span class="info_title">Created By</span>
-                    <span class="info_info">{{ job.created_by }}</span>
+                    <span class="info_info"><a href="{% url 'user:detail' job.created_by.username %}">{{ job.created_by }}</a></span>
                 </div>
             </div>
             <div class="row">
