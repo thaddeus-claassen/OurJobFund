@@ -38,14 +38,7 @@ $('document').ready(function() {
         if (canSubmitPledge) {
             canSubmitPledge = false;
         } else {
-            canSubmitPledge = true;
-        }// end if-else
-    });
-    $('#pledge-money-form').submit(function(e) {
-        if (canSubmitPledge) {
-            canSubmitPledge = false;
-        } else {
-            e.preventDefault();
+            e.preventDefault();;
         }// end if-else
     });
     $('#work-form').submit(function(e) {
@@ -56,7 +49,7 @@ $('document').ready(function() {
         }// end if-else
     });
     $('#finish-form').submit(function(e) {
-        console.log("canSubmitWork: " + canSubmitWork.toString());
+        alert("finished clicked")
         if (canSubmitWork) {
             canSubmitWork = false;
         } else {
