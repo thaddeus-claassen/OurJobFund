@@ -143,6 +143,7 @@ class DetailView(TemplateView):
                 request.user.userprofile.occupation = self.profileForm.cleaned_data['occupation'];
                 request.user.userprofile.education = self.profileForm.cleaned_data['education'];
                 request.user.userprofile.contact = self.profileForm.cleaned_data['contact'];
+                request.user.userprofile.preferred_payment = self.profileForm.cleaned_data['preferred_payment'];
                 request.user.userprofile.save();
                 return redirect(request.user);
         if ('description' in request.POST):
