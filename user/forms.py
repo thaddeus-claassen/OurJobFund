@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User;
 from user.models import UserProfile
 from django import forms;
-from .choices import STATES;
+from .choices import STATES, PAYMENT_METHODS;
 import re;
 
 class LoginForm(forms.ModelForm):
@@ -53,26 +53,27 @@ class NewUserForm(forms.ModelForm):
         return repeat_password;
             
 class ProfileForm(forms.ModelForm):
-    city = forms.CharField(widget=forms.TextInput(attrs={'size' : '12', 'readonly' : 'true'}), required=False);
-    state = forms.ChoiceField(choices=STATES, widget=forms.Select(attrs={'disabled' : 'disabled'}), required=False);
-    education = forms.CharField(widget=forms.TextInput(attrs={'size' : '12', 'readonly' : 'true'}), required=False);
-    occupation = forms.CharField(widget=forms.TextInput(attrs={'size' : '12', 'readonly' : 'true'}), required=False);
-    contact = forms.CharField(widget=forms.TextInput(attrs={'size' : '12', 'readonly' : 'true'}), required=False);
+    city = forms.CharField(widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
+    state = forms.ChoiceField(choices=STATES, widget=forms.Select(attrs={'class' : 'info'}), required=False);
+    education = forms.CharField(widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
+    occupation = forms.CharField(widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
+    contact = forms.CharField(widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
+    preferred_payment = forms.ChoiceField(choices=PAYMENT_METHODS, widget=forms.Select(attrs={'class' : 'info'}))
     
     class Meta:
         model = UserProfile;
-        fields = ['city', 'state', 'education', 'occupation', 'contact'];
+        fields = ['city', 'state', 'education', 'occupation', 'contact', 'preferred_payment'];
             
 class DescriptionForm(forms.ModelForm):
-    description = forms.CharField(widget=forms.Textarea(attrs={'readonly' : 'true'}), required=False);
+    description = forms.CharField(widget=forms.Textarea)
 
     class Meta:
         model = UserProfile;
         fields = ['description'];        
             
 class ChangeNameForm(forms.ModelForm):
-    first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'size' : '12', 'readonly' : 'true'}), required=False);
-    last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'size' : '12', 'readonly' : 'true'}), required=False);
+    first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
+    last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
 
     class Meta: 
         model = User;

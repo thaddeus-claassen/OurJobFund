@@ -56,3 +56,11 @@ STATES = (
     ('PR', 'Puerto Rico'),
     ('VI', 'Virgin Islands'),
 );
+
+PAYMENT_METHODS = (
+    ('N/A', 'N/A'),
+    ('ANY', 'Any'),
+    ('CASH', 'Cash'),
+    ('CREDIT', 'Credit'),
+    ('OTHER', 'Other'),
+);

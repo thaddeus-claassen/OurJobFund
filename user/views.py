@@ -124,6 +124,7 @@ class DetailView(TemplateView):
             'occupation' : user.userprofile.occupation,
             'education' : user.userprofile.education,
             'contact' : user.userprofile.contact,
+            'preferred_payment' : user.userprofile.preferred_payment,
         });
         self.descriptionForm = self.descriptionForm(initial={'description' : user.userprofile.description});
         return render(request, self.template_name, self.get_context_data());

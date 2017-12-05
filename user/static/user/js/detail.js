@@ -64,6 +64,8 @@ function initInfoAndDescription() {
     orgEducation = $('#id_education').val();
     orgContact = $('#id_contact').val();
     orgDescription = $('#id_description').val();
+    addReadonlyInfoAttributes();
+    addReadonlyDescriptionAttributes();
 }// end initInfoAndDescription()
 
 function cancelInfo() {
@@ -81,24 +83,23 @@ function cancelDescription() {
 }// end cancelDescription()
 
 function removeReadonlyInfoAttributes() {
-    $('#id_first_name').removeAttr('readonly');
-    $('#id_last_name').removeAttr('readonly');
-    $('#id_city').removeAttr('readonly');
-    $('#id_state').removeAttr('disabled');
-    $('#id_education').removeAttr('readonly');
-    $('#id_occupation').removeAttr('readonly');
-    $('#id_contact').removeAttr('readonly');
+    $('.info').each(function(index) {
+        if ($(this).attr('type') === 'text') {
+            $(this).removeAttr('readonly');
+        } else {
+            $(this).removeAttr('disabled');
+        }// end if-else
+    });
 }// end removeReadOnlyAttributes()
 
 function addReadonlyInfoAttributes() {
-    $('#inputId').prop('readonly', false);
-    $('#id_first_name').prop('readonly', false);
-    $('#id_last_name').prop('readonly', false);
-    $('#id_city').prop('readonly', false);
-    $('#id_state').prop('disabled', false);
-    $('#id_education').prop('readonly', false);
-    $('#id_occupation').prop('readonly', false);
-    $('#id_contact').prop('readonly', false);
+    $('.info').each(function(index) {
+        if ($(this).attr('type') === 'text') {
+            $(this).prop('readonly', true);
+        } else {
+            $(this).prop('disabled', true);
+        }// end if-else
+    });
 }// end addReadonlyInfoAttributes()
 
 function removeReadonlyDescriptionAttributes() {
@@ -106,5 +107,5 @@ function removeReadonlyDescriptionAttributes() {
 }// end removeReadOnlyDescriptionAttributes()
 
 function addReadonlyDescriptionAttributes() {
-    $('#id_description').prop('readonly', false);
+    $('#id_description').prop('readonly', true);
 }// end addReadonlyDescriptionAttributes()

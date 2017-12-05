@@ -43,7 +43,7 @@
                     {% endif %}
                 </div>
             </div>
-            <form id="info_form" class="info" action="{{ request.get_full_path }}" method="POST" name="info_form">
+            <form id="info_form" action="{{ request.get_full_path }}" method="POST" name="info_form">
             {% csrf_token %}
             {% for name in name_form %}
                 <div class="row info_row">
