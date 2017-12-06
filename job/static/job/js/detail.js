@@ -63,42 +63,6 @@ $('document').ready(function() {
             e.preventDefault();
         }// end if-else
     });
-    var handler = StripeCheckout.configure({
-        key: 'pk_test_DF7zGC0IPpcOQyWr2nWHVLZ6',
-        locale: 'auto',
-        name: 'OurJobFund',
-        description: 'One-time donation to the selected worker',
-        token: function(token) {
-            $('#stripe_token').val(token.id);
-            $('#pay_form').submit();
-        }
-    });
-    $('#pay_button').click(function(e) {
-        $('#pay_to_error').text('');
-        var username = $('#pay_to').val();
-        if (username === "(default)") {
-            $('#pay_to_error').text('Please select a vaild worker to pay.');
-        } else {
-            $('#pay_amount_error').text('');
-            var amount = $('#pay_amount').val();
-            amount = amount.replace(/\$/g, '').replace(/\,/g, '')
-            amount = parseFloat(amount);
-            if (isNaN(amount)) {
-                $('#pay_amount_error').text('Please enter a valid amount in USD ($).');
-            } else if (amount < 1.00) {
-                $('#pay_amount_error').text('Donation amount must be at least $1.');
-            } else {
-                amount = Math.round(amount * 100); // Needs to be an integer!
-                handler.open({
-                    amount: amount,
-                });
-            }// end if-else
-        }// end if-else
-    });
-    // Close Checkout on page navigation
-    $(window).on('popstate', function() {
-        handler.close();
-    });
 });
 
 function changeTHeadTFootWidthToAccountForScrollBar() {
