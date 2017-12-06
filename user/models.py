@@ -18,7 +18,7 @@ class UserProfile(models.Model):
     occupation = models.CharField(default='', max_length=100, blank=True);
     education = models.CharField(default='', max_length=100, blank=True);
     contact = models.CharField(default='', max_length=100, blank=True);
-    last_time_name_was_changed = models.DateTimeField(default=pytz.utc.localize(datetime.datetime(2000, 1, 1)));
+    last_time_username_was_changed = models.DateTimeField(default=pytz.utc.localize(datetime.datetime(2000, 1, 1)));
     preferred_payment = models.CharField(default="N/A", max_length=6);
     stripe_account_id = models.CharField(null=True, blank=True, max_length=100);
     

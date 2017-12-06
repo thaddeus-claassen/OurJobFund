@@ -9,7 +9,7 @@ from django.http import JsonResponse, HttpResponse, Http404;
 from django.core import serializers;
 from django.db.models import Q, F;
 from django.contrib.auth import authenticate, login, logout;
-from .forms import ChangePasswordForm, ChangeNameForm, ChangeEmailForm, LoginForm, NewUserForm, DeactivateAccountForm, ProfileForm, DescriptionForm;
+from .forms import ChangePasswordForm, ChangeNameForm, ChangeEmailForm, LoginForm, NewUserForm, DeactivateAccountForm, ProfileForm, DescriptionForm, ChangeUsernameForm;
 from .models import UserProfile;
 from job.models import Job;
 from datetime import datetime;
@@ -201,16 +201,15 @@ def payment_confirmation(request, job_random_string):
         
 class AccountView(TemplateView):
     template_name = 'user/account.html';
-    nameForm = None;
+    usernameForm = ChangeUsernameForm;
     emailForm = ChangeEmailForm;
     passwordForm = ChangePasswordForm;
     deactivateForm = DeactivateAccountForm;
-    changeNameForm = ChangeNameForm;
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
-        if ((datetime.now() - request.user.userprofile.last_time_name_was_changed.replace(tzinfo=None)).days >= 180):
-            self.nameForm = self.changeNameForm(initial = {'first_name' : request.user.first_name, 'last_name' : request.user.last_name});
+        if ((datetime.now() - request.user.userprofile.last_time_username_was_changed.replace(tzinfo=None)).days >= 180):
+            self.usernameForm = self.usernameForm(initial = {'username' : request.user.username});
         self.emailForm = self.emailForm(initial={'email' : request.user.email});
         self.passwordForm = self.passwordForm(user = request.user);
         self.deactivateForm = self.deactivateForm(initial = {'is_active' : True});
@@ -219,14 +218,13 @@ class AccountView(TemplateView):
     @method_decorator(login_required)    
     def post(self, request, *args, **kwargs):
         if ('change-name' in request.POST):
-            self.nameForm = self.changeName(self.nameForm(request.POST));
+            self.usernameForm = self.changeUsername(self.usernameForm(request.POST));
             return redirect(request.user);
         elif ('change-email' in request.POST):
             self.emailForm = self.changeEmail(self.emailForm(request.POST));
             return redirect(request.user);
         elif ('change-password' in request.POST):
             self.passwordForm = self.changePassword(self.passwordForm(request.POST, user=request.user));
-            print("Password should be set correctly.");
             return redirect(request.user);
         elif ('deactivate-account' in request.POST):
             self.deactivateForm = self.deactivateAccount(self.deactivateForm(request.POST));
@@ -235,17 +233,16 @@ class AccountView(TemplateView):
         
     def get_context_data(self, request):
         context = {
-            'change_name_form' : self.nameForm,
+            'change_username_form' : self.usernameForm,
             'change_email_form' : self.emailForm,
             'password_form' : self.passwordForm,
             'deactivate_form' : self.deactivateForm,
         }
         return context;
                 
-    def changeName(self, form):
+    def changeUsername(self, form):
         if (form.is_valid()):
-            self.request.user.first_name = form.cleaned_data['first_name'];
-            self.request.user.last_name = form.cleaned_data['last_name'];
+            self.request.user.username = form.cleaned_data['username'];
             self.request.user.save();
             self.request.user.userprofile.last_time_name_was_changed = datetime.now();
             self.request.user.userprofile.save();

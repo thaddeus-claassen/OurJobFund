@@ -28,6 +28,7 @@
     height: 312px;
     overflow-y: auto;
     overflow-x: hidden;
+    word-wrap: break-word;
 }
 
 table, #job_description {

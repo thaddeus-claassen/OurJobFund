@@ -62,14 +62,7 @@ class ProfileForm(forms.ModelForm):
     
     class Meta:
         model = UserProfile;
-        fields = ['city', 'state', 'education', 'occupation', 'contact', 'preferred_payment'];
-            
-class DescriptionForm(forms.ModelForm):
-    description = forms.CharField(widget=forms.Textarea)
-
-    class Meta:
-        model = UserProfile;
-        fields = ['description'];        
+        fields = ['city', 'state', 'education', 'occupation', 'contact', 'preferred_payment'];    
             
 class ChangeNameForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
@@ -93,7 +86,20 @@ class ChangeNameForm(forms.ModelForm):
             raise forms.ValidationError('Your last name must not exceed 30 characters.');
         if (not re.match(r'^[A-Za-z]{1,30}$', last_name)):
             raise forms.ValidationError('Your first name may only include alphabetic characters or "-".');
-        return last_name;    
+        return last_name;
+        
+class DescriptionForm(forms.ModelForm):
+    description = forms.CharField(widget=forms.Textarea)
+
+    class Meta:
+        model = UserProfile;
+        fields = ['description'];    
+
+class ChangeUsernameForm(forms.ModelForm):
+    
+    class Meta:
+        model = User;
+        fields = ['username'];
         
 class ChangeEmailForm(forms.ModelForm):
     email = forms.CharField(max_length=30, required=False);
