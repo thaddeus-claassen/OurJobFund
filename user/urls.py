@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^(?P<username>[a-zA-Z0-9]*)/$', views.DetailView.as_view(), name='detail'),
     url(r'^search_users/$', views.search_users, name='search_users'),
     url(r'^see_more_users/$', views.see_more_users, name='see_more_users'),
+    url(r'^confirmation/(?P<job_random_string>[a-zA-Z0-9]+)', views.payment_confirmation, name='confirmation'),
 ]

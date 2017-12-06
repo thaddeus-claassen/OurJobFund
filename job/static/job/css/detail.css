@@ -86,12 +86,8 @@ tbody {
     float: left;
 }
 
-#pay_clicked, #pledge_clicked {
+#pledge_clicked {
     display: none;
-}
-
-#pay_cancel {
-    float: right;
 }
 
 .pledge_work_inputs {

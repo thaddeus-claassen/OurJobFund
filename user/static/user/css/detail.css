@@ -94,6 +94,15 @@ tbody {
     float: left;
 }
 
-#create_job {
-    width: 100%;
+#pay_clicked {
+    display: none;
 }
+
+#pay_cancel, #pay_money, #pay_for, #pay_amount_span, #pay_for_error, #pay_amount_error {
+    float: right;
+}
+
+#pay_for_error, #pay_amount_error {
+    color: red;
+}
+

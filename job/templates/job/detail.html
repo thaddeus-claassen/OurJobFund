@@ -4,7 +4,6 @@
 {% block import %}
     <link rel="stylesheet" type="text/css" href="{% static 'job/css/detail.css' %}" />
     <script type="text/javascript" src="{% static 'job/js/detail.js' %}"></script>
-    <script src="https://checkout.stripe.com/checkout.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -191,8 +190,7 @@
             <div class="col-md-6">
                 <span>Pledges</span>
             </div>
-            {% if request.user.is_authenticated %}
-            {% if not jobuser.pledge_set.all.exists and not jobuser.work_set.all.exists %}
+            {% if request.user.is_authenticated and not jobuser.pledge_set.all.exists and not jobuser.work_set.all.exists %}
             <div class="col-md-6">  
                 <input id="pledge_money" class="pledge_work_inputs" type="button" value="Pledge" />
                 <form id="pledge-money-form" action="{{ request.get_full_path }}" method="POST">
@@ -207,31 +205,6 @@
                     </span>
                 </form>
             </div>
-            {% elif jobuser.pledge_set.all.exists %}
-            <div class="col-md-6">
-                <div id="pay_unclicked">
-                    <input id="pay_money" class="pledge_work_inputs" type="button" value="Pay" />
-                </div>
-                <div id="pay_clicked">
-                    <form id="pay_form" action="{{ request.get_full_path }}" method="POST">
-                    {% csrf_token %}
-                        <select id="pay_to" name="pay_to">
-                            <option value="(default)" selected="selected">(Choose a Worker)</option>
-                        {% for w in workers %}
-                            <option value="{{ w.jobuser.user.username }}">{{ w.jobuser.user.username }}</option>
-                        {% endfor %}
-                        &nbsp;$<input id="pay_amount" type="text" placeholder="0" size="5" name="pay_amount" />.00
-                        </select>
-                        <span id="pay_to_error"></span><span id="pay_amount_error"></span>
-                        <span id="pay_cancel">
-                            <input id="pay_button" type="button" value="Pay" />
-                            <input id="cancel_pay" type="button" value="Cancel" />
-                        </span>
-                        <input id="stripe_token" type="hidden" name="stripeToken" />
-                    </form>
-                </div>
-            </div>
-            {% endif %}
             {% endif %}
         </div>
         <div class="row info_row">

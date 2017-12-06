@@ -168,9 +168,6 @@ class DetailView(TemplateView):
             self.finish(job, jobuser);
         elif ('unfinish' in request.POST):
             self.unfinish(job, jobuser);
-        elif ('stripeToken' in request.POST):
-            self.pay(request, job, jobuser);
-            return redirect('job:confirmation', job_random_string=job.random_string);
         return redirect(job);
     
     def get_context_data(self, request, **kwargs):
@@ -223,36 +220,6 @@ class DetailView(TemplateView):
         job.finished = job.finished - 1;
         job.save();
         create_update_by_unfinishing(unfinish);
-    
-    def pay(self, request, job, jobuser):
-        receiver_username = request.POST['pay_to'];
-        stripe.api_key = STRIPE_TEST_SECRET_KEY;
-        token = request.POST['stripeToken'];
-        amount_paying = int(request.POST['pay_amount']) * 100;
-        charge = stripe.Charge.create(
-            amount = amount_paying,
-            currency = "usd",
-            description = "Does this charge work?",
-            source = token,
-        );
-        payment = Pay(jobuser=jobuser, receiver=jobuser.user, amount=float(amount_paying));
-        payment.save();
-        jobuser.amount_paid = jobuser.amount_paid + amount_paying;
-        jobuser.save();
-        receiver_jobuser = JobUser.objects.get(user=User.objects.get(username=receiver_username), job=job);
-        receiver_jobuser.amount_received = receiver_jobuser.amount_received + amount_paying;
-        receiver_jobuser.save();
-        job.paid = job.paid + amount_paying;
-        job.save();
-        create_update_by_paying(payment);
-            
-@login_required
-def payment_confirmation(request, job_random_string):
-    job = get_object_or_404(Job, random_string = job_random_string);
-    context = {
-        'job' : job,
-    }
-    return render(request, 'job/confirmation.html', context);
 
 @login_required
 def detail_sort(request, job_random_string):
