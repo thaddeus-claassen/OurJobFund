@@ -86,7 +86,7 @@ def search_users(request):
 def getUsersFromQuery(search, num_searches):
     users = User.objects.all();
     for word in search.split():
-        users = users.filter(Q(username__contains=word) | Q(first_name__istartswith=word) | Q(last_name__istartswith=word));
+        users = users.filter(Q(username__icontains=word) | Q(first_name__istartswith=word) | Q(last_name__istartswith=word));
     start = (50 * num_searches);
     end = start + 50;
     users = users[start:end];
@@ -161,9 +161,9 @@ class DetailView(TemplateView):
         receiver_username = request.POST['pay_to'];
         stripe.api_key = STRIPE_TEST_SECRET_KEY;
         token = request.POST['stripeToken'];
-        amount_paying = int(request.POST['pay_amount']) * 100;
+        amount_paying = float(request.POST['pay_amount']);
         charge = stripe.Charge.create(
-            amount = amount_paying,
+            amount = 100 * amount_paying,
             currency = "usd",
             description = "Does this charge work?",
             source = token,

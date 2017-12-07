@@ -174,9 +174,9 @@
                         {% for current_jobuser in current_jobusers %}
                         <tr id="current_{{ current_jobuser.job.name }}">
                             <td class="name"><a href="{% url 'job:detail' current_jobuser.job.random_string %}">{{ current_jobuser.job.name }}</a></td>
-                            <td class="pledged">${{ current_jobuser.amount_pledged }}.00</td>
-                            <td class="paid">${{ current_jobuser.amount_paid }}.00</td>
-                            <td class="received">${{ current_jobuser.amount_received }}.00</td>
+                            <td class="pledged">${{ current_jobuser.amount_pledged|floatformat:2 }}</td>
+                            <td class="paid">${{ current_jobuser.amount_paid|floatformat:2 }}</td>
+                            <td class="received">${{ current_jobuser.amount_received|floatformat:2 }}</td>
                         </tr>
                         {% empty %}
                         <tr>
@@ -220,9 +220,9 @@
                     {% for finished_jobuser in finished_jobusers %}
                         <tr id="finished_{{ finished_jobuser.job.name }}">
                             <td class="name"><a href="{% url 'job:detail' finished_jobuser.job.random_string %}">{{ finished_jobuser.job.name }}</a></td>
-                            <td class="pledged">${{ finished_jobuser.amount_pledged }}.00</td>
-                            <td class="paid">${{ finished_jobuser.amount_paid }}.00</td>
-                            <td class="received">${{ finished_jobuser.amount_received }}.00</td>
+                            <td class="pledged">${{ finished_jobuser.amount_pledged|floatformat:2 }}</td>
+                            <td class="paid">${{ finished_jobuser.amount_paid|floatformat:2 }}</td>
+                            <td class="received">${{ finished_jobuser.amount_received|floatformat:2 }}</td>
                         </tr>
                     {% empty %}
                         <tr>

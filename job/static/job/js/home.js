@@ -158,14 +158,17 @@ function sortJobsSuccess(json) {
 }// end sortJobs()
 
 function addJobsToTable(json) {
+    alert("Got into add jobs to table");
     var numJobs = Object.keys(json).length;
     if (numJobs > 0) {
         for (var index = 0; index < json.length; index++) {
+            alert("Adding job");
             var job = json[index];
             var string = "<tr>"
             string = string + "<td class='name'><a href='" + job["random_string"] + "'>" + job["name"] + "</a></td>";
             string = string + "<td class='date'>" + job['creation_date'] + "</td>";
-            string = string + "<td class='pledged-paid'><sup>$" + job['expected_pay'] + "</sup>&frasl;<sub>$" + job['paid'] + "</sub></td>";
+            string = string + "<td class='pledged-paid'><sup>$" + turnMoneyToString(job['expected_pay']) + "</sup>&frasl;";
+            string = string + "<sub>$" + turnMoneyToString(job['paid']) + "</sub></td>";
             string = string + "<td class='workers-finished'><sup>" + job['expected_workers'] + "</sup>&frasl;<sub>" + job['finished'] + "</sub></td>"
             string = string + "</tr>";
             $('#main_table_body').append(string);
@@ -255,3 +258,15 @@ function deleteMarkers() {
     clearMarkers();
     markers = [];
 }// end deleteMarkers()
+
+function turnMoneyToString(number) {
+    parts = number.toString().split('.');
+    if (parts.length == 1) {
+        number = number.toString() + ".00";
+    } else {
+        if (parts[1].length == 1) {
+            number = number.toString() + "0";
+        }// end if
+    }// end if-else
+    return number.toString();
+}// end turnMoneyToString()

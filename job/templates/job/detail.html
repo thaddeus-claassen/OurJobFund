@@ -76,19 +76,19 @@
             <div class="row">
                 <div class="col-md-12">
                     <span class="info_title">Pledged</span>
-                    <span class="info_info">{{ job.pledged }}</span>
+                    <span class="info_info">{{ job.pledged|floatformat:2 }}</span>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <span class="info_title">Expected Pay</span>
-                    <span class="info_info">{{ expected_pay }}</span>
+                    <span class="info_info">{{ expected_pay|floatformat:2 }}</span>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <span class="info_title">Paid</span>
-                    <span class="info_info">{{ job.paid }}</span>
+                    <span class="info_info">{{ job.paid|floatformat:2 }}</span>
                 </div>
             </div>
             <div class="row">
@@ -197,7 +197,7 @@
                 {% csrf_token %}
                     <span id="pledge_span">
                     {% for field in pledge_form %}
-                        ${{ field }}.00
+                        ${{ field }}
                         {{ field.errors }}
                     {% endfor %}
                         <input type="submit" value="Accept" name="pledge"/>
@@ -235,8 +235,8 @@
                                 {% endif %}
                             </td>
                             <td>{{ pledge.date }}</td>
-                            <td>${{ pledge.amount }}.00</td>
-                            <td>${{ pledge.jobuser.amount_paid }}.00</td>
+                            <td>${{ pledge.amount|floatformat:2 }}</td>
+                            <td>${{ pledge.jobuser.amount_paid|floatformat:2 }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>

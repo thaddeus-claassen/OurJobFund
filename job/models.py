@@ -10,8 +10,8 @@ class Job(models.Model):
     name = models.CharField(max_length=100);
     creation_date = models.DateField(auto_now_add=True);
     creation_datetime = models.DateTimeField(auto_now_add=True);
-    pledged = models.PositiveIntegerField(default=0);
-    paid = models.PositiveIntegerField(default=0);
+    pledged = models.FloatField(default=0);
+    paid = models.FloatField(default=0);
     workers = models.PositiveIntegerField(default=0);
     finished = models.PositiveIntegerField(default=0);
     location = models.CharField(null=True, blank=True, max_length=1000);
