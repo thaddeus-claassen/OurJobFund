@@ -13,7 +13,6 @@ $('document').ready(function() {
         changeTHeadTFootWidthToAccountForScrollBar();
     });
     initInfoAndDescription();
-    initMustConnectToString();
     $('#edit_info').click(function() {
         removeReadonlyInfoAttributes();
         $('#edit_info').css('display', 'none');
@@ -45,13 +44,6 @@ $('document').ready(function() {
     });
     $('#save_description').click(function() {
         $('#description_form').submit();
-    });
-    $('#id_preferred_payment').change(function() {
-        if ($(this).val() === "ANY" | $(this).val() === "CREDIT") {
-            $('#must-connect-to-stripe').css('display', 'inline');
-        } else {
-            $('#must-connect-to-stripe').css('display', 'none');
-        }// end if-else
     });
     $('#pay_money').click(function() {
         $('#pay_unclicked').css('display', 'none');
@@ -126,15 +118,7 @@ function sort(sort) {
         },
         success: sortSuccess,
     });
-}
-
-function initMustConnectToString() {
-    if ($('#id_preferred_payment').val() === "ANY" | $('#id_preferred_payment').val() === "CREDIT") {
-        $('#must-connect-to-stripe').css('display', 'inline');
-    } else {
-        $('#must-connect-to-stripe').css('display', 'none');
-    }// end if-else
-}// end initMustConnectToString()
+}// end sort()
 
 function changeTHeadTFootWidthToAccountForScrollBar() {
     var oldTableWidth = $('table').width();
@@ -198,7 +182,3 @@ function removeReadonlyDescriptionAttributes() {
 function addReadonlyDescriptionAttributes() {
     $('#id_description').prop('readonly', true);
 }// end addReadonlyDescriptionAttributes()
-
-function mustConnectToStripe() {
-    $('#must-connect-to-stripe')
-}// end mustConnectToStripe()

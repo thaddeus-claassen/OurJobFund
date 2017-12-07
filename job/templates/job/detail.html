@@ -46,7 +46,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <span class="info_title">Created</span>
-                    <span class="info_info">{{ job.creation_date }}</span>
+                    <span class="info_info">{{ job.creation_date|date:"d M y" }}</span>
                 </div>
             </div>
             <div class="row">
@@ -234,7 +234,7 @@
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
-                            <td>{{ pledge.date }}</td>
+                            <td>{{ pledge.date|date:"d M y" }}</td>
                             <td>${{ pledge.amount|floatformat:2 }}</td>
                             <td>${{ pledge.jobuser.amount_paid|floatformat:2 }}</td>
                         </tr>
@@ -301,7 +301,7 @@
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
-                            <td>{{ worker.date }}</td>
+                            <td>{{ worker.date|date:"d M y" }}</td>
                             <td>{% if worker.jobuser.work_set.all.count == worker.jobuser.finish_set.all.count %}Finished{% else %}Working{% endif %}</td>
                             <td>${{ worker.jobuser.amount_received }}</td>
                         </tr>

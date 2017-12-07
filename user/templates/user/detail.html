@@ -24,7 +24,7 @@
                 {% if request.user.username == detail_user.username %}
                 <span id="edit_info" class="change-info-description">Edit</span>
                 <span id="cancel_info" class="change-info-description">Cancel</span>
-                <span class="change-info-description">&nbsp;&nbsp;</span>
+                &nbsp;&nbsp;
                 <span id="save_info" class="change-info-description">Save</span>
                 {% endif %}
             </div>
@@ -53,10 +53,11 @@
             <div class="row">
                 <div class="col-md-12">
                     <span id="must-connect-to-stripe">
-                        Not connected to
+                        To receive credit card payments, please sign into 
                         <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write&state={{ job.random_string }}" id="stripe_connect" class="stripe-connect">
                             <span>Stripe</span>
                         </a>
+                        .
                     </span>
                 </div>
             </div>
@@ -65,7 +66,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <span id="must-connect-to-stripe">
-                        Not connected to Stripe.
+                        Unable to receive credit card payments.
                     </span>
                 </div>
             </div>
@@ -134,10 +135,10 @@
             </div>
             <div class="col-md-6">
                 {% if request.user.username == detail_user.username %}
-                <span id="edit_description" class="change-info-description">Edit</span>
                 <span id="cancel_description" class="change-info-description">Cancel</span>
-                <span class="change-info-description">&nbsp;&nbsp;</span>
+                &nbsp;&nbsp;
                 <span id="save_description" class="change-info-description">Save</span>
+                <span id="edit_description" class="change-info-description">Edit</span>
                 {% endif %}
             </div>
         </div>

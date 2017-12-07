@@ -158,11 +158,9 @@ function sortJobsSuccess(json) {
 }// end sortJobs()
 
 function addJobsToTable(json) {
-    alert("Got into add jobs to table");
     var numJobs = Object.keys(json).length;
     if (numJobs > 0) {
         for (var index = 0; index < json.length; index++) {
-            alert("Adding job");
             var job = json[index];
             var string = "<tr>"
             string = string + "<td class='name'><a href='" + job["random_string"] + "'>" + job["name"] + "</a></td>";
