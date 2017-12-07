@@ -146,7 +146,7 @@ class DetailView(TemplateView):
                 request.user.userprofile.preferred_payment = self.profileForm.cleaned_data['preferred_payment'];
                 request.user.userprofile.save();
                 return redirect(request.user);
-        if ('description' in request.POST):
+        elif ('description' in request.POST):
             self.descriptionForm = self.descriptionForm(request.POST);
             if (self.descriptionForm.is_valid()):
                 request.user.userprofile.description = self.descriptionForm.cleaned_data['description'];
@@ -155,6 +155,9 @@ class DetailView(TemplateView):
         elif ('stripeToken' in request.POST):
             self.pay(request, job, jobuser);
             return redirect('user:confirmation', username=get_object_or_404(User, username=kwargs['username']));
+        elif ('delete-stripe' in request.POST):
+            request.user.userprofile.stripe_account_id = "";
+            request.user.userprofile.save();
         return render(request, self.template_name, self.get_context_data({'username' : kwargs['username']}));
         
     def pay(self, request, job, jobuser):

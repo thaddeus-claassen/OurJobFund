@@ -49,7 +49,7 @@
                 </div>
             {% endfor %}
             </form>
-            {% if request.user.username == detail_user.username %}
+            {% if request.user.username == detail_user.username and detail_user.userprofile.stripe_account_id == "" %}
             <div class="row">
                 <div class="col-md-12">
                     <span id="must-connect-to-stripe">
@@ -61,8 +61,15 @@
                     </span>
                 </div>
             </div>
-            {% else %}
-            {% if detail_user.userprofile.stripe_account_id == "" %}
+            {% elif request.user.username == detail_user.username and detail_user.userprofile.stripe_account_id != "" %}
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="remove-stripe-account-form" action="{{ request.get_full_path }}" method="POST">
+                        <input id="delete-stripe" type="submit" value="Erase Stripe account" name="delete-stripe" />
+                    </form>
+                </div>
+            </div>
+            {% elif request.user.username != detail_user.username and detail_user.userprofile.stripe_account_id == "" %}
             <div class="row">
                 <div class="col-md-12">
                     <span id="must-connect-to-stripe">
@@ -123,7 +130,6 @@
                     </div>
                     <input id="stripe_token" type="hidden" name="stripeToken" />
                 </form>
-            {% endif %}
             </div>
             {% endif %}
         </div>

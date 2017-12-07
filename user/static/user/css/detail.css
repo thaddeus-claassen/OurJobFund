@@ -46,7 +46,7 @@
     float: left;
 }
 
-.info_info {
+.info_info, #delete-stripe {
     float: right;
 }
 
