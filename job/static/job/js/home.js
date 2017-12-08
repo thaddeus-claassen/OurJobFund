@@ -17,6 +17,16 @@ $('document').ready(function() {
     $('#search_button').click(function() {
         search();
     });
+    $('#location').keydown(function(event) {
+        if (event.which == ENTER) {
+            search();
+        // end if
+    });
+    $('#radius').keydown(function(event) {
+        if (event.which == ENTER) {
+            search();
+        }// end if
+    });
     $('.sort').click(function() {
         var by = $(this).attr('id');
         var sort_by_val =  $('#sort').val();
