@@ -104,7 +104,7 @@ def findJobs(request):
     search = request.GET['search'];
     jobs = Job.objects.all();
     for word in search.split(" "):
-        jobs = jobs.filter(Q(name__contains=word) | Q(tag__tag__contains=word));
+        jobs = jobs.filter(Q(name__icontains=word) | Q(tag__tag__icontains=word));
     jobs = jobs.distinct();
     sort_array = request.GET['sort'].split(" ");
     latitude_in_degrees_as_string = request.GET['latitude'];
