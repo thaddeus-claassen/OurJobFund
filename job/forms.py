@@ -14,23 +14,6 @@ class NewJobForm(forms.ModelForm):
     class Meta: 
         model = Job;
         fields = ['name', 'location', 'latitude', 'longitude', 'tags', 'image_set', 'description'];
-
-    def clean_name(self):
-        name = self.cleaned_data.get('name');
-        if (len(name) > 100):
-            raise forms.ValidationError('The name cannot have more than 100 characters.');
-        return name;
-        
-    def clean_tags(self):
-        tags = ' '.join(self.cleaned_data.get('tags').split());
-        tagsArray = tags.split(" ");
-        for tag in tagsArray:
-            if (len(tag) > 30):
-                raise forms.ValidationError('Each tag must have 30 characters or fewer.');
-                break;
-            if (not re.match(r'^[A-Za-z0-9_]*$', tag)):
-                raise forms.ValidationError('Each tag may only include alphabetic characters, numbers, and "_", separated by spaces.');
-        return tags;
     
     
     
