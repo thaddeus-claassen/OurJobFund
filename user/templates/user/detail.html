@@ -24,7 +24,7 @@
                 {% if request.user.username == detail_user.username %}
                 <span id="edit_info" class="change-info-description">Edit</span>
                 <span id="cancel_info" class="change-info-description">Cancel</span>
-                &nbsp;&nbsp;
+                <span>&nbsp;&nbsp;</span>
                 <span id="save_info" class="change-info-description">Save</span>
                 {% endif %}
             </div>
@@ -65,7 +65,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <form id="remove-stripe-account-form" action="{{ request.get_full_path }}" method="POST">
-                        <input id="delete-stripe" type="submit" value="Erase Stripe account" name="delete-stripe" />
+                        <input id="delete-stripe" type="submit" value="Remove Stripe" name="delete-stripe" />
                     </form>
                 </div>
             </div>

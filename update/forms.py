@@ -11,18 +11,3 @@ class UpdateForm(forms.ModelForm):
     class Meta: 
         model = Update;
         fields = ['title', 'images', 'description'];
-        
-    def clean_title(self):
-        title = self.cleaned_data.get('title');
-        if (len(title) > 100):
-            raise forms.ValidationError('Your title cannot exceed 30 characters in length.');
-        if (not re.match(r'^[A-Za-z]{1,30}$', title)):
-            raise forms.ValidationError('Your title may only include alphabetic characters or numbers.');
-        return title;
-        
-    def clean_description(self):
-        description = self.cleaned_data.get('description');
-        if (len(description) > 10000):
-            raise forms.ValidationError('Your description cannot be longer than 10000 character in length');
-        return description;
-        
