@@ -16,14 +16,16 @@ Including another URLconf
 from django.conf.urls import include, url;
 from django.contrib import admin;
 from django.conf import settings;
+from django.views.generic import TemplateView;
 from django.conf.urls.static import static;
-from django.contrib.auth import views as auth_views
+from django.contrib.auth import views as auth_views;
 from user.views import search_users;
 from . import views;
 
 app_name = 'ourjobfund';
 
 urlpatterns = [
+    url(r'^robots.txt$', TemplateView.as_view(template_name='robots.txt', content_type="text/plain")),
     url(r'^password_reset/$', auth_views.password_reset, name='password_reset'),
     url(r'^password_reset/done/$', auth_views.password_reset_done, name='password_reset_done'),
     url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
