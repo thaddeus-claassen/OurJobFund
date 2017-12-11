@@ -20,7 +20,7 @@ $('document').ready(function() {
     $('#location').keydown(function(event) {
         if (event.which == ENTER) {
             search();
-        // end if
+        }// end if
     });
     $('#radius').keydown(function(event) {
         if (event.which == ENTER) {
@@ -53,9 +53,10 @@ $('document').ready(function() {
             }// end if
         }// end if
     });
-    $('.filter').change(function() {
-        save_filter($(this));
-        sort_jobs();
+    $(document).on('input', 'input:text', function() {
+        if ($(this).attr('class') === 'filter' && !isNaN($(this).val())) {
+            save_filter($(this));
+        }// end if
     });
 });
 
@@ -73,13 +74,13 @@ function changeTHeadTFootWidthToAccountForScrollBar() {
     $('tfoot').width(percentageTableWidth.toString() + '%');
 }// end changeTHeadTFootWidthToAccountForScrollBar()
 
-function save_filter(changed_filter) {
+function save_filter(filter) {
     $.ajax({
         type : 'POST',
         url : '/job/save_filter/',
         data : {
-            'changed_filter' : $(changed_filter).attr('id'),
-            'value' : $(changed_filter).val(),
+            'filter' : $(filter).attr('id'),
+            'value' : $(filter).val(),
             csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
         },
     });

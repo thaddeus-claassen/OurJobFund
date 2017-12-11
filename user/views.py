@@ -199,23 +199,23 @@ def save_input(request, username):
     if (request.user.username == username and request.is_ajax() and request.method == "POST"):
         id = request.POST['id'];
         value = request.POST['value'];
-        if (id == 'first_name'):
+        if (id == 'id_first_name'):
             request.user.first_name = value;
-        elif (id == 'last_name'):
+        elif (id == 'id_last_name'):
             request.user.last_name = value;
-        elif (id == 'city'):
+        elif (id == 'id_city'):
             request.user.userprofile.city = value;
-        elif (id == 'state'):
+        elif (id == 'id_state'):
             request.user.userprofile.state = value;
-        elif (id == 'education'):
+        elif (id == 'id_education'):
             request.user.userprofile.education = value;                
-        elif (id == 'occupation'):
+        elif (id == 'id_occupation'):
             request.user.userprofile.occupation = value;
-        elif (id == 'contact'):
+        elif (id == 'id_contact'):
            request.user.userprofile.contact = value;                
-        elif (id == 'preferred_payment'):
+        elif (id == 'id_preferred_payment'):
             request.user.userprofile.preferred_payment = value;
-        elif (id == 'description'):
+        elif (id == 'id_description'):
             request.user.userprofile.description = value;
         request.user.save();
         request.user.userprofile.save();

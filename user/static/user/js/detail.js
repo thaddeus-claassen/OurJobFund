@@ -4,7 +4,7 @@ $('document').ready(function() {
         changeTHeadTFootWidthToAccountForScrollBar();
     });
     disableInfo();
-    $(document).on('input', 'input', function() {
+    $(document).on('input', 'input:text', function() {
         save_input($(this));
     });
     $(document).on('input', 'textarea', function() {
@@ -115,7 +115,7 @@ function save_input(input) {
         url : 'save_input',
         type: 'POST',
         data : {
-            'id' : $(input).attr('id').substring(3, $(input).attr('id').length),
+            'id' : $(input).attr('id'),
             'value' : $(input).val(),
             csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
         },

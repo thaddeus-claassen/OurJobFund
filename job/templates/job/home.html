@@ -87,7 +87,7 @@
                                     <span class="filter_label">not been active in</span>
                                 </div>
                                 <div class="col-md-2">
-                                    <input id="worker-not_been_active_in_the_last_n_days" class="filter" type="number" min="0" value="{{ request.user.workerfilter.not_been_active_in_the_last_n_days }}" />
+                                    <input id="worker-not_been_active_in_the_last_n_days" class="filter" type="text" min="0" value="{{ request.user.workerfilter.not_been_active_in_the_last_n_days }}" />
                                 </div>
                                 <div class="col-md-4">
                                     <span class="filter_unit">or more days</span>
@@ -113,7 +113,7 @@
                                     <span class="filter_label">not been active in</span>
                                 </div>
                                 <div class="col-md-2">
-                                    <input id="pledge-not_been_active_in_the_last_n_days" class="filter" type="number" min="0" value="{{ request.user.pledgefilter.not_been_active_in_the_last_n_days }}"/>
+                                    <input id="pledge-not_been_active_in_the_last_n_days" class="filter" type="text" min="0" value="{{ request.user.pledgefilter.not_been_active_in_the_last_n_days }}"/>
                                 </div>
                                 <div class="col-md-4">
                                     <span class="filter_unit">or more days</span>
@@ -126,7 +126,7 @@
                                     <span class="filter_label">paid fewer than</span>
                                 </div>
                                 <div class="col-md-2">
-                                    <input id="pledge-paid_at_least_n_times" class="filter" type="number" min="0" value="{{ request.user.pledgefilter.paid_at_least_n_times }}" />
+                                    <input id="pledge-paid_at_least_n_times" class="filter" type="text" min="0" value="{{ request.user.pledgefilter.paid_at_least_n_times }}" />
                                 </div>
                                 <div class="col-md-4">
                                     <span class="filter_unit">times</span>
@@ -139,7 +139,7 @@
                                     <span class="filter_label">Paid less than $</span>
                                 </div>
                                 <div class="col-md-2">
-                                    <input id="pledge-paid_at_least_n_amount_in_total" class="filter" type="number" value="{{ request.user.pledgefilter.paid_at_least_n_amount_in_total }}" />
+                                    <input id="pledge-paid_at_least_n_amount_in_total" class="filter" type="text" value="{{ request.user.pledgefilter.paid_at_least_n_amount_in_total }}" />
                                 </div>
                             </li>
                         </div>

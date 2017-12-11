@@ -88,7 +88,7 @@ def get_total_jobs(request):
         
 def save_filter(request):
     if (request.is_ajax()):
-        changed_filter = request.POST['changed_filter'];
+        changed_filter = request.POST['filter'];
         filter = changed_filter.split("-")[0];
         row = changed_filter.split("-")[1];
         value = request.POST['value'];
