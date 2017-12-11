@@ -193,6 +193,36 @@ class DetailView(TemplateView):
             'finished_jobusers' : user.jobuser_set.filter(Q(job__pledged__gt=0) & Q(job__pledged__lte=F('job__paid'))),
         }
         return context;
+
+@login_required        
+def save_input(request, username):
+    if (request.is_ajax() and request.method == "POST"):
+        id = request.POST['id'];
+        value = request.POST['value'];
+        if (id == 'first_name'):
+            request.user.first_name = value;
+        elif (id == 'last_name'):
+            request.user.last_name = value;
+        elif (id == 'city'):
+            request.user.userprofile.city = value;
+        elif (id == 'state'):
+            request.user.userprofile.state = value;
+        elif (id == 'education'):
+            request.user.userprofile.education = value;                
+        elif (id == 'occupation'):
+            request.user.userprofile.occupation = value;
+        elif (id == 'contact'):
+           request.user.userprofile.contact = value;                
+        elif (id == 'preferred_payment'):
+            request.user.userprofile.preferred_payment = value;
+        elif (id == 'description'):
+            request.user.userprofile.description = value;
+        request.user.save();
+        request.user.userprofile.save();
+        return HttpResponse();
+    else:
+        return Http404();
+        
         
 @login_required
 def payment_confirmation(request, job_random_string):

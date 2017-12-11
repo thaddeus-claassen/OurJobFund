@@ -17,16 +17,8 @@
 <div class="row">
     <div class="col-md-3">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <h4>Info</h4>
-            </div>
-            <div class="col-md-6">
-                {% if request.user.username == detail_user.username %}
-                <span id="edit_info" class="change-info-description">Edit</span>
-                <span id="cancel_info" class="change-info-description">Cancel</span>
-                <span>&nbsp;&nbsp;</span>
-                <span id="save_info" class="change-info-description">Save</span>
-                {% endif %}
             </div>
         </div>
         <div id="info-wrapper">
@@ -137,16 +129,8 @@
     </div>
     <div class="col-md-9">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <h4>Description</h4>
-            </div>
-            <div class="col-md-6">
-                {% if request.user.username == detail_user.username %}
-                <span id="cancel_description" class="change-info-description">Cancel</span>
-                &nbsp;&nbsp;
-                <span id="save_description" class="change-info-description">Save</span>
-                <span id="edit_description" class="change-info-description">Edit</span>
-                {% endif %}
             </div>
         </div>
         {{ description_form.description.errors }}
