@@ -196,7 +196,7 @@ class DetailView(TemplateView):
 
 @login_required        
 def save_input(request, username):
-    if (request.is_ajax() and request.method == "POST"):
+    if (request.user.username == username and request.is_ajax() and request.method == "POST"):
         id = request.POST['id'];
         value = request.POST['value'];
         if (id == 'first_name'):
