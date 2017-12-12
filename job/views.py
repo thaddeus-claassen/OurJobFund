@@ -101,10 +101,18 @@ def save_filter(request):
         return Http404();
         
 def findJobs(request):
+    type = request.GET['type'];
+    print('Type: ' + str(type));
     search = request.GET['search'];
-    jobs = Job.objects.all();
-    for word in search.split(" "):
-        jobs = jobs.filter(Q(name__icontains=word) | Q(tag__tag__icontains=word));
+    print('Search: ' + str(search));
+    if (type == 'basic'):
+        jobs = Job.objects.all();
+        for word in search.split(" "):
+            jobs = jobs.filter(Q(name__icontains=word) | Q(tag__tag__icontains=word));
+    else:
+        jobs = get_jobs_from_custom_search(search);
+    print("Jobs: ")
+    print(jobs)
     jobs = jobs.distinct();
     sort_array = request.GET['sort'].split(" ");
     latitude_in_degrees_as_string = request.GET['latitude'];
@@ -125,7 +133,7 @@ def findJobs(request):
     return jobs;
     
 def get_jobs_from_custom_search(tags):
-    return eval("Job.objects.filter(" + re.sub(r'([a-zA-Z0-9]+)', "Q(tag__tag__iexact='" + r'\1' + "')", tags) + ")");
+    return eval(re.sub(r'([a-zA-Z0-9_]+)', "Job.objects.filter(tag__tag__iexact='" + r'\1' + "')", tags));
     
 def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_miles):
     radius_in_degrees = radius_in_miles / 69;

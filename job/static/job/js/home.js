@@ -9,7 +9,15 @@ $('document').ready(function() {
     $(window).resize(function() {
         changeTHeadTFootWidthToAccountForScrollBar();
     });
-    $('#basic_search_jobs').keydown(function(event) {
+    checkSearchRadio();
+    $('input[name=search]').change(function() {
+        checkSearchRadio();
+    });
+    hideLocation();
+    $('input[type=checkbox]').change(function() {
+        hideLocation();
+    });
+    $('#basic_search').keydown(function(event) {
         if (event.which == ENTER) {
             search();
         }// end if
@@ -87,12 +95,20 @@ function save_filter(filter) {
 }// end save_filter()
 
 function get_jobs() {
+    var id = $('input[name="search"]:checked').attr('id');
+    var lat = "";
+    var lng = "";
+    if (!$('#hide-location').prop('checked')) {
+        lat = $('#latitude').val();
+        lng = $('#longitude').val();
+    }// end if
     $.ajax({
         url : 'get_jobs',
         data : {
-            'search' : $('#basic_search_jobs').val(),
-            'latitude' : $('#latitude').val(),
-            'longitude' : $('#longitude').val(),
+            'type' : id,
+            'search' : $('#' + id +'_search').val(),
+            'latitude' : lat,
+            'longitude' : lng,
             'radius' : getRadius(),
             'sort' : $('#sort').val(),
         },
@@ -101,13 +117,21 @@ function get_jobs() {
 }// end get_jobs()
 
 function add_jobs() {
+    var id = $('input[name="search"]:checked').attr('id');
+    var lat = "";
+    var lng = "";
+    if (!$('#hide-location').prop('checked')) {
+        lat = $('#latitude').val();
+        lng = $('#longitude').val();
+    }// end if
     $.ajax({
         url : 'add_jobs',
         data : {
             'numSearches' : numSearches,
-            'search' : $('#basic_search_jobs').val(),
-            'latitude' : $('#latitude').val(),
-            'longitude' : $('#longitude').val(),
+            'type' : id,
+            'search' : $('#' + id +'_search').val(),
+            'latitude' : lat,
+            'longitude' : lng,
             'radius' : getRadius(),
             'sort' : $('#sort').val(),
         },
@@ -116,13 +140,21 @@ function add_jobs() {
 }// end add_jobs()
 
 function sort_jobs() {
+    var id = $('input[name="search"]:checked').attr('id');
+    var lat = "";
+    var lng = "";
+    if (!$('#hide-location').prop('checked')) {
+        lat = $('#latitude').val();
+        lng = $('#longitude').val();
+    }// end if
     $.ajax({
         url : 'sort_jobs',
         data : {
             'numSearches' : numSearches,
-            'search' : $('#basic_search_jobs').val(),
-            'latitude' : $('#latitude').val(),
-            'longitude' : $('#longitude').val(),
+            'type' : id,
+            'search' : $('#' + id +'_search').val(),
+            'latitude' : lat,
+            'longitude' : lng,
             'radius' : getRadius(),
             'sort' : $('#sort').val(),
         },
@@ -131,12 +163,20 @@ function sort_jobs() {
 }// end sort_jobs()
 
 function get_total_jobs() {
+    var id = $('input[name="search"]:checked').attr('id');
+    var lat = "";
+    var lng = "";
+    if (!$('#hide-location').prop('checked')) {
+        lat = $('#latitude').val();
+        lng = $('#longitude').val();
+    }// end if
     $.ajax({
         url : 'get_total_jobs',
         data : {
-            'search' : $('#basic_search_jobs').val(),
-            'latitude' : $('#latitude').val(),
-            'longitude' : $('#longitude').val(),
+            'type' : id,
+            'search' : $('#' + id +'_search').val(),
+            'latitude' : lat,
+            'longitude' : lng,
             'radius' : getRadius(),
             'sort' : $('#sort').val(),
         },
@@ -279,3 +319,21 @@ function turnMoneyToString(number) {
     }// end if-else
     return number.toString();
 }// end turnMoneyToString()
+
+function checkSearchRadio() {
+    if ($('#basic').prop('checked')) {
+        $('#basic_search').css('display', 'inline');
+        $('#custom_search').css('display', 'none');
+    } else {
+        $('#basic_search').css('display', 'none');
+        $('#custom_search').css('display', 'inline');
+    }// end if-else
+}// end checkSearchRadio()
+
+function hideLocation() {
+    if ($('#hide-location').prop('checked')) {
+        $('#location-wrapper').css('display', 'none');
+    } else {
+        $('#location-wrapper').css('display', 'inline');
+    }// end if-else
+}// end hideLocation()
