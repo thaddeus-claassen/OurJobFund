@@ -81,7 +81,6 @@ function disableInfo() {
         $('#id_education').attr('readonly', true);
         $('#id_occupation').attr('readonly', true);
         $('#id_contact').attr('readonly', true);
-        $('#id_preferred_payment').attr('disabled', true);
         $('#id_description').attr('readonly', true);
     }// end if
 }// end disableInfo()

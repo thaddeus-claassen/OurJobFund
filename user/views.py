@@ -124,7 +124,6 @@ class DetailView(TemplateView):
             'occupation' : user.userprofile.occupation,
             'education' : user.userprofile.education,
             'contact' : user.userprofile.contact,
-            'preferred_payment' : user.userprofile.preferred_payment,
         });
         self.descriptionForm = self.descriptionForm(initial={'description' : user.userprofile.description});
         return render(request, self.template_name, self.get_context_data());
@@ -143,7 +142,6 @@ class DetailView(TemplateView):
                 request.user.userprofile.occupation = self.profileForm.cleaned_data['occupation'];
                 request.user.userprofile.education = self.profileForm.cleaned_data['education'];
                 request.user.userprofile.contact = self.profileForm.cleaned_data['contact'];
-                request.user.userprofile.preferred_payment = self.profileForm.cleaned_data['preferred_payment'];
                 request.user.userprofile.save();
                 return redirect(request.user);
         elif ('description' in request.POST):
@@ -213,8 +211,6 @@ def save_input(request, username):
             request.user.userprofile.occupation = value;
         elif (id == 'id_contact'):
            request.user.userprofile.contact = value;                
-        elif (id == 'id_preferred_payment'):
-            request.user.userprofile.preferred_payment = value;
         elif (id == 'id_description'):
             request.user.userprofile.description = value;
         request.user.save();

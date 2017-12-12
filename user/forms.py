@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User;
 from user.models import UserProfile
 from django import forms;
-from .choices import STATES, PAYMENT_METHODS;
+from .choices import STATES;
 import re;
 
 class LoginForm(forms.ModelForm):
@@ -70,12 +70,11 @@ class ProfileForm(forms.ModelForm):
     education = forms.CharField(widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
     occupation = forms.CharField(widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
     contact = forms.CharField(widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
-    preferred_payment = forms.ChoiceField(choices=PAYMENT_METHODS, widget=forms.Select(attrs={'class' : 'info'}));
     protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
     
     class Meta:
         model = UserProfile;
-        fields = ['city', 'state', 'education', 'occupation', 'contact', 'preferred_payment'];    
+        fields = ['city', 'state', 'education', 'occupation', 'contact'];    
     
     def clean_protection(self):
         if (not self.cleaned_data.get('protection') == ""):

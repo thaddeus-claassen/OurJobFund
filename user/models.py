@@ -21,7 +21,6 @@ class UserProfile(models.Model):
     education = models.CharField(default='', max_length=100, blank=True);
     contact = models.CharField(default='', max_length=100, blank=True);
     last_time_username_was_changed = models.DateTimeField(default=pytz.utc.localize(datetime.datetime(2000, 1, 1)));
-    preferred_payment = models.CharField(default="N/A", max_length=6);
     stripe_account_id = models.CharField(default='', null=True, blank=True, max_length=100);
     
     def get_absolute_url(self):
