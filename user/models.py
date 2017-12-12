@@ -11,6 +11,8 @@ alphabetic = RegexValidator(r'^[a-zA-Z\s]+$', 'Alphabetic characters only');
 
 class UserProfile(models.Model):
     user = AutoOneToOneField(User, primary_key=True);
+    hide_location = models.BooleanField(default=True);
+    basic_search = models.BooleanField(default=True);
     type_of_account = models.CharField(default="personal", max_length=10);
     description = models.CharField(default='', max_length=10000, blank=True);
     city = models.CharField(default='', max_length=100, blank=True);

@@ -86,6 +86,7 @@ def get_total_jobs(request):
     else:
         return Http404();
         
+@login_required        
 def save_filter(request):
     if (request.is_ajax()):
         changed_filter = request.POST['filter'];
@@ -100,6 +101,24 @@ def save_filter(request):
     else:
         return Http404();
         
+@login_required
+def save_search_type(request):
+    if (request.is_ajax()):
+        request.user.userprofile.basic_search = (request.POST['isBasic'] == 'true');
+        request.user.userprofile.save();
+        return HttpResponse("");
+    else:
+        return Http404();
+        
+@login_required
+def save_hide_location(request):
+    if (request.is_ajax()):
+        request.user.userprofile.hide_location = (request.POST['isHidden'] == 'true');
+        request.user.userprofile.save();
+        return HttpResponse("");
+    else:
+        return Http404();
+
 def findJobs(request):
     type = request.GET['type'];
     print('Type: ' + str(type));

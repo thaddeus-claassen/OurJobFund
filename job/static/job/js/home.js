@@ -12,10 +12,12 @@ $('document').ready(function() {
     checkSearchRadio();
     $('input[name=search]').change(function() {
         checkSearchRadio();
+        save_search_type(($(this).attr('id') === 'basic_search'));
     });
     hideLocation();
-    $('input[type=checkbox]').change(function() {
+    $('#hide-location').change(function() {
         hideLocation();
+        save_hide_location($(this).prop('checked'));
     });
     $('#basic_search').keydown(function(event) {
         if (event.which == ENTER) {
@@ -93,6 +95,28 @@ function save_filter(filter) {
         },
     });
 }// end save_filter()
+
+function save_search_type(isBasic) {
+    $.ajax({
+        type : 'POST',
+        url : '/job/save_search_type/',
+        data : {
+            'isBasic' : isBasic,
+            csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
+        },
+    });
+}// end save_search_type()
+
+function save_hide_location(isHidden) {
+    $.ajax({
+        type : 'POST',
+        url : '/job/save_search_type/',
+        data : {
+            'isHidden' : isHidden,
+            csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
+        },
+    });
+}// end save_hide_location()
 
 function get_jobs() {
     var id = $('input[name="search"]:checked').attr('id');
