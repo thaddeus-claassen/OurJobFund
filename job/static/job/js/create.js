@@ -26,8 +26,8 @@ function applyLocation(address) {
             $('#id_longitude').val(center.lng());
             $('#create-job-form').submit();
         } else {
-            $('#id_location').after("<span>Google Maps could not verify your location.</span>");
-            $('#location-validation').css('color', 'red');
+            $('#id_location').after("<span id='location-error'>Could not verify location.</span>");
+            $('#location-error').css('color', 'red');
         }// end if-else
     });
 }// end applyLocation()

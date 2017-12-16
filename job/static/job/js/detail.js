@@ -11,14 +11,6 @@ $('document').ready(function() {
     $('.sort').click(function() {
         sort($(this).attr('id'));
     });
-    $('#pledge_money').click(function() {
-        $(this).css('display', 'none');
-        $('#pledge-money-form').css('display', 'inline');
-    });
-    $('#cancel-pledge-money').click(function() {
-        $('#pledge_money').css('display', 'inline');
-        $('#pledge-money-form').css('display', 'none');
-    });
     $('#pay_money').click(function() {
         $('#pay_unclicked').css('display', 'none');
         $('#pay_clicked').css('display', 'inline');

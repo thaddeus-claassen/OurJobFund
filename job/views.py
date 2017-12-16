@@ -184,7 +184,9 @@ class DetailView(TemplateView):
             jobuser = JobUser(user=request.user, job=job);
             jobuser.save();
         if ('pledge' in request.POST):
-            self.pledge(self.form(request.POST), job, jobuser);
+            self.form = self.form(request.POST);
+            self.pledge(self.form, job, jobuser);
+            return render(request, self.template_name, self.get_context_data(request, job=job));
         elif ('work' in request.POST):
             self.work(job, jobuser);
         elif ('finish' in request.POST):

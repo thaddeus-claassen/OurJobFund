@@ -64,8 +64,8 @@ tbody {
     overflow-y: scroll;
 }
 
-#pledge_span {
-    float: right;
+#pledge, #id_amount {
+    width: 100%;
 }
 
 #pledges_table th, #pledges_table td {
@@ -87,10 +87,6 @@ tbody {
     float: left;
 }
 
-#pledge_clicked {
-    display: none;
-}
-
 .pledge_work_inputs {
     width: 100%;
 }
@@ -109,8 +105,4 @@ tbody {
 .image {
     height: 100%;
     display: inline-block;
-}
-
-#pledge-money-form {
-    display: none;
 }

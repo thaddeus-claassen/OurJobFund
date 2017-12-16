@@ -191,18 +191,22 @@
                 <span>Pledges</span>
             </div>
             {% if request.user.is_authenticated and not jobuser.pledge_set.all.exists and not jobuser.work_set.all.exists %}
-            <div class="col-md-6">  
-                <input id="pledge_money" class="pledge_work_inputs" type="button" value="Pledge" />
+            <div class="col-md-6">
                 <form id="pledge-money-form" action="{{ request.get_full_path }}" method="POST">
                 {% csrf_token %}
-                    <span id="pledge_span">
-                    {% for field in pledge_form %}
-                        ${{ field }}
-                        {{ field.errors }}
-                    {% endfor %}
-                        <input type="submit" value="Accept" name="pledge"/>
-                        <input id="cancel-pledge-money" type="button" value="Cancel"/>
-                    </span>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input id="pledge" type="submit" value="Pledge" name="pledge"/>
+                        </div>
+                        <div class="col-md-6">
+                            {{ pledge_form.amount }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ pledge_form.amount.errors }}
+                        </div>
+                    </div>
                 </form>
             </div>
             {% endif %}

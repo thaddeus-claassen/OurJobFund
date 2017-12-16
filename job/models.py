@@ -3,7 +3,7 @@ from django import forms;
 from django.contrib.auth.models import User;
 from django.core.validators import RegexValidator;
         
-alphanumeric = RegexValidator(r'^[0-9a-zA-Z\s_]+$', 'Alphanumeric characters only');        
+alphanumeric = RegexValidator(r'^[0-9a-zA-Z_]+$', 'Alphanumeric characters only');        
         
 class Job(models.Model):
     is_finished = models.BooleanField(default=False);

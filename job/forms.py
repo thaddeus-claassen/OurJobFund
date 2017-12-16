@@ -16,6 +16,16 @@ class NewJobForm(forms.ModelForm):
         model = Job;
         fields = ['name', 'location', 'latitude', 'longitude', 'tags', 'image_set', 'description'];
     
+    def clean_tags(self):
+        tags = self.cleaned_data.get('tags');
+        if (not re.match(r'^[A-Za-z0-9\s_]+$', tags)):
+            raise forms.ValidationError('Alphabetic, numbers, underscore ("_") characters allowed only.');
+        tagsArray = tags.split();
+        for tag in tagsArray:
+            if (len(tag) > 30):
+                raise forms.ValidationError('Each tag cannot be more than 30 characters.');
+        return tags;
+    
     def clean_protection(self):
         if (not self.cleaned_data.get('protection') == ""):
             raise forms.ValidationError('It seems you are a bot.');
