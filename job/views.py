@@ -121,17 +121,13 @@ def save_hide_location(request):
 
 def findJobs(request):
     type = request.GET['type'];
-    print('Type: ' + str(type));
     search = request.GET['search'];
-    print('Search: ' + str(search));
     if (type == 'basic'):
         jobs = Job.objects.all();
         for word in search.split(" "):
             jobs = jobs.filter(Q(name__icontains=word) | Q(tag__tag__icontains=word));
     else:
         jobs = get_jobs_from_custom_search(search);
-    print("Jobs: ")
-    print(jobs)
     jobs = jobs.distinct();
     sort_array = request.GET['sort'].split(" ");
     latitude_in_degrees_as_string = request.GET['latitude'];

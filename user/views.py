@@ -47,21 +47,22 @@ class SignUpView(TemplateView):
     def post(self, request, *args, **kwargs):
         if (request.user.is_authenticated()):
             return redirect(request.user);
-        form = self.new_user_form;
-        if ('sign-up' in request.POST):
-            form = form(request.POST);
-            if (form.is_valid()):
-                user = form.save(commit=False);
-                user.email = form.cleaned_data['email'];
-                user.username = form.cleaned_data['username'];
-                password = form.cleaned_data['password'];
-                user.set_password(password);
-                user.save();
-                user = authenticate(username=user.username, password=password);
-                if (user is not None):
-                    login(request, user);
-                    return redirect(user);
-        return render(request, self.template_name, self.get_context_data(new_user_form=form));
+        else:
+            form = self.new_user_form;
+            if ('sign-up' in request.POST):
+                form = form(request.POST);
+                if (form.is_valid()):
+                    user = form.save(commit=False);
+                    user.email = form.cleaned_data['email'];
+                    user.username = form.cleaned_data['username'];
+                    password = form.cleaned_data['password'];
+                    user.set_password(password);
+                    user.save();
+                    user = authenticate(username=user.username, password=password);
+                    if (user is not None):
+                        login(request, user);
+                        return redirect(user);
+            return render(request, self.template_name, self.get_context_data(new_user_form=form));
         
     def get_context_data(self, **kwargs):
         context = super(SignUpView, self).get_context_data(**kwargs);

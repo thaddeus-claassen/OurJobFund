@@ -14,7 +14,7 @@
         <div class="row margin-row">
             <div class="col-md-9">
                 <input id="basic_search" class="search" type="text" placeholder="Search Jobs by Name or Tags, separated by spaces"/>
-                <textarea id="custom_search" class="search"></textarea>
+                <textarea id="custom_search" class="search" placeholder="Use tags and '&' (SHIFT - 7 ), '|' (SHIFT - \ ), and '~' (SHIFT - `) to make logical sentences."></textarea>
             </div>
             <div class="col-md-3">
                 Total:&nbsp;<span id="num-jobs-found">0</span>
@@ -62,7 +62,7 @@
             <div class="col-md-6">
                 <span id="hide-location-span">
                     <label for="hide-location">Hide Location:</label>
-                    <input id="hide-location" type="checkbox"/>
+                    <input id="hide-location" type="checkbox" {% if not request.user.userprofile.hide_location %}checked{% endif %} />
                 </span>
             </div>
         </div>

@@ -3,10 +3,6 @@ input[type=text] {
     max-width: 100%;
 }
 
-#search_error {
-    color: red;
-}
-
 .search, #search_button, #location, #radius, #create_job, table {
     width: 100%;
 }

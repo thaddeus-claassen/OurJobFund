@@ -7,10 +7,6 @@ html, .container, .container-fluid {
     width: 100%;
 }
 
-.sign-up-input {
-    text-align: right;
-}
-
 ul {
     list-style: none;
 }
@@ -39,10 +35,6 @@ option:hover {
 
 .footer-div {
     height: 100%;
-}
-
-.info_col {
-    display: table;
 }
 
 .info_link {

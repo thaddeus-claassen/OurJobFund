@@ -21,11 +21,6 @@
     text-decoration: underline;
 }
 
-.bottom {
-    height: 100%;
-    width: 100%;
-}
-
 #id_description {
     height: 300px;
     width: 100%;
@@ -48,10 +43,6 @@
 
 .info_info, #delete-stripe {
     float: right;
-}
-
-#save_info, #cancel_info, #save_description, #cancel_description {
-    display: none;
 }
 
 table {
