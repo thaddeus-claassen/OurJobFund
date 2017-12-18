@@ -3,14 +3,14 @@ var canSubmit = true;
 $('document').ready(function() {
     $('#create-job-form').submit(function(event) {
         if (canSubmit) {
-            if ($('#id_latitude').val() == 0 || $('#id_longitude').val() == 0) {
+            canSubmit = false;
+            if ($('#id_latitude').val() === "" || $('#id_longitude').val() === "") {
                 var loc = $('#id_location').val();
                 if (loc.length > 0) {
                     event.preventDefault();
                     applyLocation(loc);
                 }// end if
             }// end if
-            canSubmit = false;
         } else {
             event.preventDefault();
         }// end if-else
@@ -20,6 +20,7 @@ $('document').ready(function() {
 function applyLocation(address) {
     var geocoder = new google.maps.Geocoder();
     geocoder.geocode({ 'address': address}, function(results, status) {
+        canSubmit = true;
         if (status == google.maps.GeocoderStatus.OK) {
             var center = results[0].geometry.location;
             $('#id_latitude').val(center.lat());
@@ -28,6 +29,7 @@ function applyLocation(address) {
         } else {
             $('#id_location').after("<span id='location-error'>Could not verify location.</span>");
             $('#location-error').css('color', 'red');
+            can 
         }// end if-else
     });
 }// end applyLocation()

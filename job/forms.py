@@ -18,12 +18,13 @@ class NewJobForm(forms.ModelForm):
     
     def clean_tags(self):
         tags = self.cleaned_data.get('tags');
-        if (not re.match(r'^[A-Za-z0-9\s_]+$', tags)):
-            raise forms.ValidationError('Alphabetic, numbers, underscore ("_") characters allowed only.');
-        tagsArray = tags.split();
-        for tag in tagsArray:
-            if (len(tag) > 30):
-                raise forms.ValidationError('Each tag cannot be more than 30 characters.');
+        if (len(tags) > 0):
+            if (not re.match(r'^[A-Za-z0-9\s_]+$', tags)):
+                raise forms.ValidationError('Alphabetic, numbers, underscore ("_") characters allowed only.');
+            tagsArray = tags.split();
+            for tag in tagsArray:
+                if (len(tag) > 30):
+                    raise forms.ValidationError('Each tag cannot be more than 30 characters.');
         return tags;
     
     def clean_protection(self):
