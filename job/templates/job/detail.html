@@ -190,7 +190,7 @@
             <div class="col-md-6">
                 <span>Pledges</span>
             </div>
-            {% if request.user.is_authenticated and not jobuser.pledge_set.all.exists and not jobuser.work_set.all.exists %}
+            {% if request.user.is_authenticated and not jobuser.pledge_set.all.exists %}
             <div class="col-md-6">
                 <form id="pledge-money-form" action="{{ request.get_full_path }}" method="POST">
                 {% csrf_token %}
@@ -254,7 +254,7 @@
                 <span>Workers</span>
             </div>
             {% if request.user.is_authenticated %}
-            {% if not jobuser.work_set.all.exists and not jobuser.pledge_set.all.exists %}
+            {% if not jobuser.work_set.all.exists %}
             <div class="col-md-6">
                 <form id="work-form" action="{{ request.get_full_path }}" method="POST">
                 {% csrf_token %}
