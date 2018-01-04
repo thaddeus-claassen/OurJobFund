@@ -246,7 +246,7 @@ function addJobsToTable(json) {
             string = string + "</tr>";
             $('#main_table_body').append(string);
             if ($('#location').val() != "") {
-                addMarker(new google.maps.LatLng(job['latitude'], job['longitude']));    
+                addMarker(new google.maps.LatLng(job['latitude'], job['longitude']), job["random_string"]);    
             }// end if
         }// end for
     }// end if
@@ -309,10 +309,14 @@ function addBounds() {
     if (map.zoom > 17) mapsetZoom(17);
 }// end addBounds()
 
-function addMarker(location) {
+function addMarker(location, url) {
     var marker = new google.maps.Marker({
         position: location,
         map: map,
+        url: url,
+    });
+    google.maps.event.addListener(marker, 'click', function() {
+        window.location.href = this.url;
     });
     markers.push(marker);
 }// end addMarker()
@@ -331,6 +335,10 @@ function deleteMarkers() {
     clearMarkers();
     markers = [];
 }// end deleteMarkers()
+
+function replaceSameLocationMarkers() {
+    
+}// end replaceSameLocationMarkers()
 
 function turnMoneyToString(number) {
     parts = number.toString().split('.');

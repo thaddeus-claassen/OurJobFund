@@ -62,7 +62,7 @@
             <div class="col-md-6">
                 <span id="hide-location-span">
                     <label for="hide-location">Hide Location:</label>
-                    <input id="hide-location" type="checkbox" {% if not request.user.userprofile.hide_location %}checked{% endif %} />
+                    <input id="hide-location" type="checkbox" />
                 </span>
             </div>
         </div>
@@ -152,10 +152,13 @@
                         <div class="row">
                             <li>
                                 <div class="col-md-6">
-                                    <span class="filter_label">Paid less than $</span>
+                                    <span class="filter_label">Paid less than</span>
                                 </div>
                                 <div class="col-md-2">
                                     <input id="pledge-paid_at_least_n_amount_in_total" class="filter" type="text" value="{{ request.user.pledgefilter.paid_at_least_n_amount_in_total }}" />
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="filter_unit">dollars</span>
                                 </div>
                             </li>
                         </div>
