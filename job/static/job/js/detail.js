@@ -26,7 +26,7 @@ $('document').ready(function() {
             $('#stripe_connect').css('display', 'inline');
         }// end if
     });
-    $('#pledge-money-form').submit(function() {
+    $('#pledge-money-form').submit(function(e) {
         if (canSubmitPledge) {
             canSubmitPledge = false;
         } else {
@@ -41,7 +41,6 @@ $('document').ready(function() {
         }// end if-else
     });
     $('#finish-form').submit(function(e) {
-        alert("finished clicked")
         if (canSubmitWork) {
             canSubmitWork = false;
         } else {

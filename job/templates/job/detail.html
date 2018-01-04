@@ -132,7 +132,7 @@
                     <div class="col-md-6">
                         <span id="updates_title">Updates</span>
                     </div>
-                    {% if request.user.is_authenticated and jobuser %}
+                    {% if jobuser %}
                     <div class="col-md-6">
                         <form action="{% url 'update:create' job.random_string %}">
                             <input id="post_update" class="pledge_work_inputs" type="submit" value="Post Update" />
