@@ -4,7 +4,7 @@ from django.utils.decorators import method_decorator;
 from django.http import HttpResponse, Http404;
 from django.contrib.auth.models import User;
 from jobuser.models import JobUser;
-from .models import Update;
+from .models import Update, Image;
 from notification.views import sendNotifications;
 from django.views.generic import TemplateView;
 from job.models import Job;

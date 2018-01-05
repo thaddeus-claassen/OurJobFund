@@ -75,17 +75,24 @@
                         </li>
                     </ul>
                     {% else %}
+                    {% if login_form %}
                     <form id="sign-in-form" class="navbar-form navbar-right" method="POST" action="{% url 'user:login' %}">
                     {% csrf_token %}
                         <ul class="nav navbar-nav navbar-right">
-                        {% for field in login_form %}
-                            <li><a>{{ field }}</a></li>
-                        {% endfor %}
-                            <li><a><button type="submit" class="btn btn-default" name="sign-in">Log In</button></a></li>
-                            <li><a href="{% url 'password_reset' %}">Forgot Password</a></li>
-                            <li class="navbar_button"><a href="{% url 'user:sign_up' %}">Sign Up</a></li>
+                            <li><a>
+                                {% for field in login_form %}
+                                    {{ field }}
+                                {% endfor %}
+                                    <button type="submit" class="btn btn-default" name="sign-in">Log In</button>
+                                </a>
+                                <li>
+                                <li><a href="{% url 'password_reset' %}">Forgot Password</a></li>
+                            </li>
                         </ul>
                     </form>
+                    {% else %}
+                    <ul class="nav navbar-nav navbar-right"><li><a href="{% url 'user:login' %}">Login/Sign Up</a></li></ul>
+                    {% endif %}
                     {% endif %}
                 </div>
             </div>

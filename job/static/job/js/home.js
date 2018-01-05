@@ -282,22 +282,14 @@ function getRadius() {
 }// end getRadius()
 
 function initMap() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(centerMap)
-    } else {
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: 0, lng: 0},
-            zoom: 8,
-        });
-    }// end if-else
+    map = new google.maps.Map(document.getElementById('map'));
+    var bounds = new google.maps.LatLngBounds();
+    bounds.extend({lat: 25.7617, lng: -80.1918});
+    bounds.extend({lat: 32.7157, lng: -117.1611});
+    bounds.extend({lat: 21.9, lng: -160.2});
+    bounds.extend({lat: 71.3, lng: -156.8});
+    map.fitBounds(bounds);
 }// end initMap()
-
-function centerMap(position) {
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: position.coords.latitude, lng: position.coords.longitude},
-        zoom: 12,
-    });
-}// centerMap()
 
 function addBounds() {
     map.setZoom(1)

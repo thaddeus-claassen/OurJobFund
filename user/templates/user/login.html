@@ -2,14 +2,14 @@
 
 {% load staticfiles %}
 {% block import %}
-    <script type="text/javascript" src="{% static 'user/js/signup.js' %}" ></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'user/css/signup.css' %}" />
+    <script type="text/javascript" src="{% static 'user/js/login.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'user/css/login.css' %}" />
 {% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <form id="sign-up-form" method="POST" action="{% url 'user:sign_up' %}">
+        <form id="sign-up-form" method="POST" action="{% url 'user:login' %}">
         {% csrf_token %}
         {% for field in new_user_form %}
             <div class="row">

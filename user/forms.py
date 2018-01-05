@@ -17,8 +17,8 @@ class LoginForm(forms.ModelForm):
         if (not self.cleaned_data.get('protection') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
-    
-class NewUserForm(forms.ModelForm):
+        
+class SignUpForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder' : 'Email'}));
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder' : 'Username'}));
     password = forms.CharField(label='Password:', widget=forms.PasswordInput(attrs={'placeholder' : 'Password'}));

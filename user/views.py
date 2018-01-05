@@ -9,70 +9,65 @@ from django.http import JsonResponse, HttpResponse, Http404;
 from django.core import serializers;
 from django.db.models import Q, F;
 from django.contrib.auth import authenticate, login, logout;
-from .forms import ChangePasswordForm, ChangeNameForm, ChangeEmailForm, LoginForm, NewUserForm, DeactivateAccountForm, ProfileForm, DescriptionForm, ChangeUsernameForm;
+from .forms import ChangePasswordForm, ChangeNameForm, ChangeEmailForm, LoginForm, SignUpForm, DeactivateAccountForm, ProfileForm, DescriptionForm, ChangeUsernameForm;
 from .models import UserProfile;
 from job.models import Job;
 from datetime import datetime;
 from random import randint;
-import logging;
+import json;
 
 class LoginView(TemplateView):
-   
-    def get(self, request, *args, **kwargs):
-        return redirect('user:sign_up');
-    
-    def post(self, request, *args, **kwargs):
-        if ('sign-in' in request.POST):
-            userForm = LoginForm(request.POST);
-            if (userForm.is_valid()):
-                email = userForm.cleaned_data['email'];
-                if (email != "" and User.objects.filter(email=email).exists()):
-                    user = authenticate(username=User.objects.get(email=email).username, password=userForm.cleaned_data['password']);
-                    if (user is not None):
-                        user.is_active = True;
-                        login(request, user);
-                        return redirect('job:home');
-        return redirect('user:sign_up');
-
-class SignUpView(TemplateView):
-    template_name = 'user/signup.html';
-    new_user_form = NewUserForm;
+    template_name = 'user/login.html';
+    new_user_form = SignUpForm;
+    login_form = LoginForm;
     
     def get(self, request, *args, **kwargs):
         if (request.user.is_authenticated()):
             return redirect('user:detail', username=request.user.username);
         else:
-            return render(request, self.template_name, self.get_context_data(new_user_form=self.new_user_form));
+            return render(request, self.template_name, self.get_context_data(login_form=self.login_form, new_user_form=self.new_user_form));
     
     def post(self, request, *args, **kwargs):
         if (request.user.is_authenticated()):
             return redirect(request.user);
         else:
-            form = self.new_user_form;
+            login_form = self.login_form;
+            if ('login' in request.POST):
+                login_form = login_form(request.POST);
+                if (login_form.is_valid()):
+                    email = userForm.cleaned_data['email'];
+                    if (email != "" and User.objects.filter(email=email).exists()):
+                        user = authenticate(username=User.objects.get(email=email).username, password=userForm.cleaned_data['password']);
+                        if (user is not None):
+                            user.is_active = True;
+                            login(request, user);
+                            return redirect('job:home');
+            new_user_form = self.new_user_form;
             if ('sign-up' in request.POST):
-                form = form(request.POST);
-                if (form.is_valid()):
-                    user = form.save(commit=False);
-                    user.email = form.cleaned_data['email'];
-                    user.username = form.cleaned_data['username'];
-                    password = form.cleaned_data['password'];
+                new_user_form = new_user_form(request.POST);
+                if (new_user_form.is_valid()):
+                    user = new_user_form.save(commit=False);
+                    user.email = new_user_form.cleaned_data['email'];
+                    user.username = new_user_form.cleaned_data['username'];
+                    password = new_user_form.cleaned_data['password'];
                     user.set_password(password);
                     user.save();
                     user = authenticate(username=user.username, password=password);
                     if (user is not None):
                         login(request, user);
                         return redirect(user);
-            return render(request, self.template_name, self.get_context_data(new_user_form=form));
+            return render(request, self.template_name, self.get_context_data(login_form=login_form, new_user_form=new_user_form));
         
     def get_context_data(self, **kwargs):
-        context = super(SignUpView, self).get_context_data(**kwargs);
+        context = super(LoginView, self).get_context_data(**kwargs);
+        context['login_form'] = kwargs['login_form'];
         context['new_user_form'] = kwargs['new_user_form'];
         return context;
 
-@login_required        
+@login_required
 def sign_out(request):
     logout(request);
-    return redirect('user:sign_up');
+    return redirect('user:login');
 
 @login_required    
 def search_users(request):
