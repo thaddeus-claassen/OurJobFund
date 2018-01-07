@@ -155,21 +155,22 @@ class DetailView(TemplateView):
         receiver_username = request.POST['pay_to'];
         stripe.api_key = STRIPE_TEST_SECRET_KEY;
         token = request.POST['stripeToken'];
-        amount_paying = float(request.POST['pay_amount']);
+        amount_paying_in_cents = int(request.POST['pay_amount']);
         charge = stripe.Charge.create(
-            amount = 100 * amount_paying,
+            amount = amount_paying_in_cents,
             currency = "usd",
             description = "Does this charge work?",
             source = token,
         );
-        payment = Pay(jobuser=jobuser, receiver=jobuser.user, amount=float(amount_paying));
+        amount_paying_in_dollars = float(amount_paying_in_cents) / 100;
+        payment = Pay(jobuser=jobuser, receiver=jobuser.user, amount=amount_paying_in_dollars);
         payment.save();
-        jobuser.amount_paid = jobuser.amount_paid + amount_paying;
+        jobuser.amount_paid = jobuser.amount_paid + amount_paying_in_dollars;
         jobuser.save();
         receiver_jobuser = JobUser.objects.get(user=User.objects.get(username=receiver_username), job=job);
-        receiver_jobuser.amount_received = receiver_jobuser.amount_received + amount_paying;
+        receiver_jobuser.amount_received = receiver_jobuser.amount_received + amount_paying_in_dollars;
         receiver_jobuser.save();
-        job.paid = job.paid + amount_paying;
+        job.paid = job.paid + amount_paying_in_dollars;
         job.save();
         create_update_by_paying(payment);
         

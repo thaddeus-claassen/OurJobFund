@@ -9,9 +9,9 @@ $('document').ready(function() {
     $(window).resize(function() {
         changeTHeadTFootWidthToAccountForScrollBar();
     });
-    checkSearchRadio();
+    toggleSearch();
     $('input[name=search]').change(function() {
-        checkSearchRadio();
+        toggleSearch();
         save_search_type(($(this).attr('id') === 'basic_search'));
     });
     hideLocation();
@@ -344,7 +344,7 @@ function turnMoneyToString(number) {
     return number.toString();
 }// end turnMoneyToString()
 
-function checkSearchRadio() {
+function toggleSearch() {
     if ($('#basic').prop('checked')) {
         $('#basic_search').css('display', 'inline');
         $('#custom_search').css('display', 'none');
@@ -352,7 +352,7 @@ function checkSearchRadio() {
         $('#basic_search').css('display', 'none');
         $('#custom_search').css('display', 'inline');
     }// end if-else
-}// end checkSearchRadio()
+}// end toggleSearch()
 
 function hideLocation() {
     if ($('#hide-location').prop('checked')) {
