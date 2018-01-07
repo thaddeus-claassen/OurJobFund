@@ -18,50 +18,49 @@ import json;
 
 class LoginView(TemplateView):
     template_name = 'user/login.html';
-    new_user_form = SignUpForm;
-    login_form = LoginForm;
+    login_form = LoginForm();
+    sign_up_form = SignUpForm();
     
     def get(self, request, *args, **kwargs):
         if (request.user.is_authenticated()):
             return redirect('user:detail', username=request.user.username);
         else:
-            return render(request, self.template_name, self.get_context_data(login_form=self.login_form, new_user_form=self.new_user_form));
+            return render(request, self.template_name, self.get_context_data(login_form=self.login_form, sign_up_form=self.sign_up_form));
     
     def post(self, request, *args, **kwargs):
+        print(request.POST);
         if (request.user.is_authenticated()):
             return redirect(request.user);
         else:
             login_form = self.login_form;
-            if ('login' in request.POST):
-                login_form = login_form(request.POST);
+            if ('sign-in' in request.POST):
+                login_form = LoginForm(request.POST);
                 if (login_form.is_valid()):
-                    email = userForm.cleaned_data['email'];
-                    if (email != "" and User.objects.filter(email=email).exists()):
-                        user = authenticate(username=User.objects.get(email=email).username, password=userForm.cleaned_data['password']);
-                        if (user is not None):
-                            user.is_active = True;
-                            login(request, user);
-                            return redirect('job:home');
-            new_user_form = self.new_user_form;
+                    user = login_form.get_user();
+                    if (user is not None):
+                        user.is_active = True;
+                        login(request, user);
+                        return redirect('job:home');
+            sign_up_form = self.sign_up_form;
             if ('sign-up' in request.POST):
-                new_user_form = new_user_form(request.POST);
-                if (new_user_form.is_valid()):
-                    user = new_user_form.save(commit=False);
-                    user.email = new_user_form.cleaned_data['email'];
-                    user.username = new_user_form.cleaned_data['username'];
-                    password = new_user_form.cleaned_data['password'];
+                sign_up_form = SignUpForm(request.POST);
+                if (sign_up_form.is_valid()):
+                    user = sign_up_form.save(commit=False);
+                    user.email = sign_up_form.cleaned_data['email'];
+                    user.username = sign_up_form.cleaned_data['username'];
+                    password = sign_up_form.cleaned_data['password'];
                     user.set_password(password);
                     user.save();
                     user = authenticate(username=user.username, password=password);
                     if (user is not None):
                         login(request, user);
                         return redirect(user);
-            return render(request, self.template_name, self.get_context_data(login_form=login_form, new_user_form=new_user_form));
+            return render(request, self.template_name, self.get_context_data(login_form=login_form, sign_up_form=sign_up_form));
         
     def get_context_data(self, **kwargs):
         context = super(LoginView, self).get_context_data(**kwargs);
         context['login_form'] = kwargs['login_form'];
-        context['new_user_form'] = kwargs['new_user_form'];
+        context['sign_up_form'] = kwargs['sign_up_form'];
         return context;
 
 @login_required

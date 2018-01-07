@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User;
 from user.models import UserProfile
 from django import forms;
+from django.contrib.auth import authenticate;
+from annoying.functions import get_object_or_None;
 from .choices import STATES;
 import re;
 
@@ -8,11 +10,20 @@ class LoginForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder' : 'Password'}));
     email = forms.EmailField(label='Email', widget=forms.TextInput(attrs={'placeholder' : 'Email'}));
     protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
-
+    prefix = "login";
+    
     class Meta:
         model = User;
         fields = ['email', 'password'];
-    
+        
+    def clean_password(self):
+        email = self.cleaned_data.get('email');
+        password = self.cleaned_data.get('password');
+        user = get_object_or_None(User, email=email);
+        if (not user or (authenticate(username=user.username, password=password) is None)):
+            raise forms.ValidationError('Your username or password is incorrect.');
+        return password;  
+        
     def clean_protection(self):
         if (not self.cleaned_data.get('protection') == ""):
             raise forms.ValidationError('It seems you are a bot.');
@@ -25,6 +36,7 @@ class SignUpForm(forms.ModelForm):
     repeat_password = forms.CharField(label='Repeat Password:', widget=forms.PasswordInput(attrs={'placeholder' : 'Repeat Password'}));
     age_checkbox = forms.BooleanField(label='Check here to verify you are at least 13 years old:');
     protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
+    prefix = "signup";
     
     class Meta:
         model = User;

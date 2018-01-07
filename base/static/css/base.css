@@ -16,6 +16,10 @@ ul {
     list-style-type: none;
 }
 
+.errorlist {
+    color: red;
+}
+
 option:hover {
     background: grey;
 }

@@ -10,11 +10,16 @@
 <div class="row">
     <div class="col-md-12">
         <form id="sign-up-form" method="POST" action="{% url 'user:login' %}">
+        <div class="row">
+            <div class="col-md-12">
+                Create Account
+            </div>
+        </div>
         {% csrf_token %}
-        {% for field in new_user_form %}
+        {% for field in sign_up_form %}
             <div class="row">
                 <div class="col-md-12 sign-up-input">
-                {% if field.auto_id == "id_age_checkbox"%}
+                {% if field.auto_id == "id_signup-age_checkbox"%}
                     {{ field.label }}
                 {% endif %}
                 {{ field }}{{ field.errors }}
