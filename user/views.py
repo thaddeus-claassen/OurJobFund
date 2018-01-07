@@ -28,7 +28,6 @@ class LoginView(TemplateView):
             return render(request, self.template_name, self.get_context_data(login_form=self.login_form, sign_up_form=self.sign_up_form));
     
     def post(self, request, *args, **kwargs):
-        print(request.POST);
         if (request.user.is_authenticated()):
             return redirect(request.user);
         else:
@@ -36,11 +35,10 @@ class LoginView(TemplateView):
             if ('sign-in' in request.POST):
                 login_form = LoginForm(request.POST);
                 if (login_form.is_valid()):
-                    user = login_form.get_user();
-                    if (user is not None):
-                        user.is_active = True;
-                        login(request, user);
-                        return redirect('job:home');
+                    user = User.objects.get(email=login_form.cleaned_data['email']);
+                    user.is_active = True;
+                    login(request, user);
+                    return redirect('job:home');
             sign_up_form = self.sign_up_form;
             if ('sign-up' in request.POST):
                 sign_up_form = SignUpForm(request.POST);
