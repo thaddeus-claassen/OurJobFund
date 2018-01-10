@@ -307,7 +307,7 @@
                             </td>
                             <td>{{ worker.date|date:"d M y" }}</td>
                             <td>{% if worker.jobuser.work_set.all.count == worker.jobuser.finish_set.all.count %}Finished{% else %}Working{% endif %}</td>
-                            <td>${{ worker.jobuser.amount_received }}</td>
+                            <td>${{ worker.jobuser.amount_received|floatformat:2 }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
