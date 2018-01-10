@@ -11,8 +11,15 @@
 {% block content %}
 <div class="row">
     <div class="col-md-7">
-        <div class="row">
-            
+        <div class="row margin-row">
+            <div class="col-md-3">
+                <label for="basic">Basic:</label>
+                <input id="basic" type="radio" name="search" checked="checked"/>
+            </div>
+            <div class="col-md-3">
+                <label for="custom">Custom:</label>
+                <input id="custom" type="radio" name="search"/>
+            </div>
         </div>
         <div class="row margin-row">
             <div class="col-md-9">
@@ -54,14 +61,6 @@
     </div>
     <div class="col-md-5">
         <div class="row">
-            <div class="col-md-3">
-                <label for="basic">Basic:</label>
-                <input id="basic" type="radio" name="search" checked="checked"/>
-            </div>
-            <div class="col-md-3">
-                <label for="custom">Custom:</label>
-                <input id="custom" type="radio" name="search"/>
-            </div>
             <div class="col-md-6">
                 <span id="hide-location-span">
                     <label for="hide-location">Hide Location:</label>

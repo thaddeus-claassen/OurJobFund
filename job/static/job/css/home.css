@@ -7,10 +7,6 @@ input[type=text] {
     width: 100%;
 }
 
-#hide-location-span {
-    float: right;
-}
-
 #custom_search {
     height: 70px;
     overflow-y: auto;
