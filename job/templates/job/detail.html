@@ -76,19 +76,19 @@
             <div class="row">
                 <div class="col-md-12">
                     <span class="info_title">Pledged</span>
-                    <span class="info_info">{{ job.pledged|floatformat:2 }}</span>
+                    <span class="info_info">${{ job.pledged|floatformat:2 }}</span>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <span class="info_title">Expected Pay</span>
-                    <span class="info_info">{{ expected_pay|floatformat:2 }}</span>
+                    <span class="info_info">${{ expected_pay|floatformat:2 }}</span>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <span class="info_title">Paid</span>
-                    <span class="info_info">{{ job.paid|floatformat:2 }}</span>
+                    <span class="info_info">${{ job.paid|floatformat:2 }}</span>
                 </div>
             </div>
             <div class="row">
@@ -168,7 +168,7 @@
                                     </td>
                                     <td class="updates-date_data">{{ update.date }}</td>
                                     <td class="updates-title">
-                                        {% if update.description %}
+                                        {% if update.description or update.image_set.all.exists %}
                                         <a href="{% url 'update:detail' update.random_string %}">{{ update.title }}</a>
                                         {% else %}
                                         {{ update.title }}
@@ -190,26 +190,6 @@
             <div class="col-md-6">
                 <span>Pledges</span>
             </div>
-            {% if request.user.is_authenticated and not jobuser.pledge_set.all.exists %}
-            <div class="col-md-6">
-                <form id="pledge-money-form" action="{{ request.get_full_path }}" method="POST">
-                {% csrf_token %}
-                    <div class="row">
-                        <div class="col-md-6">
-                            <input id="pledge" type="submit" value="Pledge" name="pledge"/>
-                        </div>
-                        <div class="col-md-6">
-                            {{ pledge_form.amount }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{ pledge_form.amount.errors }}
-                        </div>
-                    </div>
-                </form>
-            </div>
-            {% endif %}
         </div>
         <div class="row info_row">
             <div class="col-md-12">
@@ -217,31 +197,31 @@
                     <thead>
                         <tr>
                             <th id="pledges-last_name" class="sort">Username</th>
-                            <th id="pledgers-date_pledged" class="sort">Date Pledged</th>
                             <th id="pledges-pledged" class="sort">Pledged</th>
                             <th id="pledgers-paid" class="sort">Paid</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for pledge in pledges %}
+                    {% for jobuser in jobusers %}
+                        {% if jobuser.pledge_set.all.exists %}
                         <tr>
                             <td>
-                                {% if pledge.jobuser.user.is_active %}
+                                {% if jobuser.user.is_active %}
                                 {% if request.user.is_authenticated %}
                                 <a href="{% url 'user:detail' pledge.jobuser.user.username %}">
-                                    {{ pledge.jobuser.user.username }}
+                                    {{ jobuser.user.username }}
                                 </a>
                                 {% else %}
-                                <span>{{ pledge.jobuser.user.username }}</span>
+                                <span>{{ jobuser.user.username }}</span>
                                 {% endif %}
                                 {% else %}
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
-                            <td>{{ pledge.date|date:"d M y" }}</td>
-                            <td>${{ pledge.amount|floatformat:2 }}</td>
-                            <td>${{ pledge.jobuser.amount_paid|floatformat:2 }}</td>
+                            <td>${{ jobuser.amount_pledged|floatformat:2 }}</td>
+                            <td>${{ jobuser.amount_paid|floatformat:2 }}</td>
                         </tr>
+                        {% endif %}
                     {% endfor %}
                     </tbody>
                 </table>
@@ -253,30 +233,6 @@
             <div class="col-md-6">
                 <span>Workers</span>
             </div>
-            {% if request.user.is_authenticated %}
-            {% if not jobuser.work_set.all.exists %}
-            <div class="col-md-6">
-                <form id="work-form" action="{{ request.get_full_path }}" method="POST">
-                {% csrf_token %}
-                    <input id="work_on_job" class="pledge_work_inputs" type="submit" value="Work" name="work" />
-                </form>
-            </div>
-            {% elif jobuser.work_set.all.count > jobuser.finish_set.all.count %}
-            <div class="col-md-6">
-                <form id="finish-form" action="{{ request.get_full_path }}" method="POST">
-                {% csrf_token %}
-                    <input id="finish_job" class="pledge_work_inputs" type="submit" value="Finish" name="finish" />
-                </form>
-            </div>
-            {% elif jobuser.work_set.all.count == jobuser.finish_set.all.count %}
-            <div class="col-md-6">
-                <form id="unfinish-form" action="{{ request.get_full_path }}" method="POST">
-                {% csrf_token %}
-                    <input id="unfinish_job" class="pledge_work_inputs" type="submit" value="Unfinish" name="unfinish" />
-                </form>
-            </div>
-            {% endif %}
-            {% endif %}
         </div>
         <div class="row info_row">
             <div class="col-md-12">
@@ -284,31 +240,31 @@
                     <thead>
                         <tr>
                             <th id="workers-last_name">Username</th>
-                            <th id="workers-started">Started</th>
                             <th id="workers-finished">Status</th>
                             <th id="workers-received">Received</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for worker in workers %}
+                    {% for jobuser in jobusers %}
+                        {% if jobuser.work_set.all.exists %}
                         <tr>
                             <td>
-                                {% if worker.jobuser.user.is_active %}
+                                {% if jobuser.user.is_active %}
                                 {% if request.user.is_authenticated %}
                                 <a href="{% url 'user:detail' worker.jobuser.user.username %}">
-                                    {{ worker.jobuser.user.username }}
+                                    {{ jobuser.user.username }}
                                 </a>
                                 {% else %}
-                                <span>{{ worker.jobuser.user.username }}
+                                <span>{{ jobuser.user.username }}</span>
                                 {% endif %}
                                 {% else %}
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
-                            <td>{{ worker.date|date:"d M y" }}</td>
-                            <td>{% if worker.jobuser.work_set.all.count == worker.jobuser.finish_set.all.count %}Finished{% else %}Working{% endif %}</td>
+                            <td>{{ worker.status }}</td>
                             <td>${{ worker.jobuser.amount_received|floatformat:2 }}</td>
                         </tr>
+                        {% endif %}
                     {% endfor %}
                     </tbody>
                 </table>

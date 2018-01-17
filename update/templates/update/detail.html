@@ -10,7 +10,7 @@
 <input id="update_id" type="hidden" value="{{ update.id }}" />
 <div class="row">
     <div class="col-md-12">
-        <h4 id="title" >{{ update.title }}</h4>
+        <h4 id="title">{{ update.title }}</h4>
     </div>
 </div>
 <div class="row">
@@ -31,7 +31,7 @@
     {% if update.image_set.all.count > 0 %}
         <div id="images">
         {% for image in update.image_set.all %}
-            <img src="{{ image.image.url }}" class="img-responsive image">
+            <img src="{{ image.image.url }}" class="img-responsive image" />
         {% endfor %}
         </div>
     {% endif %}
@@ -42,6 +42,13 @@
         <div id="description_div">
             <span id="description">{{ update.description }}</span>
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <form action="{% url 'job:detail' update.jobuser.job.random_string %}">
+            <input type="submit" value="Back" />
+        </form>
     </div>
 </div>
 {% endblock %}

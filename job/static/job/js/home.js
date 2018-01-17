@@ -17,7 +17,6 @@ $('document').ready(function() {
     hideLocation();
     $('#hide-location').change(function() {
         hideLocation();
-        save_hide_location($(this).prop('checked'));
     });
     $('#basic_search').keydown(function(event) {
         if (event.which == ENTER) {
@@ -110,7 +109,7 @@ function save_search_type(isBasic) {
 function save_hide_location(isHidden) {
     $.ajax({
         type : 'POST',
-        url : '/job/save_search_type/',
+        url : '/job/save_hide_location/',
         data : {
             'isHidden' : isHidden,
             csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
@@ -327,10 +326,6 @@ function deleteMarkers() {
     clearMarkers();
     markers = [];
 }// end deleteMarkers()
-
-function replaceSameLocationMarkers() {
-    
-}// end replaceSameLocationMarkers()
 
 function turnMoneyToString(number) {
     parts = number.toString().split('.');

@@ -30,5 +30,7 @@ class NewJobForm(forms.ModelForm):
     def clean_protection(self):
         if (not self.cleaned_data.get('protection') == ""):
             raise forms.ValidationError('It seems you are a bot.');
-        return "";    
+        return "";
+        
+
     

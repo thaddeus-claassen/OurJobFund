@@ -1,6 +1,5 @@
 var canSubmitPledge = true;
 var canSubmitWork = true;
-
 var currSort = 'date-descending';
 
 $('document').ready(function() {
@@ -54,6 +53,7 @@ $('document').ready(function() {
             e.preventDefault();
         }// end if-else
     });
+    togglePledgeWrapper();
 });
 
 function changeTHeadTFootWidthToAccountForScrollBar() {
@@ -79,22 +79,6 @@ function sort(sort) {
         success: sortSuccess,
     });
 }// end sort()
-
-function correctFormat() {
-    var errorMessage = "";
-    var amount = parseFloat($('#pledge_amount').val());
-    var isFloat = !isNaN(amount);
-    if (isFloat) {
-        if (amount != amount.toFixed(2)) {
-            errorMessage = "Must have at most two decimal places";
-        }// end if
-    } else {
-        errorMessage = "Not a valid number";
-    }// end if-else
-    return errorMessage;
-}// end pledgeErrorMessage()
-
-
 
 
 

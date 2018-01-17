@@ -1,14 +1,15 @@
 from rest_framework import serializers;
 from .models import Job;
-from jobuser.models import JobUser, Pledge, Work, Pay;
+from jobuser.models import JobUser;
+from pledge.models import Pledge, Pay;
+from work.models import Work;
 import datetime;
 from django.db.models import Count, Q;
 from django.utils import timezone;
 
 class JobSerializer(serializers.ModelSerializer):
     expected_pay = serializers.SerializerMethodField();
-    expected_workers = serializers.SerializerMethodField();
-    
+    expected_workers = serializers.SerializerMethodField(); 
 
     class Meta:
         model = Job;

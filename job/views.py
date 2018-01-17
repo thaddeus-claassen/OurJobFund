@@ -7,7 +7,9 @@ from .models import Job, Tag, User, Image;
 from .serializers import JobSerializer;
 from notification.models import Notification;
 from django.db.models import Q, F;
-from jobuser.models import JobUser, Pledge, Pay, Work, Finish;
+from jobuser.models import JobUser;
+from pledge.models import Pledge, Pay;
+from work.models import Work;
 from update.models import Update;
 from update.views import create_update_by_finishing, create_update_by_paying, create_update_by_unfinishing;
 from django.http import HttpResponse, Http404;
@@ -17,7 +19,6 @@ from filter.forms import PledgeFilterForm, WorkerFilterForm;
 from .forms import NewJobForm;
 import json, re, math;
 from random import randint;
-from jobuser.forms import PledgeForm;
 from ourjobfund.settings import STRIPE_TEST_SECRET_KEY, STATIC_ROOT;
 import stripe;
 
@@ -167,7 +168,6 @@ def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_
     
 class DetailView(TemplateView):
     template_name = 'job/detail.html';
-    form = PledgeForm;
     
     def get(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
@@ -176,75 +176,19 @@ class DetailView(TemplateView):
                 Notification.objects.get(user=request.user, job=job).delete();
         return render(request, self.template_name, self.get_context_data(request, job=job))
     
-    @method_decorator(login_required)
-    def post(self, request, *args, **kwargs):
-        job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
-        jobuser = get_object_or_None(JobUser, job=job, user=request.user);
-        if (not jobuser):
-            jobuser = JobUser(user=request.user, job=job);
-            jobuser.save();
-        if ('pledge' in request.POST):
-            self.form = self.form(request.POST);
-            self.pledge(self.form, job, jobuser);
-            return render(request, self.template_name, self.get_context_data(request, job=job));
-        elif ('work' in request.POST):
-            self.work(job, jobuser);
-        elif ('finish' in request.POST):
-            self.finish(job, jobuser);
-        elif ('unfinish' in request.POST):
-            self.unfinish(job, jobuser);
-        return redirect(job);
-    
     def get_context_data(self, request, **kwargs):
         job = kwargs['job'];
         context = {                                                                     
             'job': job,
-            'pledges' : Pledge.objects.filter(jobuser__job=job),
-            'workers' : Work.objects.filter(Q(jobuser__job=job) & Q(date__exact=F('jobuser__oldest_work_date'))).order_by('-date'),
+            'jobusers' : JobUser.objects.filter(job=job),
             'updates' : Update.objects.filter(jobuser__job=job).order_by('-date'),
         }
         if (request.user.is_authenticated()):
             serializer = JobSerializer(Job.objects.filter(pk=job.pk), many=True, context={'user' : request.user});
             context['jobuser'] = get_object_or_None(JobUser, user=request.user, job=job);
-            context['user_has_stripe_account'] = (request.user.userprofile.stripe_account_id != None) and (request.user.userprofile.stripe_account_id != '');
-            context['pledge_form'] = self.form;
             context['expected_pay'] = serializer.data[0]['expected_pay'];
             context['expected_workers'] = serializer.data[0]['expected_workers'];
         return context;
-        
-    def pledge(self, form, job, jobuser):
-        if (form.is_valid()):
-            amount_pledged = form.cleaned_data['amount'];
-            pledge = Pledge(jobuser=jobuser, amount=amount_pledged);
-            pledge.save();
-            jobuser.amount_pledged = jobuser.amount_pledged + amount_pledged;
-            jobuser.save();
-            job.pledged = job.pledged + jobuser.amount_pledged;
-            job.save();
-            
-    def work(self, job, jobuser):
-        work = Work(jobuser=jobuser);
-        work.save();
-        jobuser.oldest_work_date = work.date;
-        jobuser.save();
-        job.workers = job.workers + 1;
-        job.save();
-            
-    def finish(self, job, jobuser):
-        finish = Finish(jobuser=jobuser);
-        finish.save();
-        job.finished = job.finished + 1;
-        job.save();
-        jobuser.newest_finish_date = finish.date;
-        jobuser.save();
-        create_update_by_finishing(finish);
-        
-    def unfinish(self, job, jobuser):
-        unfinish = Work(jobuser=jobuser);
-        unfinish.save();
-        job.finished = job.finished - 1;
-        job.save();
-        create_update_by_unfinishing(unfinish);
 
 @login_required
 def detail_sort(request, job_random_string):
@@ -314,7 +258,7 @@ def createRandomString():
     random_string = '';
     available_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
     for i in range(50):
-        index = randint(0, 61);
+        index = randint(0, len(available_chars)-1);
         random_char = available_chars[index];
         random_string = random_string + random_char;
     if (Job.objects.filter(random_string=random_string).exists()):

@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'job',
     'user',
     'jobuser',
+    'pledge',
+    'work',
     'update',
     'filter',
     'notification',

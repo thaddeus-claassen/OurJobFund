@@ -14,20 +14,38 @@
             <h4 id="update_for">Update for {{ jobuser.job.name }}</h4>
         </div>
     </div>
-{% for field in form %}
     <div class="row info_row">
         <div class="col-md-2">
-            {{ field.label }}
+            {{ form.type.label }}
         </div>
         <div class="col-md-10">
-            {{ field }}
+            {{ form.type }}
         </div>
     </div>
-{% endfor %}   
-    <div class="row info_row">
-        <div class="col-md-10 col-md-offset-2">
-            <input type="submit" value="Submit" />
+{% for field in form %}
+    {% if field.auto_id != "id_type" %}
+    <div id="{{ field.auto_id }}-wrapper">
+        <div class="row info_row">
+            <div class="col-md-2">
+                {{ field.label }}
+            </div>
+            <div class="col-md-10">
+                {{ field }}
+            </div>
         </div>
     </div>
+    {% endif %}
+{% endfor %}
 </form>
+<div class="row info_row">
+    <div class="col-md-2">
+        <form action="{% url 'job:detail' jobuser.job.random_string %}">
+            <input type="submit" value="Back" />
+        </form>
+    </div>
+    <div class="col-md-2 col-md-offset-2">
+        <input form="post_update_form" type="submit" value="Submit" />
+    </div>
+
+</div>
 {% endblock %}
