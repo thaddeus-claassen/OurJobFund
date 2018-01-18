@@ -21,13 +21,7 @@ class CreateView(TemplateView):
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         job = get_object_or_None(Job, random_string=kwargs['job_random_string']);
-        jobuser = get_object_or_None(JobUser, user=request.user, job=job);
-        if (jobuser):
-            jobuser.amount_pledged = jobuser.amount_pledged + amount;
-        else:
-            jobuser = JobUser(user=user, job=job, amount_pledged=amount);
-        jobuser.save();
-        return render(request, self.template_name, self.get_context_data(jobuser=jobuser, form=self.form));
+        return render(request, self.template_name, self.get_context_data(job=job, form=self.form));
     
     @method_decorator(login_required)    
     def post(self, request, *args, **kwargs):
@@ -69,7 +63,7 @@ class CreateView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = {
-            'jobuser' : kwargs['jobuser'],
+            'job' : kwargs['job'],
             'form' : kwargs['form'],
         }
         return context;
