@@ -26,9 +26,12 @@ class CreateView(TemplateView):
     @method_decorator(login_required)    
     def post(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
-        jobuser = get_object_or_404(JobUser, user=request.user, job=job);
         form = self.form(request.POST);
         if (form.is_valid()):
+            jobuser = get_object_or_None(JobUser, user=request.user, job=job);
+            if (jobuser is None):
+                jobuser = JobUser(user=request.user, job=job);
+                jobuser.save();
             description = form.cleaned_data['description'];
             title = form.cleaned_data['title'];
             type = form.cleaned_data['type'];
@@ -42,6 +45,8 @@ class CreateView(TemplateView):
                 job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
                 pledge = Pledge(jobuser=jobuser, amount=amount, comment=description, random_string=createRandomString());
                 pledge.save();
+                jobuser.amount_pledged = jobuser.amount_pledged + amount;
+                jobuser.save();
                 job.pledged = job.pledged + amount;
                 job.save();
                 title = "Pledged $" + str(amount);
