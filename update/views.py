@@ -21,7 +21,7 @@ class CreateView(TemplateView):
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         job = get_object_or_None(Job, random_string=kwargs['job_random_string']);
-        jobuser = get_object_or_None(JobUser, user=user, job=job);
+        jobuser = get_object_or_None(JobUser, user=request.user, job=job);
         if (jobuser):
             jobuser.amount_pledged = jobuser.amount_pledged + amount;
         else:
