@@ -32,6 +32,12 @@ class CreateView(TemplateView):
             description = form.cleaned_data['description'];
             title = form.cleaned_data['title'];
             type = form.cleaned_data['type'];
+            jobuser = get_object_or_None(JobUser, user=user, job=job);
+            if (jobuser):
+                jobuser.amount_pledged = jobuser.amount_pledged + amount;
+            else:
+                jobuser = JobUser(user=user, job=job, amount_pledged=amount);
+            jobuser.save();
             if (type == 'Comment'):
                 for image in request.FILES.getlist('images'):
                     image = Image(image=image, update=update);
@@ -40,12 +46,6 @@ class CreateView(TemplateView):
                 amount = form.cleaned_data['amount'];
                 user = request.user;
                 job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
-                jobuser = get_object_or_None(JobUser, user=user, job=job);
-                if (jobuser):
-                    jobuser.amount_pledged = jobuser.amount_pledged + amount;
-                else:
-                    jobuser = JobUser(user=user, job=job, amount_pledged=amount);
-                jobuser.save();
                 pledge = Pledge(jobuser=jobuser, amount=amount, comment=description, random_string=createRandomString());
                 pledge.save();
                 job.pledged = job.pledged + amount;
