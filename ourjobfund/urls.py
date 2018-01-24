@@ -19,7 +19,7 @@ from django.conf import settings;
 from django.views.generic import TemplateView;
 from django.conf.urls.static import static;
 from django.contrib.auth import views as auth_views;
-from user.views import search_users;
+from user.views import SearchUsersView, see_more_users;
 from . import views;
 
 app_name = 'ourjobfund';
@@ -31,13 +31,15 @@ urlpatterns = [
     url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         auth_views.password_reset_confirm, name='password_reset_confirm'),
     url(r'^reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
-    url(r'search_users$', search_users),
+    url(r'search_users$', SearchUsersView.as_view()),
+    url(r'^see_more_users$', see_more_users),
     url(r'^admin/', admin.site.urls),
     url(r'^user/', include('user.urls')),
     url(r'^job/', include('job.urls')),
     url(r'^update/', include('update.urls')),
     url(r'^about/', include('about.urls')),
     url(r'^contact/', include('contact.urls')),
+    url(r'^pledge/', include('pledge.urls')),
     url(r'^terms_of_service', include('terms_of_service.urls')),
     url(r'^$', include('job.urls')),
 ]

@@ -15,15 +15,15 @@
 </div>
 <div class="row">
     <div class="col-md-6">
-        For: <a href="{% url 'job:detail' update.jobuser.job.random_string %}">{{ update.jobuser.job.name }}</a>
+        Job: <a href="{% url 'job:detail' update.jobuser.job.random_string %}">{{ update.jobuser.job.name }}</a>
     </div>
     <div class="col-md-6">
-        <span id="date">Updated: {{ update.date }}</span>
+        <span id="date">{{ update.date }}</span>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-        By: <a href="{% url 'user:detail' update.jobuser.user.username %}">{{ update.jobuser.user.username }}</a>
+        Creator: <a href="{% url 'user:detail' update.jobuser.user.username %}">{{ update.jobuser.user.username }}</a>
     </div>
 </div>
 <div class="row">
@@ -47,7 +47,7 @@
 <div class="row">
     <div class="col-md-2">
         <form action="{% url 'job:detail' update.jobuser.job.random_string %}">
-            <input type="submit" value="Back" />
+            <input type="submit" value="Back to Job" />
         </form>
     </div>
 </div>

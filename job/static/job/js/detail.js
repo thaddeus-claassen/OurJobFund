@@ -53,7 +53,6 @@ $('document').ready(function() {
             e.preventDefault();
         }// end if-else
     });
-    togglePledgeWrapper();
 });
 
 function changeTHeadTFootWidthToAccountForScrollBar() {

@@ -66,25 +66,35 @@ def sign_out(request):
     logout(request);
     return redirect('user:login');
 
-@login_required    
-def search_users(request):
-    search = request.GET['search-users'];
-    context = {
-        'users' : getUsersFromQuery(search, 0),
-        'search' : search,
-        'total' : getTotalNumberOfUsersFromQuery(search),
-    };
-    return render(request, 'user/search.html', context);
-        
-def getUsersFromQuery(search, num_searches):
-    users = User.objects.all();
-    for word in search.split():
-        users = users.filter(Q(username__icontains=word) | Q(first_name__istartswith=word) | Q(last_name__istartswith=word));
-    start = (50 * num_searches);
-    end = start + 50;
-    users = users[start:end];
-    return users;
+class SearchUsersView(TemplateView):
+    template_name = 'user/search.html';
     
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        search = request.GET['search-users'];
+        context = {
+            'users' : self.getUsersFromQuery(search, 0),
+            'search' : search,
+            'total' : self.getTotalNumberOfUsersFromQuery(search),
+        };
+        return render(request, 'user/search.html', context);
+    
+    def getUsersFromQuery(self, search, num_searches):
+        users = User.objects.all();
+        for word in search.split():
+            users = users.filter(Q(username__icontains=word) | Q(first_name__istartswith=word) | Q(last_name__istartswith=word));
+            start = (50 * num_searches);
+            end = start + 50;
+        users = users[start:end];
+        return users;
+        
+    def getTotalNumberOfUsersFromQuery(self, search):
+        users = User.objects.all();
+        for word in search.split():
+            users = users.filter(Q(username__icontains=word) | Q(first_name__istartswith=word) | Q(last_name__istartswith=word));
+        return users.count();
+
+@login_required
 def see_more_users(request):
     if (request.is_ajax()):
         search = request.GET['search'];
@@ -94,13 +104,7 @@ def see_more_users(request):
         return HttpResponse(users, content_type="application/json");
     else:
         return Http404();
-    
-def getTotalNumberOfUsersFromQuery(search):
-    users = User.objects.all();
-    for word in search.split():
-        users = users.filter(Q(first_name__startswith=word) | Q(last_name__startswith=word));
-    return users.count();
- 
+
 class DetailView(TemplateView):
     template_name = 'user/detail.html';
     nameForm = ChangeNameForm;
@@ -151,29 +155,6 @@ class DetailView(TemplateView):
             request.user.userprofile.save();
         return render(request, self.template_name, self.get_context_data({'username' : kwargs['username']}));
         
-    def pay(self, request, job, jobuser):
-        receiver_username = request.POST['pay_to'];
-        stripe.api_key = STRIPE_TEST_SECRET_KEY;
-        token = request.POST['stripeToken'];
-        amount_paying_in_cents = int(request.POST['pay_amount']);
-        charge = stripe.Charge.create(
-            amount = amount_paying_in_cents,
-            currency = "usd",
-            description = "Does this charge work?",
-            source = token,
-        );
-        amount_paying_in_dollars = float(amount_paying_in_cents) / 100;
-        payment = Pay(jobuser=jobuser, receiver=jobuser.user, amount=amount_paying_in_dollars);
-        payment.save();
-        jobuser.amount_paid = jobuser.amount_paid + amount_paying_in_dollars;
-        jobuser.save();
-        receiver_jobuser = JobUser.objects.get(user=User.objects.get(username=receiver_username), job=job);
-        receiver_jobuser.amount_received = receiver_jobuser.amount_received + amount_paying_in_dollars;
-        receiver_jobuser.save();
-        job.paid = job.paid + amount_paying_in_dollars;
-        job.save();
-        create_update_by_paying(payment);
-        
     def get_context_data(self, *args, **kwargs):
         user = get_object_or_None(User, username=self.kwargs['username']);
         context = {
@@ -212,15 +193,6 @@ def save_input(request, username):
         return HttpResponse();
     else:
         return Http404();
-        
-        
-@login_required
-def payment_confirmation(request, job_random_string):
-    job = get_object_or_404(Job, random_string = job_random_string);
-    context = {
-        'job' : job,
-    }
-    return render(request, 'job/confirmation.html', context);
         
 class AccountView(TemplateView):
     template_name = 'user/account.html';

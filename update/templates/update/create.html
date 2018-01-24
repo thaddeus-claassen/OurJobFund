@@ -4,6 +4,7 @@
 {% block import %}
     <script type="text/javascript" src="{% static 'update/js/create.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'update/css/create.css' %}" />
+    <script src="https://checkout.stripe.com/checkout.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -11,7 +12,7 @@
 {% csrf_token %}
     <div class="row info_row">
         <div class="col-md-12">
-            <h4 id="update_for">Update for {{ job.name }}</h4>
+            <h4 id="update_for">Update for <a href="{% url 'job:detail' job.random_string %}">{{ job.name }}</a></h4>
         </div>
     </div>
     <div class="row info_row">
@@ -36,16 +37,12 @@
     </div>
     {% endif %}
 {% endfor %}
+    <div class="row info_row">
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+            <input type="submit" value="Submit" />
+        </div>
+    </div>
+    <input id="stripe_token" type="hidden" name="stripeToken" />
 </form>
-<div class="row info_row">
-    <div class="col-md-2"></div>
-    <div class="col-md-2">
-        <form action="{% url 'job:detail' job.random_string %}">
-            <input type="submit" value="Back" />
-        </form>
-    </div>
-    <div class="col-md-2">
-        <input form="post_update_form" type="submit" value="Submit" />
-    </div>
-</div>
 {% endblock %}

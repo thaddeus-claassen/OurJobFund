@@ -4,7 +4,6 @@
 {% block import %}
     <script type="text/javascript" src="{% static 'user/js/detail.js' %}" ></script>
     <link rel="stylesheet" type="text/css" href="{% static 'user/css/detail.css' %}" />
-    <script src="https://checkout.stripe.com/checkout.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -98,30 +97,6 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <span id="pay_amount_span">$<input id="pay_amount" type="text" placeholder="0" size="5" name="pay_amount" /></span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <span id="pay_cancel">
-                                <input id="pay_button" type="button" value="Pay" />
-                                <input id="cancel_pay" type="button" value="Cancel" />
-                            </span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <span id="pay_for_error"></span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <span id="pay_amount_error"></span>
-                        </div>
-                    </div>
-                    <input id="stripe_token" type="hidden" name="stripeToken" />
                 </form>
             </div>
             {% endif %}

@@ -235,15 +235,17 @@ function addJobsToTable(json) {
     var numJobs = Object.keys(json).length;
     if (numJobs > 0) {
         for (var index = 0; index < json.length; index++) {
+            
             var job = json[index];
             var string = "<tr>"
-            string = string + "<td class='name'><a href='" + job["random_string"] + "'>" + job["name"] + "</a></td>";
+            string = string + "<td class='name'><a id='" + job["random_string"] + "' href='" + job["random_string"] + "'></a></td>";
             string = string + "<td class='date'>" + job['creation_date'] + "</td>";
             string = string + "<td class='pledged-paid'><sup>$" + turnMoneyToString(job['expected_pay']) + "</sup>&frasl;";
             string = string + "<sub>$" + turnMoneyToString(job['paid']) + "</sub></td>";
             string = string + "<td class='workers-finished'><sup>" + job['expected_workers'] + "</sup>&frasl;<sub>" + job['finished'] + "</sub></td>"
             string = string + "</tr>";
             $('#main_table_body').append(string);
+            $('#' + job["random_string"]).text(job["name"]);
             if ($('#location').val() != "") {
                 addMarker(new google.maps.LatLng(job['latitude'], job['longitude']), job["random_string"]);    
             }// end if

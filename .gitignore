@@ -60,6 +60,8 @@ job/migrations/*
 jobuser/migrations/*
 update/migrations/*
 user/migrations/*
+pledge/migrations/*
+work/migrations/*
 
 # ./__pycache__ stuff
 about/__pycache__/*
@@ -72,6 +74,8 @@ ourjobfund/__pycache__/*
 terms_of_service/__pycache__/*
 update/__pycache__/*
 user/__pycache__/*
+pledge/__pycache__/*
+work/__pycache__/*
 sendgrid.env
 
 # static stuff
