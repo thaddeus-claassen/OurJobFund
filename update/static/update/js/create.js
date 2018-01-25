@@ -16,7 +16,6 @@ $(document).ready(function() {
             }// end if-else
         } else {
             $('#id_amount').after(format);
-            }// end if-else  
         }// end if-else
     });
 });
