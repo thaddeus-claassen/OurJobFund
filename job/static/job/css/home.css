@@ -25,6 +25,7 @@ input[type=text] {
     border: 1px solid black;
     overflow-y: auto;
     overflow-x: hidden;
+    padding: 5px;
 }
 
 .filter_label {

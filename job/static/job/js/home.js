@@ -299,7 +299,7 @@ function addBounds() {
         bounds.extend(markers[i].position);
         map.fitBounds(bounds);
     }// end for
-    if (map.zoom > 17) mapsetZoom(17);
+    if (map.zoom > 15) map.setZoom(15)
 }// end addBounds()
 
 function addMarker(location, url) {

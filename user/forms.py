@@ -106,15 +106,15 @@ class ChangeNameForm(forms.ModelForm):
         first_name = self.cleaned_data.get('first_name');
         if (len(first_name) > 30):
             raise forms.ValidationError('Your first name must not exceed 30 characters.');
-        if (not re.match(r'^[A-Za-z-]{1,30}$', first_name)):
-            raise forms.ValidationError('Your first name may only include alphabetic characters or "-".');
+        if (not re.match(r'^[A-Za-z-\']{1,30}$', first_name)):
+            raise forms.ValidationError('Your first name may only include alphabetic characters, "-", or "\'".');
         return first_name;
 
     def clean_last_name(self):
         last_name = self.cleaned_data.get('last_name');
         if (len(last_name) > 30):
             raise forms.ValidationError('Your last name must not exceed 30 characters.');
-        if (not re.match(r'^[A-Za-z]{1,30}$', last_name)):
+        if (not re.match(r'^[A-Za-z\']{1,30}$', last_name)):
             raise forms.ValidationError('Your first name may only include alphabetic characters or "-".');
         return last_name;
    
@@ -124,7 +124,7 @@ class ChangeNameForm(forms.ModelForm):
         return "";
         
 class DescriptionForm(forms.ModelForm):
-    description = forms.CharField(widget=forms.Textarea);
+    description = forms.CharField(widget=forms.Textarea, required=False);
     protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
 
     class Meta:

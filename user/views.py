@@ -127,7 +127,7 @@ class DetailView(TemplateView):
     
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        if ('first_name' in request.POST):
+        if ('info' in request.POST):
             self.nameForm = self.nameForm(request.POST);
             self.profileForm = self.profileForm(request.POST);
             if (self.nameForm.is_valid() and self.profileForm.is_valid()):

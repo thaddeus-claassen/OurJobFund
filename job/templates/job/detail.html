@@ -251,7 +251,7 @@
                             <td>
                                 {% if jobuser.user.is_active %}
                                 {% if request.user.is_authenticated %}
-                                <a href="{% url 'user:detail' worker.jobuser.user.username %}">
+                                <a href="{% url 'user:detail' jobuser.user.username %}">
                                     {{ jobuser.user.username }}
                                 </a>
                                 {% else %}

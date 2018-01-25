@@ -16,14 +16,26 @@
 <div class="row">
     <div class="col-md-3">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <h4>Info</h4>
+            </div>
+            <div class="col-md-6">
+                {% if request.user.username == detail_user.username %}
+                <input type="submit" value="Save" form="info_form" name="info" />
+                {% endif %}
             </div>
         </div>
         <div id="info-wrapper">
-            <form id="info_form" action="{{ request.get_full_path }}" method="POST" name="info_form">
+            <form id="info_form" action="{{ request.get_full_path }}" method="POST">
             {% csrf_token %}
             {% for name in name_form %}
+                {% if info.errors %}
+                <div class="row info_row">
+                    <div class="col-md-12">
+                        <span>{{ name.errors }}</span>
+                    </div>
+                </div>
+                {% endif %}
                 <div class="row info_row">
                     <div class="col-md-12">
                         <span class="info_title">{{ name.label }}</span>
@@ -32,6 +44,13 @@
                 </div>
             {% endfor %}
             {% for info in profile_form %}
+                {% if info.errors %}
+                <div class="row info_row">
+                    <div class="col-md-12">
+                        <span>{{ info.errors }}</span>
+                    </div>
+                </div>
+                {% endif %}
                 <div class="row info_row">
                     <div class="col-md-12">
                         <span class="info_title">{{ info.label }}</span>
@@ -77,9 +96,9 @@
                     </div>
                 </div>
             </div>
-            <div id="pay_clicked">
-                <form id="pay_form" action="{{ request.get_full_path }}" method="POST">
+            <form id="pay_form" action="{{ request.get_full_path }}" method="POST">
                 {% csrf_token %}
+                <div id="pay_clicked">
                     <div class="row">
                         <div class="col-md-12">
                             <select id="pay_for" name="pay_for">
@@ -97,26 +116,42 @@
                             </select>
                         </div>
                     </div>
-                </form>
-            </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input id="pay_button" type="button" value="Pay" />
+                            <input id="pay_amount" type="text" placeholder="$0.00" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <span id="amount_error"></span>
+                        </div>
+                    </div>
+                </div>
+            </form>
             {% endif %}
         </div>
     </div>
     <div class="col-md-9">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <h4>Description</h4>
+            </div>
+            <div class="col-md-6">
+                {% if request.user.username == detail_user.username %}
+                <input type="submit" value="Save" form="description_form" name="description" />
+                {% endif %}
             </div>
         </div>
         {{ description_form.description.errors }}
-        <div class="row">
-            <div class="col-md-12">
-                <form id="description_form" action="{{ request.get_full_path }}" method="POST" name="description_form">
-                {% csrf_token %}
+        <form id="description_form" action="{{ request.get_full_path }}" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12">
                     {{ description_form.description }}
-                </form>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 <div class="row">

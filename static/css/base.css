@@ -7,13 +7,17 @@ html, .container, .container-fluid {
     width: 100%;
 }
 
-ul {
-    list-style: none;
-}
-
 body {
     min-height: 100%;
     padding-bottom: 50px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.errorlist {
+    color: red;
 }
 
 option:hover {
@@ -35,6 +39,10 @@ option:hover {
 
 .footer-div {
     height: 100%;
+}
+
+.info_col {
+    display: table;
 }
 
 .info_link {

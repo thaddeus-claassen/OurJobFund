@@ -22,13 +22,12 @@ class CreateView(TemplateView):
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         job = get_object_or_None(Job, random_string=kwargs['job_random_string']);
-        return render(request, self.template_name, self.get_context_data(job=job, form=self.form(user=request.user, job=job)));
+        return render(request, self.template_name, self.get_context_data(job=job, form=self.form));
     
     @method_decorator(login_required)    
     def post(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
         form = self.form(request.POST);
-        print(form)
         if (form.is_valid()):
             jobuser = get_object_or_None(JobUser, user=request.user, job=job);
             if (jobuser is None):
@@ -55,12 +54,7 @@ class CreateView(TemplateView):
             elif (type == 'Working' or type == 'Finished'):
                 work = Work(jobuser=jobuser, status=type, comment=description);
                 work.save();
-                if (type == 'Working'):
-                    job.workers = job.workers + 1;
-                    title = "Started Working";
-                else:
-                    job.finished = job.finished + 1;
-                    title = "Finished Working";
+                jobuser.work_status = type;
             elif (type == 'Pay'):
                 self.pay(request, job, jobuser);
             update = Update(jobuser=jobuser, title=title, description=description, random_string=createRandomString());
