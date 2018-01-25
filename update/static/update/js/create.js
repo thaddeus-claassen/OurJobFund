@@ -55,14 +55,6 @@ function toggleType() {
         $('#id_pay_to-wrapper').css('display', 'none');
         $('#id_pay_to').val('@@@');
         $('#id_images-wrapper').css('display', 'none');
-    } else if (type === 'Pay') {
-        $('#id_title-wrapper').css('display', 'none');
-        $('#id_title').val(type);
-        $('#id_amount-wrapper').css('display', 'inline');
-        $('#id_amount').val('');
-        $('#id_pay_to-wrapper').css('display', 'inline');
-        $('#id_pay_to').val('');
-        $('#id_images-wrapper').css('display', 'none');
     }// end if
 }// end toggleType()
 

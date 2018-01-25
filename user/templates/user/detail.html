@@ -80,14 +80,6 @@
                     </form>
                 </div>
             </div>
-            {% elif request.user.username != detail_user.username and detail_user.userprofile.stripe_account_id == "" %}
-            <div class="row">
-                <div class="col-md-12">
-                    <span id="must-connect-to-stripe">
-                        Unable to receive credit card payments.
-                    </span>
-                </div>
-            </div>
             {% else %}
             <div id="pay_unclicked">
                 <div class="row">
