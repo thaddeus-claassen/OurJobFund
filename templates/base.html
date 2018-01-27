@@ -30,7 +30,7 @@
                     <ul class="nav navbar-nav navbar-left">
                         <li class="navbar_button"><a href="{% url 'job:home' %}">Jobs</a></li>
                     </ul>
-                    {% if user.is_authenticated %}
+                    {% if request.user.is_authenticated %}
                     <ul class="nav navbar-nav navbar-left">
                         <li>
                             <a>
