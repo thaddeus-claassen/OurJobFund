@@ -155,6 +155,28 @@ class DetailView(TemplateView):
             request.user.userprofile.save();
         return render(request, self.template_name, self.get_context_data({'username' : kwargs['username']}));
         
+    def pay(self, request, job, jobuser):
+        receiver_pk = request.POST['pay_to'];
+        stripe.api_key = STRIPE_TEST_SECRET_KEY;
+        token = request.POST['stripeToken'];
+        amount_paying_in_cents = int(request.POST['pay_amount']);
+        charge = stripe.Charge.create(
+            amount = amount_paying_in_cents,
+            currency = "usd",
+            description = "Does this charge work?",
+            source = token,
+        );
+        amount_paying_in_dollars = float(amount_paying_in_cents) / 100;
+        payment = Pay(jobuser=jobuser, receiver=jobuser.user, amount=amount_paying_in_dollars);
+        payment.save();
+        jobuser.amount_paid = jobuser.amount_paid + amount_paying_in_dollars;
+        jobuser.save();
+        receiver_jobuser = JobUser.objects.get(user=User.objects.get(id=receiver_pk), job=job);
+        receiver_jobuser.amount_received = receiver_jobuser.amount_received + amount_paying_in_dollars;
+        receiver_jobuser.save();
+        job.paid = job.paid + amount_paying_in_dollars;
+        job.save();
+        
     def get_context_data(self, *args, **kwargs):
         user = get_object_or_None(User, username=self.kwargs['username']);
         context = {
@@ -166,33 +188,6 @@ class DetailView(TemplateView):
             'finished_jobusers' : user.jobuser_set.filter(Q(job__pledged__gt=0) & Q(job__pledged__lte=F('job__paid'))),
         }
         return context;
-
-@login_required        
-def save_input(request, username):
-    if (request.user.username == username and request.is_ajax() and request.method == "POST"):
-        id = request.POST['id'];
-        value = request.POST['value'];
-        if (id == 'id_first_name'):
-            request.user.first_name = value;
-        elif (id == 'id_last_name'):
-            request.user.last_name = value;
-        elif (id == 'id_city'):
-            request.user.userprofile.city = value;
-        elif (id == 'id_state'):
-            request.user.userprofile.state = value;
-        elif (id == 'id_education'):
-            request.user.userprofile.education = value;                
-        elif (id == 'id_occupation'):
-            request.user.userprofile.occupation = value;
-        elif (id == 'id_contact'):
-           request.user.userprofile.contact = value;                
-        elif (id == 'id_description'):
-            request.user.userprofile.description = value;
-        request.user.save();
-        request.user.userprofile.save();
-        return HttpResponse();
-    else:
-        return Http404();
         
 class AccountView(TemplateView):
     template_name = 'user/account.html';
@@ -204,33 +199,29 @@ class AccountView(TemplateView):
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         if ((datetime.now() - request.user.userprofile.last_time_username_was_changed.replace(tzinfo=None)).days >= 180):
-            self.usernameForm = self.usernameForm(initial = {'username' : request.user.username});
+            self.usernameForm = self.usernameForm(initial={'username' : request.user.username});
         self.emailForm = self.emailForm(initial={'email' : request.user.email});
-        self.passwordForm = self.passwordForm(user = request.user);
-        self.deactivateForm = self.deactivateForm(initial = {'is_active' : True});
+        self.passwordForm = self.passwordForm;
+        self.deactivateForm = self.deactivateForm(initial={'is_active' : True});
         return render(request, self.template_name, self.get_context_data(request));
     
     @method_decorator(login_required)    
     def post(self, request, *args, **kwargs):
         if ('change-name' in request.POST):
             self.usernameForm = self.changeUsername(self.usernameForm(request.POST));
-            return redirect(request.user);
         elif ('change-email' in request.POST):
             self.emailForm = self.changeEmail(self.emailForm(request.POST));
-            return redirect(request.user);
         elif ('change-password' in request.POST):
             self.passwordForm = self.changePassword(self.passwordForm(request.POST, user=request.user));
-            return redirect(request.user);
         elif ('deactivate-account' in request.POST):
             self.deactivateForm = self.deactivateAccount(self.deactivateForm(request.POST));
-            return redirect('sign_out');
         return render(request, self.template_name, self.get_context_data(request));
         
     def get_context_data(self, request):
         context = {
             'change_username_form' : self.usernameForm,
             'change_email_form' : self.emailForm,
-            'password_form' : self.passwordForm,
+            'change_password_form' : self.passwordForm,
             'deactivate_form' : self.deactivateForm,
         }
         return context;
@@ -241,24 +232,28 @@ class AccountView(TemplateView):
             self.request.user.save();
             self.request.user.userprofile.last_time_name_was_changed = datetime.now();
             self.request.user.userprofile.save();
+            return redirect('user:account');
         return form;
         
     def changeEmail(self, form):
         if (form.is_valid()):
             self.request.user.email = form.cleaned_data['email'];
             self.request.user.save();
+            return redirect('user:account');
         return form;
         
     def changePassword(self, form):
         if (form.is_valid()):
             self.request.user.set_password(form.cleaned_data['new_password']);
             self.request.user.save();
+            return redirect('user:account');
         return form;
         
     def deactivateAccount(self, form):
         if (form.is_valid()):
             self.request.user.is_active = False;
-            sign_out(self.request)
+            self.request.user.save();
+            return redirect('user:sign_out');
         return form;
     
     

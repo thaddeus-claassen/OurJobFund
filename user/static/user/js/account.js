@@ -1,66 +1,42 @@
 $('document').ready(function() {
-    $('#username').click(function() {
-        changeUsername();
+    disableInputs();
+    $('.edit').click(function() {
+        var action = $(this).attr('id').split('_')[0];
+        if (action !== 'save') {
+            $(this).css('display', 'none');
+            var info = $(this).attr('id').split('_')[1];
+            if (action === 'change') {
+                if (info === 'password') {
+                    $('input[type=password]').removeAttr('disabled');
+                } else {
+                    $('#id_' + info).removeAttr('disabled');
+                }// end if-else
+                $('#save_' + info).css('display', 'inline');
+                $('#cancel_' + info).css('display', 'inline');
+            } else if (action === 'cancel') {
+                if (info === 'password') {
+                    $('input[type=password]').prop('disabled', true);
+                } else {
+                    $('#id_' + info).prop('disabled', true);
+                }// end if-else
+                $('#save_' + info).css('display', 'none');
+            }// end if
+        }// end if
     });
-    $('#cancel-username').click(function() {
-        cancelUsername();
+    $('#deactivate-account').click(function() {
+        $(this).css('display', 'none');
+        $('.deactivate').css('display', 'inline');        
     });
-    $('#email').click(function() {
-        changeEmail();
-    });
-    $('#cancel-email').click(function() {
-        cancelEmail();
-    });
-    $('#password').click(function() {
-        changePassword();
-    });
-    $('#cancel-password').click(function() {
-        cancelPassword();
-    });
-    $('#delete-account').click(function() {
-        deleteAccount();
-    });
-    $('#cancel-delete-account').click(function() {
-        cancelDeleteAccount();
+    $('#cancel-deactivate-account').click(function() {
+        $('#deactivate-account').css('display', 'inline');
+        $('.deactivate').css('display', 'none');
     });
 });
 
-function changeUsername() {
-    $('#current-username').css('display', 'none');
-    $('#change-username').css('display', 'block');
-}// end changeName()
+function disableInputs() {
+    $('#id_username').prop('disabled', true);
+    $('#id_email').prop('disabled', true);
+    $('input[type=password]').prop('disabled', true);
+}// end disableInputs()
 
-function cancelUsername() {
-    $('#current-username').css('display', 'block');
-    $('#change-username').css('display', 'none');
-}// end cancelName()
 
-function changeEmail() {
-    $('#current-email').css('display', 'none');
-    $('#change-email').css('display', 'block');
-}// end changeEmail()
-
-function cancelEmail() {
-    $('#current-email').css('display', 'block');
-    $('#change-email').css('display', 'none');
-}// end cancelEmail()
-
-function changePassword() {
-    $('#current-password').css('display', 'none');
-    $('#change-password').css('display', 'block');
-}// end changePassword()
-
-function cancelPassword() {
-    $('#current-password').css('display', 'block');
-    $('#change-password').css('display', 'none');
-}// end cancelPassword()
-
-function deleteAccount() {
-    $('#delete-account').css('display', 'none');
-    $('#delete-account-clicked').css('display', 'block');
-}// end deleteAccount()
-
-function cancelDeleteAccount() {
-    $('#delete-account').css('display', 'block');
-    $('#delete-account-clicked').css('display', 'none');
-}// end cancelDeleteAccount()

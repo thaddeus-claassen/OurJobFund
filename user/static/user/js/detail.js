@@ -14,7 +14,6 @@ $('document').ready(function() {
             $('#amount_error').text(result);
         }// end if-else
     });
-
     $('#pay_money').click(function() {
         $('#pay_unclicked').css('display', 'none');
         $('#pay_clicked').css('display', 'inline');

@@ -1,10 +1,13 @@
-#change-name, #change-email, #change-password, #delete-account-clicked {
-    margin-top: 20px;
-    margin-bottom: 20px;
+#id_username, #id_email, input[type=password] {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#save_username, #save_email, #save_password, input[value=Cancel], .deactivate {
     display: none;
 }
 
-button {
+.class {
     float: right;
 }
 

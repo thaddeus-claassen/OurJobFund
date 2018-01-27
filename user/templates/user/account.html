@@ -7,157 +7,100 @@
 {% endblock %}
 
 {% block content %}
-<div id="name-wrapper">
-    <div id="current-name" class="row">
-        <div class="col-md-4">
-            Username:
-        </div>
-        <div class="col-md-4">
-            {{ user.username }}
-        </div>
-        <div class="col-md-4">
-             {% if change_name_form %} 
-             <button id="name" type="button">Edit</button>
-             {% endif %}
-        </div>
-    </div>
-    <div id="change-name">
-        {% if change_name_form %}
-        <form id="change-name-form" action="{{ request.get_full_path }}" method="POST">
-        {% csrf_token %}
-        {% for field in change_name_form %}
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <form id="username_form" action="{{ request.get_full_path }}" method="POST">
+            {% csrf_token %}
             <div class="row">
-                <div class="col-md-2 col-md-offset-2">
+                <div class="col-md-4">
+                    {{ change_username_form.username.label }}
+                </div>
+                <div class="col-md-4">
+                    {{ change_username_form.username }}
+                </div>
+                <div class="col-md-4">
+                    {% if change_name_form %} 
+                    <input id="change_username" class="edit" type="button" value="Change Username" />
+                    <input id="save_username" class="edit" type="submit" value="Save Username" name="change-username" />
+                    <input id="cancel_username" class="edit" type="cancel" value="Cancel" />
+                    {% endif %}
+                </div>
+            </div>
+            {% if change_username_form.errors %}
+            <div class="row">
+                <div class="col-md-12">
+                    {{ change_username_form.errors }}
+                </div>
+            </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12">
+                    <span>Note: Your username cannot be changed more than once every 180 days.</span>
+                </div>
+            </div>
+        </form>
+        <form id="change_email_form" action="{{ request.get_full_path }}" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-4">
+                    {{ change_email_form.email.label }}
+                </div>
+                <div class="col-md-4">
+                    {{ change_email_form.email }}
+                </div>
+                <div class="col-md-4">
+                    <input id="change_email" class="edit" type="button" value="Change Email" />
+                    <input id="save_email" class="edit" type="submit" value="Save Email" name="change-email" />
+                    <input id="cancel_email" class="edit" type="button" value="Cancel" />
+                </div>
+            </div>
+        </form>
+        <form id="password_form" action="{{ request.get_full_path }}" method="POST">
+        {% csrf_token %}
+        {% for field in change_password_form %}
+            <div class="row">
+                <div class="col-md-4">
                     {{ field.label }}
                 </div>
                 <div class="col-md-4">
                     {{ field }}
                 </div>
+                {% if field.auto_id == 'id_password' %}
                 <div class="col-md-4">
+                    <input id="change_password" class="edit" type="button" value="Change Password" />
+                    <input id="save_password" class="edit" type="submit" value="Save Password" name="change-password" />
+                    <input id="cancel_password" class="edit" type="button" value="Cancel" />
+                </div>
+                {% endif %}
+            </div>
+            {% if field.errors %}
+            <div class="row">
+                <div class="col-md-12">
                     {{ field.errors }}
                 </div>
             </div>
+            {% endif %}
         {% endfor %}
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <span>Note: Cannot be changed more than once every 180 days.</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <input id="save-name" type="submit" value="Save" name="change-name" />
-                    <button id="cancel-name" type="button">Cancel</button>
-                </div>
-            </div>
         </form>
-        {% endif %}
-    </div>
-</div>
-<div id="email-wrapper">
-    <div id="current-email">
-        <div class="row">
-            <div class="col-md-4">
-                Email:
-            </div>
-            <div class="col-md-4">
-                {{ user.email }}
-            </div>
-            <div class="col-md-4">
-                <button id="email" type="button" >Edit</button>
-            </div>
-        </div>
-    </div>
-    <div id="change-email">
-        <form id="change-email-form" action="{{ request.get_full_path }}" method="POST">
-        {% csrf_token %}
-        {% for field in change_email_form %}
-            <div class="row">
-                <div class="col-md-2 col-md-offset-2">
-                    {{ field.label }}
-                </div>
-                <div class="col-md-4">
-                    {{ field }}
-                </div>
-                <div class="col-md-4">
-                    {{ field.errors }}
-                </div>
-            </div>
-        {% endfor %}
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <input id="save-email" type="submit" value="Save" name="change-email" />
-                    <button id="cancel-email" type="button">Cancel</button>        
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-<div id="password-wrapper">
-    <div id="current-password">
-        <div class="row">
-            <div class="col-md-4">
-                Password:
-            </div>
-            <div class="col-md-4">
-                *********
-            </div>
-            <div class="col-md-4">
-                <button id="password" type="button" >Edit</button>
-            </div>
-        </div>
-    </div>
-    <div id="change-password">
-        <form id="change-password-form" action="{{ request.get_full_path }}" method="POST">
-        {% csrf_token %}
-        {% for field in password_form %}
-            <div class="row">
-                <div class="col-md-2 col-md-offset-2">
-                    {{ field.label }}
-                </div>
-                <div class="col-md-4">
-                    {{ field }}
-                </div>
-                <div class="col-md-4">
-                    {{ field.errors }}
-                </div>
-            </div>
-        {% endfor %}
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <input id="save-password" type="submit" value="Save" name="change-password" />
-                    <button id="cancel-password" type="button">Cancel</button>        
-                </div>
-            </div>
-        </form>
-    </div>   
-</div>
-<div id="delete-account-wrapper">
-    <div id="delete-account-button">
-        <div class="row">
-            <div class="col-md-12">
-                <button id="delete-account" type="button">Delete Account</button>
-            </div>
-        </div>
-    </div>
-    <div id="delete-account-clicked">
         <form id="deactivate-account-form" action="{{ request.get_full_path }}" method="POST">
         {% csrf_token %}
             <div class="row">
                 <div class="col-md-6 col-md-offset-3">
-                    Are you sure?
-                    <Input id="deactivate-account-yes" type="submit" value="Yes" name="deactivate-account"/>
-                    <button id="deactivate-account-no" type="button">No</button>
+                    <input id="deactivate-account" type="button" value="Deactivate Account" />
+                    <span class="deactivate">Are you sure?</span>
+                    <input class="deactivate" type="submit" value="Yes" name="deactivate-account"/>
+                    <input id="cancel-deactivate-account" class="deactivate" type="button" value="No" />
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <span>
+                    <span class="deactivate">
                         Deactivating your account will disallow users from viewing your profile, and will replace any links to your account with "[ Deactivated User]".
                         All your data will be saved and your account will automatically reactivate by logging back in.
                     </span>
                 </div>
             </div>
         </form>
-    </div>
+    </div>   
 </div>
 {% endblock %}

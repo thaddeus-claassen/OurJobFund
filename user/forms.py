@@ -137,20 +137,20 @@ class DescriptionForm(forms.ModelForm):
         return "";        
         
 class ChangeUsernameForm(forms.ModelForm):
-    protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
+    username_protection = forms.CharField(label="", widget=forms.HiddenInput(), required=False);
     
     class Meta:
         model = User;
         fields = ['username'];
         
-    def clean_protection(self):
+    def clean_username_protection(self):
         if (not self.cleaned_data.get('protection') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";        
         
 class ChangeEmailForm(forms.ModelForm):
-    email = forms.CharField(max_length=30, required=False);
-    protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
+    email = forms.EmailField(max_length=30, widget=forms.TextInput, required=False);
+    email_protection = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     
     class Meta:
         model = User;
@@ -162,7 +162,7 @@ class ChangeEmailForm(forms.ModelForm):
             raise forms.ValidationError('A user already has that email');
         return email;
     
-    def clean_protection(self):
+    def clean_email_protection(self):
         if (not self.cleaned_data.get('protection') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
@@ -171,15 +171,15 @@ class ChangePasswordForm(forms.ModelForm):
     password = forms.CharField(label="Current Password", widget=forms.PasswordInput);
     new_password = forms.CharField(widget=forms.PasswordInput);
     repeat_new_password = forms.CharField(widget=forms.PasswordInput);
-    protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
+    password_protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
             
     class Meta:
         model = User;
         fields = ['password'];
         
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user', None)
-        super(ChangePasswordForm, self).__init__(*args, **kwargs)
+        self.user = kwargs.pop('user', None);
+        super(ChangePasswordForm, self).__init__(*args, **kwargs);
             
     def clean_password(self):
         password = self.cleaned_data.get('password');
@@ -192,7 +192,7 @@ class ChangePasswordForm(forms.ModelForm):
         if (len(password) < 9):
             raise forms.ValidationError('Your password must contain at least 9 characters.');
         if (not re.match(r'^(?=.*?\d)(?=.*?[A-Z])(?=.*?[a-z])[A-Za-z\d]{9,}$', password)):
-            raise forms.ValidationError('Your password must contain at least one uppercase letter, lowercase letter, and number');
+            raise forms.ValidationError('Your password must contain at least one uppercase letter, lowercase letter, and number.');
         return password;
         
     def clean_repeat_password(self):
@@ -202,20 +202,20 @@ class ChangePasswordForm(forms.ModelForm):
             raise forms.ValidationError("Passwords do not match");
         return repeat_password;
         
-    def clean_protection(self):
+    def clean_password_protection(self):
         if (not self.cleaned_data.get('protection') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
         
 class DeactivateAccountForm(forms.ModelForm):
     is_active = forms.BooleanField(initial=False, required=False);
-    protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
+    deactivate_protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
     
     class Meta:
         model = User;
         fields = ['is_active'];
         
-    def clean_protection(self):
+    def clean_deactivate_protection(self):
         if (not self.cleaned_data.get('protection') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
