@@ -11,6 +11,8 @@ from django.db.models import Q, F;
 from django.contrib.auth import authenticate, login, logout;
 from .forms import ChangePasswordForm, ChangeNameForm, ChangeEmailForm, LoginForm, SignUpForm, DeactivateAccountForm, ProfileForm, DescriptionForm, ChangeUsernameForm;
 from .models import UserProfile;
+from ourjobfund.settings import STRIPE_TEST_SECRET_KEY, STATIC_ROOT;
+import stripe;
 from job.models import Job;
 from datetime import datetime;
 from random import randint;
@@ -256,6 +258,24 @@ class AccountView(TemplateView):
             return redirect('user:sign_out');
         return form;
     
+    
+@login_required
+def get_stripe_info(request):
+    job_random_string = request.GET.get('state', None);
+    if (job_random_string is not None):
+        job = get_object_or_404(Job, random_string=job_random_string);
+        code = request.GET.get('code', None);
+        request.user.userprofile.stripe_account_id = code;
+        request.user.userprofile.save();
+        jobuser = get_object_or_None(JobUser, user=request.user, job=job);
+        if (not jobuser):
+            jobuser = JobUser(user=request.user, job=job);
+            jobuser.save();
+        work = Work(jobuser=jobuser);
+        work.save();
+        return redirect(job);
+    else:
+        return Http404();
     
         
     

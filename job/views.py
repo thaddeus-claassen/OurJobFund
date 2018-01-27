@@ -19,32 +19,12 @@ from filter.forms import PledgeFilterForm, WorkerFilterForm;
 from .forms import NewJobForm;
 import json, re, math;
 from random import randint;
-from ourjobfund.settings import STRIPE_TEST_SECRET_KEY, STATIC_ROOT;
-import stripe;
 
 def redirect_to_home(request):
     return redirect('job:home');
 
 def home(request):
     return render(request, 'job/home.html');
-
-@login_required
-def get_stripe_info(request):
-    job_random_string = request.GET.get('state', None);
-    if (job_random_string is not None):
-        job = get_object_or_404(Job, random_string=job_random_string);
-        code = request.GET.get('code', None);
-        request.user.userprofile.stripe_account_id = code;
-        request.user.userprofile.save();
-        jobuser = get_object_or_None(JobUser, user=request.user, job=job);
-        if (not jobuser):
-            jobuser = JobUser(user=request.user, job=job);
-            jobuser.save();
-        work = Work(jobuser=jobuser);
-        work.save();
-        return redirect(job);
-    else:
-        return Http404();
     
 def get_jobs(request):
     if (request.is_ajax()):
