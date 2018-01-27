@@ -268,7 +268,7 @@ def get_stripe_info(request):
         code = request.GET.get('code', None);
         request.user.userprofile.stripe_account_id = code;
         request.user.userprofile.save();
-        return redirect('user:detail');
+        return redirect('user:detail', username=username);
     else:
         return Http404();
     
