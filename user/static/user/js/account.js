@@ -20,6 +20,7 @@ $('document').ready(function() {
                     $('#id_' + info).prop('disabled', true);
                 }// end if-else
                 $('#save_' + info).css('display', 'none');
+                $('#change_' + info).css('display', 'inline');
             }// end if
         }// end if
     });

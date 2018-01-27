@@ -144,12 +144,11 @@ class ChangeUsernameForm(forms.ModelForm):
         fields = ['username'];
         
     def clean_username_protection(self):
-        if (not self.cleaned_data.get('protection') == ""):
+        if (not self.cleaned_data.get('username_protection') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";        
         
 class ChangeEmailForm(forms.ModelForm):
-    email = forms.EmailField(max_length=30, widget=forms.TextInput, required=False);
     email_protection = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     
     class Meta:
@@ -163,7 +162,7 @@ class ChangeEmailForm(forms.ModelForm):
         return email;
     
     def clean_email_protection(self):
-        if (not self.cleaned_data.get('protection') == ""):
+        if (not self.cleaned_data.get('email_protection') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
             
@@ -171,7 +170,7 @@ class ChangePasswordForm(forms.ModelForm):
     password = forms.CharField(label="Current Password", widget=forms.PasswordInput);
     new_password = forms.CharField(widget=forms.PasswordInput);
     repeat_new_password = forms.CharField(widget=forms.PasswordInput);
-    password_protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
+    password_protection = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
             
     class Meta:
         model = User;
@@ -203,7 +202,7 @@ class ChangePasswordForm(forms.ModelForm):
         return repeat_password;
         
     def clean_password_protection(self):
-        if (not self.cleaned_data.get('protection') == ""):
+        if (not self.cleaned_data.get('password_protection') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
         
@@ -216,6 +215,6 @@ class DeactivateAccountForm(forms.ModelForm):
         fields = ['is_active'];
         
     def clean_deactivate_protection(self):
-        if (not self.cleaned_data.get('protection') == ""):
+        if (not self.cleaned_data.get('deactivate_protection') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";

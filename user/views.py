@@ -207,8 +207,9 @@ class AccountView(TemplateView):
         self.deactivateForm = self.deactivateForm(initial={'is_active' : True});
         return render(request, self.template_name, self.get_context_data(request));
     
-    @method_decorator(login_required)    
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
+    
         if ('change-name' in request.POST):
             self.usernameForm = self.changeUsername(self.usernameForm(request.POST));
         elif ('change-email' in request.POST):
@@ -248,6 +249,7 @@ class AccountView(TemplateView):
         if (form.is_valid()):
             self.request.user.set_password(form.cleaned_data['new_password']);
             self.request.user.save();
+            login(self.request, user);
             return redirect('user:account');
         return form;
         
@@ -258,7 +260,6 @@ class AccountView(TemplateView):
             return redirect('user:sign_out');
         return form;
     
-    
 @login_required
 def get_stripe_info(request):
     username = request.GET.get('state', None);
@@ -267,7 +268,7 @@ def get_stripe_info(request):
         code = request.GET.get('code', None);
         request.user.userprofile.stripe_account_id = code;
         request.user.userprofile.save();
-        return redirect(user);
+        return redirect('user:detail');
     else:
         return Http404();
     
