@@ -261,19 +261,13 @@ class AccountView(TemplateView):
     
 @login_required
 def get_stripe_info(request):
-    job_random_string = request.GET.get('state', None);
-    if (job_random_string is not None):
-        job = get_object_or_404(Job, random_string=job_random_string);
+    username = request.GET.get('state', None);
+    if (username is not None):
+        user = get_object_or_404(user, username=username);
         code = request.GET.get('code', None);
         request.user.userprofile.stripe_account_id = code;
         request.user.userprofile.save();
-        jobuser = get_object_or_None(JobUser, user=request.user, job=job);
-        if (not jobuser):
-            jobuser = JobUser(user=request.user, job=job);
-            jobuser.save();
-        work = Work(jobuser=jobuser);
-        work.save();
-        return redirect(job);
+        return redirect(user);
     else:
         return Http404();
     
