@@ -6,8 +6,8 @@ from datetime import datetime;
 class JobUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE);
     job = models.ForeignKey(Job, on_delete=models.CASCADE);
-    amount_pledged = models.FloatField(default=0);
-    amount_paid = models.FloatField(default=0);
-    work_status = models.CharField(default='', max_length=10, blank=True);
-    amount_received = models.FloatField(default=0);
+    pledged = models.FloatField(default=0);
+    paid = models.FloatField(default=0);
+    work_status = models.CharField(default='Not Working', max_length=10, blank=True);
+    received = models.FloatField(default=0);
     

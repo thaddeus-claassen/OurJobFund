@@ -158,9 +158,13 @@ class DetailView(TemplateView):
     
     def get_context_data(self, request, **kwargs):
         job = kwargs['job'];
+        jobusers = JobUser.objects.filter(Q(job=job) & (Q(pledged__gt=0) | ~Q(work_status='Not Working')));
+        current = jobusers.filter((Q(pledged__gt=0) & Q(paid__lt=F('pledged'))) | Q(work_status='Working'));
+        finished = jobusers.exclude(id__in=current);
         context = {                                                                     
             'job': job,
-            'jobusers' : JobUser.objects.filter(job=job),
+            'current' : current,
+            'finished' : finished,
             'updates' : Update.objects.filter(jobuser__job=job).order_by('-date'),
         }
         if (request.user.is_authenticated()):

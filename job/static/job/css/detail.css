@@ -65,21 +65,8 @@ tbody {
     overflow-y: scroll;
 }
 
-#pledge, #id_amount {
-    width: 100%;
-}
-
-#confirm-pledge-wrapper {
-    display: none;
-}
-
-#pledges_table th, #pledges_table td {
-    width: 33%;
-    float: left;
-}
-
-#workers_table th, #workers_table td {
-    width: 33%;
+#current th, #current td, #finished th, #finished td {
+    width: 25%;
     float: left;
 }
 
@@ -87,7 +74,7 @@ tbody {
     margin-top: 30px;
 }
 
-#updates_table th, #updates_table td {
+#updates th, #updates td {
     width: 33%;
     float: left;
 }

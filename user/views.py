@@ -20,8 +20,8 @@ import json;
 
 class LoginView(TemplateView):
     template_name = 'user/login.html';
-    login_form = LoginForm();
-    sign_up_form = SignUpForm();
+    login_form = LoginForm;
+    sign_up_form = SignUpForm;
     
     def get(self, request, *args, **kwargs):
         if (request.user.is_authenticated()):
@@ -30,32 +30,29 @@ class LoginView(TemplateView):
             return render(request, self.template_name, self.get_context_data(login_form=self.login_form, sign_up_form=self.sign_up_form));
     
     def post(self, request, *args, **kwargs):
-        if (request.user.is_authenticated()):
-            return redirect(request.user);
-        else:
-            login_form = self.login_form;
-            if ('sign-in' in request.POST):
-                login_form = LoginForm(request.POST);
-                if (login_form.is_valid()):
-                    user = User.objects.get(email=login_form.cleaned_data['email']);
-                    user.is_active = True;
+        login_form = self.login_form;
+        sign_up_form = self.sign_up_form;
+        if ('sign-in' in request.POST):
+            login_form = LoginForm(request.POST);
+            if (login_form.is_valid()):
+                user = User.objects.get(email=login_form.cleaned_data['email']);
+                user.is_active = True;
+                login(request, user);
+                return redirect('job:home');
+        elif ('sign-up' in request.POST):
+            sign_up_form = SignUpForm(request.POST);
+            if (sign_up_form.is_valid()):
+                user = sign_up_form.save(commit=False);
+                user.email = sign_up_form.cleaned_data['email'];
+                user.username = sign_up_form.cleaned_data['username'];
+                password = sign_up_form.cleaned_data['password'];
+                user.set_password(password);
+                user.save();
+                user = authenticate(username=user.username, password=password);
+                if (user is not None):
                     login(request, user);
-                    return redirect('job:home');
-            sign_up_form = self.sign_up_form;
-            if ('sign-up' in request.POST):
-                sign_up_form = SignUpForm(request.POST);
-                if (sign_up_form.is_valid()):
-                    user = sign_up_form.save(commit=False);
-                    user.email = sign_up_form.cleaned_data['email'];
-                    user.username = sign_up_form.cleaned_data['username'];
-                    password = sign_up_form.cleaned_data['password'];
-                    user.set_password(password);
-                    user.save();
-                    user = authenticate(username=user.username, password=password);
-                    if (user is not None):
-                        login(request, user);
-                        return redirect(user);
-            return render(request, self.template_name, self.get_context_data(login_form=login_form, sign_up_form=sign_up_form));
+                    return redirect(user);
+        return render(request, self.template_name, self.get_context_data(login_form=login_form, sign_up_form=sign_up_form));
         
     def get_context_data(self, **kwargs):
         context = super(LoginView, self).get_context_data(**kwargs);
@@ -171,24 +168,23 @@ class DetailView(TemplateView):
         amount_paying_in_dollars = float(amount_paying_in_cents) / 100;
         payment = Pay(jobuser=jobuser, receiver=jobuser.user, amount=amount_paying_in_dollars);
         payment.save();
-        jobuser.amount_paid = jobuser.amount_paid + amount_paying_in_dollars;
+        jobuser.paid = jobuser.paid + amount_paying_in_dollars;
         jobuser.save();
         receiver_jobuser = JobUser.objects.get(user=User.objects.get(id=receiver_pk), job=job);
-        receiver_jobuser.amount_received = receiver_jobuser.amount_received + amount_paying_in_dollars;
+        receiver_jobuser.received = receiver_jobuser.received + amount_paying_in_dollars;
         receiver_jobuser.save();
         job.paid = job.paid + amount_paying_in_dollars;
         job.save();
         
     def get_context_data(self, *args, **kwargs):
+        context = super(DetailView, self).get_context_data(**kwargs);
         user = get_object_or_None(User, username=self.kwargs['username']);
-        context = {
-            'detail_user' : user,
-            'name_form' : self.nameForm,
-            'profile_form' : self.profileForm,
-            'description_form' : self.descriptionForm,
-            'current_jobusers' : user.jobuser_set.filter(Q(job__pledged=0) | Q(job__pledged__gt=F('job__paid'))),
-            'finished_jobusers' : user.jobuser_set.filter(Q(job__pledged__gt=0) & Q(job__pledged__lte=F('job__paid'))),
-        }
+        context['detail_user'] = user;
+        context['name_form'] = self.nameForm;
+        context['profile_form'] = self.profileForm;
+        context['description_form'] = self.descriptionForm,
+        context['current_jobusers'] = user.jobuser_set.filter(Q(job__pledged=0) | Q(job__pledged__gt=F('job__paid'))),
+        context['finished_jobusers'] = user.jobuser_set.filter(Q(job__pledged__gt=0) & Q(job__pledged__lte=F('job__paid'))),
         return context;
         
 class AccountView(TemplateView):
@@ -200,65 +196,56 @@ class AccountView(TemplateView):
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
+        usernameForm = '';
         if ((datetime.now() - request.user.userprofile.last_time_username_was_changed.replace(tzinfo=None)).days >= 180):
-            self.usernameForm = self.usernameForm(initial={'username' : request.user.username});
-        self.emailForm = self.emailForm(initial={'email' : request.user.email});
-        self.passwordForm = self.passwordForm;
-        self.deactivateForm = self.deactivateForm(initial={'is_active' : True});
-        return render(request, self.template_name, self.get_context_data(request));
+            usernameForm = self.usernameForm(initial={'username' : request.user.username});
+        emailForm = self.emailForm(initial={'email' : request.user.email});
+        passwordForm = self.passwordForm;
+        deactivateForm = self.deactivateForm(initial={'is_active' : True});
+        return render(request, self.template_name, self.get_context_data(request, usernameForm=usernameForm, emailForm=emailForm, passwordForm=passwordForm, deactivateForm=deactivateForm));
     
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-    
-        if ('change-name' in request.POST):
-            self.usernameForm = self.changeUsername(self.usernameForm(request.POST));
+        usernameForm = self.usernameForm;
+        emailForm = self.emailForm;
+        passwordForm = self.passwordForm;
+        deactivateForm = self.deactivateForm;
+        if ('change-username' in request.POST):
+            emailForm = usernameForm(request.POST);
+            if (usernameForm.is_valid()):
+                self.request.user.username = emailForm.cleaned_data['username'];
+                self.request.user.save();
+                self.request.user.userprofile.last_time_name_was_changed = datetime.now();
+                self.request.user.userprofile.save();
+                return redirect('user:account');
         elif ('change-email' in request.POST):
-            self.emailForm = self.changeEmail(self.emailForm(request.POST));
+            emailForm = emailForm(request.POST);
+            if (emailForm.is_valid()):
+                self.request.user.email = emailForm.cleaned_data['email'];
+                self.request.user.save();
+                return redirect('user:account');
         elif ('change-password' in request.POST):
-            self.passwordForm = self.changePassword(self.passwordForm(request.POST, user=request.user));
+            passwordForm = passwordForm(request.POST, user=request.user);
+            if (passwordForm.is_valid()):
+                self.request.user.set_password(passwordForm.cleaned_data['new_password']);
+                self.request.user.save();
+                login(self.request, request.user);
+                return redirect('user:account');
         elif ('deactivate-account' in request.POST):
-            self.deactivateForm = self.deactivateAccount(self.deactivateForm(request.POST));
-        return render(request, self.template_name, self.get_context_data(request));
+            deactivateForm = deactivateForm(request.POST);
+            if (deactivateForm.is_valid()):
+                self.request.user.is_active = False;
+                self.request.user.save();
+                return redirect('user:sign_out');
+        return render(request, self.template_name, self.get_context_data(request, usernameForm=usernameForm, emailForm=emailForm, passwordForm=passwordForm, deactivateForm=deactivateForm));
         
-    def get_context_data(self, request):
-        context = {
-            'change_username_form' : self.usernameForm,
-            'change_email_form' : self.emailForm,
-            'change_password_form' : self.passwordForm,
-            'deactivate_form' : self.deactivateForm,
-        }
+    def get_context_data(self, request, **kwargs):
+        context = super(AccountView, self).get_context_data(**kwargs);
+        context['change_username_form'] = kwargs['usernameForm'];
+        context['change_email_form'] = kwargs['emailForm'];
+        context['change_password_form'] = kwargs['passwordForm'];
+        context['deactivate_form'] = kwargs['deactivateForm'];
         return context;
-                
-    def changeUsername(self, form):
-        if (form.is_valid()):
-            self.request.user.username = form.cleaned_data['username'];
-            self.request.user.save();
-            self.request.user.userprofile.last_time_name_was_changed = datetime.now();
-            self.request.user.userprofile.save();
-            return redirect('user:account');
-        return form;
-        
-    def changeEmail(self, form):
-        if (form.is_valid()):
-            self.request.user.email = form.cleaned_data['email'];
-            self.request.user.save();
-            return redirect('user:account');
-        return form;
-        
-    def changePassword(self, form):
-        if (form.is_valid()):
-            self.request.user.set_password(form.cleaned_data['new_password']);
-            self.request.user.save();
-            login(self.request, user);
-            return redirect('user:account');
-        return form;
-        
-    def deactivateAccount(self, form):
-        if (form.is_valid()):
-            self.request.user.is_active = False;
-            self.request.user.save();
-            return redirect('user:sign_out');
-        return form;
     
 @login_required
 def get_stripe_info(request):

@@ -7,9 +7,6 @@ $('document').ready(function() {
     $(window).resize(function() {
         changeTHeadTFootWidthToAccountForScrollBar();
     });
-    $('.sort').click(function() {
-        sort($(this).attr('id'));
-    });
     $('#pay_money').click(function() {
         $('#pay_unclicked').css('display', 'none');
         $('#pay_clicked').css('display', 'inline');
@@ -75,7 +72,6 @@ function sort(sort) {
             'sort' : sort,
             'ascending_or_descending' : ascending_or_descending,
         },
-        success: sortSuccess,
     });
 }// end sort()
 

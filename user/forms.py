@@ -183,7 +183,7 @@ class ChangePasswordForm(forms.ModelForm):
     def clean_password(self):
         password = self.cleaned_data.get('password');
         if (not User.objects.get(username=self.user).check_password(password)):
-            raise forms.ValidationError('The password you inputted does not match your current password.');
+            raise forms.ValidationError('The current password is incorrect.');
         return password;    
             
     def clean_new_password(self):

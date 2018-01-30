@@ -46,7 +46,7 @@ class CreateView(TemplateView):
                 job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
                 pledge = Pledge(jobuser=jobuser, amount=amount, comment=description, random_string=createRandomString());
                 pledge.save();
-                jobuser.amount_pledged = jobuser.amount_pledged + amount;
+                jobuser.pledged = jobuser.pledged + amount;
                 jobuser.save();
                 job.pledged = job.pledged + amount;
                 job.save();
@@ -55,6 +55,7 @@ class CreateView(TemplateView):
                 work = Work(jobuser=jobuser, status=type, comment=description);
                 work.save();
                 jobuser.work_status = type;
+                jobuser.save();
             elif (type == 'Pay'):
                 self.pay(request, job, jobuser);
             update = Update(jobuser=jobuser, title=title, description=description, random_string=createRandomString());

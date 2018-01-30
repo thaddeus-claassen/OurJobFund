@@ -142,7 +142,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <table id="updates_table" class="table">
+                        <table id="updates" class="table">
                             <thead>
                                 <tr>
                                     <th id="updates-last_name" class="sort">Username</th>
@@ -184,44 +184,46 @@
         </div>
     </div>
 </div>
+
+
 <div class="row">
     <div class="col-md-6">
         <div class="row info_row header">
             <div class="col-md-6">
-                <span>Pledges</span>
+                <span>Current</span>
             </div>
         </div>
         <div class="row info_row">
             <div class="col-md-12">
-                <table id="pledges_table" class="table">
+                <table id="current" class="table">
                     <thead>
                         <tr>
-                            <th id="pledges-last_name" class="sort">Username</th>
-                            <th id="pledges-pledged" class="sort">Pledged</th>
-                            <th id="pledgers-paid" class="sort">Paid</th>
+                            <th id="current-username" class="sort">Username</th>
+                            <th id="current-pledged" class="sort">Pledged</th>
+                            <th id="current-paid" class="sort">Paid</th>
+                            <th id="current-received" class="sort">Received</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for jobuser in jobusers %}
-                        {% if jobuser.pledge_set.all.exists %}
+                    {% for j in current %}
                         <tr>
                             <td>
-                                {% if jobuser.user.is_active %}
+                                {% if j.user.is_active %}
                                 {% if request.user.is_authenticated %}
-                                <a href="{% url 'user:detail' pledge.jobuser.user.username %}">
-                                    {{ jobuser.user.username }}
+                                <a href="{% url 'user:detail' j.user.username %}">
+                                    {{ j.user.username }}
                                 </a>
                                 {% else %}
-                                <span>{{ jobuser.user.username }}</span>
+                                <span>{{ j.user.username }}</span>
                                 {% endif %}
                                 {% else %}
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
-                            <td>${{ jobuser.amount_pledged|floatformat:2 }}</td>
-                            <td>${{ jobuser.amount_paid|floatformat:2 }}</td>
+                            <td>${{ j.pledged|floatformat:2 }}</td>
+                            <td>${{ j.paid|floatformat:2 }}</td>
+                            <td>${{ j.received|floatformat:2 }}</td>
                         </tr>
-                        {% endif %}
                     {% endfor %}
                     </tbody>
                 </table>
@@ -231,40 +233,40 @@
     <div class="col-md-6">
         <div class="row info_row header">
             <div class="col-md-6">
-                <span>Workers</span>
+                <span>Finished</span>
             </div>
         </div>
         <div class="row info_row">
             <div class="col-md-12">
-                <table id="workers_table" class="table">
+                <table id="finished" class="table">
                     <thead>
                         <tr>
-                            <th id="workers-last_name">Username</th>
-                            <th id="workers-finished">Status</th>
-                            <th id="workers-received">Received</th>
+                            <th id="finished-username">Username</th>
+                            <th id="finished-pledged">Pledged</th>
+                            <th id="finished-paid">Paid</th>
+                            <th id="finished-received">Received</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for jobuser in jobusers %}
-                        {% if jobuser.work_set.all.exists %}
+                    {% for j in finished %}
                         <tr>
                             <td>
-                                {% if jobuser.user.is_active %}
+                                {% if j.user.is_active %}
                                 {% if request.user.is_authenticated %}
-                                <a href="{% url 'user:detail' jobuser.user.username %}">
-                                    {{ jobuser.user.username }}
+                                <a href="{% url 'user:detail' j.user.username %}">
+                                    {{ j.user.username }}
                                 </a>
                                 {% else %}
-                                <span>{{ jobuser.user.username }}</span>
+                                <span>{{ j.user.username }}</span>
                                 {% endif %}
                                 {% else %}
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
-                            <td>{{ worker.status }}</td>
-                            <td>${{ jobuser.amount_received|floatformat:2 }}</td>
+                            <td>${{ j.pledged|floatformat:2 }}</td>
+                            <td>${{ j.paid|floatformat:2 }}</td>
+                            <td>${{ j.received|floatformat:2 }}</td>
                         </tr>
-                        {% endif %}
                     {% endfor %}
                     </tbody>
                 </table>
