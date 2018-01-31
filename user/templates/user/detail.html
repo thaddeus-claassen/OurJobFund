@@ -165,12 +165,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for current_jobuser in current_jobusers %}
-                        <tr id="current_{{ current_jobuser.job.name }}">
-                            <td class="name"><a href="{% url 'job:detail' current_jobuser.job.random_string %}">{{ current_jobuser.job.name }}</a></td>
-                            <td class="pledged">${{ current_jobuser.pledged|floatformat:2 }}</td>
-                            <td class="paid">${{ current_jobuser.paid|floatformat:2 }}</td>
-                            <td class="received">${{ current_jobuser.received|floatformat:2 }}</td>
+                        {% for j in current %}
+                        <tr id="current_{{ j.job.name }}">
+                            <td class="name"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.name }}</a></td>
+                            <td class="pledged">${{ j.pledged|floatformat:2 }}</td>
+                            <td class="paid">${{ j.paid|floatformat:2 }}</td>
+                            <td class="received">${{ j.received|floatformat:2 }}</td>
                         </tr>
                         {% empty %}
                         <tr>
@@ -183,7 +183,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="name">Total:&nbsp;{{ current_jobusers.count }}</td>
+                            <td class="name">Total:&nbsp;{{ current.count }}</td>
                             <td class="pledged"></td>
                             <td class="paid"></td>
                             <td class="status"></td>
@@ -211,12 +211,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for finished_jobuser in finished_jobusers %}
-                        <tr id="finished_{{ finished_jobuser.job.name }}">
-                            <td class="name"><a href="{% url 'job:detail' finished_jobuser.job.random_string %}">{{ finished_jobuser.job.name }}</a></td>
-                            <td class="pledged">${{ finished_jobuser.pledged|floatformat:2 }}</td>
-                            <td class="paid">${{ finished_jobuser.paid|floatformat:2 }}</td>
-                            <td class="received">${{ finished_jobuser.received|floatformat:2 }}</td>
+                    {% for j in finished %}
+                        <tr id="finished_{{ j.job.name }}">
+                            <td class="name"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.name }}</a></td>
+                            <td class="pledged">${{ j.pledged|floatformat:2 }}</td>
+                            <td class="paid">${{ j.paid|floatformat:2 }}</td>
+                            <td class="received">${{ j.received|floatformat:2 }}</td>
                         </tr>
                     {% empty %}
                         <tr>
@@ -229,7 +229,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="name">Total:&nbsp;{{ finished_jobusers.count }}</td>
+                            <td class="name">Total:&nbsp;{{ finished.count }}</td>
                             <td class="pledged"></td>
                             <td class="paid"></td>
                             <td class="received"></td>

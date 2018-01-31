@@ -76,7 +76,7 @@ class SearchUsersView(TemplateView):
             'search' : search,
             'total' : self.getTotalNumberOfUsersFromQuery(search),
         };
-        return render(request, 'user/search.html', context);
+        return render(request, self.template_name, context);
     
     def getUsersFromQuery(self, search, num_searches):
         users = User.objects.all();
@@ -113,37 +113,41 @@ class DetailView(TemplateView):
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(User, username=kwargs['username']);
-        self.nameForm = self.nameForm(initial={'first_name' : user.first_name, 'last_name' : user.last_name });
-        self.profileForm = self.profileForm(initial={
+        nameForm = self.nameForm(initial={'first_name' : user.first_name, 'last_name' : user.last_name });
+        profileForm = self.profileForm(initial={
             'city' : user.userprofile.city, 
             'state' : user.userprofile.state,
             'occupation' : user.userprofile.occupation,
             'education' : user.userprofile.education,
             'contact' : user.userprofile.contact,
         });
-        self.descriptionForm = self.descriptionForm(initial={'description' : user.userprofile.description});
-        return render(request, self.template_name, self.get_context_data());
+        descriptionForm = self.descriptionForm(initial={'description' : user.userprofile.description});
+        con = self.get_context_data(user=user, nameForm=nameForm, profileForm=profileForm, descriptionForm=descriptionForm);
+        return render(request, self.template_name, self.get_context_data(user=user, nameForm=nameForm, profileForm=profileForm, descriptionForm=descriptionForm));
     
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
+        nameForm = self.nameForm;
+        profileForm = self.profileForm;
+        descriptionForm = self.descriptionForm;
         if ('info' in request.POST):
-            self.nameForm = self.nameForm(request.POST);
-            self.profileForm = self.profileForm(request.POST);
-            if (self.nameForm.is_valid() and self.profileForm.is_valid()):
-                request.user.first_name = self.nameForm.cleaned_data['first_name'];
-                request.user.last_name = self.nameForm.cleaned_data['last_name'];
+            nameForm = nameForm(request.POST);
+            profileForm = profileForm(request.POST);
+            if (nameForm.is_valid() and profileForm.is_valid()):
+                request.user.first_name = nameForm.cleaned_data['first_name'];
+                request.user.last_name = nameForm.cleaned_data['last_name'];
                 request.user.save();
-                request.user.userprofile.city = self.profileForm.cleaned_data['city'];
-                request.user.userprofile.state = self.profileForm.cleaned_data['state'];
-                request.user.userprofile.occupation = self.profileForm.cleaned_data['occupation'];
-                request.user.userprofile.education = self.profileForm.cleaned_data['education'];
-                request.user.userprofile.contact = self.profileForm.cleaned_data['contact'];
+                request.user.userprofile.city = profileForm.cleaned_data['city'];
+                request.user.userprofile.state = profileForm.cleaned_data['state'];
+                request.user.userprofile.occupation = profileForm.cleaned_data['occupation'];
+                request.user.userprofile.education = profileForm.cleaned_data['education'];
+                request.user.userprofile.contact = profileForm.cleaned_data['contact'];
                 request.user.userprofile.save();
                 return redirect(request.user);
         elif ('description' in request.POST):
-            self.descriptionForm = self.descriptionForm(request.POST);
-            if (self.descriptionForm.is_valid()):
-                request.user.userprofile.description = self.descriptionForm.cleaned_data['description'];
+            descriptionForm = descriptionForm(request.POST);
+            if (descriptionForm.is_valid()):
+                request.user.userprofile.description = descriptionForm.cleaned_data['description'];
                 request.user.userprofile.save();
                 return redirect(request.user);
         elif ('stripeToken' in request.POST):
@@ -152,7 +156,7 @@ class DetailView(TemplateView):
         elif ('delete-stripe' in request.POST):
             request.user.userprofile.stripe_account_id = "";
             request.user.userprofile.save();
-        return render(request, self.template_name, self.get_context_data({'username' : kwargs['username']}));
+        return render(request, self.template_name, self.get_context_data(user=request.user, nameForm=nameForm, profileForm=profileForm, descriptionForm=descriptionForm));
         
     def pay(self, request, job, jobuser):
         receiver_pk = request.POST['pay_to'];
@@ -178,13 +182,13 @@ class DetailView(TemplateView):
         
     def get_context_data(self, *args, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs);
-        user = get_object_or_None(User, username=self.kwargs['username']);
-        context['detail_user'] = user;
-        context['name_form'] = self.nameForm;
-        context['profile_form'] = self.profileForm;
-        context['description_form'] = self.descriptionForm,
-        context['current_jobusers'] = user.jobuser_set.filter(Q(job__pledged=0) | Q(job__pledged__gt=F('job__paid'))),
-        context['finished_jobusers'] = user.jobuser_set.filter(Q(job__pledged__gt=0) & Q(job__pledged__lte=F('job__paid'))),
+        user = kwargs['user'];
+        context['detail_user'] = user;kwargs
+        context['name_form'] = kwargs['nameForm'];
+        context['profile_form'] = kwargs['profileForm'];
+        context['description_form'] = kwargs['descriptionForm'];
+        context['current'] = user.jobuser_set.filter(Q(job__pledged=0) | Q(job__pledged__gt=F('job__paid')));
+        context['finished'] = user.jobuser_set.filter(Q(job__pledged__gt=0) & Q(job__pledged__lte=F('job__paid')));
         return context;
         
 class AccountView(TemplateView):

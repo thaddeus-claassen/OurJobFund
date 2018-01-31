@@ -60,9 +60,7 @@ function toggleType() {
 function correctFormat() {
     var errorMessage = "";
     var amount = parseFloat($('#id_amount').val());
-    alert("amount: " + amount);
     var isFloat = !isNaN(amount);
-    alert("isFloat: " + isFloat);
     if (isFloat) {
         if (amount != amount.toFixed(2)) {
             errorMessage = "Must have at most two decimal places";
