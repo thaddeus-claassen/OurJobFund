@@ -48,20 +48,20 @@ Temporary Items
 
 
 #Hidden files
-.stripe
-.django
-.sendgrid
-.zoho
+.stripe/
+.django/
+.sendgrid/
+.zoho/
 
 # Database stuff
 db.sqlite3
-filter/migrations
-job/migrations
-jobuser/migrations
-update/migrations
-user/migrations
-pledge/migrations
-work/migrations
+filter/migrations/
+job/migrations/
+jobuser/migrations/
+update/migrations/
+user/migrations/
+pledge/migrations/
+work/migrations/
 
 # ./__pycache__ stuff
 about/__pycache__/
@@ -86,3 +86,5 @@ static/rest_framework/
 static/static_jquery/
 static/update/
 static/user/
+static/pledge/
+static/work/
