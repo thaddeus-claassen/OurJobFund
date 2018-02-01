@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os;
 
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)));
+
 DEBUG = open(os.path.join(BASE_DIR, '.django/DEBUG.txt'), 'r').read().rstrip();
 
 if DEBUG:
@@ -25,15 +28,12 @@ else:
     SESSION_COOKIE_SECURE = True;
     CSRF_COOKIE_SECURE = True;
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = open(os.path.join(BASE_DIR, '.django/secret_key.txt'), 'r').read();
-
 
 # Application definition
 INSTALLED_APPS = [
