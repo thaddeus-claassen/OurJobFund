@@ -36,12 +36,14 @@ urlpatterns = [
     url(r'^see-more-users$', see_more_users),
     url(r'^admin/', admin.site.urls),
     url(r'^job/', include('job.urls')),
+    url(r'^home/', include('job.urls')),
+    url(r'^', include('job.urls')),
     url(r'^update/', include('update.urls')),
     url(r'^about/', include('about.urls')),
     url(r'^contact/', include('contact.urls')),
     url(r'^pledge/', include('pledge.urls')),
     url(r'^terms_of_service/', include('terms_of_service.urls')),
-    url(r'^home/', include('job.urls')),
+    
     url(r'^', include('user.urls')),
 ]
 
