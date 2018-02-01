@@ -126,7 +126,7 @@ function get_jobs() {
         lng = $('#longitude').val();
     }// end if
     $.ajax({
-        url : 'get_jobs',
+        url : 'get-jobs',
         data : {
             'type' : id,
             'search' : $('#' + id +'_search').val(),
@@ -152,7 +152,7 @@ function add_jobs() {
         data : {
             'numSearches' : numSearches,
             'type' : id,
-            'search' : $('#' + id +'_search').val(),
+            'search' : $('#' + id +'-search').val(),
             'latitude' : lat,
             'longitude' : lng,
             'radius' : getRadius(),
@@ -197,7 +197,7 @@ function get_total_jobs() {
         url : 'get_total_jobs',
         data : {
             'type' : id,
-            'search' : $('#' + id +'_search').val(),
+            'search' : $('#' + id +'-search').val(),
             'latitude' : lat,
             'longitude' : lng,
             'radius' : getRadius(),
