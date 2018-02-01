@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os;
 
-DEBUG = True;
+DEBUG = open(os.path.join(BASE_DIR, '.django/DEBUG.txt'), 'r').read().rstrip();
 
 if DEBUG:
     ALLOWED_HOSTS = [];
