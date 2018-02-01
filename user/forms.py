@@ -4,6 +4,7 @@ from django import forms;
 from django.contrib.auth import authenticate;
 from annoying.functions import get_object_or_None;
 from .choices import STATES;
+from .reserved_names import RESERVED_NAMES;
 import re;
 
 class LoginForm(forms.ModelForm):
@@ -46,8 +47,10 @@ class SignUpForm(forms.ModelForm):
         username = self.cleaned_data.get('username');
         if (len(username) > 150):
             raise forms.ValidationError('Your first name must not exceed 150 characters.');
-        if (not re.match(r'^[A-Za-z0-9_]+$', username)):
+        elif (not re.match(r'^[A-Za-z0-9_]+$', username)):
             raise forms.ValidationError('Your username may only include alphanumeric characters, "_", or "-".');
+        elif (username in RESERVED_NAMES):
+            raise forms.ValidationError('You cannot use the username ' + username);
         return username;
         
     def clean_email(self):

@@ -86,7 +86,7 @@ function changeTHeadTFootWidthToAccountForScrollBar() {
 function save_filter(filter) {
     $.ajax({
         type : 'POST',
-        url : '/job/save_filter/',
+        url : '/job/save-filter/',
         data : {
             'filter' : $(filter).attr('id'),
             'value' : $(filter).val(),
@@ -98,7 +98,7 @@ function save_filter(filter) {
 function save_search_type(isBasic) {
     $.ajax({
         type : 'POST',
-        url : '/job/save_search_type/',
+        url : '/job/save-search-type/',
         data : {
             'isBasic' : isBasic,
             csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
@@ -109,7 +109,7 @@ function save_search_type(isBasic) {
 function save_hide_location(isHidden) {
     $.ajax({
         type : 'POST',
-        url : '/job/save_hide_location/',
+        url : '/job/save-hide-location/',
         data : {
             'isHidden' : isHidden,
             csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
@@ -148,7 +148,7 @@ function add_jobs() {
         lng = $('#longitude').val();
     }// end if
     $.ajax({
-        url : 'add_jobs',
+        url : 'add-jobs',
         data : {
             'numSearches' : numSearches,
             'type' : id,
@@ -175,7 +175,7 @@ function sort_jobs() {
         data : {
             'numSearches' : numSearches,
             'type' : id,
-            'search' : $('#' + id +'_search').val(),
+            'search' : $('#' + id +'-search').val(),
             'latitude' : lat,
             'longitude' : lng,
             'radius' : getRadius(),
@@ -235,7 +235,6 @@ function addJobsToTable(json) {
     var numJobs = Object.keys(json).length;
     if (numJobs > 0) {
         for (var index = 0; index < json.length; index++) {
-            
             var job = json[index];
             var string = "<tr>"
             string = string + "<td class='name'><a id='" + job["random_string"] + "' href='" + job["random_string"] + "'></a></td>";

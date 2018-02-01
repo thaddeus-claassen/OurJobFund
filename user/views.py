@@ -112,7 +112,10 @@ class DetailView(TemplateView):
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
+        print(request);
+        print("username: " + str(kwargs['username']));
         user = get_object_or_404(User, username=kwargs['username']);
+        print("user: " + str(user));
         nameForm = self.nameForm(initial={'first_name' : user.first_name, 'last_name' : user.last_name });
         profileForm = self.profileForm(initial={
             'city' : user.userprofile.city, 
@@ -122,7 +125,6 @@ class DetailView(TemplateView):
             'contact' : user.userprofile.contact,
         });
         descriptionForm = self.descriptionForm(initial={'description' : user.userprofile.description});
-        con = self.get_context_data(user=user, nameForm=nameForm, profileForm=profileForm, descriptionForm=descriptionForm);
         return render(request, self.template_name, self.get_context_data(user=user, nameForm=nameForm, profileForm=profileForm, descriptionForm=descriptionForm));
     
     @method_decorator(login_required)
