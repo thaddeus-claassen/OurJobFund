@@ -59,7 +59,9 @@ def sort_jobs(request):
         return Http404();
         
 def get_total_jobs(request):
+    print("Got into get_total_jobs")
     if (request.is_ajax()):
+        print("request is ajax");
         jobs = findJobs(request);
         total = {};
         total['total'] = len(jobs)
@@ -67,42 +69,10 @@ def get_total_jobs(request):
     else:
         return Http404();
         
-@login_required        
-def save_filter(request):
-    if (request.is_ajax()):
-        changed_filter = request.POST['filter'];
-        filter = changed_filter.split("-")[0];
-        row = changed_filter.split("-")[1];
-        value = request.POST['value'];
-        if (value == ''):
-            value = 0;
-        exec("request.user." + str(filter) + "filter." + row + " = " + str(value));
-        exec("request.user." + str(filter) + "filter.save()");
-        return HttpResponse("");
-    else:
-        return Http404();
-        
-@login_required
-def save_search_type(request):
-    if (request.is_ajax()):
-        request.user.userprofile.basic_search = (request.POST['isBasic'] == 'true');
-        request.user.userprofile.save();
-        return HttpResponse("");
-    else:
-        return Http404();
-        
-@login_required
-def save_hide_location(request):
-    if (request.is_ajax()):
-        request.user.userprofile.hide_location = (request.POST['isHidden'] == 'true');
-        request.user.userprofile.save();
-        return HttpResponse("");
-    else:
-        return Http404();
-
 def findJobs(request):
     type = request.GET['type'];
     search = request.GET['search'];
+    print("Search: " + str(search));
     if (type == 'basic'):
         jobs = Job.objects.all();
         for word in search.split(" "):
@@ -145,6 +115,40 @@ def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_
         if (distance > radius_in_miles):
             jobs = jobs.exclude(id=job.id);
     return jobs;
+    
+@login_required        
+def save_filter(request):
+    if (request.is_ajax()):
+        changed_filter = request.POST['filter'];
+        filter = changed_filter.split("-")[0];
+        row = changed_filter.split("-")[1];
+        value = request.POST['value'];
+        if (value == ''):
+            value = 0;
+        exec("request.user." + str(filter) + "filter." + row + " = " + str(value));
+        exec("request.user." + str(filter) + "filter.save()");
+        return HttpResponse("");
+    else:
+        return Http404();
+        
+@login_required
+def save_search_type(request):
+    if (request.is_ajax()):
+        request.user.userprofile.basic_search = (request.POST['isBasic'] == 'true');
+        request.user.userprofile.save();
+        return HttpResponse("");
+    else:
+        return Http404();
+        
+@login_required
+def save_hide_location(request):
+    if (request.is_ajax()):
+        request.user.userprofile.hide_location = (request.POST['isHidden'] == 'true');
+        request.user.userprofile.save();
+        return HttpResponse("");
+    else:
+        return Http404();
+
     
 class DetailView(TemplateView):
     template_name = 'job/detail.html';

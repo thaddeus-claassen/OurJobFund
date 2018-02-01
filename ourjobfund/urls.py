@@ -37,7 +37,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^job/', include('job.urls')),
     url(r'^home/', include('job.urls')),
-    url(r'^', include('job.urls')),
+    url(r'^/', include('job.urls')),
     url(r'^update/', include('update.urls')),
     url(r'^about/', include('about.urls')),
     url(r'^contact/', include('contact.urls')),
