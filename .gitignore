@@ -55,13 +55,13 @@ Temporary Items
 
 # Database stuff
 db.sqlite3
-filter/migrations/*
-job/migrations/*
-jobuser/migrations/*
-update/migrations/*
-user/migrations/*
-pledge/migrations/*
-work/migrations/*
+filter/migrations
+job/migrations
+jobuser/migrations
+update/migrations
+user/migrations
+pledge/migrations
+work/migrations
 
 # ./__pycache__ stuff
 about/__pycache__/*
