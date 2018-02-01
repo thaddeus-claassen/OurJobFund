@@ -143,6 +143,14 @@ class ChangeUsernameForm(forms.ModelForm):
         model = User;
         fields = ['username'];
         
+    def clean_username(self):
+        username = self.cleaned_data.get('username');
+        if (len(username) > 150):
+            raise forms.ValidationError('Your first name must not exceed 150 characters.');
+        if (not re.match(r'^[A-Za-z0-9_]+$', username)):
+            raise forms.ValidationError('Your username may only include alphanumeric characters or "_".');
+        return username;
+        
     def clean_username_protection(self):
         if (not self.cleaned_data.get('username_protection') == ""):
             raise forms.ValidationError('It seems you are a bot.');

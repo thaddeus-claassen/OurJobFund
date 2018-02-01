@@ -76,7 +76,7 @@
                     </ul>
                     {% else %}
                     {% if login_form %}
-                    <form id="sign-in-form" class="navbar-form navbar-right" method="POST" action="{% url 'user:login' %}">
+                    <form id="sign-in-form" class="navbar-form navbar-right" method="POST" action="{{ request.get_full_path }}">
                     {% csrf_token %}
                         <ul class="nav navbar-nav navbar-right">
                             <li><a>

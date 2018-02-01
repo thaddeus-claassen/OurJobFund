@@ -173,9 +173,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media');
 
 MEDIA_URL = '/media/';
 
-LOGOUT_URL = '/user/log_out/'
+LOGOUT_URL = '/log_out/'
 
-LOGIN_URL = '/user/sign_up/';
+LOGIN_URL = '/sign_up/';
 
 ABSOLUTE_URL_OVERRIDES = {
     'auth.user': lambda u: '/user/%s/' % u.username,

@@ -51,7 +51,7 @@ class LoginView(TemplateView):
                 user = authenticate(username=user.username, password=password);
                 if (user is not None):
                     login(request, user);
-                    return redirect(user);
+                    return redirect('user:login');
         return render(request, self.template_name, self.get_context_data(login_form=login_form, sign_up_form=sign_up_form));
         
     def get_context_data(self, **kwargs):

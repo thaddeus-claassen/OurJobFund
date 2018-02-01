@@ -19,7 +19,7 @@ from django.conf import settings;
 from django.views.generic import TemplateView;
 from django.conf.urls.static import static;
 from django.contrib.auth import views as auth_views;
-from user.views import SearchUsersView, see_more_users;
+from user.views import SearchUsersView, see_more_users, LoginView, sign_out, AccountView, SearchUsersView, DetailView;
 from . import views;
 
 app_name = 'ourjobfund';
@@ -34,7 +34,6 @@ urlpatterns = [
     url(r'search_users$', SearchUsersView.as_view()),
     url(r'^see_more_users$', see_more_users),
     url(r'^admin/', admin.site.urls),
-    url(r'^user/', include('user.urls')),
     url(r'^job/', include('job.urls')),
     url(r'^update/', include('update.urls')),
     url(r'^about/', include('about.urls')),
@@ -42,6 +41,7 @@ urlpatterns = [
     url(r'^pledge/', include('pledge.urls')),
     url(r'^terms_of_service', include('terms_of_service.urls')),
     url(r'^$', include('job.urls')),
+    url(r'^', include('user.urls')),
 ]
 
 if settings.DEBUG:
