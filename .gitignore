@@ -79,10 +79,10 @@ work/__pycache__/*
 sendgrid.env
 
 # static stuff
-static/admin/*
-static/job/*
-static/jobuser/*
+static/admin
+static/job
+static/jobuser
 static/rest_framework/*
 static/static_jquery/*
-static/update/*
-static/user/*
+static/update
+static/user
