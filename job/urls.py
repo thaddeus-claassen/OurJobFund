@@ -6,7 +6,6 @@ from . import views;
 app_name = 'job';
 
 urlpatterns = [
-    url(r'^$', views.home, name='home'),
     url(r'^create/$', views.CreateView.as_view(), name='create'),
     url(r'^save-filter/$', views.save_filter),
     url(r'^save-search-type/$', views.save_search_type),

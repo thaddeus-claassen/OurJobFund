@@ -72,7 +72,6 @@ def get_total_jobs(request):
 def findJobs(request):
     type = request.GET['type'];
     search = request.GET['search'];
-    print("Search: " + str(search));
     if (type == 'basic'):
         jobs = Job.objects.all();
         for word in search.split(" "):

@@ -14,9 +14,9 @@ $('document').ready(function() {
         toggleSearch();
         save_search_type(($(this).attr('id') === 'basic_search'));
     });
-    hideLocation();
-    $('#hide-location').change(function() {
-        hideLocation();
+    showLocation();
+    $('#show-location').change(function() {
+        showLocation();
     });
     $('#basic_search').keydown(function(event) {
         if (event.which == ENTER) {
@@ -106,22 +106,22 @@ function save_search_type(isBasic) {
     });
 }// end save_search_type()
 
-function save_hide_location(isHidden) {
+function save_show_location(isHidden) {
     $.ajax({
         type : 'POST',
-        url : '/job/save-hide-location/',
+        url : '/job/save-show-location/',
         data : {
             'isHidden' : isHidden,
             csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
         },
     });
-}// end save_hide_location()
+}// end save_show_location()
 
 function get_jobs() {
     var id = $('input[name="search"]:checked').attr('id');
     var lat = "";
     var lng = "";
-    if (!$('#hide-location').prop('checked')) {
+    if ($('#show-location').prop('checked')) {
         lat = $('#latitude').val();
         lng = $('#longitude').val();
     }// end if
@@ -143,7 +143,7 @@ function add_jobs() {
     var id = $('input[name="search"]:checked').attr('id');
     var lat = "";
     var lng = "";
-    if (!$('#hide-location').prop('checked')) {
+    if ($('#show-location').prop('checked')) {
         lat = $('#latitude').val();
         lng = $('#longitude').val();
     }// end if
@@ -166,7 +166,7 @@ function sort_jobs() {
     var id = $('input[name="search"]:checked').attr('id');
     var lat = "";
     var lng = "";
-    if (!$('#hide-location').prop('checked')) {
+    if ($('#show-location').prop('checked')) {
         lat = $('#latitude').val();
         lng = $('#longitude').val();
     }// end if
@@ -189,7 +189,7 @@ function get_total_jobs() {
     var id = $('input[name="search"]:checked').attr('id');
     var lat = "";
     var lng = "";
-    if (!$('#hide-location').prop('checked')) {
+    if ($('#show-location').prop('checked')) {
         lat = $('#latitude').val();
         lng = $('#longitude').val();
     }// end if
@@ -350,10 +350,10 @@ function toggleSearch() {
     }// end if-else
 }// end toggleSearch()
 
-function hideLocation() {
-    if ($('#hide-location').prop('checked')) {
-        $('#location-wrapper').css('display', 'none');
-    } else {
+function showLocation() {
+    if ($('#show-location').prop('checked')) {
         $('#location-wrapper').css('display', 'inline');
+    } else {
+        $('#location-wrapper').css('display', 'none');
     }// end if-else
-}// end hideLocation()
+}// end showLocation()
