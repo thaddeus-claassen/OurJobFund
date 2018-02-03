@@ -20,9 +20,6 @@ from .forms import NewJobForm;
 import json, re, math;
 from random import randint;
 
-def redirect_to_home(request):
-    return redirect('job:home');
-
 def home(request):
     return render(request, 'job/home.html');
     

@@ -36,7 +36,6 @@ urlpatterns = [
     url(r'^see-more-users$', see_more_users),
     url(r'^admin/', admin.site.urls),
     url(r'^job/', include('job.urls')),
-    url(r'^home/', include('job.urls')),
     url(r'^$', home, name='home'),
     url(r'^update/', include('update.urls')),
     url(r'^about/', include('about.urls')),

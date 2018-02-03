@@ -19,10 +19,10 @@
                     {{ change_username_form.username }}
                 </div>
                 <div class="col-md-4">
-                    {% if change_name_form %} 
+                    {% if change_username_form %} 
                     <input id="change_username" class="edit" type="button" value="Change Username" />
-                    <input id="save_username" class="edit" type="submit" value="Save Username" name="change-username" />
-                    <input id="cancel_username" class="edit" type="cancel" value="Cancel" />
+                    <input id="save_username" class="edit" type="submit" value="Save" name="change-username" />
+                    <input id="cancel_username" class="edit" type="button" value="Cancel" />
                     {% endif %}
                 </div>
             </div>
@@ -50,7 +50,7 @@
                 </div>
                 <div class="col-md-4">
                     <input id="change_email" class="edit" type="button" value="Change Email" />
-                    <input id="save_email" class="edit" type="submit" value="Save Email" name="change-email" />
+                    <input id="save_email" class="edit" type="submit" value="Save" name="change-email" />
                     <input id="cancel_email" class="edit" type="button" value="Cancel" />
                 </div>
             </div>
@@ -68,7 +68,7 @@
                 {% if field.auto_id == 'id_repeat_new_password' %}
                 <div class="col-md-4">
                     <input id="change_password" class="edit" type="button" value="Change Password" />
-                    <input id="save_password" class="edit" type="submit" value="Save Password" name="change-password" />
+                    <input id="save_password" class="edit" type="submit" value="Save" name="change-password" />
                     <input id="cancel_password" class="edit" type="button" value="Cancel" />
                 </div>
                 {% endif %}

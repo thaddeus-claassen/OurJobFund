@@ -126,7 +126,7 @@ function get_jobs() {
         lng = $('#longitude').val();
     }// end if
     $.ajax({
-        url : 'get-jobs',
+        url : 'job/get-jobs',
         data : {
             'type' : id,
             'search' : $('#' + id +'_search').val(),
@@ -148,7 +148,7 @@ function add_jobs() {
         lng = $('#longitude').val();
     }// end if
     $.ajax({
-        url : 'add-jobs',
+        url : 'job/add-jobs',
         data : {
             'numSearches' : numSearches,
             'type' : id,
@@ -171,7 +171,7 @@ function sort_jobs() {
         lng = $('#longitude').val();
     }// end if
     $.ajax({
-        url : 'sort_jobs',
+        url : 'job/sort_jobs',
         data : {
             'numSearches' : numSearches,
             'type' : id,
@@ -194,7 +194,7 @@ function get_total_jobs() {
         lng = $('#longitude').val();
     }// end if
     $.ajax({
-        url : 'get-total-jobs',
+        url : 'job/get-total-jobs',
         data : {
             'type' : id,
             'search' : $('#' + id +'_search').val(),

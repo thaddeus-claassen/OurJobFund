@@ -38,7 +38,7 @@ class LoginView(TemplateView):
                 user = User.objects.get(email=login_form.cleaned_data['email']);
                 user.is_active = True;
                 login(request, user);
-                return redirect('job:home');
+                return redirect('home');
         elif ('sign-up' in request.POST):
             sign_up_form = SignUpForm(request.POST);
             if (sign_up_form.is_valid()):
@@ -202,7 +202,9 @@ class AccountView(TemplateView):
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
+        print("got into AccountView through GET method.")
         usernameForm = '';
+        print((datetime.now() - request.user.userprofile.last_time_username_was_changed.replace(tzinfo=None)).days)
         if ((datetime.now() - request.user.userprofile.last_time_username_was_changed.replace(tzinfo=None)).days >= 180):
             usernameForm = self.usernameForm(initial={'username' : request.user.username});
         emailForm = self.emailForm(initial={'email' : request.user.email});
