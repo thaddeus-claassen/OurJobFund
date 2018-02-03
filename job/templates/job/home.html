@@ -90,6 +90,7 @@
                 </div>
             </div>
         </div>
+        {% if request.user.is_authenticated %}
         <div id="worker-filter-wrapper" class="margin-row">
             <div class="row">
                 <div class="col-md-12">
@@ -168,6 +169,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

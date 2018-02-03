@@ -56,9 +56,7 @@ def sort_jobs(request):
         return Http404();
         
 def get_total_jobs(request):
-    print("Got into get_total_jobs")
     if (request.is_ajax()):
-        print("request is ajax");
         jobs = findJobs(request);
         total = {};
         total['total'] = len(jobs)
