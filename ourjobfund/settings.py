@@ -12,19 +12,17 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os;
 
-ALLOWED_HOSTS = ['.ourjobfund.com', '54.173.90.146'];
-
+DEBUG = True;
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)));
 
-DEBUG = open(os.path.join(BASE_DIR, '.django/DEBUG.txt'), 'r').read().strip();
-
-
 if DEBUG:
+    ALLOWED_HOSTS = [];
     SECURE_SSL_REDIRECT = False;
     SESSION_COOKIE_SECURE = False;
     CSRF_COOKIE_SECURE = False;
 else:
+    ALLOWED_HOSTS = ['.ourjobfund.com', '54.173.90.146'];
     SECURE_SSL_REDIRECT = True;
     SESSION_COOKIE_SECURE = True;
     CSRF_COOKIE_SECURE = True;
