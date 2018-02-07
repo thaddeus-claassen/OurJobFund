@@ -40,7 +40,6 @@ urlpatterns = [
     url(r'^update/', include('update.urls')),
     url(r'^about/', include('about.urls')),
     url(r'^contact/', include('contact.urls')),
-    url(r'^pledge/', include('pledge.urls')),
     url(r'^terms_of_service/', include('terms_of_service.urls')),
     url(r'^', include('user.urls')),
 ]

@@ -1,24 +1,23 @@
 from django.contrib.auth.decorators import login_required;
+from rest_framework.renderers import JSONRenderer;
 from django.utils.decorators import method_decorator;
-from django.shortcuts import render, get_object_or_404, redirect;
 from django.views.generic import TemplateView;
+from notification.models import Notification;
 from annoying.functions import get_object_or_None;
 from django.utils.html import escape;
-from .models import Job, Tag, User, Image;
-from .serializers import JobSerializer;
-from notification.models import Notification;
+from django.shortcuts import render, get_object_or_404, redirect;
 from django.db.models import Q, F;
 from jobuser.models import JobUser;
-from pledge.models import Pledge, Pay;
-from work.models import Work;
 from update.models import Update;
+from .serializers import JobSerializer;
+from filter.forms import PledgeFilterForm, WorkerFilterForm;
 from django.http import HttpResponse, Http404;
 from django.core import serializers;
-from rest_framework.renderers import JSONRenderer;
-from filter.forms import PledgeFilterForm, WorkerFilterForm;
+from pay.models import Pay;
+from .models import Job, Tag, User, Image;
 from .forms import NewJobForm;
-import json, re, math;
 from random import randint;
+import json, re, math;
 
 def home(request):
     return render(request, 'job/home.html');
@@ -156,20 +155,17 @@ class DetailView(TemplateView):
     
     def get_context_data(self, request, **kwargs):
         job = kwargs['job'];
-        jobusers = JobUser.objects.filter(Q(job=job) & (Q(pledged__gt=0) | ~Q(work_status='Not Working')));
-        current = jobusers.filter((Q(pledged__gt=0) & Q(paid__lt=F('pledged'))) | Q(work_status='Working'));
-        finished = jobusers.exclude(id__in=current);
-        context = {                                                                     
+        context = {
             'job': job,
-            'current' : current,
-            'finished' : finished,
             'updates' : Update.objects.filter(jobuser__job=job).order_by('-date'),
+            'pledges' : JobUser.objects.filter(job=job, pledged__gt=0),
+            'workers' : JobUser.objects.filter(job=job).exclude(work_status=''),
         }
         if (request.user.is_authenticated()):
             serializer = JobSerializer(Job.objects.filter(pk=job.pk), many=True, context={'user' : request.user});
             context['jobuser'] = get_object_or_None(JobUser, user=request.user, job=job);
             context['expected_pay'] = serializer.data[0]['expected_pay'];
-            context['expected_workers'] = serializer.data[0]['expected_workers'];
+            #context['expected_workers'] = serializer.data[0]['expected_workers'];
         return context;
 
 @login_required

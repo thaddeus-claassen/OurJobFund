@@ -93,12 +93,12 @@
                         <div class="col-md-12">
                             <select id="pay_for" name="pay_for">
                                 <option value="(default)" selected="selected">(Choose a job)</option>
-                            {% for jobuser in detail_user.current_jobusers %}
+                            {% for jobuser in current %}
                                 {% if jobuser.job.work_set.all %}
                                 <option value="{{ jobuser.job.random_string }}">{{ jobuser.job.name }}</option>
                                 {% endif %}
                             {% endfor %}
-                            {% for jobuser in detail_user.finished_jobusers %}
+                            {% for jobuser in finished %}
                                 {% if jobuser.job.work_set.all %}
                                 <option value="{{ jobuser.job.random_string }}">{{ jobuser.job.name }}</option>
                                 {% endif %}

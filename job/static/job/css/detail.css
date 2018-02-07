@@ -65,7 +65,7 @@ tbody {
     overflow-y: scroll;
 }
 
-#current th, #current td, #finished th, #finished td {
+#workers th, #workers td {
     width: 25%;
     float: left;
 }
@@ -74,7 +74,7 @@ tbody {
     margin-top: 30px;
 }
 
-#updates th, #updates td {
+#updates th, #updates td, #pledges th, #pledges td {
     width: 33%;
     float: left;
 }

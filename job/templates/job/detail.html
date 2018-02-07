@@ -135,7 +135,7 @@
                     {% if request.user.is_authenticated %}
                     <div class="col-md-6">
                         <form action="{% url 'update:create' job.random_string %}">
-                            <input id="post_update" class="pledge_work_inputs" type="submit" value="Post Update" />
+                            <input id="post_update" class="pledge_work_inputs" type="submit" value="Post Update" name="update" />
                         </form>
                     </div>
                     {% endif %}
@@ -184,28 +184,30 @@
         </div>
     </div>
 </div>
-
-
 <div class="row">
     <div class="col-md-6">
         <div class="row info_row header">
             <div class="col-md-6">
-                <span>Current</span>
+                <span>Pledges</span>
+            </div>
+            <div class="col-md-6">
+                <form action="{% url 'update:create' job.random_string %}">
+                    <input class="pledge_work_inputs" type="submit" value="Pledge" name="pledge" />
+                </form>
             </div>
         </div>
         <div class="row info_row">
             <div class="col-md-12">
-                <table id="current" class="table">
+                <table id="pledges" class="table">
                     <thead>
                         <tr>
-                            <th id="current-username" class="sort">Username</th>
-                            <th id="current-pledged" class="sort">Pledged</th>
-                            <th id="current-paid" class="sort">Paid</th>
-                            <th id="current-received" class="sort">Received</th>
+                            <th id="pledges-username" class="sort">Username</th>
+                            <th id="pledges-pledged" class="sort">Pledged</th>
+                            <th id="pledges-paid" class="sort">Paid</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for j in current %}
+                    {% for j in pledges %}
                         <tr>
                             <td>
                                 {% if j.user.is_active %}
@@ -222,7 +224,6 @@
                             </td>
                             <td>${{ j.pledged|floatformat:2 }}</td>
                             <td>${{ j.paid|floatformat:2 }}</td>
-                            <td>${{ j.received|floatformat:2 }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -233,39 +234,46 @@
     <div class="col-md-6">
         <div class="row info_row header">
             <div class="col-md-6">
-                <span>Finished</span>
+                <span>Workers</span>
             </div>
+            {% if request.user.is_authenticated %}
+            <div class="col-md-6">
+                <form action="{% url 'update:create' job.random_string %}">
+                    <input class="pledge_work_inputs" type="submit" value="Work" name="work" />
+                </form>
+            </div>
+            {% endif %}
         </div>
         <div class="row info_row">
             <div class="col-md-12">
-                <table id="finished" class="table">
+                <table id="workers" class="table">
                     <thead>
                         <tr>
-                            <th id="finished-username">Username</th>
-                            <th id="finished-pledged">Pledged</th>
-                            <th id="finished-paid">Paid</th>
-                            <th id="finished-received">Received</th>
+                            <th id="workers-username">Username</th>
+                            <th id="workers-status">Status</th>
+                            <th id="workers-requesting">Requesting</th>
+                            <th id="workers-received">Received</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for j in finished %}
+                    {% for w in workers %}
                         <tr>
                             <td>
-                                {% if j.user.is_active %}
+                                {% if w.user.is_active %}
                                 {% if request.user.is_authenticated %}
-                                <a href="{% url 'user:detail' j.user.username %}">
-                                    {{ j.user.username }}
+                                <a href="{% url 'user:detail' w.user.username %}">
+                                    {{ w.user.username }}
                                 </a>
                                 {% else %}
-                                <span>{{ j.user.username }}</span>
+                                <span>{{ w.user.username }}</span>
                                 {% endif %}
                                 {% else %}
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
-                            <td>${{ j.pledged|floatformat:2 }}</td>
-                            <td>${{ j.paid|floatformat:2 }}</td>
-                            <td>${{ j.received|floatformat:2 }}</td>
+                            <td>{{ w.work_status }}</td>
+                            <td>${{ w.received|floatformat:2 }}</td>
+                            <td>${{ w.requesting|floatformat:2 }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>

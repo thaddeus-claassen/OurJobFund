@@ -1,4 +1,4 @@
-#update_for {
+#title {
     text-align: center;
 }
 
@@ -6,7 +6,7 @@ input[type=submit] {
     width: 100%;
 }
 
-#post_update_form textarea {
+textarea {
     width: 100%;
     resize: none;
 }

@@ -8,6 +8,6 @@ class JobUser(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE);
     pledged = models.FloatField(default=0);
     paid = models.FloatField(default=0);
-    work_status = models.CharField(default='Not Working', max_length=100, blank=True);
+    work_status = models.CharField(default='', max_length=10, blank=True);
+    money_request = models.FloatField(default=0);
     received = models.FloatField(default=0);
-    

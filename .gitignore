@@ -62,6 +62,7 @@ update/migrations/
 user/migrations/
 pledge/migrations/
 work/migrations/
+notification/migrations/
 
 # ./__pycache__ stuff
 about/__pycache__/

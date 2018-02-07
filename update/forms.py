@@ -2,18 +2,33 @@ from django import forms;
 from .models import Update;
 import re;
 
-TYPES = (('Comment', 'Comment'), ('Working', 'Working'), ('Finished', 'Finished'), ('Pledge', 'Pledge'));
-
 class UpdateForm(forms.Form):
-    type = forms.ChoiceField(label="Type:", choices=TYPES);
-    amount = forms.FloatField(label='Amount:', widget=forms.TextInput(attrs={'placeholder' : '$0.00'}));
-    title = forms.CharField(label="Title:", widget=forms.TextInput(attrs={'placeholder': '(Required)'}), max_length=100);
+    pledge = forms.CharField(label="Pledge:", widget=forms.TextInput(attrs={'placeholder': '$0.00'}));
+    money_request = forms.CharField(label="$ Requesting:", widget=forms.TextInput(attrs={'placeholder': '$0.00'}));
     images = forms.ImageField(label="Images:", widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False);
-    description = forms.CharField(label="Description:", widget=forms.Textarea(), required=False, max_length=10000);
-    protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
+    description = forms.CharField(label="Description:", widget=forms.Textarea, required=False, max_length=10000);
+    honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
         
-    def clean_protection(self):
-        if (not self.cleaned_data.get('protection') == ""):
+    def clean_pledge(self):
+        pledge = self.cleaned_data.get('pledge');
+        if (self.checkStringIsValidMoney(pledge)):
+            if (float(pledge) <= 0):
+                raise forms.ValidationError('You cannot pledge 0 or less.'); 
+        else:
+            raise forms.ValidationError('Please enter a valid dollar amount.');
+        return pledge;
+        
+    def checkStringIsValidMoney(money):
+        valid = False;
+        s = money.split('.');
+        if (len(s) == 1 and s[0].isdigit()):
+            valid = True;
+        elif (len(s) == 2 and s[0].isdigit() and (len(s[1]) == 0 or len(s[2]) == 1) and s[1].isdigit()):
+            valid = True;
+        return valid;
+        
+    def clean_honey_pot(self):
+        if (not self.cleaned_data.get('honey_pot') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
         

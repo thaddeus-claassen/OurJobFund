@@ -85,23 +85,23 @@ class ProfileForm(forms.ModelForm):
     education = forms.CharField(widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
     occupation = forms.CharField(widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
     contact = forms.CharField(widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
-    protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
+    profile_honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
     
     class Meta:
         model = UserProfile;
         fields = ['city', 'state', 'education', 'occupation', 'contact'];    
     
-    def clean_protection(self):
-        if (not self.cleaned_data.get('protection') == ""):
+    def clean_profile_honey_pot(self):
+        if (not self.cleaned_data.get('profile_honey_pot') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
     
 class ChangeNameForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
     last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
-    protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
+    name_honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
 
-    class Meta: 
+    class Meta:
         model = User;
         fields = ['first_name', 'last_name'];
         
@@ -121,26 +121,26 @@ class ChangeNameForm(forms.ModelForm):
             raise forms.ValidationError('Your first name may only include alphabetic characters or "-".');
         return last_name;
    
-    def clean_protection(self):
-        if (not self.cleaned_data.get('protection') == ""):
+    def clean_name_honey_pot(self):
+        if (not self.cleaned_data.get('name_honey_pot') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
         
 class DescriptionForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea, required=False);
-    protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
+    description_honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
 
     class Meta:
         model = UserProfile;
-        fields = ['description'];    
+        fields = ['description'];
 
-    def clean_protection(self):
-        if (not self.cleaned_data.get('protection') == ""):
+    def clean_description_honey_pot(self):
+        if (not self.cleaned_data.get('description_honey_pot') == ""):
             raise forms.ValidationError('It seems you are a bot.');
-        return "";        
-        
+        return "";
+
 class ChangeUsernameForm(forms.ModelForm):
-    username_protection = forms.CharField(label="", widget=forms.HiddenInput(), required=False);
+    username_honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), required=False);
     
     class Meta:
         model = User;
@@ -154,13 +154,13 @@ class ChangeUsernameForm(forms.ModelForm):
             raise forms.ValidationError('Your username may only include alphanumeric characters or "_".');
         return username;
         
-    def clean_username_protection(self):
-        if (not self.cleaned_data.get('username_protection') == ""):
+    def clean_username_honey_pot(self):
+        if (not self.cleaned_data.get('username_honey_pot') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";        
         
 class ChangeEmailForm(forms.ModelForm):
-    email_protection = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
+    email_honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     
     class Meta:
         model = User;
@@ -172,8 +172,8 @@ class ChangeEmailForm(forms.ModelForm):
             raise forms.ValidationError('A user already has that email');
         return email;
     
-    def clean_email_protection(self):
-        if (not self.cleaned_data.get('email_protection') == ""):
+    def clean_email_honey_pot(self):
+        if (not self.cleaned_data.get('email_honey_pot') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
             
@@ -181,7 +181,7 @@ class ChangePasswordForm(forms.ModelForm):
     password = forms.CharField(label="Current Password", widget=forms.PasswordInput);
     new_password = forms.CharField(widget=forms.PasswordInput);
     repeat_new_password = forms.CharField(widget=forms.PasswordInput);
-    password_protection = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
+    password_honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
             
     class Meta:
         model = User;
@@ -212,20 +212,20 @@ class ChangePasswordForm(forms.ModelForm):
             raise forms.ValidationError("Passwords do not match");
         return repeat_password;
         
-    def clean_password_protection(self):
-        if (not self.cleaned_data.get('password_protection') == ""):
+    def clean_password_honey_pot(self):
+        if (not self.cleaned_data.get('password_honey_pot') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
         
 class DeactivateAccountForm(forms.ModelForm):
     is_active = forms.BooleanField(initial=False, required=False);
-    deactivate_protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
+    deactivate_honey_pot= forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
     
     class Meta:
         model = User;
         fields = ['is_active'];
         
     def clean_deactivate_protection(self):
-        if (not self.cleaned_data.get('deactivate_protection') == ""):
+        if (not self.cleaned_data.get('deactivate_honey_pot') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";

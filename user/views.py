@@ -11,12 +11,12 @@ from django.db.models import Q, F;
 from django.contrib.auth import authenticate, login, logout;
 from .forms import ChangePasswordForm, ChangeNameForm, ChangeEmailForm, LoginForm, SignUpForm, DeactivateAccountForm, ProfileForm, DescriptionForm, ChangeUsernameForm;
 from .models import UserProfile;
+from pay.models import Pay;
 from ourjobfund.settings import STRIPE_TEST_SECRET_KEY, STATIC_ROOT;
-import stripe;
 from job.models import Job;
 from datetime import datetime;
 from random import randint;
-import json;
+import json, stripe;
 
 class LoginView(TemplateView):
     template_name = 'user/login.html';
@@ -112,19 +112,10 @@ class DetailView(TemplateView):
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
-        print(request);
-        print("username: " + str(kwargs['username']));
         user = get_object_or_404(User, username=kwargs['username']);
-        print("user: " + str(user));
-        nameForm = self.nameForm(initial={'first_name' : user.first_name, 'last_name' : user.last_name });
-        profileForm = self.profileForm(initial={
-            'city' : user.userprofile.city, 
-            'state' : user.userprofile.state,
-            'occupation' : user.userprofile.occupation,
-            'education' : user.userprofile.education,
-            'contact' : user.userprofile.contact,
-        });
-        descriptionForm = self.descriptionForm(initial={'description' : user.userprofile.description});
+        nameForm = self.initializeName(user, name_form=self.nameForm);
+        profileForm = self.initializeProfile(user, profile_form=self.profileForm);
+        descriptionForm = self.initializeDescription(user, description_form=self.descriptionForm);
         return render(request, self.template_name, self.get_context_data(user=user, nameForm=nameForm, profileForm=profileForm, descriptionForm=descriptionForm));
     
     @method_decorator(login_required)
@@ -133,6 +124,7 @@ class DetailView(TemplateView):
         profileForm = self.profileForm;
         descriptionForm = self.descriptionForm;
         if ('info' in request.POST):
+            print("Got into info");
             nameForm = nameForm(request.POST);
             profileForm = profileForm(request.POST);
             if (nameForm.is_valid() and profileForm.is_valid()):
@@ -145,13 +137,19 @@ class DetailView(TemplateView):
                 request.user.userprofile.education = profileForm.cleaned_data['education'];
                 request.user.userprofile.contact = profileForm.cleaned_data['contact'];
                 request.user.userprofile.save();
-                return redirect(request.user);
+                return redirect('user:detail', username=request.user.username);
+            else:
+                print("Forms are not valid");
+                descriptionForm = self.initializeDescription(request.user, description_form=descriptionForm);
         elif ('description' in request.POST):
             descriptionForm = descriptionForm(request.POST);
             if (descriptionForm.is_valid()):
                 request.user.userprofile.description = descriptionForm.cleaned_data['description'];
                 request.user.userprofile.save();
-                return redirect(request.user);
+                return redirect('user:detail', username=request.user.username);
+            else:
+                nameForm = self.initializeName(request.user, name_form=nameForm);
+                profileForm = self.initializeProfile(request.user, profile_form=profileForm);
         elif ('stripeToken' in request.POST):
             self.pay(request, job, jobuser);
             return redirect('user:confirmation', username=get_object_or_404(User, username=kwargs['username']));
@@ -159,6 +157,24 @@ class DetailView(TemplateView):
             request.user.userprofile.stripe_account_id = "";
             request.user.userprofile.save();
         return render(request, self.template_name, self.get_context_data(user=request.user, nameForm=nameForm, profileForm=profileForm, descriptionForm=descriptionForm));
+        
+    def initializeName(self, *args, **kwargs):
+        user = args[0];
+        return kwargs['name_form'](initial={'first_name' : user.first_name, 'last_name' : user.last_name });
+        
+    def initializeProfile(self, *args, **kwargs):
+        user = args[0];
+        return kwargs['profile_form'](initial={
+            'city' : user.userprofile.city, 
+            'state' : user.userprofile.state,
+            'occupation' : user.userprofile.occupation,
+            'education' : user.userprofile.education,
+            'contact' : user.userprofile.contact,
+        });
+        
+    def initializeDescription(self, *args, **kwargs):
+        user = args[0];
+        return kwargs['description_form'](initial={'description' : user.userprofile.description});
         
     def pay(self, request, job, jobuser):
         receiver_pk = request.POST['pay_to'];
@@ -185,7 +201,7 @@ class DetailView(TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs);
         user = kwargs['user'];
-        context['detail_user'] = user;kwargs
+        context['detail_user'] = user;
         context['name_form'] = kwargs['nameForm'];
         context['profile_form'] = kwargs['profileForm'];
         context['description_form'] = kwargs['descriptionForm'];
@@ -202,9 +218,7 @@ class AccountView(TemplateView):
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
-        print("got into AccountView through GET method.")
         usernameForm = '';
-        print((datetime.now() - request.user.userprofile.last_time_username_was_changed.replace(tzinfo=None)).days)
         if ((datetime.now() - request.user.userprofile.last_time_username_was_changed.replace(tzinfo=None)).days >= 180):
             usernameForm = self.usernameForm(initial={'username' : request.user.username});
         emailForm = self.emailForm(initial={'email' : request.user.email});

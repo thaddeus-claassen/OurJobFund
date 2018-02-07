@@ -8,41 +8,56 @@
 {% endblock %}
 
 {% block content %}
-<form id="post_update_form" action="{% url 'update:create' job.random_string %}" method="POST" enctype="multipart/form-data">
+<form id="form" action="{{ request.get_full_path }}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
     <div class="row info_row">
         <div class="col-md-12">
-            <h4 id="update_for">Update for <a href="{% url 'job:detail' job.random_string %}">{{ job.name }}</a></h4>
+            <h4 id="title">
+                {{ job.name }}
+            </h4>
         </div>
     </div>
+    {% if type == 'update' %}
     <div class="row info_row">
         <div class="col-md-2">
-            {{ form.type.label }}
+            {{ form.images.label }}
         </div>
         <div class="col-md-10">
-            {{ form.type }}
+            {{ form.images }}
         </div>
     </div>
-{% for field in form %}
-    {% if field.auto_id != "id_type" %}
-    <div id="{{ field.auto_id }}-wrapper">
-        <div class="row info_row">
-            <div class="col-md-2">
-                {{ field.label }}
-            </div>
-            <div class="col-md-10">
-                {{ field }}
-            </div>
+    {% elif type == 'pledge' %}
+    <div class="row info_row">
+        <div class="col-md-2">
+            {{ form.pledge.label }}
+        </div>
+        <div class="col-md-10">
+            {{ form.pledge }}
+        </div>
+    </div>
+    {% elif type == 'work' %}
+    <div class="row info_row">
+        <div class="col-md-2">
+            {{ form.money_request.label }}
+        </div>
+        <div class="col-md-10">
+            {{ form.money_request }}
         </div>
     </div>
     {% endif %}
-{% endfor %}
+    <div class="row info_row">
+        <div class="col-md-2">
+            {{ form.description.label }}
+        </div>
+        <div class="col-md-10">
+            {{ form.description }}
+        </div>
+    </div>
     <div class="row info_row">
         <div class="col-md-2"></div>
         <div class="col-md-10">
-            <input type="submit" value="Submit" />
+            <input type="submit" value="Submit" name="{{ type }}"/>
         </div>
     </div>
-    <input id="stripe_token" type="hidden" name="stripeToken" />
 </form>
 {% endblock %}
