@@ -10,29 +10,20 @@ from django.http import HttpResponse, Http404;
 from job.models import Job;
 from pay.models import Pay;
 from .models import Update, Image;
-from .forms import UpdateForm;
+from .forms import UpdateForm, PledgeForm, WorkForm;
 from random import randint;
 import stripe;
-    
-class CreateView(TemplateView):
+
+class CreateUpdateView(TemplateView):
     template_name = 'update/create.html';
     form = UpdateForm;
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         job = get_object_or_None(Job, random_string=kwargs['job_random_string']);
-        type = "";
-        if ('update' in request.GET):
-            type = 'update';
-        elif ('pledge' in request.GET):
-            type = 'pledge';
-        elif ('work' in request.GET):
-            type = 'work';
-        else:
-            return redirect(job);
-        return render(request, self.template_name, self.get_context_data(type=type, job=job, form=self.form));
+        return render(request, self.template_name, self.get_context_data(job=job, form=self.form));
     
-    @method_decorator(login_required)    
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
         form = self.form(request.POST);
@@ -42,50 +33,118 @@ class CreateView(TemplateView):
                 jobuser = JobUser(user=request.user, job=job);
                 jobuser.save();
             description = form.cleaned_data['description'];
-            update = Update(jobuser=jobuser, description=description);
-            if ('update' in request.POST):
-                for image in request.FILES.getlist('images'):
-                    image = Image(update=update, image=image);
-                    image.save();
-                title = "Update";
-            elif ('pledge' in request.POST):
-                amount = form.cleaned_data['amount'];
-                jobuser.pledged = jobuser.pledged + amount;
-                jobuser.save();
-                job.pledged = job.pledged + amount;
-                job.save();
-                title = "Pledged $" + str(amount);
-            elif ('work' in request.POST):
-                jobuser.request = form.cleaned_data['money_request'];
-                if (jobuser.work_status == 'work'):
-                    jobuser.work_status = 'work';
-                    title = "Started Working";
-                else:
-                    jobuser.work_static = 'finish';
-                    title = "Finished Working";
-                jobuser.save();
+            update = Update(jobuser=jobuser, description=description, random_string=createRandomString());
+            for image in request.FILES.getlist('images'):
+                image = Image(update=update, image=image);
+                image.save();
+            title = "Update";
             update.title = title;
             update.save();
             sendNotifications(jobuser);
             return redirect(job);
         else:
-            type = "";
-            if ('update' in request.POST):
-                type = 'update';
-            elif ('pledge' in request.POST):
-                type = 'pledge';
-            elif ('work' in request.POST):
-                type = 'work';
-            return render(request, self.template_name, self.get_context_data(type=type, job=job, form=form));
+            return render(request, self.template_name, self.get_context_data(job=job, form=form));
     
     def get_context_data(self, **kwargs):
-        context = super(CreateView, self).get_context_data(**kwargs);
-        context = {
-            'type' : kwargs['type'],
-            'job' : kwargs['job'],
-            'form' : kwargs['form'],
-        }
+        context = super(CreateUpdateView, self).get_context_data(**kwargs);
+        context['job'] = kwargs['job'];
+        context['form'] = kwargs['form'];
+        context['type'] = 'update';
         return context;
+        
+class CreatePledgeView(TemplateView):
+    template_name = 'update/create.html';
+    form = PledgeForm;
+    
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
+        return render(request, self.template_name, self.get_context_data(job=job, form=self.form));
+        
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
+        form = self.form(request.POST);
+        if (form.is_valid()):
+            jobuser = get_object_or_None(JobUser, user=request.user, job=job);
+            if (jobuser is None):
+                jobuser = JobUser(user=request.user, job=job);
+                jobuser.save();
+            description = form.cleaned_data['description'];
+            amount = float(form.cleaned_data['pledge']);
+            update = Update(jobuser=jobuser, description=description, pledge=amount, random_string=createRandomString());
+            jobuser.pledged = jobuser.pledged + amount;
+            jobuser.save();
+            job.pledged = job.pledged + amount;
+            job.save();
+            title = "Pledged $" + str(amount);
+            update.title = title;
+            update.save();
+            sendNotifications(jobuser);
+            return redirect(job);
+        else:
+            return render(request, self.template_name, self.get_context_data(job=job, form=form));
+        
+        
+    def get_context_data(self, **kwargs):
+        context = super(CreatePledgeView, self).get_context_data(**kwargs);
+        context['job'] = kwargs['job'];
+        context['form'] = kwargs['form'];
+        context['type'] = 'pledge';
+        return context;
+    
+class CreateWorkView(TemplateView):
+    template_name = 'update/create.html';
+    form = WorkForm;
+    
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
+        jb = get_object_or_None(JobUser, user=request.user, job=job);
+        if (jb and jb.work_status == 'work'):
+            type = 'finish';
+        else:
+            type = 'work';
+        return render(request, self.template_name, self.get_context_data(job=job, form=self.form, type=type));
+        
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
+        form = self.form(request.POST);
+        if (form.is_valid()):
+            jobuser = get_object_or_None(JobUser, user=request.user, job=job);
+            if (jobuser is None):
+                jobuser = JobUser(user=request.user, job=job);
+                jobuser.save();
+            description = form.cleaned_data['description'];
+            type = form.cleaned_data['type'];
+            money_request = form.cleaned_data['money_request'];
+            update = Update(jobuser=jobuser, description=description, money_request=money_request, work_status=type, random_string=createRandomString());
+            jobuser.work_status = type;
+            if (type == 'work'):
+                title = "Started Working";
+                jobuser.request_money = money_request;
+            else:
+                title = "Finished Working";
+            jobuser.save();
+            update.title = title;
+            update.save();
+            sendNotifications(jobuser);
+            return redirect(job);
+        else:
+            jb = get_object_or_None(JobUser, user=request.user, job=job);
+            if (jb and jb.work_status == 'work'):
+                type = 'finish';
+            else:
+                type = 'work';
+            return render(request, self.template_name, self.get_context_data(job=job, form=form, type=type));
+        
+    def get_context_data(self, **kwargs):
+        context = super(CreateWorkView, self).get_context_data(**kwargs);
+        context['job'] = kwargs['job'];
+        context['form'] = kwargs['form'];
+        context['type'] = kwargs['type'];
+        return context;    
     
 def detail(request, update_random_string):
     update = get_object_or_404(Update, random_string=update_random_string);

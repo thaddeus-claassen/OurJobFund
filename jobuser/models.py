@@ -9,5 +9,5 @@ class JobUser(models.Model):
     pledged = models.FloatField(default=0);
     paid = models.FloatField(default=0);
     work_status = models.CharField(default='', max_length=10, blank=True);
-    money_request = models.FloatField(default=0);
+    request_money = models.FloatField(default=0);
     received = models.FloatField(default=0);

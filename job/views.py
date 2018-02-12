@@ -104,12 +104,12 @@ def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_
         lat = job.latitude * math.pi / 180;
         lon = job.longitude * math.pi / 180;
         RADIUS_OF_EARTH_IN_MILES = 3959;
-        distance = RADIUS_OF_EARTH_IN_MILES * math.acos(math.sin(latitude_in_radians) * math.sin(lat) + math.cos(latitude_in_radians) * math.cos(lat) * math.cos(math.fabs(longitude_in_radians - lon))); #This is called the Spherical Law of Cosines and it is used to calculate distances on a sphere. (Note: Earth is not a sphere, thus this will have a margin of error, but it is small. Computation speed compensates)
+        distance = RADIUS_OF_EARTH_IN_MILES * math.acos(math.sin(latitude_in_radians) * math.sin(lat) + math.cos(latitude_in_radians) * math.cos(lat) * math.cos(math.fabs(longitude_in_radians - lon))); #This is called the Spherical Law of Cosines and it is used to calculate distances on a sphere. (Note: Earth is not a sphere, thus this will have a margin of error, but it is small. Quicker computation speed compensates)
         if (distance > radius_in_miles):
             jobs = jobs.exclude(id=job.id);
     return jobs;
     
-@login_required        
+@login_required
 def save_filter(request):
     if (request.is_ajax()):
         changed_filter = request.POST['filter'];

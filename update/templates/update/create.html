@@ -13,50 +13,29 @@
     <div class="row info_row">
         <div class="col-md-12">
             <h4 id="title">
-                {{ job.name }}
+                <a href="{% url 'job:detail' job.random_string %}">{{ job.name }}</a>
             </h4>
         </div>
     </div>
-    {% if type == 'update' %}
-    <div class="row info_row">
-        <div class="col-md-2">
-            {{ form.images.label }}
-        </div>
-        <div class="col-md-10">
-            {{ form.images }}
-        </div>
-    </div>
-    {% elif type == 'pledge' %}
-    <div class="row info_row">
-        <div class="col-md-2">
-            {{ form.pledge.label }}
-        </div>
-        <div class="col-md-10">
-            {{ form.pledge }}
+    {{ form.non_field_errors }}
+    {{ form.errors }}
+    {% for field in form %}
+    <div id="{{ field.auto_id }}-wrapper">
+        <div class="row info_row">
+            <div class="col-md-2">
+                {{ field.label }}
+            </div>
+            <div class="col-md-10">
+                {{ field }}
+                {{ field.errors }}
+            </div>
         </div>
     </div>
-    {% elif type == 'work' %}
-    <div class="row info_row">
-        <div class="col-md-2">
-            {{ form.money_request.label }}
-        </div>
-        <div class="col-md-10">
-            {{ form.money_request }}
-        </div>
-    </div>
-    {% endif %}
-    <div class="row info_row">
-        <div class="col-md-2">
-            {{ form.description.label }}
-        </div>
-        <div class="col-md-10">
-            {{ form.description }}
-        </div>
-    </div>
+    {% endfor %}
     <div class="row info_row">
         <div class="col-md-2"></div>
         <div class="col-md-10">
-            <input type="submit" value="Submit" name="{{ type }}"/>
+            <input id="submit_button" type="submit" value="Submit" name="submit_{{ type }}"/>
         </div>
     </div>
 </form>

@@ -10,45 +10,49 @@
 <input id="update_id" type="hidden" value="{{ update.id }}" />
 <div class="row">
     <div class="col-md-12">
-        <h4 id="title">{{ update.title }}</h4>
+        <h4 id="title">{{ update.title }} for <a href="{% url 'job:detail' update.jobuser.job.random_string %}">{{ update.jobuser.job.name }}</a></h4>
     </div>
 </div>
 <div class="row">
     <div class="col-md-6">
-        Job: <a href="{% url 'job:detail' update.jobuser.job.random_string %}">{{ update.jobuser.job.name }}</a>
+        Creator: <a href="{% url 'user:detail' update.jobuser.user.username %}">{{ update.jobuser.user.username }}</a>
     </div>
     <div class="col-md-6">
         <span id="date">{{ update.date }}</span>
     </div>
 </div>
+{% if update.image_set.all.count > 0 %}
 <div class="row">
-    <div class="col-md-12">
-        Creator: <a href="{% url 'user:detail' update.jobuser.user.username %}">{{ update.jobuser.user.username }}</a>
+    <div class="col-md-2">
+        Images:
     </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-    {% if update.image_set.all.count > 0 %}
+    <div class="col-md-10">
         <div id="images">
         {% for image in update.image_set.all %}
             <img src="{{ image.image.url }}" class="img-responsive image" />
         {% endfor %}
         </div>
-    {% endif %}
     </div>
 </div>
+{% endif %}
+{% if update.request_money > 0 %}
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-2">
+        Request:
+    </div>
+    <div class="col-md-10">
+        ${{ update.request_money }}
+    </div>
+</div>
+{% endif %}
+<div class="row">
+    <div class="col-md-2">
+        Description:
+    </div>
+    <div class="col-md-10">
         <div id="description_div">
             <span id="description">{{ update.description }}</span>
         </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-2">
-        <form action="{% url 'job:detail' update.jobuser.job.random_string %}">
-            <input type="submit" value="Back to Job" />
-        </form>
     </div>
 </div>
 {% endblock %}

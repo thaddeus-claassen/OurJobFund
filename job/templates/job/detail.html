@@ -52,7 +52,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <span class="info_title">Created By</span>
-                    <span class="info_info"><a href="{% url 'user:detail' job.created_by.username %}">{{ job.created_by }}</a></span>
+                    <span class="info_info"><a href="{% url 'user:detail' job.created_by.username %}">{{ job.created_by.username }}</a></span>
                 </div>
             </div>
             <div class="row">
@@ -134,7 +134,7 @@
                     </div>
                     {% if request.user.is_authenticated %}
                     <div class="col-md-6">
-                        <form action="{% url 'update:create' job.random_string %}">
+                        <form action="{% url 'create-update' job.random_string %}">
                             <input id="post_update" class="pledge_work_inputs" type="submit" value="Post Update" name="update" />
                         </form>
                     </div>
@@ -191,7 +191,7 @@
                 <span>Pledges</span>
             </div>
             <div class="col-md-6">
-                <form action="{% url 'update:create' job.random_string %}">
+                <form action="{% url 'create-pledge' job.random_string %}">
                     <input class="pledge_work_inputs" type="submit" value="Pledge" name="pledge" />
                 </form>
             </div>
@@ -237,11 +237,14 @@
                 <span>Workers</span>
             </div>
             {% if request.user.is_authenticated %}
+            {% if not jobuser or jobuser.work_status != 'finish' %}
             <div class="col-md-6">
-                <form action="{% url 'update:create' job.random_string %}">
-                    <input class="pledge_work_inputs" type="submit" value="Work" name="work" />
+                <form action="{% url 'create-work' job.random_string %}">
+                    <input class="pledge_work_inputs" type="submit" 
+                        value="{% if jobuser.work_status == 'work' %}Finish{% else %}Work{% endif %}" name="work" />
                 </form>
             </div>
+            {% endif %}
             {% endif %}
         </div>
         <div class="row info_row">
@@ -271,9 +274,9 @@
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
-                            <td>{{ w.work_status }}</td>
+                            <td>{{ w.work_status|title }}</td>
+                            <td>${{ w.request_money|floatformat:2 }}</td>
                             <td>${{ w.received|floatformat:2 }}</td>
-                            <td>${{ w.requesting|floatformat:2 }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>

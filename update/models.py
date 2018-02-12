@@ -5,6 +5,9 @@ class Update(models.Model):
     jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);
     title = models.CharField(max_length=100);
     description = models.CharField(default="", max_length=10000);
+    pledge = models.FloatField(default=0);
+    request_money = models.FloatField(default=0);
+    work_status = models.CharField(default='', max_length=100, blank=True);
     date = models.DateTimeField(auto_now_add=True);
     random_string = models.CharField(max_length=50);
     
