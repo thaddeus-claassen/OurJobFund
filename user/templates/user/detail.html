@@ -29,7 +29,7 @@
             <form id="info_form" action="{{ request.get_full_path }}" method="POST">
             {% csrf_token %}
             {% for name in name_form %}
-                {% if info.errors %}
+                {% if name.errors %}
                 <div class="row info_row">
                     <div class="col-md-12">
                         <span>{{ name.errors }}</span>
