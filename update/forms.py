@@ -15,7 +15,7 @@ class UpdateForm(forms.Form):
 class PledgeForm(forms.Form):
     pledge = forms.CharField(label="Pledge:", widget=forms.TextInput(attrs={'placeholder': '$0.00'}));
     description = forms.CharField(label="Description:", widget=forms.Textarea, max_length=10000);
-    honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=True);
+    honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     
     def clean_pledge(self):
         pledge = self.cleaned_data.get('pledge');

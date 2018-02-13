@@ -145,15 +145,15 @@
                         <table id="updates" class="table">
                             <thead>
                                 <tr>
-                                    <th id="updates-last_name" class="sort">Username</th>
+                                    <th id="updates-username" class="sort">Username</th>
                                     <th id="updates-date" class="sort">Date</th>
                                     <th id="updates-title" class="sort">Title</th>
                                 </tr>
                             </thead>
-                            <tbody id="updates-body">
+                            <tbody>
                             {% for update in updates %}
                                 <tr>
-                                    <td class="updates-last_name_data">
+                                    <td>
                                         {% if update.jobuser.user.is_active %}
                                         {% if request.user.is_authenticated %}
                                         <a href="{% url 'user:detail' update.jobuser.user.username %}">
@@ -166,8 +166,10 @@
                                         <span>[ Deleted User ]</span>
                                         {% endif %}
                                     </td>
-                                    <td class="updates-date_data">{{ update.date }}</td>
-                                    <td class="updates-title">
+                                    <td 
+                                        class="{{ update.date|date:'Y-m-d' }}T{{ update.date|date:'H:m:se' }}">
+                                        {{ update.date|date:"d M y" }}</td>
+                                    <td>
                                         {% if update.description or update.image_set.all.exists %}
                                         <a href="{% url 'update:detail' update.random_string %}">{{ update.title }}</a>
                                         {% else %}
