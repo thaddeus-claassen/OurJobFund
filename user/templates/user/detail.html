@@ -157,34 +157,30 @@
                     <thead>
                         <tr>
                             <th class="name">Name</th>
-                            <th class="pledged">Pledged</th>
-                            <th class="paid">Paid</th>
-                            <th class="received">Received</th>
+                            <th class="type">Type</th>
+                            <th class="status">Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for j in current %}
                         <tr id="current_{{ j.job.name }}">
                             <td class="name"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.name }}</a></td>
-                            <td class="pledged">${{ j.pledged|floatformat:2 }}</td>
-                            <td class="paid">${{ j.paid|floatformat:2 }}</td>
-                            <td class="received">${{ j.received|floatformat:2 }}</td>
+                            <td class="type">{% if j.pledged > 0 %}Pledged{% else %}Working{% endif %}</td>
+                            <td class="status">{% if j.pledged > 0 %}Paid ${{ j.paid|floatformat:2 }}{% else %}Received ${{ j.received|floatformat:2 }}{% endif %}</td>
                         </tr>
                         {% empty %}
                         <tr>
                             <td class="name">No current jobs</td>
-                            <td class="pledged"></td>
-                            <td class="paid"></td>
-                            <td class="received"></td>
+                            <td class="type"></td>
+                            <td class="status"></td>
                         </tr>
                         {% endfor %}
                     </tbody>
                     <tfoot>
                         <tr>
                             <td class="name">Total:&nbsp;{{ current.count }}</td>
-                            <td class="pledged"></td>
-                            <td class="paid"></td>
-                            <td class="received"></td>
+                            <td class="type"></td>
+                            <td class="status"></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -203,34 +199,30 @@
                     <thead>
                         <tr>
                             <th class="name">Name</th>
-                            <th class="pledged">Pledged</th>
-                            <th class="paid">Paid</th>
-                            <th class="received">Received</th>
+                            <th class="type">Type</th>
+                            <th class="status">Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for j in finished %}
-                        <tr id="finished_{{ j.job.name }}">
+                        {% for j in finished %}
+                        <tr id="current_{{ j.job.name }}">
                             <td class="name"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.name }}</a></td>
-                            <td class="pledged">${{ j.pledged|floatformat:2 }}</td>
-                            <td class="paid">${{ j.paid|floatformat:2 }}</td>
-                            <td class="received">${{ j.received|floatformat:2 }}</td>
+                            <td class="type">{% if j.pledged > 0 %}Pledged{% else %}Working{% endif %}</td>
+                            <td class="status">{% if j.pledged > 0 %}Paid ${{ j.paid|floatformat:2 }}{% else %}Received ${{ j.received|floatformat:2 }}{% endif %}</td>
                         </tr>
-                    {% empty %}
+                        {% empty %}
                         <tr>
                             <td class="name">No finished jobs</td>
-                            <td class="pledged"></td>
-                            <td class="paid"></td>
-                            <td class="received"></td>
+                            <td class="type"></td>
+                            <td class="status"></td>
                         </tr>
-                    {% endfor %}
+                        {% endfor %}
                     </tbody>
                     <tfoot>
                         <tr>
                             <td class="name">Total:&nbsp;{{ finished.count }}</td>
-                            <td class="pledged"></td>
-                            <td class="paid"></td>
-                            <td class="received"></td>
+                            <td class="type"></td>
+                            <td class="status"></td>
                         </tr>
                     </tfoot>
                 </table>

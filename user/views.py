@@ -18,6 +18,9 @@ from random import randint;
 from .forms import ChangePasswordForm, ChangeNameForm, ChangeEmailForm, LoginForm, SignUpForm, DeactivateAccountForm, ProfileForm, DescriptionForm, ChangeUsernameForm;
 import json, stripe;
 
+def create_stripe_account(request):
+    pass;
+
 class LoginView(TemplateView):
     template_name = 'user/login.html';
     login_form = LoginForm;
@@ -174,28 +177,6 @@ class DetailView(TemplateView):
         user = args[0];
         return kwargs['description_form'](initial={'description' : user.userprofile.description});
         
-    def pay(self, request, job, jobuser):
-        receiver_pk = request.POST['pay_to'];
-        stripe.api_key = STRIPE_TEST_SECRET_KEY;
-        token = request.POST['stripeToken'];
-        amount_paying_in_cents = int(request.POST['pay_amount']);
-        charge = stripe.Charge.create(
-            amount = amount_paying_in_cents,
-            currency = "usd",
-            description = "Does this charge work?",
-            source = token,
-        );
-        amount_paying_in_dollars = float(amount_paying_in_cents) / 100;
-        payment = Pay(jobuser=jobuser, receiver=jobuser.user, amount=amount_paying_in_dollars);
-        payment.save();
-        jobuser.paid = jobuser.paid + amount_paying_in_dollars;
-        jobuser.save();
-        receiver_jobuser = JobUser.objects.get(user=User.objects.get(id=receiver_pk), job=job);
-        receiver_jobuser.received = receiver_jobuser.received + amount_paying_in_dollars;
-        receiver_jobuser.save();
-        job.paid = job.paid + amount_paying_in_dollars;
-        job.save();
-        
     def get_context_data(self, *args, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs);
         user = kwargs['user'];
@@ -206,6 +187,28 @@ class DetailView(TemplateView):
         context['current'] = user.jobuser_set.filter(Q(job__pledged=0) | Q(job__pledged__gt=F('job__paid')));
         context['finished'] = user.jobuser_set.filter(Q(job__pledged__gt=0) & Q(job__pledged__lte=F('job__paid')));
         return context;
+        
+def pay(request, job, jobuser):
+    receiver_pk = request.POST['pay_to'];
+    stripe.api_key = STRIPE_TEST_SECRET_KEY;
+    token = request.POST['stripeToken'];
+    amount_paying_in_cents = int(request.POST['pay_amount']);
+    charge = stripe.Charge.create(
+        amount = amount_paying_in_cents,
+        currency = "usd",
+        description = "Does this charge work?",
+        source = token,
+    );
+    amount_paying_in_dollars = float(amount_paying_in_cents) / 100;
+    payment = Pay(jobuser=jobuser, receiver=jobuser.user, amount=amount_paying_in_dollars);
+    payment.save();
+    jobuser.paid = jobuser.paid + amount_paying_in_dollars;
+    jobuser.save();
+    receiver_jobuser = JobUser.objects.get(user=User.objects.get(id=receiver_pk), job=job);
+    receiver_jobuser.received = receiver_jobuser.received + amount_paying_in_dollars;
+    receiver_jobuser.save();
+    job.paid = job.paid + amount_paying_in_dollars;
+    job.save();
         
 class AccountView(TemplateView):
     template_name = 'user/account.html';

@@ -20,8 +20,8 @@ class PledgeForm(forms.Form):
     def clean_pledge(self):
         pledge = self.cleaned_data.get('pledge');
         if (checkStringIsValidMoney(pledge)):
-            if (float(pledge) <= 0):
-                raise forms.ValidationError('You cannot pledge $0 or less.'); 
+            if (float(pledge) < 0.5):
+                raise forms.ValidationError('You cannot pledge less than $0.50.'); 
         else:
             raise forms.ValidationError('Please enter a valid dollar amount.');
         return pledge;

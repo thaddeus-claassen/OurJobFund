@@ -79,25 +79,12 @@ tbody {
     overflow-y: scroll;
 }
 
-.name {
+.name, .status {
     width: 40%;
     float: left;
 }
 
-.pledged, .paid, .status, .received {
+.type {
     width: 20%;
     float: left;
 }
-
-#pay_clicked {
-    display: none;
-}
-
-#pay_cancel, #pay_money, #pay_for, #pay_amount_span, #pay_for_error, #pay_amount_error {
-    float: right;
-}
-
-#pay_for_error, #pay_amount_error {
-    color: red;
-}
-
