@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os;
+import datetime;
 
 DEBUG = True;
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -214,4 +215,3 @@ else:
     EMAIL_PORT = 587;
     EMAIL_USE_TLS = True;
     DEFAULT_FROM_EMAIL = 'admin@ourjobfund.com';
-

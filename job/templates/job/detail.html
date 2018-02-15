@@ -193,9 +193,13 @@
                 <span>Pledges</span>
             </div>
             <div class="col-md-6">
+                {% if request.user.is_authenticated %}
+                {% if not jobuser or jobuser.work_status == '' %}
                 <form action="{% url 'create-pledge' job.random_string %}">
                     <input class="pledge_work_inputs" type="submit" value="Pledge" name="pledge" />
                 </form>
+                {% endif %}
+                {% endif %}
             </div>
         </div>
         <div class="row info_row">
@@ -239,10 +243,10 @@
                 <span>Workers</span>
             </div>
             {% if request.user.is_authenticated %}
-            {% if not jobuser or jobuser.work_status != 'finish' %}
+            {% if not jobuser or jobuser.pledged == 0 and jobuser.work_status != 'finish' %}
             <div class="col-md-6">
                 <form action="{% url 'create-work' job.random_string %}">
-                    <input class="pledge_work_inputs" type="submit" 
+                    <input class="pledge_work_inputs" type="submit"
                         value="{% if jobuser.work_status == 'work' %}Finish{% else %}Work{% endif %}" name="work" />
                 </form>
             </div>

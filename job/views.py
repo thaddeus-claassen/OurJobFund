@@ -165,7 +165,7 @@ class DetailView(TemplateView):
             serializer = JobSerializer(Job.objects.filter(pk=job.pk), many=True, context={'user' : request.user});
             context['jobuser'] = get_object_or_None(JobUser, user=request.user, job=job);
             context['expected_pay'] = serializer.data[0]['expected_pay'];
-            #context['expected_workers'] = serializer.data[0]['expected_workers'];
+            context['expected_workers'] = serializer.data[0]['expected_workers'];
         return context;
 
 @login_required
