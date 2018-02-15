@@ -52,7 +52,7 @@ Temporary Items
 .django/
 .sendgrid/
 .zoho/
-ourjobfund/.debug.py
+ourjobfund/debug.py
 
 # Database stuff
 db.sqlite3
