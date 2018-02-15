@@ -18,9 +18,6 @@ from random import randint;
 from .forms import ChangePasswordForm, ChangeNameForm, ChangeEmailForm, LoginForm, SignUpForm, DeactivateAccountForm, ProfileForm, DescriptionForm, ChangeUsernameForm;
 import json, stripe;
 
-def create_stripe_account(request):
-    pass;
-
 class LoginView(TemplateView):
     template_name = 'user/login.html';
     login_form = LoginForm;
@@ -271,7 +268,8 @@ class AccountView(TemplateView):
         return context;
     
 @login_required
-def get_stripe_info(request):
+def stripe(request):
+    print('got into stripe')
     username = request.GET.get('state', None);
     if (username is not None):
         user = get_object_or_404(user, username=username);
@@ -280,7 +278,7 @@ def get_stripe_info(request):
         request.user.userprofile.save();
         return redirect('user:detail', username=username);
     else:
-        return Http404();
+        return redirect('job:home')
     
         
     
