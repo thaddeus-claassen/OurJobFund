@@ -124,7 +124,6 @@ class DetailView(TemplateView):
         profileForm = self.profileForm;
         descriptionForm = self.descriptionForm;
         if ('info' in request.POST):
-            print("Got into info");
             nameForm = nameForm(request.POST);
             profileForm = profileForm(request.POST);
             if (nameForm.is_valid() and profileForm.is_valid()):
@@ -139,7 +138,6 @@ class DetailView(TemplateView):
                 request.user.userprofile.save();
                 return redirect('user:detail', username=request.user.username);
             else:
-                print("Forms are not valid");
                 descriptionForm = self.initializeDescription(request.user, description_form=descriptionForm);
         elif ('description' in request.POST):
             descriptionForm = descriptionForm(request.POST);

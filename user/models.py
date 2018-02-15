@@ -7,7 +7,7 @@ from annoying.fields import AutoOneToOneField;
 from .choices import STATES;
 import datetime, pytz;
 
-alphabetic = RegexValidator(r'^[a-zA-Z\s]+$', 'Alphabetic characters only');   
+alphabetic = RegexValidator(r'^[a-zA-Z\s]+$', 'Alphabetic characters only');
 
 class UserProfile(models.Model):
     user = AutoOneToOneField(User, primary_key=True);
