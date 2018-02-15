@@ -269,10 +269,9 @@ class AccountView(TemplateView):
     
 @login_required
 def stripe(request):
-    print('got into stripe')
     username = request.GET.get('state', None);
     if (username is not None):
-        user = get_object_or_404(user, username=username);
+        user = get_object_or_404(User, username=username);
         code = request.GET.get('code', None);
         request.user.userprofile.stripe_account_id = code;
         request.user.userprofile.save();
