@@ -73,7 +73,7 @@ class CreatePledgeView(TemplateView):
                 jobuser = JobUser(user=request.user, job=job);
                 jobuser.save();
             description = form.cleaned_data['description'];
-            amount = float(form.cleaned_data['pledge']);
+            amount = float(form.cleaned_data['amount']);
             update = Update(jobuser=jobuser, description=description, pledge=amount, random_string=createRandomString());
             jobuser.pledged = jobuser.pledged + amount;
             jobuser.save();
@@ -119,12 +119,12 @@ class CreateWorkView(TemplateView):
                 jobuser.save();
             description = form.cleaned_data['description'];
             type = form.cleaned_data['type'];
-            money_request = float(form.cleaned_data['money_request']);
-            update = Update(jobuser=jobuser, description=description, request_money=money_request, work_status=type, random_string=createRandomString());
+            request_money = float(form.cleaned_data['amount']);
+            update = Update(jobuser=jobuser, description=description, request_money=request_money, work_status=type, random_string=createRandomString());
             jobuser.work_status = type;
             if (type == 'work'):
                 title = "Started Working";
-                jobuser.request_money = money_request;
+                jobuser.request_money = request_money;
             else:
                 title = "Finished Working";
             jobuser.save();
