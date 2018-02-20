@@ -71,7 +71,6 @@ class CreatePledgeView(TemplateView):
             jobuser = get_object_or_None(JobUser, user=request.user, job=job);
             if (jobuser is None):
                 jobuser = JobUser(user=request.user, job=job);
-                jobuser.save();
             description = form.cleaned_data['description'];
             amount = float(form.cleaned_data['amount']);
             update = Update(jobuser=jobuser, description=description, pledge=amount, random_string=createRandomString());
@@ -116,7 +115,6 @@ class CreateWorkView(TemplateView):
         if (form.is_valid()):
             if (jobuser is None):
                 jobuser = JobUser(user=request.user, job=job);
-                jobuser.save();
             description = form.cleaned_data['description'];
             type = form.cleaned_data['type'];
             request_money = float(form.cleaned_data['amount']);
