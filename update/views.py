@@ -119,7 +119,7 @@ class CreateWorkView(TemplateView):
                 jobuser.save();
             description = form.cleaned_data['description'];
             type = form.cleaned_data['type'];
-            money_request = form.cleaned_data['money_request'];
+            money_request = float(form.cleaned_data['money_request']);
             update = Update(jobuser=jobuser, description=description, request_money=money_request, work_status=type, random_string=createRandomString());
             jobuser.work_status = type;
             if (type == 'work'):
