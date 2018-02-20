@@ -21,7 +21,7 @@ from django.conf.urls.static import static;
 from django.contrib.auth import views as auth_views;
 from user.views import SearchUsersView, see_more_users;
 from job.views import home;
-from update.views import CreateUpdateView, CreatePledgeView, CreateWorkView;
+from update.views import CreateUpdateView, CreatePledgeView, CreateWorkView, PayView;
 from . import views;
 
 app_name = 'ourjobfund';
@@ -42,6 +42,7 @@ urlpatterns = [
     url(r'update/create/(?P<job_random_string>[a-zA-Z0-9]+)/', CreateUpdateView.as_view(), name='create-update'),
     url(r'pledge/create/(?P<job_random_string>[a-zA-Z0-9]+)/', CreatePledgeView.as_view(), name='create-pledge'),
     url(r'work/create/(?P<job_random_string>[a-zA-Z0-9]+)/', CreateWorkView.as_view(), name='create-work'),
+    url(r'^pay/(?P<profile_random_string>[a-zA-Z0-9]+)/(?P<job_random_string>[a-zA-Z0-9]+)/', PayView.as_view(), name='pay'),
     url(r'^about/', include('about.urls')),
     url(r'^contact/', include('contact.urls')),
     url(r'^terms_of_service/', include('terms_of_service.urls')),

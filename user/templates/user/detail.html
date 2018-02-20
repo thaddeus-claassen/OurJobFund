@@ -59,17 +59,17 @@
                 </div>
             {% endfor %}
             </form>
-            {% if request.user.username == detail_user.username and detail_user.userprofile.stripe_account_id == "" %}
+            {% if request.user.username == detail_user.username and detail_user.profile.stripe_account_id == "" %}
             <div class="row">
                 <div class="col-md-12">
                     <span id="must-connect-to-stripe">
-                        To receive credit card payments, please sign into 
+                        To receive credit card payments, please sign into
                         <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write&state={{ request.user.username }}" id="stripe_connect" class="stripe-connect">
                             <span>Stripe</span></a>.
                     </span>
                 </div>
             </div>
-            {% elif request.user.username == detail_user.username and detail_user.userprofile.stripe_account_id != "" %}
+            {% elif request.user.username == detail_user.username and detail_user.profile.stripe_account_id != "" %}
             <div class="row">
                 <div class="col-md-12">
                     <form id="remove-stripe-account-form" action="{{ request.get_full_path }}" method="POST">
@@ -78,47 +78,6 @@
                     </form>
                 </div>
             </div>
-            {% else %}
-            <div id="pay_unclicked">
-                <div class="row">
-                    <div class="col-md-12">
-                        <input id="pay_money" class="pledge_work_inputs" type="button" value="Pay with Credit" />
-                    </div>
-                </div>
-            </div>
-            <form id="pay_form" action="{{ request.get_full_path }}" method="POST">
-                {% csrf_token %}
-                <div id="pay_clicked">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <select id="pay_for" name="pay_for">
-                                <option value="(default)" selected="selected">(Choose a job)</option>
-                            {% for jobuser in current %}
-                                {% if jobuser.job.work_set.all %}
-                                <option value="{{ jobuser.job.random_string }}">{{ jobuser.job.name }}</option>
-                                {% endif %}
-                            {% endfor %}
-                            {% for jobuser in finished %}
-                                {% if jobuser.job.work_set.all %}
-                                <option value="{{ jobuser.job.random_string }}">{{ jobuser.job.name }}</option>
-                                {% endif %}
-                            {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <input id="pay_button" type="button" value="Pay" />
-                            <input id="pay_amount" type="text" placeholder="$0.00" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <span id="amount_error"></span>
-                        </div>
-                    </div>
-                </div>
-            </form>
             {% endif %}
         </div>
     </div>

@@ -187,7 +187,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-5">
         <div class="row info_row header">
             <div class="col-md-6">
                 <span>Pledges</span>
@@ -237,7 +237,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-7">
         <div class="row info_row header">
             <div class="col-md-6">
                 <span>Workers</span>
@@ -262,6 +262,7 @@
                             <th id="workers-status">Status</th>
                             <th id="workers-requesting">Requesting</th>
                             <th id="workers-received">Received</th>
+                            <th id="workers-pay">Pay</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -283,6 +284,13 @@
                             <td>{{ w.work_status|title }}</td>
                             <td>${{ w.request_money|floatformat:2 }}</td>
                             <td>${{ w.received|floatformat:2 }}</td>
+                            <td>
+                                {% if request.user.is_authenticated and w.user != request.user %}
+                                <form action="{% url 'pay' w.user.profile.random_string job.random_string %}">
+                                    <input type="submit" value="Pay" />
+                                </form>
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>

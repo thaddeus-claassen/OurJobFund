@@ -13,7 +13,7 @@ from django.core import serializers;
 from pay.models import Pay;
 from job.models import Job;
 from datetime import datetime;
-from .models import UserProfile;
+from .models import Profile;
 from random import randint;
 from .forms import ChangePasswordForm, ChangeNameForm, ChangeEmailForm, LoginForm, SignUpForm, DeactivateAccountForm, ProfileForm, DescriptionForm, ChangeUsernameForm;
 import json, stripe;
@@ -130,20 +130,20 @@ class DetailView(TemplateView):
                 request.user.first_name = nameForm.cleaned_data['first_name'];
                 request.user.last_name = nameForm.cleaned_data['last_name'];
                 request.user.save();
-                request.user.userprofile.city = profileForm.cleaned_data['city'];
-                request.user.userprofile.state = profileForm.cleaned_data['state'];
-                request.user.userprofile.occupation = profileForm.cleaned_data['occupation'];
-                request.user.userprofile.education = profileForm.cleaned_data['education'];
-                request.user.userprofile.contact = profileForm.cleaned_data['contact'];
-                request.user.userprofile.save();
+                request.user.profile.city = profileForm.cleaned_data['city'];
+                request.user.profile.state = profileForm.cleaned_data['state'];
+                request.user.profile.occupation = profileForm.cleaned_data['occupation'];
+                request.user.profile.education = profileForm.cleaned_data['education'];
+                request.user.profile.contact = profileForm.cleaned_data['contact'];
+                request.user.profile.save();
                 return redirect('user:detail', username=request.user.username);
             else:
                 descriptionForm = self.initializeDescription(request.user, description_form=descriptionForm);
         elif ('description' in request.POST):
             descriptionForm = descriptionForm(request.POST);
             if (descriptionForm.is_valid()):
-                request.user.userprofile.description = descriptionForm.cleaned_data['description'];
-                request.user.userprofile.save();
+                request.user.profile.description = descriptionForm.cleaned_data['description'];
+                request.user.profile.save();
                 return redirect('user:detail', username=request.user.username);
             else:
                 nameForm = self.initializeName(request.user, name_form=nameForm);
@@ -152,8 +152,8 @@ class DetailView(TemplateView):
             self.pay(request, job, jobuser);
             return redirect('user:confirmation', username=get_object_or_404(User, username=kwargs['username']));
         elif ('delete-stripe' in request.POST):
-            request.user.userprofile.stripe_account_id = "";
-            request.user.userprofile.save();
+            request.user.profile.stripe_account_id = "";
+            request.user.profile.save();
         return render(request, self.template_name, self.get_context_data(user=request.user, nameForm=nameForm, profileForm=profileForm, descriptionForm=descriptionForm));
         
     def initializeName(self, *args, **kwargs):
@@ -163,16 +163,16 @@ class DetailView(TemplateView):
     def initializeProfile(self, *args, **kwargs):
         user = args[0];
         return kwargs['profile_form'](initial={
-            'city' : user.userprofile.city, 
-            'state' : user.userprofile.state,
-            'occupation' : user.userprofile.occupation,
-            'education' : user.userprofile.education,
-            'contact' : user.userprofile.contact,
+            'city' : user.profile.city, 
+            'state' : user.profile.state,
+            'occupation' : user.profile.occupation,
+            'education' : user.profile.education,
+            'contact' : user.profile.contact,
         });
         
     def initializeDescription(self, *args, **kwargs):
         user = args[0];
-        return kwargs['description_form'](initial={'description' : user.userprofile.description});
+        return kwargs['description_form'](initial={'description' : user.profile.description});
         
     def get_context_data(self, *args, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs);
@@ -185,28 +185,6 @@ class DetailView(TemplateView):
         context['finished'] = user.jobuser_set.filter(Q(job__pledged__gt=0) & Q(job__pledged__lte=F('job__paid')));
         return context;
         
-def pay(request, job, jobuser):
-    receiver_pk = request.POST['pay_to'];
-    stripe.api_key = STRIPE_TEST_SECRET_KEY;
-    token = request.POST['stripeToken'];
-    amount_paying_in_cents = int(request.POST['pay_amount']);
-    charge = stripe.Charge.create(
-        amount = amount_paying_in_cents,
-        currency = "usd",
-        description = "Does this charge work?",
-        source = token,
-    );
-    amount_paying_in_dollars = float(amount_paying_in_cents) / 100;
-    payment = Pay(jobuser=jobuser, receiver=jobuser.user, amount=amount_paying_in_dollars);
-    payment.save();
-    jobuser.paid = jobuser.paid + amount_paying_in_dollars;
-    jobuser.save();
-    receiver_jobuser = JobUser.objects.get(user=User.objects.get(id=receiver_pk), job=job);
-    receiver_jobuser.received = receiver_jobuser.received + amount_paying_in_dollars;
-    receiver_jobuser.save();
-    job.paid = job.paid + amount_paying_in_dollars;
-    job.save();
-        
 class AccountView(TemplateView):
     template_name = 'user/account.html';
     usernameForm = ChangeUsernameForm;
@@ -217,7 +195,7 @@ class AccountView(TemplateView):
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         usernameForm = '';
-        if ((datetime.now() - request.user.userprofile.last_time_username_was_changed.replace(tzinfo=None)).days >= 180):
+        if ((datetime.now() - request.user.profile.last_time_username_was_changed.replace(tzinfo=None)).days >= 180):
             usernameForm = self.usernameForm(initial={'username' : request.user.username});
         emailForm = self.emailForm(initial={'email' : request.user.email});
         passwordForm = self.passwordForm;
@@ -235,8 +213,8 @@ class AccountView(TemplateView):
             if (usernameForm.is_valid()):
                 self.request.user.username = emailForm.cleaned_data['username'];
                 self.request.user.save();
-                self.request.user.userprofile.last_time_name_was_changed = datetime.now();
-                self.request.user.userprofile.save();
+                self.request.user.profile.last_time_name_was_changed = datetime.now();
+                self.request.user.profile.save();
                 return redirect('user:account');
         elif ('change-email' in request.POST):
             emailForm = emailForm(request.POST);
@@ -272,13 +250,26 @@ def stripe(request):
     username = request.GET.get('state', None);
     if (username is not None):
         user = get_object_or_404(User, username=username);
-        code = request.GET.get('code', None);
-        request.user.userprofile.stripe_account_id = code;
-        request.user.userprofile.save();
-        return redirect('user:detail', username=username);
+        if (user.username == request.user.username):
+            code = request.GET.get('code', None);
+            request.user.profile.stripe_account_id = code;
+            request.user.profile.save();
+            return redirect('user:detail', username=username);
+        else:
+            Http404();
     else:
-        return redirect('job:home')
+        return Http404();
     
+def createRandomString():
+    random_string = '';
+    available_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+    for i in range(50):
+        index = randint(0, 61);
+        random_char = available_chars[index];
+        random_string = random_string + random_char;
+    if (User.objects.filter(profile__random_string=random_string).exists()):
+        random_string = createRandomString();
+    return random_string;
         
     
     

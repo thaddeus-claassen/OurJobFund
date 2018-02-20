@@ -1,18 +1,30 @@
 {% extends 'base.html' %}
-
+ 
 {% load staticfiles %}
 {% block import %}
+    {% if type == "pay" %}
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+    <script type="text/javascript" src="{% static 'update/js/pay.js' %}"></script>
+    {% endif %}
     <script type="text/javascript" src="{% static 'update/js/create.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'update/css/create.css' %}" />
-    <script src="https://checkout.stripe.com/checkout.js"></script>
 {% endblock %}
-
+ 
 {% block content %}
 <form id="form" action="{{ request.get_full_path }}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
     <div class="row info_row">
         <div class="col-md-12">
             <h4 id="title">
+                {% if type == 'update' %}
+                Update
+                {% elif type == 'work' %}
+                Work on
+                {% elif type == 'pledge' %}
+                Pledge to
+                {% elif type == 'pay' %}
+                Pay <a href="{% url 'user:detail' receiver_jobuser.user.username %}">{{ receiver_jobuser.user }}</a> for
+                {% endif %}
                 <a href="{% url 'job:detail' job.random_string %}">{{ job.name }}</a>
             </h4>
         </div>
@@ -36,5 +48,8 @@
             <input id="submit_button" type="submit" value="Submit" name="submit_{{ type }}"/>
         </div>
     </div>
+    {% if type == 'pay' %}
+    <input id="stripe_token" type="hidden" name="stripeToken" />
+    {% endif %}
 </form>
 {% endblock %}

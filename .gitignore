@@ -64,6 +64,7 @@ user/migrations/
 pledge/migrations/
 work/migrations/
 notification/migrations/
+pay/migrations/
 
 # ./__pycache__ stuff
 about/__pycache__/
@@ -78,6 +79,7 @@ update/__pycache__/
 user/__pycache__/
 pledge/__pycache__/
 work/__pycache__/
+pay/__pycache__/
 sendgrid.env
 
 # static stuff

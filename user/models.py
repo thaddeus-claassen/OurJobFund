@@ -9,7 +9,7 @@ import datetime, pytz;
 
 alphabetic = RegexValidator(r'^[a-zA-Z\s]+$', 'Alphabetic characters only');
 
-class UserProfile(models.Model):
+class Profile(models.Model):
     user = AutoOneToOneField(User, primary_key=True);
     hide_location = models.BooleanField(default=True);
     basic_search = models.BooleanField(default=True);
@@ -22,6 +22,7 @@ class UserProfile(models.Model):
     contact = models.CharField(default='', max_length=100, blank=True);
     last_time_username_was_changed = models.DateTimeField(default=pytz.utc.localize(datetime.datetime(2000, 1, 1)));
     stripe_account_id = models.CharField(default='', null=True, blank=True, max_length=100);
+    random_string = models.CharField(max_length=100);
     
     def get_absolute_url(self):
         return reverse("user.views.detail", args=[self.random_string]);

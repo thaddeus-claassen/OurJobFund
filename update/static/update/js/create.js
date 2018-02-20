@@ -1,4 +1,3 @@
-
 var canSubmit = true;
 
 $(document).ready(function() {
@@ -10,13 +9,23 @@ $(document).ready(function() {
         var type = $('#submit_button').attr('name').split('_')[1];
         format = correctFormat(type);
         if (format === "") {
-            if (canSubmit) {
-                canSubmit = false;
+            if (type === 'pay') {
+                if (canSubmit) {
+                    payClicked();
+                    canSubmit = false;
+                    e.preventDefault();
+                }// end if
             } else {
-                e.preventDefault();
+                if (canSubmit) {
+                    canSubmit = false; 
+                } else {
+                    e.preventDefault();
+                }// end if-else
             }// end if-else
         } else {
-            $('#error_message').text(format);
+            $('#amount-error-message').remove();
+            $('#id_amount').after("&nbsp;&nbsp;&nbsp;<span id='amount-error-message'>" + format + "</span>");
+            e.preventDefault();
         }// end if-else
     });
 });
@@ -30,7 +39,7 @@ function changeOptionsIfTypeisFinish() {
 }// end changeOptionsIfTypeisFinish()
 
 function changedType() {
-    if ($('#id_type').find(':selected').val() == 'work') {
+    if ($('#id_type').find(':selected').val() === 'work') {
         $('#id_money_request-wrapper').css('display', 'inline');
     } else {
         $('#id_money_request-wrapper').css('display', 'none');
@@ -39,14 +48,14 @@ function changedType() {
 
 function correctFormat(type) {
     var errorMessage = "";
-    if (type === 'pledge' || type === 'work') {
-        var amount;
-        if (type === 'pledge') amount = parseFloat($('#id_pledge').val());
-        else amount = parseFloat($('#id_money_request').val());
+    if (type === 'pledge' || type === 'work' || type === 'pay' ) {
+        var amount = parseFloat($('#id_amount').val());
         var isFloat = !isNaN(amount);
         if (isFloat) {
             if (amount != amount.toFixed(2)) {
                 errorMessage = "Must have at most two decimal places";
+            } else if (type === 'pay' && $('#type').val() === 'Credit' && amount < 0.5) {
+                errorMessage = "You cannot pay less than $0.50 with card."
             }// end if
         } else {
             errorMessage = "Not a valid number";

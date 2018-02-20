@@ -127,8 +127,8 @@ def save_filter(request):
 @login_required
 def save_search_type(request):
     if (request.is_ajax()):
-        request.user.userprofile.basic_search = (request.POST['isBasic'] == 'true');
-        request.user.userprofile.save();
+        request.user.profile.basic_search = (request.POST['isBasic'] == 'true');
+        request.user.profile.save();
         return HttpResponse("");
     else:
         return Http404();
@@ -136,8 +136,8 @@ def save_search_type(request):
 @login_required
 def save_hide_location(request):
     if (request.is_ajax()):
-        request.user.userprofile.hide_location = (request.POST['isHidden'] == 'true');
-        request.user.userprofile.save();
+        request.user.profile.hide_location = (request.POST['isHidden'] == 'true');
+        request.user.profile.save();
         return HttpResponse("");
     else:
         return Http404();
@@ -158,7 +158,7 @@ class DetailView(TemplateView):
         context = {
             'job': job,
             'updates' : Update.objects.filter(jobuser__job=job).order_by('-date'),
-            'pledges' : JobUser.objects.filter(job=job, pledged__gt=0),
+            'pledges' : JobUser.objects.filter(Q(job=job) & (Q(pledged__gt=0) | Q(paid__gt=0))),
             'workers' : JobUser.objects.filter(job=job).exclude(work_status=''),
         }
         if (request.user.is_authenticated()):

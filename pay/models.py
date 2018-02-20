@@ -3,8 +3,9 @@ from django import forms;
 from django.contrib.auth.models import User;
 from jobuser.models import JobUser;
     
-class Pay(models.Model):    
-    jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);
+class Pay(models.Model):
+    sender_jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE, related_name='sender_jobuser');
+    receiver_jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE, related_name='receiver_jobuser');
+    type = models.CharField(choices=(('Other', 'Other'), ('Credit', 'Credit')), max_length=10);
     amount = models.FloatField(editable=False, null=True, blank=True);
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE);
     date = models.DateTimeField(auto_now_add=True);

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block import %}
+    <link rel="stylesheet" type="text/css" href="{% static 'pay/css/confirmed.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        Payment confirmed
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <form action="{% url 'job:detail' job.random_string %}">
+            <input type="Submit" value="Back to Job" />
+        </form>
+   </div>
+</div>
+{% endblock %}

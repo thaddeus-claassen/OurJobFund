@@ -6,8 +6,6 @@ from . import views;
 app_name = 'pledge';
 
 urlpatterns = [
-    url(r'^(?P<pledge_random_string>[a-zA-Z0-9]+)/$', views.DetailView.as_view(), name='detail'),
-    url(r'^create/(?P<job_random_string>[a-zA-Z0-9]+)/$', views.CreateView.as_view(), name='create'),
     url(r'^confirmation/(?P<job_random_string>[a-zA-Z0-9]+)/$', views.payment_confirmation, name='confirmation'),
 ]
 

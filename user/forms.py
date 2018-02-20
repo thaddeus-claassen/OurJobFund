@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User;
-from user.models import UserProfile
+from user.models import Profile;
 from django import forms;
 from django.contrib.auth import authenticate;
 from annoying.functions import get_object_or_None;
@@ -88,7 +88,7 @@ class ProfileForm(forms.ModelForm):
     profile_honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
     
     class Meta:
-        model = UserProfile;
+        model = Profile;
         fields = ['city', 'state', 'education', 'occupation', 'contact'];    
     
     def clean_profile_honey_pot(self):
@@ -131,7 +131,7 @@ class DescriptionForm(forms.ModelForm):
     description_honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
 
     class Meta:
-        model = UserProfile;
+        model = Profile;
         fields = ['description'];
 
     def clean_description_honey_pot(self):
