@@ -34,15 +34,15 @@ function changeOptionsIfTypeisFinish() {
     var type = $('#submit_button').attr('name').split('_')[1];
     if (type === 'finish') {
         $('option[value=work]').remove();
-        $('#id_money_request-wrapper').css('display', 'none');
+        $('#id_amount-wrapper').css('display', 'none');
     }// end if
 }// end changeOptionsIfTypeisFinish()
 
 function changedType() {
     if ($('#id_type').find(':selected').val() === 'work') {
-        $('#id_money_request-wrapper').css('display', 'inline');
+        $('#id_amount-wrapper').css('display', 'inline');
     } else {
-        $('#id_money_request-wrapper').css('display', 'none');
+        $('#id_amount-wrapper').css('display', 'none');
     }// end if-else
 }// end changedType()
 

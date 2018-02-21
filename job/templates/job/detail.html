@@ -262,7 +262,7 @@
                             <th id="workers-status">Status</th>
                             <th id="workers-requesting">Requesting</th>
                             <th id="workers-received">Received</th>
-                            <th id="workers-pay">Pay</th>
+                            <th id="workers-pay">Pay Worker</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -287,7 +287,7 @@
                             <td>
                                 {% if request.user.is_authenticated and w.user != request.user %}
                                 <form action="{% url 'pay' w.user.profile.random_string job.random_string %}">
-                                    <input type="submit" value="Pay" />
+                                    <input type="submit" value="Pay Here" />
                                 </form>
                                 {% endif %}
                             </td>
