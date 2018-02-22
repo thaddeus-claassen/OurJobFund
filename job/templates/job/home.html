@@ -20,6 +20,9 @@
                 <label for="custom">Custom:</label>
                 <input id="custom" type="radio" name="search"/>
             </div>
+            <div class="col-md-3">
+                <span id="search-error-message"></span>
+            </div>
         </div>
         <div class="row margin-row">
             <div class="col-md-9">
@@ -50,8 +53,8 @@
                             <input id="sort" type="hidden" value="created descending" />
                             <th id="name" class="name sort">Name</th>
                             <th id="created" class="date sort">Created</th>
-                            <th id="pledged-paid" class="pledged-paid sort">$&nbsp;<sup>Expected Pledged</sup>&frasl;<sub>Paid</sub></th>
-                            <th id="workers-finished" class="workers-finished sort"><sup>Expected Workers</sup>&frasl;<sub>Finished</sub></th>
+                            <th id="pledged-paid" class="pledged-paid sort"><sup>Paid</sup>&frasl;<sub>Expected Pledged</sub></th>
+                            <th id="workers-finished" class="workers-finished sort"><sup>Finished</sup>&frasl;<sub>Expected Workers</sub></th>
                         </tr>
                     </thead>
                     <tbody id="main_table_body"></tbody>

@@ -136,6 +136,9 @@ function get_jobs() {
             'sort' : $('#sort').val(),
         },
         success: getJobsSuccess,
+        error: function () {
+            $('#search-error-message').text("Invalid Search");
+        },
     });
 }// end get_jobs()
 
@@ -159,6 +162,9 @@ function add_jobs() {
             'sort' : $('#sort').val(),
         },
         success: addJobsSuccess,
+        error: function() {
+            $('#search-error-message').text("Invalid Search");
+        },
     });
 }// end add_jobs()
 
@@ -182,6 +188,9 @@ function sort_jobs() {
             'sort' : $('#sort').val(),
         },
         success: sortJobsSuccess,
+        error: function() {
+            $('#search-error-message').text("Invalid Search");
+        },
     });
 }// end sort_jobs()
 
@@ -239,9 +248,9 @@ function addJobsToTable(json) {
             var string = "<tr>"
             string = string + "<td class='name'><a id='" + job["random_string"] + "' href='job/" + job["random_string"] + "'></a></td>";
             string = string + "<td class='date'>" + job['creation_date'] + "</td>";
-            string = string + "<td class='pledged-paid'><sup>$" + turnMoneyToString(job['expected_pay']) + "</sup>&frasl;";
-            string = string + "<sub>$" + turnMoneyToString(job['paid']) + "</sub></td>";
-            string = string + "<td class='workers-finished'><sup>" + job['expected_workers'] + "</sup>&frasl;<sub>" + job['finished'] + "</sub></td>"
+            string = string + "<td class='pledged-paid'><sup>$" + turnMoneyToString(job['paid']) + "</sup>&frasl;";
+            string = string + "<sub>$" + turnMoneyToString(job['expected_pay']) + "</sub></td>";
+            string = string + "<td class='workers-finished'><sup>" + job['finished'] + "</sup>&frasl;<sub>" + job['expected_workers'] + "</sub></td>"
             string = string + "</tr>";
             $('#main_table_body').append(string);
             $('#' + job["random_string"]).text(job["name"]);

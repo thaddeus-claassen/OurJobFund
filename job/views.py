@@ -25,10 +25,13 @@ def home(request):
 def get_jobs(request):
     if (request.is_ajax()):
         jobs = findJobs(request);
-        jobs = jobs[0:50];
-        serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
-        json = JSONRenderer().render(serializer.data);
-        return HttpResponse(json, content_type="application/json");
+        if (jobs == "Invalid Search"):
+            return HttpResponse(jobs, content_type="application/json");
+        else:
+            jobs = jobs[0:50];
+            serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
+            json = JSONRenderer().render(serializer.data);
+            return HttpResponse(json, content_type="application/json");
     else:
         return Http404();
 
@@ -36,10 +39,13 @@ def add_jobs(request):
     if (request.is_ajax()):
         numSearches =  int(request.GET['numSearches']);
         jobs = findJobs(request);
-        jobs = jobs[50 * numSearches:50 * (numSearches + 1)];
-        serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
-        json = JSONRenderer().render(serializer.data);
-        return HttpResponse(json, content_type="application/json");
+        if (jobs == "Invalid Search"):
+            return HttpResponse(jobs, content_type="application/json");
+        else:
+            jobs = jobs[50 * numSearches:50 * (numSearches + 1)];
+            serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
+            json = JSONRenderer().render(serializer.data);
+            return HttpResponse(json, content_type="application/json");
     else:
         return Http404();
         
@@ -47,18 +53,24 @@ def sort_jobs(request):
     if (request.is_ajax()):
         numSearches =  int(request.GET['numSearches']);
         jobs = findJobs(request);
-        jobs = jobs[0:50 * numSearches];
-        serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
-        json = JSONRenderer().render(serializer.data);
+        if (jobs == "Invalid Search"):
+            return HttpResponse(jobs, content_type="application/json");
+        else:
+            jobs = jobs[0:50 * numSearches];
+            serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
+            json = JSONRenderer().render(serializer.data);
         return HttpResponse(json, content_type="application/json");
     else:
         return Http404();
         
 def get_total_jobs(request):
     if (request.is_ajax()):
-        jobs = findJobs(request);
         total = {};
-        total['total'] = len(jobs)
+        jobs = findJobs(request);
+        if (jobs == "Invalid Search"):
+            total = "";
+        else:
+            total['total'] = len(jobs);
         return HttpResponse(json.dumps(total), content_type="application/json");
     else:
         return Http404();
@@ -66,12 +78,22 @@ def get_total_jobs(request):
 def findJobs(request):
     type = request.GET['type'];
     search = request.GET['search'];
-    if (type == 'basic'):
+    if (search == ""):
         jobs = Job.objects.all();
-        for word in search.split(" "):
-            jobs = jobs.filter(Q(name__icontains=word) | Q(tag__tag__icontains=word));
     else:
-        jobs = get_jobs_from_custom_search(search);
+        if (type == 'basic'):
+            if (re.match(r'^[A-Za-z0-9\s_]+$', search)):
+                jobs = get_jobs_from_custom_search(search);
+                jobs = Job.objects.all();
+                for word in search.split(" "):
+                    jobs = jobs.filter(Q(name__icontains=word) | Q(tag__tag__icontains=word));
+            else:
+                return "Invalid Search";
+        else:
+            if (re.match(r'^[A-Za-z0-9\s_&\|\(\)~]+$', search)):
+                jobs = get_jobs_from_custom_search(search);
+            else:
+                return "Invalid Search";
     jobs = jobs.distinct();
     sort_array = request.GET['sort'].split(" ");
     latitude_in_degrees_as_string = request.GET['latitude'];
@@ -92,7 +114,7 @@ def findJobs(request):
     return jobs;
     
 def get_jobs_from_custom_search(tags):
-    return eval(re.sub(r'([a-zA-Z0-9_]+)', "Job.objects.filter(tag__tag__iexact='" + r'\1' + "')", tags));
+        return eval(re.sub(r'([a-zA-Z0-9_]+)', "Job.objects.filter(tag__tag__iexact='" + r'\1' + "')", tags));
     
 def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_miles):
     radius_in_degrees = radius_in_miles / 69;
