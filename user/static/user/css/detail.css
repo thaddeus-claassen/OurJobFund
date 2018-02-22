@@ -79,12 +79,12 @@ tbody {
     overflow-y: scroll;
 }
 
-.name, .status {
+.name {
     width: 40%;
     float: left;
 }
 
-.type {
-    width: 20%;
+.paid, .received {
+    width: 30%;
     float: left;
 }
