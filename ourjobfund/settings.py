@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os;
 from .debug import DEBUG;
+from .django.databse_password import DATABASE_PASSWORD;
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)));
@@ -118,7 +119,7 @@ else:
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'ourjobfund',
             'USER': 'root',
-            'PASSWORD': 'FruitsShoichiAoki',
+            'PASSWORD': DATABASE_PASSWORD,
             'HOST': 'localhost',
             'POST': '',
         }
