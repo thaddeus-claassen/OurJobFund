@@ -1,22 +1,17 @@
 var canSubmit = true;
 
 $(document).ready(function() {
+    $('#id_type').change(function() {
+        changedType();
+    });
     $('#form').submit(function(e) {
         var type = $('#submit_button').attr('name').split('_')[1];
         format = correctFormat(type);
         if (format === "") {
-            if (type === 'pay') {
-                if (canSubmit) {
-                    payClicked();
-                    canSubmit = false;
-                    e.preventDefault();
-                }// end if
+            if (canSubmit) {
+                canSubmit = false; 
             } else {
-                if (canSubmit) {
-                    canSubmit = false; 
-                } else {
-                    e.preventDefault();
-                }// end if-else
+                e.preventDefault();
             }// end if-else
         } else {
             $('#amount-error-message').remove();
@@ -26,9 +21,17 @@ $(document).ready(function() {
     });
 });
 
+function changedType() {
+    if ($('#id_type').find(':selected').val() === 'Working') {
+        $('#id_amount-wrapper').css('display', 'inline');
+    } else {
+        $('#id_amount-wrapper').css('display', 'none');
+    }// end if-else
+}// end changedType()
+
 function correctFormat(type) {
     var errorMessage = "";
-    if (type === 'pay' ) {
+    if (type === 'pledge' || type === 'work') {
         var amount = parseFloat($('#id_amount').val());
         var isFloat = !isNaN(amount);
         if (isFloat) {

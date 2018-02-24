@@ -1,0 +1,16 @@
+#title {
+    text-align: center;
+}
+
+input[type=submit] {
+    width: 100%;
+}
+
+textarea {
+    width: 100%;
+    resize: none;
+}
+
+#amount-error-message {
+    color: red;
+}

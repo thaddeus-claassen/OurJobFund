@@ -81,12 +81,6 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <span class="info_title">Expected Pay</span>
-                    <span class="info_info">${{ expected_pay|floatformat:2 }}</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
                     <span class="info_title">Paid</span>
                     <span class="info_info">${{ job.paid|floatformat:2 }}</span>
                 </div>
@@ -95,12 +89,6 @@
                 <div class="col-md-12">
                     <span class="info_title">Workers</span>
                     <span class="info_info">{{ job.workers }}</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <span class="info_title">Expected Workers</span>
-                    <span class="info_info">{{ expected_workers }}</span>
                 </div>
             </div>
             <div class="row">
@@ -195,7 +183,7 @@
             <div class="col-md-6">
                 {% if request.user.is_authenticated %}
                 {% if not jobuser or jobuser.work_status == '' %}
-                <form action="{% url 'create-pledge' job.random_string %}">
+                <form action="{% url 'pledge' job.random_string %}">
                     <input class="pledge_work_inputs" type="submit" value="Pledge" name="pledge" />
                 </form>
                 {% endif %}
@@ -245,7 +233,7 @@
             {% if request.user.is_authenticated %}
             {% if not jobuser or jobuser.pledged == 0 and jobuser.work_status != 'finish' %}
             <div class="col-md-6">
-                <form action="{% url 'create-work' job.random_string %}">
+                <form action="{% url 'work' job.random_string %}">
                     <input class="pledge_work_inputs" type="submit"
                         value="{% if jobuser.work_status == 'work' %}Finish{% else %}Work{% endif %}" name="work" />
                 </form>
@@ -289,6 +277,8 @@
                                 <form action="{% url 'pay' w.user.profile.random_string job.random_string %}">
                                     <input type="submit" value="Pay Here" />
                                 </form>
+                                {% elif payment_verification %}
+                                
                                 {% endif %}
                             </td>
                         </tr>

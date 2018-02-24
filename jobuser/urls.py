@@ -4,4 +4,5 @@ app_name = 'jobuser';
 
 urlpatterns = [
     
+    
 ]

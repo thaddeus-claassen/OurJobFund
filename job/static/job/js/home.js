@@ -14,10 +14,6 @@ $('document').ready(function() {
         toggleSearch();
         save_search_type(($(this).attr('id') === 'basic_search'));
     });
-    showLocation();
-    $('#show-location').change(function() {
-        showLocation();
-    });
     $('#basic_search').keydown(function(event) {
         if (event.which == ENTER) {
             search();
@@ -70,6 +66,8 @@ $('document').ready(function() {
 });
 
 function search() {
+    $('#latitude').val("");
+    $('#longitude').val("");
     clearMarkers();
     numSearches = 0;
     applyLocation();
@@ -119,19 +117,13 @@ function save_show_location(isHidden) {
 
 function get_jobs() {
     var id = $('input[name="search"]:checked').attr('id');
-    var lat = "";
-    var lng = "";
-    if ($('#show-location').prop('checked')) {
-        lat = $('#latitude').val();
-        lng = $('#longitude').val();
-    }// end if
     $.ajax({
         url : 'job/get-jobs',
         data : {
             'type' : id,
             'search' : $('#' + id +'_search').val(),
-            'latitude' : lat,
-            'longitude' : lng,
+            'latitude' : $('#latitude').val(),
+            'longitude' : $('#longitude').val(),
             'radius' : getRadius(),
             'sort' : $('#sort').val(),
         },
@@ -144,20 +136,14 @@ function get_jobs() {
 
 function add_jobs() {
     var id = $('input[name="search"]:checked').attr('id');
-    var lat = "";
-    var lng = "";
-    if ($('#show-location').prop('checked')) {
-        lat = $('#latitude').val();
-        lng = $('#longitude').val();
-    }// end if
     $.ajax({
         url : 'job/add-jobs',
         data : {
             'numSearches' : numSearches,
             'type' : id,
             'search' : $('#' + id +'_search').val(),
-            'latitude' : lat,
-            'longitude' : lng,
+            'latitude' : $('#latitude').val(),
+            'longitude' : $('#longitude').val(),
             'radius' : getRadius(),
             'sort' : $('#sort').val(),
         },
@@ -170,20 +156,14 @@ function add_jobs() {
 
 function sort_jobs() {
     var id = $('input[name="search"]:checked').attr('id');
-    var lat = "";
-    var lng = "";
-    if ($('#show-location').prop('checked')) {
-        lat = $('#latitude').val();
-        lng = $('#longitude').val();
-    }// end if
     $.ajax({
         url : 'job/sort_jobs',
         data : {
             'numSearches' : numSearches,
             'type' : id,
             'search' : $('#' + id +'_search').val(),
-            'latitude' : lat,
-            'longitude' : lng,
+            'latitude' : $('#latitude').val(),
+            'longitude' : $('#longitude').val(),
             'radius' : getRadius(),
             'sort' : $('#sort').val(),
         },
@@ -196,19 +176,13 @@ function sort_jobs() {
 
 function get_total_jobs() {
     var id = $('input[name="search"]:checked').attr('id');
-    var lat = "";
-    var lng = "";
-    if ($('#show-location').prop('checked')) {
-        lat = $('#latitude').val();
-        lng = $('#longitude').val();
-    }// end if
     $.ajax({
         url : 'job/get-total-jobs',
         data : {
             'type' : id,
             'search' : $('#' + id +'_search').val(),
-            'latitude' : lat,
-            'longitude' : lng,
+            'latitude' : $('#latitude').val(),
+            'longitude' : $('#longitude').val(),
             'radius' : getRadius(),
             'sort' : $('#sort').val(),
         },
@@ -241,6 +215,7 @@ function sortJobsSuccess(json) {
 }// end sortJobs()
 
 function addJobsToTable(json) {
+    $('#seach-error-message').text('');
     var numJobs = Object.keys(json).length;
     if (numJobs > 0) {
         for (var index = 0; index < json.length; index++) {
@@ -249,8 +224,8 @@ function addJobsToTable(json) {
             string = string + "<td class='name'><a id='" + job["random_string"] + "' href='job/" + job["random_string"] + "'></a></td>";
             string = string + "<td class='date'>" + job['creation_date'] + "</td>";
             string = string + "<td class='pledged-paid'><sup>$" + turnMoneyToString(job['paid']) + "</sup>&frasl;";
-            string = string + "<sub>$" + turnMoneyToString(job['expected_pay']) + "</sub></td>";
-            string = string + "<td class='workers-finished'><sup>" + job['finished'] + "</sup>&frasl;<sub>" + job['expected_workers'] + "</sub></td>"
+            string = string + "<sub>$" + turnMoneyToString(job['pledged']) + "</sub></td>";
+            string = string + "<td class='workers-finished'><sup>" + job['finished'] + "</sup>&frasl;<sub>" + job['workers'] + "</sub></td>"
             string = string + "</tr>";
             $('#main_table_body').append(string);
             $('#' + job["random_string"]).text(job["name"]);

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% block import %}
+    <script type="text/javascript" src="{% static 'pay/js/verification.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'pay/css/verification.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="row">
+
+</div>
+<div class="row">
+    <div class="col-md-12">
+        {% for p in payments %}
+            {% if p.type == 'Other' and not p.verified %}
+                Ple
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        Note: Confirming payments not processed on OurJobFund will reduce the money you requested by that amount. This will not increase the amount you are paid.
+    </div>
+</div>
+{% endblock %}

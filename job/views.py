@@ -185,9 +185,14 @@ class DetailView(TemplateView):
         }
         if (request.user.is_authenticated()):
             serializer = JobSerializer(Job.objects.filter(pk=job.pk), many=True, context={'user' : request.user});
-            context['jobuser'] = get_object_or_None(JobUser, user=request.user, job=job);
-            context['expected_pay'] = serializer.data[0]['expected_pay'];
-            context['expected_workers'] = serializer.data[0]['expected_workers'];
+            jobuser = get_object_or_None(JobUser, user=request.user, job=job);
+            payment_verification = False;
+            if (jobuser):
+                for pay in jobuser.receiver_jobuser.all():
+                    if (pay.type == 'Other' and not pay.verified):
+                        payment_verification = True;
+            context['jobuser'] = jobuser;
+            context['payment_verification'] = payment_verification; 
         return context;
 
 @login_required

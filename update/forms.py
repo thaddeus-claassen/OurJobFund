@@ -4,50 +4,9 @@ import re;
 
 class UpdateForm(forms.Form):
     images = forms.ImageField(label="Images:", widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False);
-    description = forms.CharField(label="Description:", widget=forms.Textarea, max_length=10000);
-    honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
-
-    def clean_honey_pot(self):
-        if (not self.cleaned_data.get('honey_pot') == ""):
-            raise forms.ValidationError('It seems you are a bot.');
-        return "";
-        
-class PledgeForm(forms.Form):
-    amount = forms.CharField(label="Pledge:", widget=forms.TextInput(attrs={'placeholder': '$0.00'}));
-    description = forms.CharField(label="Description:", widget=forms.Textarea, max_length=10000);
-    honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
-    
-    def clean_amount(self):
-        pledge = self.cleaned_data.get('amount');
-        if (checkStringIsValidMoney(pledge)):
-            if (float(pledge) < 0.5):
-                raise forms.ValidationError('You cannot pledge less than $0.00.'); 
-        else:
-            raise forms.ValidationError('Please enter a valid dollar amount.');
-        return pledge;
-        
-    def clean_honey_pot(self):
-        if (not self.cleaned_data.get('honey_pot') == ""):
-            raise forms.ValidationError('It seems you are a bot.');
-        return "";
-    
-class WorkForm(forms.Form):
-    type = forms.ChoiceField(label="Type:", choices=(('work', 'Work'),('finish', 'Finish')));
-    amount = forms.CharField(label="Request Money:", widget=forms.TextInput(attrs={'placeholder': '$0.00'}), required=False);
     description = forms.CharField(label="Description:", widget=forms.Textarea, max_length=10000, required=False);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
-    
-    def clean_amount(self):
-        money = self.cleaned_data.get('amount');
-        if (money == ''):
-            money = '0';
-        if (checkStringIsValidMoney(money)):
-            if (float(money) < 0):
-                raise forms.ValidationError('You cannot request less than $0.00.'); 
-        else:
-            raise forms.ValidationError('Please enter a valid dollar amount.');
-        return money;
-        
+
     def clean_honey_pot(self):
         if (not self.cleaned_data.get('honey_pot') == ""):
             raise forms.ValidationError('It seems you are a bot.');
@@ -56,7 +15,7 @@ class WorkForm(forms.Form):
 class PayForm(forms.Form):
     type = forms.ChoiceField(choices=(('Credit', 'Credit'), ('Other', 'Other')), required=True);
     amount = forms.CharField(label="Pay Amount:", widget=forms.TextInput(attrs={'placeholder': '$0.00'}), required=True);
-    description = forms.CharField(label="Description:", widget=forms.Textarea, max_length=10000, required=True);
+    description = forms.CharField(label="Description:", widget=forms.Textarea, max_length=10000, required=False);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
 
     def clean_amount(self):

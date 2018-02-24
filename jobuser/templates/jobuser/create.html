@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+ 
+{% load staticfiles %}
+{% block import %}
+    <script type="text/javascript" src="{% static 'jobuser/js/create.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'jobuser/css/create.css' %}" />
+{% endblock %}
+ 
+{% block content %}
+<form id="form" action="{{ request.get_full_path }}" method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+    <div class="row info_row">
+        <div class="col-md-12">
+            <h4 id="title">
+                {% if type == 'work' %}
+                Work on
+                {% elif type == 'pledge' %}
+                Pledge to
+                {% endif %}
+                <a href="{% url 'job:detail' job.random_string %}">{{ job.name }}</a>
+            </h4>
+        </div>
+    </div>
+    {% for field in form %}
+    <div id="{{ field.auto_id }}-wrapper">
+        <div class="row info_row">
+            <div class="col-md-2">
+                {{ field.label }}
+            </div>
+            <div class="col-md-10">
+                {{ field }}
+                {{ field.errors }}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <div class="row info_row">
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+            <input id="submit_button" type="submit" value="Submit" name="submit_{{ type }}"/>
+        </div>
+    </div>
+    {% if type == 'pay' %}
+    <input id="stripe_token" type="hidden" name="stripeToken" />
+    {% endif %}
+</form>
+{% endblock %}
