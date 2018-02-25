@@ -59,7 +59,7 @@ def sort_jobs(request):
             jobs = jobs[0:50 * numSearches];
             serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
             json = JSONRenderer().render(serializer.data);
-        return HttpResponse(json, content_type="application/json");
+            return HttpResponse(json, content_type="application/json");
     else:
         return Http404();
         

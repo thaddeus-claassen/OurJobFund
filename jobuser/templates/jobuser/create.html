@@ -40,8 +40,5 @@
             <input id="submit_button" type="submit" value="Submit" name="submit_{{ type }}"/>
         </div>
     </div>
-    {% if type == 'pay' %}
-    <input id="stripe_token" type="hidden" name="stripeToken" />
-    {% endif %}
 </form>
 {% endblock %}

@@ -31,7 +31,7 @@ class CreateUpdateView(TemplateView):
         form = self.form(request.POST);
         if (form.is_valid()):
             description = form.cleaned_data['description'];
-            if (description != "" and len(request.FILES) > 0):
+            if (description != "" or len(request.FILES) > 0):
                 jobuser = get_object_or_None(JobUser, user=request.user, job=job);
                 if (jobuser is None):
                     jobuser = JobUser(user=request.user, job=job);

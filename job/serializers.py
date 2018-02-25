@@ -7,13 +7,13 @@ from django.db.models import Count, Q;
 from django.utils import timezone;
 
 class JobSerializer(serializers.ModelSerializer):
-    expected_pay = serializers.SerializerMethodField();
-    expected_workers = serializers.SerializerMethodField(); 
+    #expected_pay = serializers.SerializerMethodField();
+    #expected_workers = serializers.SerializerMethodField(); 
 
     class Meta:
         model = Job;
-        fields = ['name', 'creation_date', 'pledged', 'paid', 'workers', 'finished', 'expected_pay', 'expected_workers', 'random_string', 'latitude', 'longitude'];
-            
+        fields = ['name', 'creation_date', 'pledged', 'paid', 'workers', 'finished', 'random_string', 'latitude', 'longitude'];
+    ''''        
     def get_expected_pay(self, job):
         pledges = JobUser.objects.filter(Q(job=job) & Q(pledged__gt=0));
         if (self.context['user'].is_authenticated()):
@@ -54,4 +54,4 @@ class JobSerializer(serializers.ModelSerializer):
         if (self.context['user'].is_authenticated()):
             workers = self.notBeenActiveInTheLastNDays(workers, self.context['user'].workerfilter.not_been_active_in_the_last_n_days);
         return workers.count();
-        
+    '''    
