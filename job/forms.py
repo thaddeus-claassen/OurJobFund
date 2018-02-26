@@ -4,7 +4,7 @@ import re;
 
 class NewJobForm(forms.ModelForm):
     name = forms.CharField(label="Job Title:", widget=forms.TextInput(attrs={'placeholder': '(Required)'}), max_length=100);
-    location = forms.CharField(label="Location:", max_length=1000, required=False);
+    location = forms.CharField(label="Location:", widget=forms.TextInput(attrs={'placeholder' : '(Any valid location on Google Maps)'}), max_length=1000, required=False);
     latitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
     longitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
     tags = forms.CharField(label="Tags:", widget=forms.TextInput(attrs={'placeholder': '(Separated by spaces, alphanumeric characters or "_" only)'}), max_length=1000, required=False);

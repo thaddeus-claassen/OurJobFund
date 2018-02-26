@@ -183,6 +183,11 @@ if not DEBUG:
     LOGGING = {
         'version': 1,
         'disable_existing_loggers': False,
+        'formatters': {
+            'simple' : {
+                'format' : '%(asctime)s' '%(message)s'
+            }
+        },
         'handlers': {
             'file': {
                 'level': 'DEBUG',

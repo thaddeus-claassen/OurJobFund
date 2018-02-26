@@ -63,8 +63,8 @@ class SignUpForm(forms.ModelForm):
         password = self.cleaned_data.get('password');
         if (len(password) < 9):
             raise forms.ValidationError('Your password must contain at least 9 characters.');
-        if (not re.match(r'^(?=.*?\d)(?=.*?[A-Z])(?=.*?[a-z])[A-Za-z\d]{9,}$', password)):
-            raise forms.ValidationError('Your password must contain at least one uppercase letter, lowercase letter, and number');
+        if (not re.match(r'^(?=.*?\d)(?=.*?[A-Z])(?=.*?[a-z])[A-Za-z\d!@#\$%\^&\*\(\)]{9,}$', password)):
+            raise forms.ValidationError('Your password must contain at least one uppercase letter, lowercase letter, number, and a special character (!, @, #, $, %, ^, &, *, (, or ))');
         return password;
         
     def clean_repeat_password(self):
