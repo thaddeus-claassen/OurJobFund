@@ -52,7 +52,6 @@ class CreateUpdateView(TemplateView):
         context = super(CreateUpdateView, self).get_context_data(**kwargs);
         context['job'] = kwargs['job'];
         context['form'] = kwargs['form'];
-        context['type'] = 'update';
         return context;
     
 class PayView(TemplateView):
@@ -91,7 +90,7 @@ class PayView(TemplateView):
                     update.save();
                     type = form.cleaned_data['type'];
                     if (type == 'Other'):
-                        pay = Pay(sender_jobuser=sender_jobuser, receiver_jobuser=receiver_jobuser, type="Cash", amount=float(amount));
+                        pay = Pay(sender_jobuser=sender_jobuser, receiver_jobuser=receiver_jobuser, type="Other", amount=float(amount));
                         pay.save();
                     else:
                         self.pay(request, job=job, sender_jobuser=sender_jobuser, receiver_jobuser=receiver_jobuser, amount=amount);
@@ -106,7 +105,6 @@ class PayView(TemplateView):
         context['job'] = kwargs['job'];
         context['receiver_jobuser'] = kwargs['receiver_jobuser'];
         context['form'] = kwargs['form'];
-        context['type'] = 'pay';
         return context; 
     
     def pay(self, request, **kwargs):
