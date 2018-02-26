@@ -12,22 +12,13 @@
 <div class="row">
     <div class="col-md-5">
         <div class="row margin-row">
-            <div class="col-md-3">
-                <label for="basic">Basic:</label>
-                <input id="basic" type="radio" name="search" checked="checked"/>
-            </div>
-            <div class="col-md-3">
-                <label for="custom">Custom:</label>
-                <input id="custom" type="radio" name="search"/>
-            </div>
-            <div class="col-md-3">
+            <div class="col-md-12">
                 <span id="search-error-message"></span>
             </div>
         </div>
         <div class="row margin-row">
             <div class="col-md-9">
-                <input id="basic_search" class="search" type="text" placeholder="Search Jobs by Name or Tags, separated by spaces"/>
-                <textarea id="custom_search" class="search" placeholder="Use tags and '&' (SHIFT - 7 ), '|' (SHIFT - \ ), and '~' (SHIFT - `) to make logical sentences."></textarea>
+                <input id="search" class="search" type="text" placeholder="Search Jobs by Name or Tags, separated by spaces"/>
             </div>
             <div class="col-md-3">
                 Total:&nbsp;<span id="num-jobs-found">0</span>

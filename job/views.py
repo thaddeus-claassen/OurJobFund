@@ -76,19 +76,14 @@ def get_total_jobs(request):
         return Http404();
         
 def findJobs(request):
-    type = request.GET['type'];
     search = request.GET['search'];
     if (search == ""):
         jobs = Job.objects.all();
     else:
-        if (type == 'basic'):
-            if (re.match(r'^[A-Za-z0-9\s_]+$', search)):
-                jobs = get_jobs_from_custom_search(search);
-                jobs = Job.objects.all();
-                for word in search.split(" "):
-                    jobs = jobs.filter(Q(name__icontains=word) | Q(tag__tag__icontains=word));
-            else:
-                return "Invalid Search";
+        if (re.match(r'^[A-Za-z0-9\s_]+$', search)):
+            jobs = Job.objects.all();
+            for word in search.split(" "):
+                jobs = jobs.filter(Q(name__icontains=word) | Q(tag__tag__icontains=word));
         else:
             if (re.match(r'^[A-Za-z0-9\s_&\|\(\)~]+$', search)):
                 jobs = get_jobs_from_custom_search(search);

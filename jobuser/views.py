@@ -34,7 +34,7 @@ class PledgeView(TemplateView):
             jobuser.save();
             job.pledged = job.pledged + amount;
             job.save();
-            title = "Pledged $" + str(amount);
+            title = "Pledged $" + addDecimalPlacesForMoney(str(amount));
             update.title = title;
             update.save();
             sendNotifications(jobuser);
@@ -109,3 +109,12 @@ def createRandomString():
     if (Update.objects.filter(random_string=random_string).exists()):
         random_string = createRandomString();
     return random_string;
+    
+def addDecimalPlacesForMoney(amount):
+    nums = float(amount).split('.');
+    if (len(nums) == 2):
+        if (len(num[1]) == 1):
+            amount = amount + '0';
+    else:
+        amount = amount + '.00'
+    return amount;
