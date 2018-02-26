@@ -85,7 +85,7 @@ class PayView(TemplateView):
                         sender_jobuser = JobUser(user=request.user, job=job);
                         sender_jobuser.save();
                     amount = form.cleaned_data['amount'];
-                    title = "Paid $" + amount;
+                    title = "Paid $" + addDecimalPlacesForMoney(amount);
                     update = Update(jobuser=sender_jobuser, title=title, description=form.cleaned_data['description'], random_string=createRandomString());
                     update.save();
                     type = form.cleaned_data['type'];
@@ -146,3 +146,12 @@ def createRandomString():
     if (Update.objects.filter(random_string=random_string).exists()):
         random_string = createRandomString();
     return random_string;
+    
+def addDecimalPlacesForMoney(amount):
+    nums = float(amount).split('.');
+    if (len(nums) == 2):
+        if (len(num[1]) == 1):
+            amount = amount + '0';
+    else:
+        amount = amount + '.00'
+    return amount;
