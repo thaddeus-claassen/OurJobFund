@@ -152,7 +152,7 @@ function add_jobs() {
 
 function sort_jobs() {
     $.ajax({
-        url : 'job/sort_jobs',
+        url : 'job/sort-jobs',
         data : {
             'numSearches' : numSearches,
             'search' : $('#search').val(),
