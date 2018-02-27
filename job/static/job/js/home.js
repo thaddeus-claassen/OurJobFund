@@ -14,7 +14,7 @@ $('document').ready(function() {
         toggleSearch();
         save_search_type(($(this).attr('id') === 'basic_search'));
     });
-    $('#basic_search').keydown(function(event) {
+    $('#search').keydown(function(event) {
         if (event.which == ENTER) {
             search();
         }// end if
@@ -116,12 +116,10 @@ function save_show_location(isHidden) {
 }// end save_show_location()
 
 function get_jobs() {
-    var id = $('input[name="search"]:checked').attr('id');
     $.ajax({
         url : 'job/get-jobs',
         data : {
-            'type' : id,
-            'search' : $('#' + id +'_search').val(),
+            'search' : $('#search').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
             'radius' : getRadius(),
@@ -135,13 +133,11 @@ function get_jobs() {
 }// end get_jobs()
 
 function add_jobs() {
-    var id = $('input[name="search"]:checked').attr('id');
     $.ajax({
         url : 'job/add-jobs',
         data : {
             'numSearches' : numSearches,
-            'type' : id,
-            'search' : $('#' + id +'_search').val(),
+            'search' : $('#search').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
             'radius' : getRadius(),
@@ -155,13 +151,11 @@ function add_jobs() {
 }// end add_jobs()
 
 function sort_jobs() {
-    var id = $('input[name="search"]:checked').attr('id');
     $.ajax({
         url : 'job/sort_jobs',
         data : {
             'numSearches' : numSearches,
-            'type' : id,
-            'search' : $('#' + id +'_search').val(),
+            'search' : $('#search').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
             'radius' : getRadius(),
@@ -175,12 +169,10 @@ function sort_jobs() {
 }// end sort_jobs()
 
 function get_total_jobs() {
-    var id = $('input[name="search"]:checked').attr('id');
     $.ajax({
         url : 'job/get-total-jobs',
         data : {
-            'type' : id,
-            'search' : $('#' + id +'_search').val(),
+            'search' : $('#search').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
             'radius' : getRadius(),
@@ -215,7 +207,7 @@ function sortJobsSuccess(json) {
 }// end sortJobs()
 
 function addJobsToTable(json) {
-    $('#seach-error-message').text('');
+    $('#search-error-message').text('');
     var numJobs = Object.keys(json).length;
     if (numJobs > 0) {
         for (var index = 0; index < json.length; index++) {
