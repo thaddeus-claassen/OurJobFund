@@ -15,7 +15,6 @@ from pay.models import Pay;
 from job.models import Job;
 from datetime import datetime;
 from .models import Profile;
-from random import randint;
 from .forms import ChangePasswordForm, ChangeNameForm, ChangeEmailForm, LoginForm, SignUpForm, DeactivateAccountForm, ProfileForm, DescriptionForm, ChangeUsernameForm;
 import json, stripe;
 
@@ -26,7 +25,7 @@ class LoginView(TemplateView):
     
     def get(self, request, *args, **kwargs):
         if (request.user.is_authenticated()):
-            return redirect('user:detail', username=request.user.username);
+            return redirect(home);
         else:
             return render(request, self.template_name, self.get_context_data(login_form=self.login_form, sign_up_form=self.sign_up_form));
     
@@ -260,18 +259,6 @@ def stripe(request):
             Http404();
     else:
         return Http404();
-    
-def createRandomString():
-    random_string = '';
-    available_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-    for i in range(50):
-        index = randint(0, 61);
-        random_char = available_chars[index];
-        random_string = random_string + random_char;
-    if (User.objects.filter(profile__random_string=random_string).exists()):
-        random_string = createRandomString();
-    return random_string;
-        
     
     
     

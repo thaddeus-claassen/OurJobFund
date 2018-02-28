@@ -13,7 +13,6 @@ from job.models import Job;
 from pay.models import Pay;
 from .models import Update, Image;
 from .forms import UpdateForm, PayForm;
-from random import randint;
 import stripe;
 
 class CreateUpdateView(TemplateView):
@@ -32,17 +31,12 @@ class CreateUpdateView(TemplateView):
         if (form.is_valid()):
             description = form.cleaned_data['description'];
             if (description != "" or len(request.FILES) > 0):
-                jobuser = get_object_or_None(JobUser, user=request.user, job=job);
-                if (jobuser is None):
-                    jobuser = JobUser(user=request.user, job=job);
-                    jobuser.save();
-                update = Update(jobuser=jobuser, description=description, random_string=createRandomString());
+                jobuser = JobUser.objects.get(user=request.user, job=job);
+                update = Update.create(jobuser=jobuser, title="Update", description=description);
+                update.save();
                 for image in request.FILES.getlist('images'):
                     image = Image(update=update, image=image);
                     image.save();
-                title = "Update";
-                update.title = title;
-                update.save();
                 sendNotifications(jobuser);
             return redirect(job);
         else:
@@ -86,11 +80,11 @@ class PayView(TemplateView):
                         sender_jobuser.save();
                     amount = form.cleaned_data['amount'];
                     title = "Paid $" + addDecimalPlacesForMoney(amount);
-                    update = Update(jobuser=sender_jobuser, title=title, description=form.cleaned_data['description'], random_string=createRandomString());
+                    update = Update.create(jobuser=sender_jobuser, title=title, description=form.cleaned_data['description'], paid=amount);
                     update.save();
                     type = form.cleaned_data['type'];
                     if (type == 'Other'):
-                        pay = Pay(sender_jobuser=sender_jobuser, receiver_jobuser=receiver_jobuser, type="Other", amount=float(amount));
+                        pay = Pay.create(sender_jobuser=sender_jobuser, receiver_jobuser=receiver_jobuser, type="Other", amount=float(amount));
                         pay.save();
                     else:
                         self.pay(request, job=job, sender_jobuser=sender_jobuser, receiver_jobuser=receiver_jobuser, amount=amount);
@@ -120,7 +114,7 @@ class PayView(TemplateView):
         amount_paying_in_dollars = float(amount_paying_in_cents) / 100;
         sender_jobuser = kwargs['sender_jobuser'];
         receiver_jobuser = kwargs['receiver_jobuser'];
-        payment = Pay(sender_jobuser=sender_jobuser, receiver_jobuser=receiver_jobuser, amount=amount_paying_in_dollars);
+        payment = Pay.create(sender_jobuser=sender_jobuser, receiver_jobuser=receiver_jobuser, amount=amount_paying_in_dollars);
         payment.save();
         sender_jobuser.paid = sender_jobuser.paid + amount_paying_in_dollars;
         sender_jobuser.save();
@@ -135,17 +129,6 @@ def detail(request, update_random_string):
         'update' : update,
     }
     return render(request, 'update/detail.html', context);
-    
-def createRandomString():
-    random_string = '';
-    available_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-    for i in range(50):
-        index = randint(0, 61);
-        random_char = available_chars[index];
-        random_string = random_string + random_char;
-    if (Update.objects.filter(random_string=random_string).exists()):
-        random_string = createRandomString();
-    return random_string;
     
 def addDecimalPlacesForMoney(amount):
     nums = float(amount).split('.');

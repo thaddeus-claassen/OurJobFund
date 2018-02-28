@@ -22,8 +22,8 @@ class PledgeForm(forms.Form):
         return "";
     
 class WorkForm(forms.Form):
-    type = forms.ChoiceField(label="Type:", choices=(('Working', 'Work'),('Finished Working', 'Finish Working'), ('Finished Requesting Payments', 'Finish Requesting Payment')));
-    amount = forms.CharField(label="Request Money:", widget=forms.TextInput(attrs={'placeholder': '$0.00'}), required=True);
+    type = forms.ChoiceField(label="Type:", choices=(('Working', 'Work'),('Finished Working', 'Finish Working'), ('Finished Accepting Payments', 'Finish Accepting Payment')));
+    amount = forms.CharField(label="Request Money:", widget=forms.TextInput(attrs={'placeholder': '$0.00'}), required=False);
     description = forms.CharField(label="Description:", widget=forms.Textarea, max_length=10000, required=False);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     

@@ -16,7 +16,6 @@ from django.core import serializers;
 from pay.models import Pay;
 from .models import Job, Tag, User, Image;
 from .forms import NewJobForm;
-from random import randint;
 import json, re, math;
 
 def home(request):
@@ -125,41 +124,7 @@ def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_
         if (distance > radius_in_miles):
             jobs = jobs.exclude(id=job.id);
     return jobs;
-    
-@login_required
-def save_filter(request):
-    if (request.is_ajax()):
-        changed_filter = request.POST['filter'];
-        filter = changed_filter.split("-")[0];
-        row = changed_filter.split("-")[1];
-        value = request.POST['value'];
-        if (value == ''):
-            value = 0;
-        exec("request.user." + str(filter) + "filter." + row + " = " + str(value));
-        exec("request.user." + str(filter) + "filter.save()");
-        return HttpResponse("");
-    else:
-        return Http404();
         
-@login_required
-def save_search_type(request):
-    if (request.is_ajax()):
-        request.user.profile.basic_search = (request.POST['isBasic'] == 'true');
-        request.user.profile.save();
-        return HttpResponse("");
-    else:
-        return Http404();
-        
-@login_required
-def save_hide_location(request):
-    if (request.is_ajax()):
-        request.user.profile.hide_location = (request.POST['isHidden'] == 'true');
-        request.user.profile.save();
-        return HttpResponse("");
-    else:
-        return Http404();
-
-    
 class DetailView(TemplateView):
     template_name = 'job/detail.html';
     
@@ -230,20 +195,20 @@ class CreateView(TemplateView):
             location = form.cleaned_data['location'];
             tags = form.cleaned_data['tags'];
             description = form.cleaned_data['description'];
-            job = Job(name=name, latitude=latitude, longitude=longitude, location=location, description=description, created_by=request.user, random_string=createRandomString());
+            job = Job.create(name=name, latitude=latitude, longitude=longitude, location=location, description=description, created_by=request.user)
             job.save();
             if (tags != ''):
                 tagsArray = tags.split(" ");
                 for tagString in tagsArray:
-                    newTag = get_object_or_None(Tag, tag=tagString)
-                    if (not newTag):
-                        newTag = Tag(tag=tagString);
-                        newTag.save();
-                    job.tag_set.add(newTag);
+                    tag = get_object_or_None(Tag, tag=tagString)
+                    if (tag is None):
+                        tag = Tag.create(tag=tagString);
+                        tag.save();
+                    job.tag_set.add(tag);
             for image in request.FILES.getlist('image_set'):
-                image = Image(image=image, job=job);
+                image = Image.create(image=image, job=job);
                 image.save();
-            jobuser = JobUser(user=request.user, job=job);
+            jobuser = JobUser.create(user=request.user, job=job);
             jobuser.save();
             return redirect(job);
         return render(request, self.template_name, self.get_context_data(form=form));
@@ -253,17 +218,6 @@ class CreateView(TemplateView):
             'form' : kwargs['form'],
         }
         return context
-    
-def createRandomString():
-    random_string = '';
-    available_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-    for i in range(50):
-        index = randint(0, len(available_chars)-1);
-        random_char = available_chars[index];
-        random_string = random_string + random_char;
-    if (Job.objects.filter(random_string=random_string).exists()):
-        random_string = createRandomString();
-    return random_string;
                    
                     
                     

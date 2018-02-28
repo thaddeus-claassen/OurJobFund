@@ -10,3 +10,13 @@ class Pay(models.Model):
     verified = models.BooleanField(default=False);
     amount = models.FloatField(editable=False, null=True, blank=True);
     date = models.DateTimeField(auto_now_add=True, null=True);
+    
+    @classmethod
+    def create(cls, sender_jobuser, receiver_jobuser, type, amount):
+        pay = Pay(
+            sender_jobuser = sender_jobuser,
+            receiver_jobuser = receiver_jobuser,
+            type = type,
+            amount = amount,
+        );
+        return pay;

@@ -5,8 +5,7 @@ $(document).ready(function() {
         changedType();
     });
     $('#form').submit(function(e) {
-        var type = $('#submit_button').attr('name').split('_')[1];
-        format = correctFormat(type);
+        format = correctFormat();
         if (format === "") {
             if (canSubmit) {
                 canSubmit = false; 
@@ -31,14 +30,12 @@ function changedType() {
 
 function correctFormat(type) {
     var errorMessage = "";
-    if (type === 'pledge' || type === 'work') {
+    if (type === 'Work' && $('#id_type').val() === 'Working') {
         var amount = parseFloat($('#id_amount').val());
         var isFloat = !isNaN(amount);
         if (isFloat) {
             if (amount != amount.toFixed(2)) {
                 errorMessage = "Must have at most two decimal places";
-            } else if (type === 'pay' && $('#type').val() === 'Credit' && amount < 0.5) {
-                errorMessage = "You cannot pay less than $0.50 with card."
             }// end if
         } else {
             errorMessage = "Not a valid number";

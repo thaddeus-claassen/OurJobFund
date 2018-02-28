@@ -2,8 +2,8 @@
  
 {% load staticfiles %}
 {% block import %}
-    <script type="text/javascript" src="{% static 'jobuser/js/create.js' %}"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'jobuser/css/create.css' %}" />
+    <script type="text/javascript" src="{% static 'jobuser/js/work.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'jobuser/css/work.css' %}" />
 {% endblock %}
  
 {% block content %}
@@ -12,11 +12,7 @@
     <div class="row info_row">
         <div class="col-md-12">
             <h4 id="title">
-                {% if type == 'work' %}
                 Work on
-                {% elif type == 'pledge' %}
-                Pledge to
-                {% endif %}
                 <a href="{% url 'job:detail' job.random_string %}">{{ job.name }}</a>
             </h4>
         </div>
@@ -37,7 +33,7 @@
     <div class="row info_row">
         <div class="col-md-2"></div>
         <div class="col-md-10">
-            <input id="submit_button" type="submit" value="Submit" name="submit"/>
+            <input id="submit_button" type="submit" value="Submit"/>
         </div>
     </div>
 </form>

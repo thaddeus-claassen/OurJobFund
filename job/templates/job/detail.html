@@ -120,7 +120,7 @@
                     <div class="col-md-6">
                         <span id="updates_title">Updates</span>
                     </div>
-                    {% if request.user.is_authenticated %}
+                    {% if request.user.is_authenticated and jobuser %}
                     <div class="col-md-6">
                         <form action="{% url 'create-update' job.random_string %}">
                             <input id="post_update" class="pledge_work_inputs" type="submit" value="Post Update" name="update" />
@@ -274,7 +274,7 @@
                             <td>${{ w.received|floatformat:2 }}</td>
                             <td>
                                 {% if request.user.is_authenticated and w.user != request.user %}
-                                <form action="{% url 'pay' w.user.profile.random_string job.random_string %}">
+                                <form action="{% url 'pay' w.user.username job.random_string %}">
                                     <input type="submit" value="Pay Here" />
                                 </form>
                                 {% elif payment_verification %}

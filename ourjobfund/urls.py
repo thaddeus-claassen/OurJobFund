@@ -43,7 +43,7 @@ urlpatterns = [
     url(r'^update/create/(?P<job_random_string>[a-zA-Z0-9]+)/', CreateUpdateView.as_view(), name='create-update'),
     url(r'^pledge/(?P<job_random_string>[a-zA-Z0-9]+)', PledgeView.as_view(), name='pledge'),
     url(r'^work/(?P<job_random_string>[a-zA-Z0-9]+)', WorkView.as_view(), name='work'),
-    url(r'^pay/(?P<profile_random_string>[a-zA-Z0-9]+)/(?P<job_random_string>[a-zA-Z0-9]+)/', PayView.as_view(), name='pay'),
+    url(r'^pay/(?P<username>[a-zA-Z0-9_]*)/(?P<job_random_string>[a-zA-Z0-9]+)/', PayView.as_view(), name='pay'),
     url(r'^about/', include('about.urls')),
     url(r'^contact/', include('contact.urls')),
     url(r'^terms_of_service/', include('terms_of_service.urls')),
