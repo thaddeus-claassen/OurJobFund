@@ -19,9 +19,6 @@ $('document').ready(function() {
             search();
         }// end if
     });
-    $('#search_button').click(function() {
-        search();
-    });
     $('#location').keydown(function(event) {
         if (event.which == ENTER) {
             search();
