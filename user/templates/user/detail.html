@@ -117,7 +117,7 @@
                         <tr>
                             <th class="name">Name</th>
                             <th class="paid"><sup>Paid</sup>&frasl;<sub>Pledged</sub></th>
-                            <th class="received"><sup>Received</sup>&frasl;<sub>Requested</sub></th>
+                            <th class="received">Received</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -125,7 +125,7 @@
                         <tr id="current_{{ j.job.name }}">
                             <td class="name"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.name }}</a></td>
                             <td class="paid"><sup>${{ j.paid|floatformat:2 }}</sup>&frasl;<sub>${{ j.pledged|floatformat:2 }}</sub></td>
-                            <td class="received"><sup>${{ j.received|floatformat:2 }}</sup>&frasl;<sub>${{ j.request_money|floatformat:2}}</sub></td>
+                            <td class="received">${{ j.received|floatformat:2 }}</td>
                         </tr>
                         {% empty %}
                         <tr>
@@ -159,7 +159,7 @@
                         <tr>
                             <th class="name">Name</th>
                             <th class="paid"><sup>Paid</sup>&frasl;<sub>Pledged</sub></th>
-                            <th class="received"><sup>Received</sup>&frasl;<sub>Requested</sub></th>
+                            <th class="received">Received</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -167,7 +167,7 @@
                         <tr id="current_{{ j.job.name }}">
                             <td class="name"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.name }}</a></td>
                             <td class="paid"><sup>${{ j.paid|floatformat:2 }}</sup>&frasl;<sub>${{ j.pledged|floatformat:2 }}</sub></td>
-                            <td class="received"><sup>${{ j.received|floatformat:2 }}</sup>&frasl;<sub>${{ j.request_money|floatformat:2}}</sub></td>
+                            <td class="received">${{ j.received|floatformat:2 }}</td>
                         </tr>
                         {% empty %}
                         <tr>

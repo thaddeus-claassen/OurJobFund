@@ -7,19 +7,17 @@ class Update(models.Model):
     title = models.CharField(max_length=100);
     description = models.CharField(default="", max_length=10000, blank=True);
     pledge = models.FloatField(default=0);
-    request_money = models.FloatField(default=0);
     work_status = models.CharField(default='', max_length=100, blank=True);
     date = models.DateTimeField(auto_now_add=True);
     random_string = models.CharField(max_length=50);
     
     @classmethod
-    def create(cls, jobuser, title, description, pledge=0, request_money=0, work_status=''):
+    def create(cls, jobuser, title, description, pledge=0, work_status=''):
         update = Update(
             jobuser = jobuser,
             title = title,
             description = description,
             pledge = pledge,
-            request_money = request_money,
             work_status = work_status,
             random_string = cls.createRandomString(),
         );

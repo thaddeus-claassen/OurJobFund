@@ -248,7 +248,6 @@
                         <tr>
                             <th id="workers-username">Username</th>
                             <th id="workers-status">Status</th>
-                            <th id="workers-requesting">Requesting</th>
                             <th id="workers-received">Received</th>
                             <th id="workers-pay">Pay Worker</th>
                         </tr>
@@ -270,7 +269,6 @@
                                 {% endif %}
                             </td>
                             <td>{{ w.work_status|title }}</td>
-                            <td>${{ w.request_money|floatformat:2 }}</td>
                             <td>${{ w.received|floatformat:2 }}</td>
                             <td>
                                 {% if request.user.is_authenticated and w.user != request.user %}
