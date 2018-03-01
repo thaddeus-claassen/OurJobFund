@@ -7,23 +7,30 @@ from .choices import STATES;
 from .reserved_names import RESERVED_NAMES;
 import re;
 
-class LoginForm(forms.ModelForm):
+class LoginForm(forms.Form):
+    username_or_password = forms.CharField(label="", widget=forms.TextInput(attrs={'placeholder' : 'Username or Email'}));
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder' : 'Password'}));
-    email = forms.EmailField(label='Email', widget=forms.TextInput(attrs={'placeholder' : 'Email'}));
     protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
     prefix = "login";
-    
-    class Meta:
-        model = User;
-        fields = ['email', 'password'];
-        
+
+    def clean_username_or_password(self):
+        username_or_password = self.cleaned_data.get('username_or_password');
+        user = get_object_or_None(User, email=username_or_password);
+        if (user is None):
+            user = get_object_or_None(User, username=username_or_password);
+        if (user is None):
+            raise forms.ValidationError('Your username or email is incorrect.');
+        return username_or_password;    
+            
     def clean_password(self):
-        email = self.cleaned_data.get('email');
+        username_or_password = self.cleaned_data.get('username_or_password');
         password = self.cleaned_data.get('password');
-        user = get_object_or_None(User, email=email);
+        user = get_object_or_None(User, email=username_or_password);
+        if (user is None):
+            user = get_object_or_None(User, username=username_or_password);
         if (not user or (authenticate(username=user.username, password=password) is None)):
-            raise forms.ValidationError('Your username or password is incorrect.');
-        return password;  
+            raise forms.ValidationError('Your password is incorrect.');
+        return password;
         
     def clean_protection(self):
         if (not self.cleaned_data.get('protection') == ""):

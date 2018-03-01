@@ -1,5 +1,4 @@
 User-agent: *
-Disallow: /user/*
-Disallow: /update/*
-Disallow: /contact/*
-Disallow: /terms-of-service/*
+Disallow: /update/
+Disallow: /contact/
+Disallow: /terms-of-service/

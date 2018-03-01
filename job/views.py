@@ -195,12 +195,12 @@ class CreateView(TemplateView):
             location = form.cleaned_data['location'];
             tags = form.cleaned_data['tags'];
             description = form.cleaned_data['description'];
-            job = Job.create(name=name, latitude=latitude, longitude=longitude, location=location, description=description, created_by=request.user)
+            job = Job.create(name=name, latitude=latitude, longitude=longitude, location=location, description=description, created_by=request.user);
             job.save();
             if (tags != ''):
                 tagsArray = tags.split(" ");
                 for tagString in tagsArray:
-                    tag = get_object_or_None(Tag, tag=tagString)
+                    tag = get_object_or_None(Tag, tag=tagString);
                     if (tag is None):
                         tag = Tag.create(tag=tagString);
                         tag.save();
@@ -218,7 +218,3 @@ class CreateView(TemplateView):
             'form' : kwargs['form'],
         }
         return context
-                   
-                    
-                    
-    
