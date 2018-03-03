@@ -182,8 +182,10 @@ class DetailView(TemplateView):
         context['name_form'] = kwargs['nameForm'];
         context['profile_form'] = kwargs['profileForm'];
         context['description_form'] = kwargs['descriptionForm'];
-        context['current'] = user.jobuser_set.filter(Q(job__pledged=0) | Q(job__pledged__gt=F('job__paid')));
-        context['finished'] = user.jobuser_set.filter(Q(job__pledged__gt=0) & Q(job__pledged__lte=F('job__paid')));
+        context['currently_pledged'] = user.jobuser_set.filter(Q(job__is_finished=False) & Q(pledged__gt=0));
+        context['currently_working'] = user.jobuser_set.filter(Q(job__is_finished=False) & (Q(work_status='working') | Q(work_status='finished')));
+        context['finished_pledging'] = user.jobuser_set.filter(Q(job__is_finished=True) & Q(pledged__gt=0));
+        context['finished_working'] = user.jobuser_set.filter(Q(job__is_finished=True) & (Q(work_status='working') | Q(work_status='finished')));
         return context;
         
 class AccountView(TemplateView):

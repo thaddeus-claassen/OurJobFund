@@ -14,7 +14,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="row">
             <div class="col-md-6">
                 <h4>Info</h4>
@@ -25,89 +25,74 @@
                 {% endif %}
             </div>
         </div>
-        <div id="info-wrapper">
-            <form id="info_form" action="{{ request.get_full_path }}" method="POST">
-            {% csrf_token %}
-            {% for name in name_form %}
-                {% if name.errors %}
-                <div class="row info_row">
-                    <div class="col-md-12">
-                        <span>{{ name.errors }}</span>
-                    </div>
-                </div>
-                {% endif %}
-                <div class="row info_row">
-                    <div class="col-md-12">
-                        <span class="info_title">{{ name.label }}</span>
-                        <span class="info_info">{{ name }}</span>
-                    </div>
-                </div>
-            {% endfor %}
-            {% for info in profile_form %}
-                {% if info.errors %}
-                <div class="row info_row">
-                    <div class="col-md-12">
-                        <span>{{ info.errors }}</span>
-                    </div>
-                </div>
-                {% endif %}
-                <div class="row info_row">
-                    <div class="col-md-12">
-                        <span class="info_title">{{ info.label }}</span>
-                        <span class="info_info">{{ info }}</span>
-                    </div>
-                </div>
-            {% endfor %}
-            </form>
-            {% if request.user.username == detail_user.username and detail_user.profile.stripe_account_id == "" %}
-            <div class="row">
+        <form id="info_form" action="{{ request.get_full_path }}" method="POST">
+        {% csrf_token %}
+        {% for name in name_form %}
+            {% if name.errors %}
+            <div class="row info_row">
                 <div class="col-md-12">
-                    <span id="must-connect-to-stripe">
-                        To receive credit card payments, please sign into
-                        <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write&state={{ request.user.username }}" id="stripe_connect" class="stripe-connect">
-                            <span>Stripe</span></a>.
-                    </span>
-                </div>
-            </div>
-            {% elif request.user.username == detail_user.username and detail_user.profile.stripe_account_id != "" %}
-            <div class="row">
-                <div class="col-md-12">
-                    <form id="remove-stripe-account-form" action="{{ request.get_full_path }}" method="POST">
-                        {% csrf_token %}
-                        <input id="delete-stripe" type="submit" value="Remove Stripe" name="delete-stripe" />
-                    </form>
+                    <span>{{ name.errors }}</span>
                 </div>
             </div>
             {% endif %}
-        </div>
-    </div>
-    <div class="col-md-9">
-        <div class="row">
-            <div class="col-md-6">
-                <h4>Description</h4>
+            <div class="row info_row">
+                <div class="col-md-12">
+                    <span class="info_title">{{ name.label }}</span>
+                    <span class="info_info">{{ name }}</span>
+                </div>
             </div>
-            <div class="col-md-6">
-                {% if request.user.username == detail_user.username %}
-                <input type="submit" value="Save" form="description_form" name="description" />
-                {% endif %}
+        {% endfor %}
+        {% for info in profile_form %}
+            {% if info.errors %}
+            <div class="row info_row">
+                <div class="col-md-12">
+                    <span>{{ info.errors }}</span>
+                </div>
             </div>
-        </div>
-        {{ description_form.description.errors }}
-        <form id="description_form" action="{{ request.get_full_path }}" method="POST">
-            {% csrf_token %}
+            {% endif %}
+            <div class="row info_row">
+                <div class="col-md-12">
+                    <span class="info_title">{{ info.label }}</span>
+                    <span class="info_info">{{ info }}</span>
+                </div>
+            </div>
+        {% endfor %}
+            <div class="row">
+                <div class="col-md-12">
+                    <span class="info_title">Description</span>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-12">
                     {{ description_form.description }}
                 </div>
             </div>
         </form>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
+        {% if request.user.username == detail_user.username and detail_user.profile.stripe_account_id == "" %}
         <div class="row">
             <div class="col-md-12">
-                <h4>Current Jobs</h4>
+                <span id="must-connect-to-stripe">
+                    To receive credit card payments, please sign into
+                    <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write&state={{ request.user.username }}" id="stripe_connect" class="stripe-connect">
+                        <span>Stripe</span></a>.
+                </span>
+            </div>
+        </div>
+        {% elif request.user.username == detail_user.username and detail_user.profile.stripe_account_id != "" %}
+        <div class="row">
+            <div class="col-md-12">
+                <form id="remove-stripe-account-form" action="{{ request.get_full_path }}" method="POST">
+                    {% csrf_token %}
+                    <input id="delete-stripe" type="submit" value="Remove Stripe" name="delete-stripe" />
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Currently Pledging</h4>
             </div>
         </div>
         <div class="row">
@@ -116,40 +101,80 @@
                     <thead>
                         <tr>
                             <th class="name">Name</th>
-                            <th class="paid"><sup>Paid</sup>&frasl;<sub>Pledged</sub></th>
-                            <th class="received">Received</th>
+                            <th class="pledged">Pledged</th>
+                            <th class="paid">Paid</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for j in current %}
+                        {% for j in currently_pledged %}
                         <tr id="current_{{ j.job.name }}">
                             <td class="name"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.name }}</a></td>
-                            <td class="paid"><sup>${{ j.paid|floatformat:2 }}</sup>&frasl;<sub>${{ j.pledged|floatformat:2 }}</sub></td>
-                            <td class="received">${{ j.received|floatformat:2 }}</td>
+                            <td class="pledged">${{ j.pledged|floatformat:2 }}</td>
+                            <td class="paid">${{ j.paid|floatformat:2 }}</td>
                         </tr>
                         {% empty %}
                         <tr>
                             <td class="name">No current jobs</td>
+                            <td class="pledged"></td>
                             <td class="paid"></td>
-                            <td class="received"></td>
                         </tr>
                         {% endfor %}
                     </tbody>
                     <tfoot>
                         <tr>
                             <td class="name">Total:&nbsp;{{ current.count }}</td>
+                            <td class="pledged"></td>
                             <td class="paid"></td>
-                            <td class="received"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Finished Pledging<h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                 <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="name">Name</th>
+                            <th class="pledged">Pledged</th>
+                            <th class="paid">Paid</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for j in finished_pledged %}
+                        <tr id="current_{{ j.job.name }}">
+                            <td class="name"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.name }}</a></td>
+                            <td class="pledged">${{ j.pledged|floatformat:2 }}</td>
+                            <td class="paid">${{ j.paid|floatformat:2 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="name">No current jobs</td>
+                            <td class="pledged"></td>
+                            <td class="paid"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="name">Total:&nbsp;{{ current.count }}</td>
+                            <td class="pledged"></td>
+                            <td class="paid"></td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="row">
             <div class="col-md-12">
-                <h4>Completed Jobs</h4>
+                <h4>Currently Working</h4>
             </div>
         </div>
         <div class="row">
@@ -158,21 +183,21 @@
                     <thead>
                         <tr>
                             <th class="name">Name</th>
-                            <th class="paid"><sup>Paid</sup>&frasl;<sub>Pledged</sub></th>
-                            <th class="received">Received</th>
+                            <th class="status">Status</th>
+                            <th class="pledged">Received</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for j in finished %}
+                        {% for j in currently_working %}
                         <tr id="current_{{ j.job.name }}">
                             <td class="name"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.name }}</a></td>
-                            <td class="paid"><sup>${{ j.paid|floatformat:2 }}</sup>&frasl;<sub>${{ j.pledged|floatformat:2 }}</sub></td>
+                            <td class="status">{{ j.work_stastus }}</td>
                             <td class="received">${{ j.received|floatformat:2 }}</td>
                         </tr>
                         {% empty %}
                         <tr>
                             <td class="name">No finished jobs</td>
-                            <td class="paid"></td>
+                            <td class="status"></td>
                             <td class="received"></td>
                         </tr>
                         {% endfor %}
@@ -180,7 +205,47 @@
                     <tfoot>
                         <tr>
                             <td class="name">Total:&nbsp;{{ finished.count }}</td>
-                            <td class="paid"></td>
+                            <td class="status"></td>
+                            <td class="received"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Finished Working</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="name">Name</th>
+                            <th class="status">Status</th>
+                            <th class="received">Received</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for j in finished_working %}
+                        <tr id="current_{{ j.job.name }}">
+                            <td class="name"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.name }}</a></td>
+                            <td class="status">{{ j.work_status }}</sub></td>
+                            <td class="received">${{ j.received|floatformat:2 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="name">No finished jobs</td>
+                            <td class="status"></td>
+                            <td class="received"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="name">Total:&nbsp;{{ finished.count }}</td>
+                            <td class="status"></td>
                             <td class="received"></td>
                         </tr>
                     </tfoot>

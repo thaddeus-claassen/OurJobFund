@@ -74,7 +74,7 @@ thead th {
 }
 
 tbody {
-    height: 300px;
+    height: 250px;
     overflow-x: auto;
     overflow-y: scroll;
 }
@@ -84,7 +84,7 @@ tbody {
     float: left;
 }
 
-.paid, .received {
+.pledged, .paid, .status, .received {
     width: 30%;
     float: left;
 }
