@@ -14,7 +14,7 @@ from pay.models import Pay;
 from job.models import Job;
 from datetime import datetime;
 from .models import Profile;
-from .forms import ChangePasswordForm, ChangeNameForm, ChangeEmailForm, LoginForm, SignUpForm, DeactivateAccountForm, ProfileForm, DescriptionForm, ChangeUsernameForm;
+from .forms import ChangePasswordForm, ChangeNameForm, ChangeEmailForm, LoginForm, SignUpForm, DeactivateAccountForm, ProfileForm, ChangeUsernameForm;
 import json, stripe;
 
 class LoginView(TemplateView):
@@ -109,15 +109,13 @@ class DetailView(TemplateView):
     template_name = 'user/detail.html';
     nameForm = ChangeNameForm;
     profileForm = ProfileForm;
-    descriptionForm = DescriptionForm;
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(User, username=kwargs['username']);
         nameForm = self.initializeName(user, name_form=self.nameForm);
         profileForm = self.initializeProfile(user, profile_form=self.profileForm);
-        descriptionForm = self.initializeDescription(user, description_form=self.descriptionForm);
-        return render(request, self.template_name, self.get_context_data(user=user, nameForm=nameForm, profileForm=profileForm, descriptionForm=descriptionForm));
+        return render(request, self.template_name, self.get_context_data(user=user, nameForm=nameForm, profileForm=profileForm));
     
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
@@ -136,26 +134,18 @@ class DetailView(TemplateView):
                 request.user.profile.occupation = profileForm.cleaned_data['occupation'];
                 request.user.profile.education = profileForm.cleaned_data['education'];
                 request.user.profile.contact = profileForm.cleaned_data['contact'];
-                request.user.profile.save();
-                return redirect('user:detail', username=request.user.username);
-            else:
-                descriptionForm = self.initializeDescription(request.user, description_form=descriptionForm);
-        elif ('description' in request.POST):
-            descriptionForm = descriptionForm(request.POST);
-            if (descriptionForm.is_valid()):
                 request.user.profile.description = descriptionForm.cleaned_data['description'];
                 request.user.profile.save();
                 return redirect('user:detail', username=request.user.username);
             else:
-                nameForm = self.initializeName(request.user, name_form=nameForm);
-                profileForm = self.initializeProfile(request.user, profile_form=profileForm);
+                descriptionForm = self.initializeDescription(request.user, description_form=descriptionForm);
         elif ('stripeToken' in request.POST):
             self.pay(request, job, jobuser);
             return redirect('user:confirmation', username=get_object_or_404(User, username=kwargs['username']));
         elif ('delete-stripe' in request.POST):
             request.user.profile.stripe_account_id = "";
             request.user.profile.save();
-        return render(request, self.template_name, self.get_context_data(user=request.user, nameForm=nameForm, profileForm=profileForm, descriptionForm=descriptionForm));
+        return render(request, self.template_name, self.get_context_data(user=request.user, nameForm=nameForm, profileForm=profileForm));
         
     def initializeName(self, *args, **kwargs):
         user = args[0];
@@ -169,11 +159,8 @@ class DetailView(TemplateView):
             'occupation' : user.profile.occupation,
             'education' : user.profile.education,
             'contact' : user.profile.contact,
+            'description' : user.profile.description,
         });
-        
-    def initializeDescription(self, *args, **kwargs):
-        user = args[0];
-        return kwargs['description_form'](initial={'description' : user.profile.description});
         
     def get_context_data(self, *args, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs);
@@ -181,7 +168,6 @@ class DetailView(TemplateView):
         context['detail_user'] = user;
         context['name_form'] = kwargs['nameForm'];
         context['profile_form'] = kwargs['profileForm'];
-        context['description_form'] = kwargs['descriptionForm'];
         context['currently_pledged'] = user.jobuser_set.filter(Q(job__is_finished=False) & Q(pledged__gt=0));
         context['currently_working'] = user.jobuser_set.filter(Q(job__is_finished=False) & (Q(work_status='working') | Q(work_status='finished')));
         context['finished_pledging'] = user.jobuser_set.filter(Q(job__is_finished=True) & Q(pledged__gt=0));

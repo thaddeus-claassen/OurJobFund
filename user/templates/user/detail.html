@@ -50,23 +50,26 @@
                 </div>
             </div>
             {% endif %}
+            {% if info.auto_id == "id_description" %}
+            <div class="row">
+                <div class="col-md-12">
+                    <span class="info_title">{{ info.label }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    {{ info }}
+                </div>
+            </div>
+            {% else %}
             <div class="row info_row">
                 <div class="col-md-12">
                     <span class="info_title">{{ info.label }}</span>
                     <span class="info_info">{{ info }}</span>
                 </div>
             </div>
+            {% endif %}
         {% endfor %}
-            <div class="row">
-                <div class="col-md-12">
-                    <span class="info_title">Description</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    {{ description_form.description }}
-                </div>
-            </div>
         </form>
         {% if request.user.username == detail_user.username and detail_user.profile.stripe_account_id == "" %}
         <div class="row">
@@ -122,7 +125,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="name">Total:&nbsp;{{ current.count }}</td>
+                            <td class="name">Total:&nbsp;{{ currently_pledged.count }}</td>
                             <td class="pledged"></td>
                             <td class="paid"></td>
                         </tr>
@@ -162,7 +165,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="name">Total:&nbsp;{{ current.count }}</td>
+                            <td class="name">Total:&nbsp;{{ finished_pledged.count }}</td>
                             <td class="pledged"></td>
                             <td class="paid"></td>
                         </tr>
@@ -204,7 +207,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="name">Total:&nbsp;{{ finished.count }}</td>
+                            <td class="name">Total:&nbsp;{{ currently_working.count }}</td>
                             <td class="status"></td>
                             <td class="received"></td>
                         </tr>
@@ -244,7 +247,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="name">Total:&nbsp;{{ finished.count }}</td>
+                            <td class="name">Total:&nbsp;{{ finished_working.count }}</td>
                             <td class="status"></td>
                             <td class="received"></td>
                         </tr>

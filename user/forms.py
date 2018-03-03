@@ -92,11 +92,12 @@ class ProfileForm(forms.ModelForm):
     education = forms.CharField(widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
     occupation = forms.CharField(widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
     contact = forms.CharField(widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
+    description = forms.CharField(widget=forms.Textarea, required=False);
     profile_honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
     
     class Meta:
         model = Profile;
-        fields = ['city', 'state', 'education', 'occupation', 'contact'];    
+        fields = ['city', 'state', 'education', 'occupation', 'contact', 'description'];    
     
     def clean_profile_honey_pot(self):
         if (not self.cleaned_data.get('profile_honey_pot') == ""):
@@ -130,19 +131,6 @@ class ChangeNameForm(forms.ModelForm):
    
     def clean_name_honey_pot(self):
         if (not self.cleaned_data.get('name_honey_pot') == ""):
-            raise forms.ValidationError('It seems you are a bot.');
-        return "";
-        
-class DescriptionForm(forms.ModelForm):
-    description = forms.CharField(widget=forms.Textarea, required=False);
-    description_honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
-
-    class Meta:
-        model = Profile;
-        fields = ['description'];
-
-    def clean_description_honey_pot(self):
-        if (not self.cleaned_data.get('description_honey_pot') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
 
