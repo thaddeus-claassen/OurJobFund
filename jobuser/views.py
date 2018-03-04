@@ -29,10 +29,10 @@ class PledgeView(TemplateView):
             description = form.cleaned_data['description'];
             amount = float(form.cleaned_data['amount']);
             title = "Pledged $" + addDecimalPlacesForMoney(str(amount));
-            update = Update.create(jobuser=jobuser, title=title, description=description, pledge=amount);
-            update.save();
             jobuser.pledged = jobuser.pledged + amount;
             jobuser.save();
+            update = Update.create(jobuser=jobuser, title=title, description=description, pledge=amount);
+            update.save();
             job.pledged = job.pledged + amount;
             job.save();
             sendNotifications(jobuser);
@@ -67,10 +67,10 @@ class WorkView(TemplateView):
             description = form.cleaned_data['description'];
             type = form.cleaned_data['type'];
             title = type;
-            update = Update.create(jobuser=jobuser, title=title, description=description, work_status=type);
-            update.save();
             jobuser.work_status = type;
             jobuser.save();
+            update = Update.create(jobuser=jobuser, title=title, description=description, work_status=type);
+            update.save();
             sendNotifications(jobuser);
             return redirect(job);
         else:

@@ -11,4 +11,4 @@ class Notification(models.Model):
             user = user, 
             job = job,
         );
-        return notifications;
+        return notification;
