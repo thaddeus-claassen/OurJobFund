@@ -24,28 +24,18 @@
     float: right;
 }
 
-#job_description {
-    height: 312px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    word-wrap: break-word;
-    padding: 5px;
-}
-
-table, #job_description {
-    border: 1px solid black;
-}
-
 table {
     width: 100%;
+    border: 1px solid black;
 }
 
 thead, tbody, tfoot, tr, td, th {
     display: block;
 }
 
-td {
+th, td {
     word-wrap: break-word;
+    float: left;
 }
 
 tr:after {
@@ -60,23 +50,36 @@ thead th {
 }
 
 tbody {
-    height: 280px;
     overflow-x: auto;
     overflow-y: scroll;
 }
 
+#updates tbody {
+    height: 500px;
+}
+
+#pledges tbody, #workers tbody {
+    height: 280px;
+}
+
 #workers th, #workers td {
     width: 25%;
-    float: left;
 }
 
 #updates_title {
     margin-top: 30px;
 }
 
-#updates th, #updates td, #pledges th, #pledges td {
+.update-date, .update-username {
+    width: 25%;
+}
+
+.update-description {
+    width: 50%;
+}
+
+#pledges th, #pledges td {
     width: 33%;
-    float: left;
 }
 
 .pledge_work_inputs {

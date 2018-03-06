@@ -2,15 +2,6 @@ input[type=submit] {
     float: right;
 }
 
-.info_title {
-    color: grey;
-}
-
-.info_row {
-    margin-top: 3px;
-    margin-bottom: 3px;
-}
-
 #username {
     text-align: center;
 }
@@ -85,6 +76,6 @@ tbody {
 }
 
 .pledged, .paid, .status, .received {
-    width: 30%;
+    width: 15%;
     float: left;
 }

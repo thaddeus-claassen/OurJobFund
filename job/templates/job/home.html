@@ -10,7 +10,7 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-7">
         <div class="row margin-row">
             <div class="col-md-9">
                 <input id="search" class="search" type="text" placeholder="Search Jobs by Name or Tags"/>
@@ -19,6 +19,24 @@
                 Total:&nbsp;<span id="num-jobs-found">0</span>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <input id="sort" type="hidden" value="created descending" />
+                            <th id="name" class="name sort">Name</th>
+                            <th id="created" class="date sort">Created</th>
+                            <th id="pledged-paid" class="pledged-paid sort"><sup>Paid</sup>&frasl;<sub>Pledged</sub></th>
+                            <th id="workers-finished" class="workers-finished sort"><sup>Finished</sup>&frasl;<sub>Workers</sub></th>
+                        </tr>
+                    </thead>
+                    <tbody id="main_table_body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
         <div class="row margin-row">
             <div class="col-md-12">
                 <input id="location" class="search" type="text" placeholder="Location" />
@@ -42,8 +60,6 @@
                 <div id="map"></div>
             </div>
         </div>
-    </div>
-    <div class="col-md-7">
         <!-- Hide Show Location ...... for now --------------------------------
         <div class="row">
             <div class="col-md-6">
@@ -54,31 +70,7 @@
             </div>
         </div>
         -------------------->
-        <div class="row">
-            <div class="col-md-12">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <input id="sort" type="hidden" value="created descending" />
-                            <th id="name" class="name sort">Name</th>
-                            <th id="created" class="date sort">Created</th>
-                            <th id="pledged-paid" class="pledged-paid sort"><sup>Paid</sup>&frasl;<sub>Pledged</sub></th>
-                            <th id="workers-finished" class="workers-finished sort"><sup>Finished</sup>&frasl;<sub>Workers</sub></th>
-                        </tr>
-                    </thead>
-                    <tbody id="main_table_body"></tbody>
-                </table>
-            </div>
-        </div>
-        <div class="row"> 
-            {% if request.user.is_authenticated %}
-            <div class="col-md-12">
-                <form action="{% url 'job:create' %}">
-                    <input id="create_job" type="submit" value="Create Job" />
-                </form>
-            </div>
-            {% endif %}
-        </div>
+     
         <!---- Hide pledge and worker filter ----------
         {% if request.user.is_authenticated %}
         <div id="worker-filter-wrapper" class="margin-row">

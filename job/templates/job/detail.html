@@ -23,162 +23,68 @@
         {% endif %}
         </span>
     </div>
-</div>
-<div class="row info_row">
-    <div class="col-md-12">
-    {% if job.image_set.all.count > 0 %}
-        <div id="images">
-        {% for image in job.image_set.all %}
-            <img src="{{ image.image.url }}" class="img-responsive image" />
-        {% endfor %}
-        </div>
-    {% endif %}
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-3">
-        <div id="info-wrapper">
-            <div class="row header">
-                <div class="col-md-12">
-                    <span>Info</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <span class="info_title">Created</span>
-                    <span class="info_info">{{ job.creation_date|date:"d M y" }}</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <span class="info_title">Created By</span>
-                    <span class="info_info"><a href="{% url 'user:detail' job.created_by.username %}">{{ job.created_by.username }}</a></span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <span class="info_title">Location</span>
-                    <span class="info_info">
-                        {% if job.location %}
-                        {{ job.location }}
-                        {% else %}
-                        N/A
-                        {% endif %}
-                    </span>
-                </div>
-            </div>
-            <div class="row header">
-                <div class="col-md-12">
-                    <span class="info_title">Updates</span>
-                    <span class="info_info">{{ updates.count }}</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <span class="info_title">Pledged</span>
-                    <span class="info_info">${{ job.pledged|floatformat:2 }}</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <span class="info_title">Paid</span>
-                    <span class="info_info">${{ job.paid|floatformat:2 }}</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <span class="info_title">Workers</span>
-                    <span class="info_info">{{ job.workers }}</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <span class="info_title">Finished</span>
-                    <span class="info_info">{{ job.finished }}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-9">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="row header">
-                    <div class="col-md-12">
-                        <span>Description</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div id="job_description">
-                            {{ job.description }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="row header">
-                    <div class="col-md-6">
-                        <span id="updates_title">Updates</span>
-                    </div>
-                    {% if request.user.is_authenticated and jobuser %}
-                    <div class="col-md-6">
-                        <form action="{% url 'create-update' job.random_string %}">
-                            <input id="post_update" class="pledge_work_inputs" type="submit" value="Post Update" name="update" />
-                        </form>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <table id="updates" class="table">
-                            <thead>
-                                <tr>
-                                    <th id="updates-username" class="sort">Username</th>
-                                    <th id="updates-date" class="sort">Date</th>
-                                    <th id="updates-title" class="sort">Title</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {% for update in updates %}
-                                <tr>
-                                    <td>
-                                        {% if update.jobuser.user.is_active %}
-                                        {% if request.user.is_authenticated %}
-                                        <a href="{% url 'user:detail' update.jobuser.user.username %}">
-                                            {{ update.jobuser.user.username }}
-                                        </a>
-                                        {% else %}
-                                        <span>{{ update.jobuser.user.username }}</span>
-                                        {% endif %}
-                                        {% else %}
-                                        <span>[ Deleted User ]</span>
-                                        {% endif %}
-                                    </td>
-                                    <td 
-                                        class="{{ update.date|date:'Y-m-d' }}T{{ update.date|date:'H:m:se' }}">
-                                        {{ update.date|date:"d M y" }}</td>
-                                    <td>
-                                        {% if update.description or update.image_set.all.exists %}
-                                        <a href="{% url 'update:detail' update.random_string %}">{{ update.title }}</a>
-                                        {% else %}
-                                        {{ update.title }}
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="col-md-6">
+         <span class="info_info">
+            
+            {% if job.location %}
+            Location:{{ job.location }}            
+            {% endif %}
+        </span>
     </div>
 </div>
 <div class="row">
     <div class="col-md-5">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Description</h4>
+            </div>
+            <div class="col-md-6">
+                <form action="{% url 'create-update' job.random_string %}">
+                    <input class="pledge_work_inputs" type="submit" value="Update" />
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table id="updates" class="table">
+                    <thead>
+                        <tr>
+                            <th class="update-date">Date</th>
+                            <th class="update-username">Username</th>
+                            <th class="update-description">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for u in updates %}
+                        <tr>
+                            <td class="update-date">
+                                {{ u.date|date:"d M y" }}
+                            </td>
+                            <td class="update-username">
+                                <a href="{% url 'user:detail' u.jobuser.user.username %}">{{ u.jobuser.user.username }}</a>
+                            </td>
+                            <td class="update-description">
+                                {{ u.description }}
+                                <br>
+                                {% if u.image_set.all.count > 0 %}
+                                <div id="images">
+                                {% for image in u.image_set.all %}
+                                    <img src="{{ image.image.url }}" class="img-responsive image" />
+                                {% endfor %}
+                                </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-7">
         <div class="row info_row header">
             <div class="col-md-6">
-                <span>Pledges</span>
+                <h4>Pledges</h4>
             </div>
             <div class="col-md-6">
                 {% if request.user.is_authenticated %}
@@ -224,11 +130,9 @@
                 </table>
             </div>
         </div>
-    </div>
-    <div class="col-md-7">
         <div class="row info_row header">
             <div class="col-md-6">
-                <span>Workers</span>
+                <h4>Workers</h4>
             </div>
             {% if request.user.is_authenticated %}
             {% if not jobuser or jobuser.pledged == 0 and jobuser.work_status != 'finish' %}

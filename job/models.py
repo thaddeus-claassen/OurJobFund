@@ -18,8 +18,6 @@ class Job(models.Model):
     location = models.CharField(null=True, blank=True, max_length=1000);
     latitude = models.FloatField(null=True, blank=True);
     longitude = models.FloatField(null=True, blank=True);
-    description = models.CharField(default='', max_length=10000, null=True, blank=True);
-    created_by = models.ForeignKey(User, null=True);
     random_string = models.CharField(default='', max_length=100);
     
     def __str__(self):  

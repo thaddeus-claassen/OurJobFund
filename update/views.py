@@ -32,7 +32,7 @@ class CreateUpdateView(TemplateView):
             description = form.cleaned_data['description'];
             if (description != "" or len(request.FILES) > 0):
                 jobuser = JobUser.objects.get(user=request.user, job=job);
-                update = Update.create(jobuser=jobuser, title="Update", description=description);
+                update = Update.create(jobuser=jobuser, description=description);
                 update.save();
                 for image in request.FILES.getlist('images'):
                     image = Image(update=update, image=image);

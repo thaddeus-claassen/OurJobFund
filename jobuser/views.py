@@ -31,7 +31,7 @@ class PledgeView(TemplateView):
             title = "Pledged $" + addDecimalPlacesForMoney(str(amount));
             jobuser.pledged = jobuser.pledged + amount;
             jobuser.save();
-            update = Update.create(jobuser=jobuser, title=title, description=description, pledge=amount);
+            update = Update.create(jobuser=jobuser, description=description);
             update.save();
             job.pledged = job.pledged + amount;
             job.save();

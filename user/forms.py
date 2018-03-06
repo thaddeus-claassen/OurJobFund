@@ -84,27 +84,22 @@ class SignUpForm(forms.ModelForm):
     def clean_protection(self):
         if (not self.cleaned_data.get('protection') == ""):
             raise forms.ValidationError('It seems you are a bot.');
-        return "";
-            
-class ProfileForm(forms.ModelForm):
-    city = forms.CharField(widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
-    state = forms.ChoiceField(choices=STATES, widget=forms.Select(attrs={'class' : 'info'}), required=False);
-    education = forms.CharField(widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
-    occupation = forms.CharField(widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
-    contact = forms.CharField(widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
+        return "";   
+        
+class DescriptionForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea, required=False);
-    profile_honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
+    description_honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
     
     class Meta:
         model = Profile;
-        fields = ['city', 'state', 'education', 'occupation', 'contact', 'description'];    
+        fields = ['description'];    
     
     def clean_profile_honey_pot(self):
-        if (not self.cleaned_data.get('profile_honey_pot') == ""):
+        if (not self.cleaned_data.get('honey_pot') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
     
-class ChangeNameForm(forms.ModelForm):
+class NameForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
     last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
     name_honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
