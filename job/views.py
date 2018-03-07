@@ -130,7 +130,7 @@ class DetailView(TemplateView):
     
     def get(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
-        if (request.user.is_authenticated()):
+        if (request.user.is_authenticated):
             if (Notification.objects.filter(user=request.user, job=job).exists()): 
                 Notification.objects.get(user=request.user, job=job).delete();
         return render(request, self.template_name, self.get_context_data(request, job=job))
@@ -143,7 +143,7 @@ class DetailView(TemplateView):
             'pledges' : JobUser.objects.filter(Q(job=job) & (Q(pledged__gt=0) | Q(paid__gt=0))),
             'workers' : JobUser.objects.filter(job=job).exclude(work_status=''),
         }
-        if (request.user.is_authenticated()):
+        if (request.user.is_authenticated):
             serializer = JobSerializer(Job.objects.filter(pk=job.pk), many=True, context={'user' : request.user});
             jobuser = get_object_or_None(JobUser, user=request.user, job=job);
             payment_verification = False;

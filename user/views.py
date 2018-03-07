@@ -23,7 +23,7 @@ class LoginView(TemplateView):
     sign_up_form = SignUpForm;
     
     def get(self, request, *args, **kwargs):
-        if (request.user.is_authenticated()):
+        if (request.user.is_authenticated):
             return redirect('home');
         else:
             return render(request, self.template_name, self.get_context_data(login_form=self.login_form, sign_up_form=self.sign_up_form));
@@ -115,7 +115,7 @@ class DetailView(TemplateView):
         user = get_object_or_404(User, username=kwargs['username']);
         description_form = self.description_form(initial={'description' : user.profile.description});
         name_form = self.name_form(initial={'first_name' : user.first_name, 'last_name' : user.last_name});
-        return render(request, self.template_name, self.get_context_data(user=user, description_form = description_form, name_form = name_form));
+        return render(request, self.template_name, self.get_context_data(user=user, description_form=description_form, name_form=name_form));
     
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):

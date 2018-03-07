@@ -10,7 +10,7 @@ import datetime, pytz;
 alphabetic = RegexValidator(r'^[a-zA-Z\s]+$', 'Alphabetic characters only');
 
 class Profile(models.Model):
-    user = AutoOneToOneField(User, primary_key=True);
+    user = AutoOneToOneField(User, primary_key=True, on_delete=models.CASCADE);
     hide_location = models.BooleanField(default=True);
     basic_search = models.BooleanField(default=True);
     type_of_account = models.CharField(default="personal", max_length=10);
