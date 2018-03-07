@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
     url(r'search-users$', SearchUsersView.as_view()),
     url(r'^see-more-users$', see_more_users),
+    url(r'^admin/uwsgi/', include('django_uwsgi.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^job/', include('job.urls')),
     url(r'^$', home, name='home'),
