@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'annoying',
     'pinax.stripe',
-    'django-uwsgi',
 ]
 
 SITE_ID = 1;
