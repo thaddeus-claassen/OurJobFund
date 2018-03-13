@@ -25,7 +25,6 @@
     </div>
     <div class="col-md-6">
          <span class="info_info">
-            
             {% if job.location %}
             Location:&nbsp;{{ job.location }}            
             {% endif %}
@@ -175,9 +174,9 @@
                             <td>{{ w.work_status|title }}</td>
                             <td>${{ w.received|floatformat:2 }}</td>
                             <td>
-                                {% if request.user.is_authenticated and w.user != request.user %}
+                                {% if request.user.is_authenticated and w.user != request.user and w.user.profile.stripe_account_id %}
                                 <form action="{% url 'pay' w.user.username job.random_string %}">
-                                    <input type="submit" value="Pay Here" />
+                                    <input type="submit" value="Here" />
                                 </form>
                                 {% elif payment_verification %}
                                 

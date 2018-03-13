@@ -8,13 +8,13 @@ from django.utils.html import escape;
 from django.shortcuts import render, get_object_or_404, redirect;
 from django.db.models import Q, F;
 from jobuser.models import JobUser;
-from update.models import Update;
+from update.models import Update, Image;
 from .serializers import JobSerializer;
 from filter.forms import PledgeFilterForm, WorkerFilterForm;
 from django.http import HttpResponse, Http404;
 from django.core import serializers;
 from pay.models import Pay;
-from .models import Job, Tag, User, Image;
+from .models import Job, Tag, User;
 from .forms import NewJobForm;
 import json, re, math;
 
@@ -139,7 +139,7 @@ class DetailView(TemplateView):
         job = kwargs['job'];
         context = {
             'job': job,
-            'updates' : Update.objects.filter(jobuser__job=job).order_by('-date'),
+            'updates' : Update.objects.filter(jobuser__job=job).order_by('date'),
             'pledges' : JobUser.objects.filter(Q(job=job) & (Q(pledged__gt=0) | Q(paid__gt=0))),
             'workers' : JobUser.objects.filter(job=job).exclude(work_status=''),
         }
@@ -195,7 +195,7 @@ class CreateView(TemplateView):
             location = form.cleaned_data['location'];
             tags = form.cleaned_data['tags'];
             description = form.cleaned_data['description'];
-            job = Job.create(name=name, latitude=latitude, longitude=longitude, location=location, description=description, created_by=request.user);
+            job = Job.create(name=name, latitude=latitude, longitude=longitude, location=location);
             job.save();
             if (tags != ''):
                 tagsArray = tags.split(" ");
@@ -205,12 +205,14 @@ class CreateView(TemplateView):
                         tag = Tag.create(tag=tagString);
                         tag.save();
                     job.tag_set.add(tag);
-            for image in request.FILES.getlist('image_set'):
-                image = Image.create(image=image, job=job);
-                image.save();
             jobuser = JobUser.create(user=request.user, job=job);
             jobuser.save();
-            return redirect(job);
+            update = Update(jobuser=jobuser, description=description);
+            update.save();
+            for image in request.FILES.getlist('image_set'):
+                image = Image.create(update=update, image=image);
+                image.save();
+            return redirect('job:detail', job_random_string=job.random_string);
         return render(request, self.template_name, self.get_context_data(form=form));
         
     def get_context_data(self, **kwargs):

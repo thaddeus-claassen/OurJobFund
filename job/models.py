@@ -23,18 +23,13 @@ class Job(models.Model):
     def __str__(self):  
         return self.name;
         
-    def get_absolute_url(self):
-        return "/job/%s/" % self.random_string;
-        
     @classmethod    
-    def create(cls, name, description, created_by, latitude='', longitude='', location=''):
+    def create(cls, name, latitude=None, longitude=None, location=''):
         job = Job(
             name = name,
             latitude = latitude,
             longitude = longitude,
             location = location, 
-            description = description,
-            created_by = created_by,
             random_string = cls.createRandomString(),
         );
         return job;
@@ -64,16 +59,3 @@ class Tag(models.Model):
             tag = tag,
         );
         return tag;
-        
-class Image(models.Model):
-    job = models.ForeignKey(Job, on_delete=models.CASCADE, null=True);
-    image = models.ImageField();
-    
-    @classmethod
-    def create(cls, job, image):
-        image = Image(
-            job = job, 
-            image = image,
-        );
-        return image;
-
