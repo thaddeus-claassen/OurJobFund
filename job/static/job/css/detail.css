@@ -63,18 +63,18 @@ tbody {
 }
 
 #workers th, #workers td {
-    width: 25%;
+    width: 33%;
 }
 
 #updates_title {
     margin-top: 30px;
 }
 
-.update-username, .update-date {
+.updates-username, .updates-date {
     width: 25%;
 }
 
-.update-description {
+.updates-description {
     width: 50%;
 }
 

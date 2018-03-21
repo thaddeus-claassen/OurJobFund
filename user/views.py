@@ -1,7 +1,10 @@
 from django.contrib.auth.decorators import login_required;
+from django.db.models.functions import Lower;
 from django.contrib.auth.models import User;
+from rest_framework.renderers import JSONRenderer;
 from django.utils.decorators import method_decorator;
 from django.views.generic import TemplateView;
+from jobuser.serializers import JobUserSerializer;
 from django.contrib.auth import authenticate, login, logout;
 from ourjobfund.settings import STRIPE_TEST_SECRET_KEY, STATIC_ROOT;
 from annoying.functions import get_object_or_None;
@@ -104,7 +107,7 @@ def see_more_users(request):
         return HttpResponse(users, content_type="application/json");
     else:
         return Http404();
-
+        
 class DetailView(TemplateView):
     template_name = 'user/detail.html';
     description_form = DescriptionForm;
@@ -148,6 +151,34 @@ class DetailView(TemplateView):
         context['current'] = user.jobuser_set.filter(job__is_finished=False);
         context['finished'] = user.jobuser_set.filter(job__is_finished=True);
         return context;
+ 
+def add_to_detail_table(request, username):
+    if (request.is_ajax()):
+        user = get_object_or_404(User, username=username);
+        numSearches = int(request.GET['num_searches']);
+        table = request.GET['table'];
+        column = request.GET['column'];
+        order = request.GET['order'];
+        if (table == 'current'):
+            data = user.jobuser_set.filter(job__is_finished=False);
+        else:
+            data = user.jobuser_set.filter(job__is_finished=True);
+        if (column == 'name'):
+            if (order == 'ascending'):
+                data = data.order_by(Lower('job__name'))[50 * numSearches : 50 * (numSearches + 1)][::-1];
+            else:
+                data = data.order_by(Lower('job__name'))[50 * numSearches : 50 * (numSearches + 1)];
+        else:
+            if (order == 'ascending'):
+                data = data.order_by(column)[50 * numSearches : 50 * (numSearches + 1)][::-1];
+            else:
+                data = data.order_by(column)[50 * numSearches : 50 * (numSearches + 1)];
+        serializer = JobUserSerializer(data, many=True);
+        json = JSONRenderer().render(serializer.data);
+        print(json)
+        return HttpResponse(json, 'application/json');
+    else:
+        return Http404();        
         
 class AccountView(TemplateView):
     template_name = 'user/account.html';

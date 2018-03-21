@@ -70,12 +70,12 @@ tbody {
     overflow-y: scroll;
 }
 
-.name {
+.current-name, .finished-name {
     width: 40%;
     float: left;
 }
 
-.pledged, .paid, .status, .received {
+.current-pledged, .current-paid, .current-status, .current-received, .finished-pledged, .finished-paid, .finished-status, .finished-received, .finished-paid {
     width: 15%;
     float: left;
 }

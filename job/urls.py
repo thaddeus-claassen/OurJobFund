@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^sort-jobs/$', views.sort_jobs),
     url(r'^get-total-jobs/$', views.get_total_jobs),
     url(r'^(?P<job_random_string>[a-zA-Z0-9]+)/$', views.DetailView.as_view(), name='detail'),
-    url(r'^(?P<job_random_string>[a-zA-Z0-9]+)/sort/$', views.detail_sort),
+    url(r'^(?P<job_random_string>[a-zA-Z0-9]+)/sort/$', views.add_to_detail_table),
 ]
 
 if settings.DEBUG:

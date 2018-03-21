@@ -26,17 +26,18 @@ class PledgeView(TemplateView):
             jobuser = get_object_or_None(JobUser, user=request.user, job=job);
             if (jobuser is None):
                 jobuser = JobUser.create(user=request.user, job=job);
-            description = form.cleaned_data['description'];
             amount = float(form.cleaned_data['amount']);
             title = "Pledged $" + addDecimalPlacesForMoney(str(amount));
             jobuser.pledged = jobuser.pledged + amount;
             jobuser.save();
-            update = Update.create(jobuser=jobuser, description=description);
-            update.save();
+            description = form.cleaned_data['description'];
+            if (description):
+                update = Update.create(jobuser=jobuser, description=description);
+                update.save();
             job.pledged = job.pledged + amount;
             job.save();
             sendNotifications(jobuser);
-            return redirect(job);
+            return redirect('job:detail', job_random_string=job.random_string);
         else:
             return render(request, self.template_name, self.get_context_data(job=job, form=form));
         
@@ -64,15 +65,16 @@ class WorkView(TemplateView):
         if (form.is_valid()):
             if (jobuser is None):
                 jobuser = JobUser(user=request.user, job=job);
-            description = form.cleaned_data['description'];
             type = form.cleaned_data['type'];
             title = type;
             jobuser.work_status = type;
             jobuser.save();
-            update = Update.create(jobuser=jobuser, title=title, description=description, work_status=type);
-            update.save();
+            description = form.cleaned_data['description'];
+            if (description):
+                update = Update.create(jobuser=jobuser, title=title, description=description, work_status=type);
+                update.save();
             sendNotifications(jobuser);
-            return redirect(job);
+            return redirect('job:detail', job_random_string=job.random_string);
         else:
             return render(request, self.template_name, self.get_context_data(job=job, form=form));
         

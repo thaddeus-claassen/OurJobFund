@@ -12,11 +12,8 @@
 <div class="row">
     <div class="col-md-7">
         <div class="row margin-row">
-            <div class="col-md-9">
-                <input id="search" class="search" type="text" placeholder="Search Jobs by Name or Tags"/>
-            </div>
-            <div class="col-md-3">
-                Total:&nbsp;<span id="num-jobs-found">0</span>
+            <div class="col-md-12">
+                <input id="search" class="search" type="text" placeholder="Search"/>
             </div>
         </div>
         <div class="row">
@@ -32,6 +29,14 @@
                         </tr>
                     </thead>
                     <tbody id="main_table_body"></tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="name">Total:&nbsp;<span id="num-jobs-found">0</span></td>
+                            <td class="date"></td>
+                            <td class="pledged-paid"></td>
+                            <td class="workers-finished"></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -43,6 +48,14 @@
             </div>
         </div>
         <div class="row margin-row">
+            <div class="col-md-12">
+                <div id="map"></div>
+            </div>
+        </div>        
+        <input id="latitude" type="hidden" value="" />
+        <input id="longitude" type="hidden" value="" />
+        <!-- Hiding Radius
+        <div class="row margin-row">
             <div class="col-md-6">
                 <input id="radius" class="search" type="text" placeholder="Radius (default: 10)" />
             </div>
@@ -53,13 +66,8 @@
                 <span id="search-error-message"></span>
             </div>
         </div>
-        <input id="latitude" type="hidden" value="" />
-        <input id="longitude" type="hidden" value="" />
-        <div class="row margin-row">
-            <div class="col-md-12">
-                <div id="map"></div>
-            </div>
-        </div>
+        End hiding radius -->
+
         <!-- Hide Show Location ...... for now --------------------------------
         <div class="row">
             <div class="col-md-6">

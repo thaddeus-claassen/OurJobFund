@@ -37,47 +37,50 @@
             <div class="col-md-6">
                 <h4>Description</h4>
             </div>
-            <div class="col-md-6">
-                <form action="{% url 'create-update' job.random_string %}">
-                    <input class="pledge_work_inputs" type="submit" value="Update" />
-                </form>
-            </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <table id="updates" class="table">
                     <thead>
                         <tr>
-                            <th class="update-date">Date</th>
-                            <th class="update-username">Username</th>
-                            <th class="update-description">Description</th>
+                            <th class="updates-date">Date</th>
+                            <th class="updates-username">Username</th>
+                            <th class="updates-description">Description</th>
                         </tr>
                     </thead>
                     <tbody>
                     {% for u in updates %}
                         <tr>
-                            <td class="update-date">
-                                {{ u.date|date:"d M y" }}
+                            <td class="updates-date">
+                                {{ u.date|date:"d/m/y" }}
                             </td>
-                            <td class="update-username">
+                            <td class="updates-username">
                                 <a href="{% url 'user:detail' u.jobuser.user.username %}">{{ u.jobuser.user.username }}</a>
                             </td>
-                            <td class="update-description">
+                            <td class="updates-description">
                                 {{ u.description }}
-                                <br>
-                                {% if u.image_set.all.count > 0 %}
-                                <div id="images">
-                                {% for image in u.image_set.all %}
-                                    <img src="{{ image.image.url }}" class="img-responsive image" />
-                                {% endfor %}
-                                </div>
-                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="updates-date">Total: <span id="updates-total">{{ updates.count }}</span></td>
+                            <td class="updates-username"></td>
+                            <td class="updates-description"></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
+        </div>
+        <div class="row">
+            {% if jobuser %}
+            <div class="col-md-12">
+                <form action="{% url 'create-update' job.random_string %}">
+                    <input class="pledge_work_inputs" type="submit" value="Update" />
+                </form>
+            </div>
+            {% endif %}
         </div>
     </div>
     <div class="col-md-7">
@@ -100,15 +103,15 @@
                 <table id="pledges" class="table">
                     <thead>
                         <tr>
-                            <th id="pledges-username" class="sort">Username</th>
-                            <th id="pledges-pledged" class="sort">Pledged</th>
-                            <th id="pledges-paid" class="sort">Paid</th>
+                            <th class="pledges-username">Username</th>
+                            <th class="pledges-pledged">Pledged</th>
+                            <th class="pledges-paid">Paid</th>
                         </tr>
                     </thead>
                     <tbody>
                     {% for j in pledges %}
                         <tr>
-                            <td>
+                            <td class="pledges-username">
                                 {% if j.user.is_active %}
                                 {% if request.user.is_authenticated %}
                                 <a href="{% url 'user:detail' j.user.username %}">
@@ -121,11 +124,18 @@
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
-                            <td>${{ j.pledged|floatformat:2 }}</td>
-                            <td>${{ j.paid|floatformat:2 }}</td>
+                            <td class="pledges-pledged">${{ j.pledged|floatformat:2 }}</td>
+                            <td class="pledges-paid">${{ j.paid|floatformat:2 }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="pledges-username">Total: <span id="pledges-total">{{ pledges.count }}</span></td>
+                            <td class="pledges-pledges"></td>
+                            <td class="pledges-paid"></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -149,16 +159,15 @@
                 <table id="workers" class="table">
                     <thead>
                         <tr>
-                            <th id="workers-username">Username</th>
-                            <th id="workers-status">Status</th>
-                            <th id="workers-received">Received</th>
-                            <th id="workers-pay">Pay Worker</th>
+                            <th class="workers-username">Username</th>
+                            <th class="workers-status">Status</th>
+                            <th class="workers-received">Received</th>
                         </tr>
                     </thead>
                     <tbody>
                     {% for w in workers %}
                         <tr>
-                            <td>
+                            <td class="workers-username">
                                 {% if w.user.is_active %}
                                 {% if request.user.is_authenticated %}
                                 <a href="{% url 'user:detail' w.user.username %}">
@@ -171,20 +180,18 @@
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
-                            <td>{{ w.work_status|title }}</td>
-                            <td>${{ w.received|floatformat:2 }}</td>
-                            <td>
-                                {% if request.user.is_authenticated and w.user != request.user and w.user.profile.stripe_account_id %}
-                                <form action="{% url 'pay' w.user.username job.random_string %}">
-                                    <input type="submit" value="Here" />
-                                </form>
-                                {% elif payment_verification %}
-                                
-                                {% endif %}
-                            </td>
+                            <td class="workers-status">{{ w.work_status }}</td>
+                            <td class="workers-received">${{ w.received|floatformat:2 }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="workers-username">Total: <span id="workers-total">{{ workers.count }}</span></td>
+                            <td class="workers-status"></td>
+                            <td class="workers-received"></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>

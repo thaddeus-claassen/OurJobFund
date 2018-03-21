@@ -38,7 +38,7 @@ class CreateUpdateView(TemplateView):
                     image = Image(update=update, image=image);
                     image.save();
                 sendNotifications(jobuser);
-            return redirect(job);
+            return redirect('job:detail', job_random_string=job.random_string);
         else:
             return render(request, self.template_name, self.get_context_data(job=job, form=form));
     

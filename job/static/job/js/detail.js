@@ -1,179 +1,178 @@
 var canSubmitPledge = true;
 var canSubmitWork = true;
-var update_sort = 'date-descending';
-var pledge_sort = 'pledge-descending';
-var work_sort = 'status-ascending';
+var updates_num_searches = 0;
+var pledges_num_searches = 0;
+var workers_num_searches = 0;
+var updates_sort = 'date-descending';
+var pledges_sort = 'pledge-descending';
+var workers_sort = 'work-ascending';
 
 $('document').ready(function() {
     changeTHeadTFootWidthToAccountForScrollBar();
     $(window).resize(function() {
         changeTHeadTFootWidthToAccountForScrollBar();
     });
-    $('.sort').click(function() {
-        var id = $(this).attr('id');
-        setSortVariable(id);
-        sortTable(id);
+    $('th').click(function() {
+        var cls = $(this).attr('class');
+        if (cls !== '') {
+            setRowToZero(cls.split('-')[0]);
+            prepareToAddRows(cls, 0);
+        }// end if
+    });
+    $('tbody').scroll(function() {
+        var cls = $(this).attr('class');
+        var table = cls.split('-')[0];
+        var total = table + '-total';
+        if ($(this).scrollTop() + $(this).height() === $(this)[0].scrollHeight && $(this).children().count() < total) {
+            if (cls !== '') {        
+                var rows = addToNumRows(cls);
+                prepareToAddRows(cls, rows);
+            }// end if
+        }// end if
     });
 });
 
-function setSortVariable(id) {
-    var table = id.split('-')[0];
-    var type = id.split('-')[1];
+function addToNumRows(table) {
+    var rows;
     if (table === 'updates') {
-        if (type === update_sort.split('-')[0]) {
-            if (update_sort.split('-')[1] === 'ascending') {
-                update_sort = type + '-descending';
-            } else {
-                update_sort = type + '-ascending';
-            }// end if-else
-        } else {
-            update_sort = type + '-ascending';
-        }// end if-else
+        updates_num_searches = updates_num_searches + 1;
+        rows = updates_num_searches;
     } else if (table === 'pledges') {
-        if (type === pledge_sort.split('-')[0]) {
-            if (pledge_sort.split('-')[1] === 'ascending') {
-                pledge_sort = type + '-descending';
-            } else {
-                pledge_sort = type + '-ascending';
-            }// end if-else
-        } else {
-            pledge_sort = type + '-ascending';
-        }// end if-else
-    } else if (table === 'work')  {
-        if (type === work_sort.split('-')[0]) {
-            if (work_sort.split('-')[1] === 'ascending') {
-                work_sort = type + '-descending';
-            } else {
-                work_sort = type + '-ascending';
-            }// end if-else
-        } else {
-            work_sort = type + '-ascending';
-        }// end if-else
+        pledges_num_searches = pledges_num_searches + 1;
+        rows = pledges_num_searches;
+    } else if (table === 'workers') {
+        workers_num_searches = workers_num_searches + 1;
+        rows = workers_num_searches;
     }// end if
+    return rows;
+}// end addToNumRows()
+
+function setRowToZero(table) {
+    if (table === 'updates') {
+        updates_num_searches = 0;
+    } else if (table === 'pledges') {
+        pledges_num_searches = 0;
+    } else if (table === 'workers') {
+        workers_num_searches = 0;
+    }// end if
+}// end setRowToZero()
+
+function prepareToAddRows(cls, rows) {
+    var table = cls.split('-')[0];
+    var type = cls.split('-')[1];
+    add_rows_to_tables(rows, table, type, setSortVariable(table, type).split('-')[1]);
+}// end prepareToAddRows()
+
+function setSortVariable(table, type) {
+    var sort = null;
+    if (table === 'updates') {
+        if (type === updates_sort.split('-')[0]) {
+            if (updates_sort.split('-')[1] === 'ascending') {
+                updates_sort = type + '-descending';
+            } else {
+                updates_sort = type + '-ascending';
+            }// end if-else
+        } else {
+            updates_sort = type + '-ascending';
+        }// end if-else
+        sort = updates_sort;
+    } else if (table === 'pledges') {
+        if (type === pledges_sort.split('-')[0]) {
+            if (pledges_sort.split('-')[1] === 'ascending') {
+                pledges_sort = type + '-descending';
+            } else {
+                pledges_sort = type + '-ascending';
+            }// end if-else
+        } else {
+            pledges_sort = type + '-ascending';
+        }// end if-else
+        sort = pledges_sort;
+    } else if (table === 'workers')  {
+        if (type === workers_sort.split('-')[0]) {
+            if (workers_sort.split('-')[1] === 'ascending') {
+                workers_sort = type + '-descending';
+            } else {
+                workers_sort = type + '-ascending';
+            }// end if-else
+        } else {
+            workers_sort = type + '-ascending';
+        }// end if-else
+        sort = workers_sort;
+    }// end if
+    return sort;
 }// end setSortVariable()
 
-function sortTable(id) {
-    var table, variable, col, ascending_or_descending, sortType;
-    if (id.split('-')[0] === 'updates') {
-        table = document.getElementById('updates');
-        variable = update_sort;
-    } else if (id.split('-')[0] === 'pledges') {
-        table = $('#pledges');
-        variable = pledge_sort;
-    } else if (id.split('-')[0] === 'workers') {
-        table = $('#workers');
-        variable = workers_sort;
+function getNumSearches(table) {
+    var searches = null;
+    if (table === 'updates') {
+        searches = updates_num_searches;
+    } else if (table === 'pledges') {
+        searches = pledges_num_searches;
+    } else if (table === 'workers') {
+        searches = workers_num_searches;
     }// end if
-    if (variable.split('-')[1] === 'ascending') ascending_or_descending = 'ascending';
-    else ascending_or_descending = 'descending';
-    if (variable.split('-')[0] === 'username' || variable.split('-')[0] === 'status' || variable.split('-')[0] === 'title') {
-        if (variable.split('-')[0] === 'username') col = 0;
-        else if (variable.split('-')[0] === 'status') col = 1;
-        else col = 2;
-        sortStrings(table, col, ascending_or_descending);
-    } else if (variable.split('-')[0] === 'pledged' || variable.split('-')[0] === 'paid' || variable.split('-')[0] === 'requesting' || variable.split('-')[0] === 'received') {
-        if (variable.split('-')[0] === 'pledged') col = 1;
-        else if (variable.split('-')[0] === 'paid' || variable.split('-')[0] === 'requesting') col = 2;
-        else col = 3;
-        sortNumbers(table, col, ascending_or_descending);
-    } else if (variable.split('-')[0] === 'date') {
-        sortDates(table, 1, ascending_or_descending);
-    }// end if
-}// end sortTable
+    return searches;
+}// end getNumSearches();
 
-function sortStrings(table, col, ascending_or_descending) {
-    if (ascending_or_descending === 'ascending') {
-        var rows, shouldSwitch, i;
-        var switching = true;
-        while (switching) {
-            switching = false;
-            rows = table.getElementsByTagName('TR');
-            for (i = 1; i < (rows.length - 1); i++) {
-                shouldSwitch = false;
-                var x = rows[i].getElementsByTagName("TD")[col];
-                var y = rows[i + 1].getElementsByTagName("TD")[col];
-                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                    shouldSwitch = true;
-                    break;
-                }// end if
-            }// end for
-            if (shouldSwitch) {
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
+function add_rows_to_tables(num_searches, table, column, order) {
+    $.ajax({
+        url : 'sort',
+        data : {
+            'num_searches' : num_searches,
+            'table' : table,
+            'column' : column,
+            'order' : order,
+        },
+        success: function(json) {
+            if (table === 'updates') {
+                if (updates_num_searches == 0) $('#updates tbody').empty();
+                addRowsToUpdatesTable(json)l
+            } else if (table === 'pledges') {
+                if (pledges_num_searches == 0) $('#pledges tbody').empty();
+                addRowsToPledgesTable(json);
+            } else if (table === 'workers') {
+                if (workers_num_searches == 0) $('#workers tbody').empty();
+                addRowsToWorkersTable(json);
             }// end if
-        }// end while
-    } else {
-        reverseRows(table);
-    }// end if-else
-}// end sortStrings()
-
-function sortNumbers(table, col, ascending_or_descending) {
-    if (ascending_or_descending === 'ascending') {
-        var rows, shouldSwitch, i;
-        var switching = true;
-        while (switching) {
-            switching = false;
-            rows = table.getElementsByTagName('TR');
-            for (i = 1; i < (rows.length - 1); i++) {
-                shouldSwitch = false;
-                var x = rows[i].getElementsByTagName("TD")[col];
-                var y = rows[i + 1].getElementsByTagName("TD")[col];
-                if (Number(x.innerHTML) > Number(y.innerHTML)) {
-                    shouldSwitch= true;
-                    break;
-                }// end if
-            }// end for
-            if (shouldSwitch) {
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-            }// end if
-        }// end while
-    } else {
-        reverseRows(table)
-    }// end if-else
-}// end sortNumbers()
-
-function sortDates(table, col, ascending_or_descending) {
-    if (ascending_or_descending === 'descending') {
-        var rows, shouldSwitch, i;
-        var switching = true;
-        while (switching) {
-            switching = false;
-            rows = table.getElementsByTagName('TR');
-            for (i = 1; i < (rows.length - 1); i++) {
-                shouldSwitch = false;
-                var x = rows[i].getElementsByTagName("TD")[col];
-                var y = rows[i + 1].getElementsByTagName("TD")[col];
-                var dateX = Date($(x).attr('class'));
-                var dateY = Date($(y).attr('class'));
-                if (dateX < dateY) {
-                    shouldSwitch= true;
-                    break;
-                }// end if
-            }// end for
-            if (shouldSwitch) {
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-            }// end if
-        }// end while
-    } else {
-        reverseRows(table);
-    }// end if-else
-}// end sortDates()
-
-function reverseRows(table) {
-    var rows = [];
-    $(table).find('tr').each(function(i, e) {
-        if (i > 0) {
-            rows[i] = e;
-        }// end if
+        },
     });
-    rows = rows.reverse();
-    $(table).find('tbody').empty();
-    for (r in rows) {
-        $(table).find('tbody').append("<tr>" + rows[r].innerHTML + "</tr>");
+}// end sort()
+
+function addRowsToUpdatesTable(json) {
+    for (var index = 0; index < json.length; index++) {
+        var update = json[index];
+        var string = "<tr>";
+        string = string + "<td class='updates-date'>" + update['date'] + "</td>";
+        string = string + "<td class='updates-username'><a href='user/ " + update['username'] + "'>" + update['username'] + "</a></td>";
+        string = string + "<td class='updates-description'>" + update['description'] + "</td>";
+        string = string + "</tr>";
+        $('#updates tbody').append(string);
     }// end for
-}// end reverseRows()
+}// end addRowsToUpdatesTable()
+
+function addRowsToPledgesTable(json) {
+    for (var index = 0; index < json.length; index++) {
+        var pledge = json[index];
+        var string = "<tr>";
+        string = string + "<td class='pledges-username'><a href='user/ " + pledge['username'] + "'>" + pledge['username'] + "</a></td>";
+        string = string + "<td class='pledges-pledged'>" + changeNumberToCurrency(pledge['pledged']) + "</td>";
+        string = string + "<td class='pledges-paid'>" + changeNumberToCurrency(pledge['paid']) + "</td>";
+        string = string + "</tr>";
+        $('#pledges tbody').append(string);
+    }// end for
+}// end addRowsToPledgesTable()
+
+function addRowsToWorkersTable(json) {
+    for (var index = 0; index < json.length; index++) {
+        var worker = json[index];
+        var string = "<tr>";
+        string = string + "<td class='workers-username'><a href='user/ " + worker['username'] + "'>" + worker['username'] + "</a></td>";
+        string = string + "<td class='workers-status'>" + worker['work_status'] + "</td>";
+        string = string + "<td class='workers-received'>" + changeNumberToCurrency(worker['received']) + "</td>";
+        string = string + "</tr>";
+        $('#workers tbody').append(string);
+    }// end for
+}// end addRowsToPledgesTable()
 
 function changeTHeadTFootWidthToAccountForScrollBar() {
     var oldTableWidth = $('table').width();
@@ -182,3 +181,18 @@ function changeTHeadTFootWidthToAccountForScrollBar() {
     $('thead').width(percentageTableWidth.toString() + '%');
     $('tfoot').width(percentageTableWidth.toString() + '%');
 }// end changeTHeadTFootWidthToAccountForScrollBar()
+
+function changeNumberToCurrency(number) {
+    var currency = null;
+    var parts = number.toString().split('.');
+    if (parts.length == 1) {
+        currency = "$" + number + ".00";
+    } else if (parts.length == 2) {
+        if (parts[1].length == 2) {
+            currency = "$" + number;
+        } else {
+            currency = "$" + number + "0";
+        }// end if-else
+    }// end if
+    return currency;
+}// end changeNumberToCurrencyFormat()

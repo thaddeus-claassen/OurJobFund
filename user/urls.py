@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^account/$', views.AccountView.as_view(), name='account'),
     url(r'^search-users/$', views.SearchUsersView.as_view(), name='search_users'),
     url(r'^see-more-users/$', views.see_more_users, name='see_more_users'),
-    url(r'^(?P<username>[a-zA-Z0-9_]*)/$', views.DetailView.as_view(), name='detail'),
+    url(r'^(?P<username>[a-zA-Z0-9_]+)/$', views.DetailView.as_view(), name='detail'),
+    url(r'^(?P<username>[a-zA-Z0-9_]+)/sort/$', views.add_to_detail_table),
 ]

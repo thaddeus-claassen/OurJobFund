@@ -4,7 +4,7 @@ from django import forms;
 from django.contrib.auth import authenticate;
 from annoying.functions import get_object_or_None;
 from .choices import STATES;
-from .reserved_names import RESERVED_NAMES;
+from ourjobfund.acceptable_urls import URLS;
 import re;
 
 class LoginForm(forms.Form):
@@ -56,7 +56,7 @@ class SignUpForm(forms.ModelForm):
             raise forms.ValidationError('Your first name must not exceed 150 characters.');
         elif (not re.match(r'^[A-Za-z0-9_]+$', username)):
             raise forms.ValidationError('Your username may only include alphanumeric characters, "_", or "-".');
-        elif (username in RESERVED_NAMES):
+        elif (username in URLS.values()):
             raise forms.ValidationError('You cannot use the username ' + username);
         return username;
         

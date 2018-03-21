@@ -1,9 +1,12 @@
 from django.contrib.auth.decorators import login_required;
+from django.db.models.functions import Lower;
 from rest_framework.renderers import JSONRenderer;
 from django.utils.decorators import method_decorator;
 from django.views.generic import TemplateView;
 from notification.models import Notification;
+from jobuser.serializers import PledgeSerializer, WorkSerializer;
 from annoying.functions import get_object_or_None;
+from update.serializers import UpdateSerializer;
 from django.utils.html import escape;
 from django.shortcuts import render, get_object_or_404, redirect;
 from django.db.models import Q, F;
@@ -139,9 +142,9 @@ class DetailView(TemplateView):
         job = kwargs['job'];
         context = {
             'job': job,
-            'updates' : Update.objects.filter(jobuser__job=job).order_by('date'),
-            'pledges' : JobUser.objects.filter(Q(job=job) & (Q(pledged__gt=0) | Q(paid__gt=0))),
-            'workers' : JobUser.objects.filter(job=job).exclude(work_status=''),
+            'updates' : Update.objects.filter(jobuser__job=job).order_by('date')[:50],
+            'pledges' : JobUser.objects.filter(Q(job=job) & (Q(pledged__gt=0) | Q(paid__gt=0)))[:50],
+            'workers' : JobUser.objects.filter(job=job).exclude(work_status='')[:50],
         }
         if (request.user.is_authenticated):
             serializer = JobSerializer(Job.objects.filter(pk=job.pk), many=True, context={'user' : request.user});
@@ -154,6 +157,55 @@ class DetailView(TemplateView):
             context['jobuser'] = jobuser;
             context['payment_verification'] = payment_verification; 
         return context;
+        
+def add_to_detail_table(request, job_random_string):
+    if (request.is_ajax()):
+        job = get_object_or_404(Job, random_string=job_random_string);
+        numSearches = int(request.GET['num_searches']);
+        table = request.GET['table'];
+        column = request.GET['column'];
+        order = request.GET['order'];
+        if (table == 'updates'):
+            if (column == 'username' or column == 'date'):
+                data = Update.objects.filter(jobuser__job=job);
+            else:
+                return Http404();
+        elif (table == 'pledges'):
+            if (column == 'username' or column == 'pledged' or column == 'paid'):
+                data = JobUser.objects.filter(Q(job=job) & (Q(pledged__gt=0) | Q(paid__gt=0)));
+            else:
+                return Http404();
+        elif (table == 'workers'):
+            if (column == 'username' or column == 'work_status' or column == 'received'):
+                data = JobUser.objects.filter(job=job).exclude(work_status='');
+            else:
+                return Http404();
+        if (column == 'username'):
+            if (table == 'updates'):
+                if (order == 'ascending'):
+                    data = data.order_by(Lower('jobuser__user__username'))[50 * numSearches : 50 * (numSearches + 1)][::-1];
+                else:
+                    data = data.order_by(Lower('jobuser__user__username'))[50 * numSearches : 50 * (numSearches + 1)];
+            else:
+                if (order == 'ascending'):
+                    data = data.order_by(Lower('user__username'))[50 * numSearches : 50 * (numSearches + 1)][::-1];
+                else:
+                    data = data.order_by(Lower('user__username'))[50 * numSearches : 50 * (numSearches + 1)];
+        else:
+            if (order == 'ascending'):
+                data = data.order_by(column)[50 * numSearches : 50 * (numSearches + 1)][::-1];
+            else:
+                data = data.order_by(column)[50 * numSearches : 50 * (numSearches + 1)];
+        if (table == 'updates'):
+            serializer = UpdateSerializer(data, many=True);
+        elif (table == 'pledges'):
+            serializer = PledgeSerializer(data, many=True);
+        elif (table == 'workers'):
+            serializer = WorkSerializer(data, many=True);
+        json = JSONRenderer().render(serializer.data);
+        return HttpResponse(json, 'application/json');
+    else:
+        return Http404();
 
 @login_required
 def detail_sort(request, job_random_string):
