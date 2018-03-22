@@ -126,7 +126,7 @@ function add_rows_to_tables(num_searches, table, column, order) {
         success: function(json) {
             if (table === 'updates') {
                 if (updates_num_searches == 0) $('#updates tbody').empty();
-                addRowsToUpdatesTable(json)l
+                addRowsToUpdatesTable(json);
             } else if (table === 'pledges') {
                 if (pledges_num_searches == 0) $('#pledges tbody').empty();
                 addRowsToPledgesTable(json);

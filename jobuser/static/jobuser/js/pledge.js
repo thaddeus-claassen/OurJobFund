@@ -2,7 +2,7 @@ var canSubmit = true;
 
 $(document).ready(function() {
     $('#form').submit(function(e) {
-        format = correctFormat();
+        var format = correctFormat();
         if (format === "") {
             if (canSubmit) {
                 canSubmit = false; 
@@ -20,13 +20,17 @@ $(document).ready(function() {
 function correctFormat() {
     var errorMessage = "";
     var amount = parseFloat($('#id_amount').val());
-    var isFloat = !isNaN(amount);
-    if (isFloat) {
-        if (amount != amount.toFixed(2)) {
-            errorMessage = "Cannot have more than two decimal places.";
-        }// end if
+    if (amount === "") {
+        amount = 0;
     } else {
-        errorMessage = "Not a valid number";
+        var isFloat = !isNaN(amount);
+        if (isFloat) {
+            if (amount != amount.toFixed(2)) {
+                errorMessage = "Cannot have more than two decimal places.";
+            }// end if
+        } else {
+            errorMessage = "Not a valid number";
+        }// end if-else
     }// end if-else
     return errorMessage;
 }// end pledgeErrorMessage()

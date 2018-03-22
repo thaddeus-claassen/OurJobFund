@@ -245,6 +245,7 @@ class CreateView(TemplateView):
             latitude = form.cleaned_data['latitude'];
             longitude = form.cleaned_data['longitude'];
             location = form.cleaned_data['location'];
+            pledge = float(form.cleaned_data['pledge']);
             tags = form.cleaned_data['tags'];
             description = form.cleaned_data['description'];
             job = Job.create(name=name, latitude=latitude, longitude=longitude, location=location);
@@ -257,7 +258,7 @@ class CreateView(TemplateView):
                         tag = Tag.create(tag=tagString);
                         tag.save();
                     job.tag_set.add(tag);
-            jobuser = JobUser.create(user=request.user, job=job);
+            jobuser = JobUser.create(user=request.user, job=job, pledged=pledge);
             jobuser.save();
             update = Update(jobuser=jobuser, description=description);
             update.save();
