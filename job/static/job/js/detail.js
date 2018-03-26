@@ -12,8 +12,8 @@ $('document').ready(function() {
     $(window).resize(function() {
         changeTHeadTFootWidthToAccountForScrollBar();
     });
-    $('th').click(function() {
-        var cls = $(this).attr('class');
+    $('.table-header').click(function() {
+        var cls = $(this).parent().attr('class');
         if (cls !== '') {
             setRowToZero(cls.split('-')[0]);
             prepareToAddRows(cls, 0);

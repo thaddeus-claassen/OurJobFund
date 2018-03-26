@@ -9,8 +9,8 @@ $('document').ready(function() {
         changeTHeadTFootWidthToAccountForScrollBar();
     });
     disableInfo();
-    $('th').click(function() {
-        var cls = $(this).attr('class');
+    $('.table-header').click(function() {
+        var cls = $(this).parent().attr('class');
         if (cls !== '') {
             setRowToZero(cls.split('-')[0]);
             prepareToAddRows(cls, 0);
@@ -117,12 +117,24 @@ function add_rows_to_tables(num_searches, table, column, order) {
 function addRowsToCurrentTable(json) {
     for (var index = 0; index < json.length; index++) {
         var current = json[index];
+        var pledged, paid, work_status, received;
+        if (current['pledged'] == 0) {
+            pledged = "--";
+            paid = "--";
+            work_status = current['work_status'];
+            received = changeNumberToCurrency(current['received']);
+        } else {
+            pledged = changeNumberToCurrency(current['pledged']);
+            paid = changeNumberToCurrency(current['paid']);
+            work_status = "--";
+            received = "--"
+        }// end if-else
         var string = "<tr>";
         string = string + "<td class='current-name'><a href='job/" + current['random_string'] + "'>" + current['name'] + "</a></td>";
-        string = string + "<td class='current-pledged'>" + changeNumberToCurrency(current['pledged']) + "</td>";
-        string = string + "<td class='current-paid'>" + changeNumberToCurrency(current['paid']) + "</td>";
-        string = string + "<td class='current-status'>" + current['work_status'] + "</td>";
-        string = string + "<td class='current-received'>" + changeNumberToCurrency(current['received']) + "</td>";
+        string = string + "<td class='current-pledged'>" + pledged + "</td>";
+        string = string + "<td class='current-paid'>" + paid + "</td>";
+        string = string + "<td class='current-status'>" + work_status + "</td>";
+        string = string + "<td class='current-received'>" + received + "</td>";
         string = string + "</tr>";
         $('#current tbody').append(string);
     }// end for

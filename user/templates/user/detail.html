@@ -33,15 +33,6 @@
                 </div>
             </div>
         </form>
-        {% if request.user.is_authenticated and request.user.username == detail_user.username %}
-        <div class="row">
-            <div class="col-md-12">
-                <form action="{% url 'job:create' %}">
-                    <input id="create_job" type="submit" value="Create Job" />
-                </form>
-            </div>
-        </div>
-        {% endif %}
         {% if request.user.username == detail_user.username and detail_user.profile.stripe_account_id == "" %}
         <div class="row">
             <div class="col-md-12">
@@ -65,30 +56,37 @@
     </div>
     <div class="col-md-8">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <h4>Current Jobs</h4>
             </div>
+            {% if request.user.is_authenticated and request.user.username == detail_user.username %}
+            <div class="col-md-6">
+                <form action="{% url 'job:create' %}">
+                    <input id="create_job" type="submit" value="Create Job" />
+                </form>
+            </div>
+            {% endif %}
         </div>
         <div class="row">
             <div class="col-md-12">
                 <table id="current" class="table">
                     <thead>
                         <tr>
-                            <th class="current-name">Name</th>
-                            <th class="current-pledged">Pledged</th>
-                            <th class="current-paid">Paid</th>
-                            <th class="current-status">Status</th>
-                            <th class="current-received">Received</th>
+                            <th class="current-name"><span class="table-header">Name</span></th>
+                            <th class="current-pledged"><span class="table-header">Pledged</span></th>
+                            <th class="current-paid"><span class="table-header">Paid</span></th>
+                            <th class="current-status"><span class="table-header">Status</span></th>
+                            <th class="current-received"><span class="table-header">Received</span></th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for j in current %}
                         <tr id="current_{{ j.job.name }}">
                             <td class="current-name"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.name }}</a></td>
-                            <td class="current-pledged">${{ j.pledged|floatformat:2 }}</td>
-                            <td class="current-paid">${{ j.paid|floatformat:2 }}</td>
-                            <td class="current-status">{% if j.work_status == '' %}Not Working{% else %}{{ j.work_status }}{% endif %}</td>
-                            <td class="current-received">${{ j.received|floatformat:2 }}</td>
+                            <td class="current-pledged">{% if j.pledged == 0 %}--{% else %}${{ j.pledged|floatformat:2 }}{% endif %}</td>
+                            <td class="current-paid">{% if j.pledged == 0 %}--{% else %}${{ j.paid|floatformat:2 }}{% endif %}</td>
+                            <td class="current-status">{% if j.work_status == '' %}--{% else %}{{ j.work_status }}{% endif %}</td>
+                            <td class="current-received">{% if j.work_status == '' %}--{% else %}${{ j.received|floatformat:2 }}{% endif %}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -114,11 +112,11 @@
                 <table id="finished" class="table">
                     <thead>
                         <tr>
-                            <th class="finished-name">Name</th>
-                            <th class="finished-pledged">Pledged</th>
-                            <th class="finished-paid">Paid</th>
-                            <th class="finished-status">Status</th>
-                            <th class="finished-received">Received</th>
+                            <th class="finished-name"><span class="table-header">Name</span></th>
+                            <th class="finished-pledged"><span class="table-header">Pledged</span></th>
+                            <th class="finished-paid"><span class="table-header">Paid</span></th>
+                            <th class="finished-status"><span class="table-header">Status</span></th>
+                            <th class="finished-received"><span class="table-header">Received</span></th>
                         </tr>
                     </thead>
                     <tbody>

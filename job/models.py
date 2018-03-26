@@ -1,7 +1,7 @@
-from django.db import models;   
-from django import forms;
 from django.contrib.auth.models import User;
 from django.core.validators import RegexValidator;
+from django.db import models;   
+from django import forms;
 from random import randint;
         
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z_]+$', 'Alphanumeric characters only');        
