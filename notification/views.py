@@ -1,5 +1,5 @@
-from django.shortcuts import render;
 from django.contrib.auth.models import User;
+from django.shortcuts import render;
 from .models import Notification;
 
 def sendNotifications(jobuser):

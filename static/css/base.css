@@ -20,8 +20,8 @@ ul {
     color: red;
 }
 
-option:hover {
-    background: grey;
+.table-header {
+    cursor: pointer;
 }
 
 #no-updates:hover {

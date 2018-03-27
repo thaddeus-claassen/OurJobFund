@@ -52,7 +52,7 @@
                     {% for u in updates %}
                         <tr>
                             <td class="updates-date">
-                                {{ u.date|date:"d/m/y" }}
+                                {{ u.date|date:"F d, Y" }}
                             </td>
                             <td class="updates-username">
                                 <a href="{% url 'user:detail' u.jobuser.user.username %}">{{ u.jobuser.user.username }}</a>

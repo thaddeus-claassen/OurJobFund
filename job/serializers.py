@@ -8,12 +8,13 @@ from django.utils import timezone;
 
 class JobSerializer(serializers.ModelSerializer):
     #expected_pay = serializers.SerializerMethodField();
-    #expected_workers = serializers.SerializerMethodField(); 
+    #expected_workers = serializers.SerializerMethodField();
 
     class Meta:
         model = Job;
-        fields = ['name', 'creation_date', 'pledged', 'paid', 'workers', 'finished', 'random_string', 'latitude', 'longitude'];
-    ''''        
+        fields = ['name', 'date', 'pledged', 'paid', 'workers', 'finished', 'random_string', 'latitude', 'longitude'];
+        
+    ''''
     def get_expected_pay(self, job):
         pledges = JobUser.objects.filter(Q(job=job) & Q(pledged__gt=0));
         if (self.context['user'].is_authenticated()):

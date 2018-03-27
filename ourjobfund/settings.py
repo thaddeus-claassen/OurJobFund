@@ -66,7 +66,13 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAdminUser',
     ],
-}
+};
+
+if (DEBUG):
+    REST_FRAMEWORK['DATETIME_FORMAT'] = '%B %#d, %Y';
+else:
+    REST_FRAMEWORK['DATETIME_FORMAT'] = '%B %-d, %Y';
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

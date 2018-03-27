@@ -99,7 +99,7 @@ def findJobs(request):
     if (latitude_in_degrees_as_string != "" and longitude_in_degrees_as_string != "" and radius_in_miles_as_string != ""):
         jobs = findJobsByRadius(jobs, float(latitude_in_degrees_as_string), float(longitude_in_degrees_as_string), float(radius_in_miles_as_string));
     if (sort_array[0] == 'created'):
-        jobs = jobs.order_by('creation_date');
+        jobs = jobs.order_by('date');
     elif (sort_array[0] == 'pledged'):
         jobs = jobs.order_by('pledged');
     elif (sort_array[0] == 'workers'):

@@ -9,8 +9,7 @@ alphanumeric = RegexValidator(r'^[0-9a-zA-Z_]+$', 'Alphanumeric characters only'
 class Job(models.Model):
     is_finished = models.BooleanField(default=False);
     name = models.CharField(max_length=100);
-    creation_date = models.DateField(auto_now_add=True);
-    creation_datetime = models.DateTimeField(auto_now_add=True);
+    date = models.DateTimeField(auto_now_add=True);
     pledged = models.FloatField(default=0);
     paid = models.FloatField(default=0);
     workers = models.PositiveIntegerField(default=0);
@@ -22,8 +21,8 @@ class Job(models.Model):
     
     def __str__(self):  
         return self.name;
-        
-    @classmethod    
+    
+    @classmethod
     def create(cls, name, latitude=None, longitude=None, location=''):
         job = Job(
             name = name,
@@ -45,11 +44,11 @@ class Job(models.Model):
         if (Job.objects.filter(random_string=random_string).exists()):
             random_string = createRandomString();
         return random_string;
-
+    
 class Tag(models.Model):
     jobs = models.ManyToManyField(Job);    
     tag = models.CharField(max_length=30, validators=[alphanumeric]);
-
+    
     def __str__(self):
         return self.tag;
     

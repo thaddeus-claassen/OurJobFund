@@ -76,13 +76,13 @@ tbody {
     text-align: center;
 }
 
-.pledged-paid {
+.paid {
     width: 25%;
     float: left;
     text-align: center;
 }
 
-.workers-finished {
+.finished {
     width: 25%;
     float: left;
     text-align: center;

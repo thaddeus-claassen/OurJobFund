@@ -211,10 +211,10 @@ function addJobsToTable(json) {
             var job = json[index];
             var string = "<tr>";
             string = string + "<td class='name'><a id='" + job["random_string"] + "' href='job/" + job["random_string"] + "'></a></td>";
-            string = string + "<td class='date'>" + job['creation_date'] + "</td>";
-            string = string + "<td class='pledged-paid'><sup>$" + turnMoneyToString(job['paid']) + "</sup>&frasl;";
+            string = string + "<td class='date'>" + job['date'] + "</td>";
+            string = string + "<td class='paid'><sup>$" + turnMoneyToString(job['paid']) + "</sup>&frasl;";
             string = string + "<sub>$" + turnMoneyToString(job['pledged']) + "</sub></td>";
-            string = string + "<td class='workers-finished'><sup>" + job['finished'] + "</sup>&frasl;<sub>" + job['workers'] + "</sub></td>"
+            string = string + "<td class='finished'><sup>" + job['finished'] + "</sup>&frasl;<sub>" + job['workers'] + "</sub></td>"
             string = string + "</tr>";
             $('#main_table_body').append(string);
             $('#' + job["random_string"]).text(job["name"]);
