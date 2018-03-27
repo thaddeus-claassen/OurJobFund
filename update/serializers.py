@@ -1,6 +1,6 @@
 from rest_framework import serializers;
-from ourjobfund.settings import DEBUG;
 from .models import Update;
+import datetime;
 
 class UpdateSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField();

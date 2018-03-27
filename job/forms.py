@@ -8,7 +8,7 @@ class NewJobForm(forms.Form):
     latitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
     longitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
     tags = forms.CharField(label="Tags:", widget=forms.TextInput(attrs={'placeholder': '(Separated by spaces, alphanumeric characters or "_" only)'}), max_length=1000, required=False);
-    pledge = forms.CharField(label="Pledge:", widget=forms.TextInput(attrs={'placeholder': '$0.00'}), required=False);
+    pledge = forms.CharField(label="Pledge:", widget=forms.TextInput(attrs={'placeholder': '$0.00'}));
     image_set = forms.ImageField(label="Images:", widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False);
     description = forms.CharField(label="Description:", widget=forms.Textarea(attrs={'placeholder': '(Required)'}), max_length=10000);
     protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
