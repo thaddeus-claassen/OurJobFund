@@ -17,19 +17,11 @@ input[type=submit] {
 }
 
 #id_description {
-    height: 300px;
+    height: 400px;
     width: 100%;
     overflow-x: hidden;
     overflow-y: auto;
     resize: none;
-}
-
-#info-wrapper {
-    height: 300px;
-    width: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-    word-wrap: break-word;
 }
 
 .info_title {
@@ -38,6 +30,10 @@ input[type=submit] {
 
 .info_info, #delete-stripe {
     float: right;
+}
+
+#save_info, #create_job {
+    width: 100%;
 }
 
 table {
@@ -70,7 +66,7 @@ tbody {
     overflow-y: scroll;
 }
 
-.current-name, .finished-name {
+.current-title, .finished-title {
     width: 40%;
     float: left;
 }

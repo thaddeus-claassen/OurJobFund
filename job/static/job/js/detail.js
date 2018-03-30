@@ -14,17 +14,15 @@ $('document').ready(function() {
     });
     $('.table-header').click(function() {
         var cls = $(this).parent().attr('class');
-        if (cls !== '') {
-            setRowToZero(cls.split('-')[0]);
-            prepareToAddRows(cls, 0);
-        }// end if
+        setRowToZero(cls.split('-')[0]);
+        prepareToAddRows(cls, 0);
     });
     $('tbody').scroll(function() {
         var cls = $(this).attr('class');
         var table = cls.split('-')[0];
         var total = table + '-total';
         if ($(this).scrollTop() + $(this).height() === $(this)[0].scrollHeight && $(this).children().count() < total) {
-            if (cls !== '') {        
+            if (cls !== '') {
                 var rows = addToNumRows(cls);
                 prepareToAddRows(cls, rows);
             }// end if
@@ -101,18 +99,6 @@ function setSortVariable(table, type) {
     }// end if
     return sort;
 }// end setSortVariable()
-
-function getNumSearches(table) {
-    var searches = null;
-    if (table === 'updates') {
-        searches = updates_num_searches;
-    } else if (table === 'pledges') {
-        searches = pledges_num_searches;
-    } else if (table === 'workers') {
-        searches = workers_num_searches;
-    }// end if
-    return searches;
-}// end getNumSearches();
 
 function add_rows_to_tables(num_searches, table, column, order) {
     $.ajax({

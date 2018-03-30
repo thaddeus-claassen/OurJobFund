@@ -30,35 +30,8 @@ def get_jobs(request):
         if (jobs == "Invalid Search"):
             return HttpResponse(jobs, content_type="application/json");
         else:
-            jobs = jobs[0:50];
-            serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
-            json = JSONRenderer().render(serializer.data);
-            return HttpResponse(json, content_type="application/json");
-    else:
-        return Http404();
-
-def add_jobs(request):
-    if (request.is_ajax()):
-        numSearches =  int(request.GET['numSearches']);
-        jobs = findJobs(request);
-        if (jobs == "Invalid Search"):
-            return HttpResponse(jobs, content_type="application/json");
-        else:
-            jobs = jobs[50 * numSearches:50 * (numSearches + 1)];
-            serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
-            json = JSONRenderer().render(serializer.data);
-            return HttpResponse(json, content_type="application/json");
-    else:
-        return Http404();
-        
-def sort_jobs(request):
-    if (request.is_ajax()):
-        numSearches =  int(request.GET['numSearches']);
-        jobs = findJobs(request);
-        if (jobs == "Invalid Search"):
-            return HttpResponse(jobs, content_type="application/json");
-        else:
-            jobs = jobs[0:50 * numSearches];
+            numSearches =  int(request.GET['numSearches']);
+            jobs = jobs[50 * (numSearches - 1):50 * numSearches];
             serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
             json = JSONRenderer().render(serializer.data);
             return HttpResponse(json, content_type="application/json");
@@ -92,7 +65,7 @@ def findJobs(request):
             else:
                 return "Invalid Search";
     jobs = jobs.distinct();
-    sort_array = request.GET['sort'].split(" ");
+    sort_array = request.GET['sort'].split("-");
     latitude_in_degrees_as_string = request.GET['latitude'];
     longitude_in_degrees_as_string = request.GET['longitude'];
     radius_in_miles_as_string = request.GET['radius'];
@@ -105,7 +78,7 @@ def findJobs(request):
     elif (sort_array[0] == 'workers'):
         jobs = jobs.order_by('workers');
     else:
-        jobs = jobs.extra(select={'case_insensitive_name': 'lower(name)'}).order_by('case_insensitive_name');
+        jobs = jobs.extra(select={'case_insensitive_title': 'lower(title)'}).order_by('case_insensitive_title');
     if (sort_array[1] == 'descending'):
         jobs = jobs[::-1];
     return jobs;
@@ -241,14 +214,14 @@ class CreateView(TemplateView):
     def post(self, request, *args, **kwargs):
         form = self.form(request.POST);
         if (form.is_valid()):
-            name = form.cleaned_data['name'];
+            title = form.cleaned_data['title'];
             latitude = form.cleaned_data['latitude'];
             longitude = form.cleaned_data['longitude'];
             location = form.cleaned_data['location'];
             pledge = float(form.cleaned_data['pledge']);
             tags = form.cleaned_data['tags'];
             description = form.cleaned_data['description'];
-            job = Job.create(name=name, latitude=latitude, longitude=longitude, location=location);
+            job = Job.create(title=title, latitude=latitude, longitude=longitude, location=location);
             job.save();
             if (tags != ''):
                 tagsArray = tags.split(" ");

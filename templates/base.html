@@ -45,15 +45,15 @@
                         <li class="dropdown">
                             <a href="" class="dropdown-toggle" data-toggle="dropdown">
                                 Updates (
-                                {% if user.notification_set.all %}                                
-                                    {{ user.notification_set.all.count }}
+                                {% if request.user.notification_set.all %}                                
+                                    {{ request.user.notification_set.all.count }}
                                 {% else %}
                                     0
                                 {% endif %}
                                 )<span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                            {% for notification in user.notification_set.all %}
+                            {% for notification in request.user.notification_set.all %}
                                 <li>
                                     <a href="{% url 'job:detail' notification.job.random_string %}" id="notification_{{ notification.id }}" >
                                         {{ notification.job.name }}

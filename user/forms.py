@@ -8,26 +8,26 @@ from ourjobfund.acceptable_urls import URLS;
 import re;
 
 class LoginForm(forms.Form):
-    username_or_password = forms.CharField(label="", widget=forms.TextInput(attrs={'placeholder' : 'Username or Email'}));
+    username_or_email = forms.CharField(label="", widget=forms.TextInput(attrs={'placeholder' : 'Username or Email'}));
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder' : 'Password'}));
     protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
     prefix = "login";
 
-    def clean_username_or_password(self):
-        username_or_password = self.cleaned_data.get('username_or_password');
-        user = get_object_or_None(User, email=username_or_password);
+    def clean_username_or_email(self):
+        username_or_email = self.cleaned_data.get('username_or_email');
+        user = get_object_or_None(User, email=username_or_email);
         if (user is None):
-            user = get_object_or_None(User, username=username_or_password);
+            user = get_object_or_None(User, username=username_or_email);
         if (user is None):
             raise forms.ValidationError('Your username or email is incorrect.');
-        return username_or_password;    
+        return username_or_email;    
             
     def clean_password(self):
-        username_or_password = self.cleaned_data.get('username_or_password');
+        username_or_email = self.cleaned_data.get('username_or_email');
         password = self.cleaned_data.get('password');
-        user = get_object_or_None(User, email=username_or_password);
+        user = get_object_or_None(User, email=username_or_email);
         if (user is None):
-            user = get_object_or_None(User, username=username_or_password);
+            user = get_object_or_None(User, username=username_or_email);
         if (not user or (authenticate(username=user.username, password=password) is None)):
             raise forms.ValidationError('Your password is incorrect.');
         return password;
@@ -40,9 +40,9 @@ class LoginForm(forms.Form):
 class SignUpForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder' : 'Email'}));
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder' : 'Username'}));
-    password = forms.CharField(label='Password:', widget=forms.PasswordInput(attrs={'placeholder' : 'Password'}));
-    repeat_password = forms.CharField(label='Repeat Password:', widget=forms.PasswordInput(attrs={'placeholder' : 'Repeat Password'}));
-    age_checkbox = forms.BooleanField(label='Check here to verify you are at least 13 years old:');
+    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'placeholder' : 'Password'}));
+    repeat_password = forms.CharField(label='Repeat Password', widget=forms.PasswordInput(attrs={'placeholder' : 'Repeat Password'}));
+    age_checkbox = forms.BooleanField(label='Check here to verify you are at least 13 years old');
     protection = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
     prefix = "signup";
     
@@ -92,7 +92,7 @@ class DescriptionForm(forms.ModelForm):
     
     class Meta:
         model = Profile;
-        fields = ['description'];    
+        fields = ['description'];
     
     def clean_profile_honey_pot(self):
         if (not self.cleaned_data.get('honey_pot') == ""):

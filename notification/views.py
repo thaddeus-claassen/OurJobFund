@@ -8,4 +8,3 @@ def sendNotifications(jobuser):
         if not user.notification_set.filter(job=jobuser.job).exists():
             notification = Notification.create(user=user, job=jobuser.job);
             notification.save();
-            

@@ -3,16 +3,12 @@ var numSearches = 0;
 var ENTER = 13;
 var map;
 var markers = [];
+var sort = "created-descending"
 
 $('document').ready(function() {
     changeTHeadTFootWidthToAccountForScrollBar();
     $(window).resize(function() {
         changeTHeadTFootWidthToAccountForScrollBar();
-    });
-    toggleSearch();
-    $('input[name=search]').change(function() {
-        toggleSearch();
-        save_search_type(($(this).attr('id') === 'basic_search'));
     });
     $('#search').keydown(function(event) {
         if (event.which == ENTER) {
@@ -29,29 +25,16 @@ $('document').ready(function() {
             search();
         }// end if
     });
-    $('.sort').click(function() {
-        var by = $(this).attr('id');
-        var sort_by_val =  $('#sort').val();
-        if (sort_by_val.indexOf(by) !== -1) {
-            if (sort_by_val.includes('descending')) {
-                sort_by_val = by + ' ascending';
-            } else {
-                sort_by_val = by + ' descending';
-            }// end if-else
-        } else {
-            if (by === 'name') {
-                sort_by_val = by + ' ascending';
-            } else {
-                sort_by_val = by + ' descending';
-            }// end if-else
-        }// end if-else
-        $('#sort').val(sort_by_val);
-        sort_jobs();
+    $('.table-header').click(function() {
+        var cls = $(this).parent().attr('class');
+        setSortAndNumSearches(cls.split("-")[0]);
+        get_jobs();
     });
     $('tbody').scroll(function() {
         if ($(this).scrollTop() + $(this).height() === $(this)[0].scrollHeight) {
             if (50 * numSearches <= parseInt($('#num-jobs-found').text())) {
-                add_jobs();
+                numSearches = numSearches + 1;
+                get_jobs();
             }// end if
         }// end if
     });
@@ -62,11 +45,28 @@ $('document').ready(function() {
     });
 });
 
+function setSortAndNumSearches(col) {
+    if (sort.split("-")[0] === col) {
+        if (sort.split("-")[1] === "descending") {
+            sort = sort.split("-")[0] + "-ascending";
+        } else {
+            sort = sort.split("-")[0] + "-descending";
+        }// end if-else
+    } else {
+        numSearches = 1;
+        if (col === "date") {
+            sort = col + "-descending";
+        } else {
+            sort = col + "-ascending";
+        }// end if-else
+    }// end if-else
+}// end setSortAndNumSearches()
+
 function search() {
     $('#latitude').val("");
     $('#longitude').val("");
     clearMarkers();
-    numSearches = 0;
+    numSearches = 1;
     applyLocation();
 }// end search()
 
@@ -78,92 +78,29 @@ function changeTHeadTFootWidthToAccountForScrollBar() {
     $('tfoot').width(percentageTableWidth.toString() + '%');
 }// end changeTHeadTFootWidthToAccountForScrollBar()
 
-function save_filter(filter) {
-    $.ajax({
-        type : 'POST',
-        url : '/job/save-filter/',
-        data : {
-            'filter' : $(filter).attr('id'),
-            'value' : $(filter).val(),
-            csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
-        },
-    });
-}// end save_filter()
-
-function save_search_type(isBasic) {
-    $.ajax({
-        type : 'POST',
-        url : '/job/save-search-type/',
-        data : {
-            'isBasic' : isBasic,
-            csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
-        },
-    });
-}// end save_search_type()
-
-function save_show_location(isHidden) {
-    $.ajax({
-        type : 'POST',
-        url : '/job/save-show-location/',
-        data : {
-            'isHidden' : isHidden,
-            csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
-        },
-    });
-}// end save_show_location()
-
 function get_jobs() {
     $.ajax({
         url : 'job/get-jobs',
         data : {
+            'numSearches' : numSearches,
             'search' : $('#search').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
             'radius' : getRadius(),
-            'sort' : $('#sort').val(),
+            'sort' : sort,
         },
-        success: getJobsSuccess,
+        success: function(json) {
+            if (numSearches == 1) {
+                $('tbody').empty();
+                clearMarkers();
+            }// end if
+            addJobsToTable(json);
+        },
         error: function () {
             $('#search-error-message').text("Invalid Search");
         },
     });
 }// end get_jobs()
-
-function add_jobs() {
-    $.ajax({
-        url : 'job/add-jobs',
-        data : {
-            'numSearches' : numSearches,
-            'search' : $('#search').val(),
-            'latitude' : $('#latitude').val(),
-            'longitude' : $('#longitude').val(),
-            'radius' : getRadius(),
-            'sort' : $('#sort').val(),
-        },
-        success: addJobsSuccess,
-        error: function() {
-            $('#search-error-message').text("Invalid Search");
-        },
-    });
-}// end add_jobs()
-
-function sort_jobs() {
-    $.ajax({
-        url : 'job/sort-jobs',
-        data : {
-            'numSearches' : numSearches,
-            'search' : $('#search').val(),
-            'latitude' : $('#latitude').val(),
-            'longitude' : $('#longitude').val(),
-            'radius' : getRadius(),
-            'sort' : $('#sort').val(),
-        },
-        success: sortJobsSuccess,
-        error: function() {
-            $('#search-error-message').text("Invalid Search");
-        },
-    });
-}// end sort_jobs()
 
 function get_total_jobs() {
     $.ajax({
@@ -173,60 +110,34 @@ function get_total_jobs() {
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
             'radius' : getRadius(),
-            'sort' : $('#sort').val(),
+            'sort' : sort,
         },
-        success: getTotalJobs,
+        success: function(json) {
+            $('#num-jobs-found').text(json['total']);
+        },
     });
 }// end get_total_jobs()
 
-function getTotalJobs(json) {
-    $('#num-jobs-found').text(json['total']);
-}// end getTotalJobs()
-
-function getJobsSuccess(json) {
-    numSearches = 1;
-    $('#main_table_body').empty();
-    clearMarkers();
-    var numJobs = addJobsToTable(json);
-}// end getJobsSuccess()
-
-function addJobsSuccess(json) {
-    numSearches = numSearches + 1;
-    var numJobs = addJobsToTable(json);
-}// end addJobs()
-
-function sortJobsSuccess(json) {
-    $('#main_table_body').empty();
-    addJobsToTable(json);
-    var sort = $('#sort').val();
-    var type = sort[0];
-    var a_or_d = sort[1];
-}// end sortJobs()
-
 function addJobsToTable(json) {
     $('#search-error-message').text('');
-    var numJobs = Object.keys(json).length;
-    if (numJobs > 0) {
-        for (var index = 0; index < json.length; index++) {
-            var job = json[index];
-            var string = "<tr>";
-            string = string + "<td class='name'><a id='" + job["random_string"] + "' href='job/" + job["random_string"] + "'></a></td>";
-            string = string + "<td class='date'>" + job['date'] + "</td>";
-            string = string + "<td class='paid'><sup>$" + turnMoneyToString(job['paid']) + "</sup>&frasl;";
-            string = string + "<sub>$" + turnMoneyToString(job['pledged']) + "</sub></td>";
-            string = string + "<td class='finished'><sup>" + job['finished'] + "</sup>&frasl;<sub>" + job['workers'] + "</sub></td>"
-            string = string + "</tr>";
-            $('#main_table_body').append(string);
-            $('#' + job["random_string"]).text(job["name"]);
-            if ($('#location').val() != "") {
-                addMarker(new google.maps.LatLng(job['latitude'], job['longitude']), 'job/' + job["random_string"]);    
-            }// end if
-        }// end for
-    }// end if
-    if ($('#location').val() != "") {
+    for (var index = 0; index < json.length; index++) {
+        var job = json[index];
+        var string = "<tr>";
+        string = string + "<td class='title'><a id='" + job["random_string"] + "' href='job/" + job["random_string"] + "'></a></td>";
+        string = string + "<td class='date'>" + job['date'] + "</td>";
+        string = string + "<td class='paid'><sup>$" + turnMoneyToString(job['paid']) + "</sup>&frasl;";
+        string = string + "<sub>$" + turnMoneyToString(job['pledged']) + "</sub></td>";
+        string = string + "<td class='finished'><sup>" + job['finished'] + "</sup>&frasl;<sub>" + job['workers'] + "</sub></td>"
+        string = string + "</tr>";
+        $('tbody').append(string);
+        $('#' + job["random_string"]).text(job["title"]);
+        if ($('#location').val() != "") {
+            addMarker(new google.maps.LatLng(job['latitude'], job['longitude']), 'job/' + job["random_string"]);    
+        }// end if
+    }// end for
+    if ($('#location').val() !== "") {
         addBounds();
     }// end if
-    return numJobs;
 }// end addJobsToTable()
 
 function applyLocation() {

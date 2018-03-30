@@ -10,7 +10,7 @@
 <input id="update_id" type="hidden" value="{{ update.id }}" />
 <div class="row">
     <div class="col-md-12">
-        <h4 id="title">{{ update.title }} for <a href="{% url 'job:detail' update.jobuser.job.random_string %}">{{ update.jobuser.job.name }}</a></h4>
+        <h4 id="title">{{ update.title }} for <a href="{% url 'job:detail' update.jobuser.job.random_string %}">{{ update.jobuser.job.title }}</a></h4>
     </div>
 </div>
 <div class="row">

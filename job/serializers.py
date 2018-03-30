@@ -12,7 +12,7 @@ class JobSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Job;
-        fields = ['name', 'date', 'pledged', 'paid', 'workers', 'finished', 'random_string', 'latitude', 'longitude'];
+        fields = ['title', 'date', 'pledged', 'paid', 'workers', 'finished', 'random_string', 'latitude', 'longitude'];
         
     ''''
     def get_expected_pay(self, job):

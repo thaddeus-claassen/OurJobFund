@@ -65,25 +65,25 @@ tbody {
     overflow-y: scroll;
 }
 
-.name {
+.title {
     width: 35%;
     float: left;
 }
 
 .date {
-    width: 15%;
+    width: 35%;
     float: left;
     text-align: center;
 }
 
 .paid {
-    width: 25%;
+    width: 15%;
     float: left;
     text-align: center;
 }
 
 .finished {
-    width: 25%;
+    width: 15%;
     float: left;
     text-align: center;
 }

@@ -25,8 +25,6 @@ URLS = {
     'username_regex': '(?P<username>[a-zA-Z0-9_]+)',
     'terms_of_service': 'terms_of_service',
     'get-jobs': 'get-jobs',
-    'add-jobs': 'add-jobs',
-    'sort-jobs': 'sort-jobs',
     'get-total-jobs': 'get-total-jobs',
     'sort': 'sort',
     'stripe': 'stripe',

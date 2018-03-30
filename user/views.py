@@ -118,7 +118,7 @@ class DetailView(TemplateView):
         user = get_object_or_404(User, username=kwargs['username']);
         description_form = self.description_form(initial={'description' : user.profile.description});
         name_form = self.name_form(initial={'first_name' : user.first_name, 'last_name' : user.last_name});
-        return render(request, self.template_name, self.get_context_data(user=user, description_form=description_form, name_form=name_form));
+        return render(request, self.template_name, self.get_context_data(request, user=user, description_form=description_form, name_form=name_form));
     
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
@@ -140,9 +140,9 @@ class DetailView(TemplateView):
         elif ('delete-stripe' in request.POST):
             request.user.profile.stripe_account_id = "";
             request.user.profile.save();
-        return render(request, self.template_name, self.get_context_data(user=request.user, description_form = description_form, name_form=name_form));
+        return render(request, self.template_name, self.get_context_data(request, user=request.user, description_form = description_form, name_form=name_form));
         
-    def get_context_data(self, *args, **kwargs):
+    def get_context_data(self, request, *args, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs);
         user = kwargs['user'];
         context['detail_user'] = user;
@@ -150,6 +150,16 @@ class DetailView(TemplateView):
         context['name_form'] = kwargs['name_form'];
         context['current'] = user.jobuser_set.filter(job__is_finished=False);
         context['finished'] = user.jobuser_set.filter(job__is_finished=True);
+        if (user != request.user):
+            receiver_jobs = Job.objects.none();
+            sender_jobs = Job.objects.none();
+            for jb in user.jobuser_set.all():
+                receiver_jobs = receiver_jobs | Job.objects.filter(pk=jb.job.id);
+            for jb in request.user.jobuser_set.all():
+                sender_jobs = sender_jobs | Job.objects.filter(pk=jb.job.id);
+            jobs = receiver_jobs & sender_jobs;
+            if (jobs.count() > 0):
+                context['pay'] = True;
         return context;
  
 def add_to_detail_table(request, username):
@@ -175,7 +185,6 @@ def add_to_detail_table(request, username):
                 data = data.order_by(column)[50 * numSearches : 50 * (numSearches + 1)];
         serializer = JobUserSerializer(data, many=True);
         json = JSONRenderer().render(serializer.data);
-        print(json)
         return HttpResponse(json, 'application/json');
     else:
         return Http404();        

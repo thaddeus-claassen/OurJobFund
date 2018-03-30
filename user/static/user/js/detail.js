@@ -130,7 +130,7 @@ function addRowsToCurrentTable(json) {
             received = "--"
         }// end if-else
         var string = "<tr>";
-        string = string + "<td class='current-name'><a href='job/" + current['random_string'] + "'>" + current['name'] + "</a></td>";
+        string = string + "<td class='current-title'><a href='job/" + current['random_string'] + "'>" + current['title'] + "</a></td>";
         string = string + "<td class='current-pledged'>" + pledged + "</td>";
         string = string + "<td class='current-paid'>" + paid + "</td>";
         string = string + "<td class='current-status'>" + work_status + "</td>";
@@ -144,7 +144,7 @@ function addRowsToFinishedTable(json) {
     for (var index = 0; index < json.length; index++) {
         var finished = json[index];
         var string = "<tr>";
-        string = string + "<td class='finished-name'><a href='job/" + finished['random_string'] + "'>" + finished['name'] + "</a></td>";
+        string = string + "<td class='finished-title'><a href='job/" + finished['random_string'] + "'>" + finished['title'] + "</a></td>";
         string = string + "<td class='finished-pledged'>" + changeNumberToCurrency(finished['pledged']) + "</td>";
         string = string + "<td class='finished-paid'>" + changeNumberToCurrency(finished['paid']) + "</td>";
         string = string + "<td class='finished-status'>" + finished['work_status'] + "</td>";

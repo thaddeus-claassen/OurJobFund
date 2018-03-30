@@ -9,12 +9,10 @@ app_name = 'job';
 urlpatterns = [
     url(r'^' + URLS['create'] + '/$', views.CreateView.as_view(), name='create'),
     url(r'^' + URLS['get-jobs'] + '/$', views.get_jobs),
-    url(r'^' + URLS['add-jobs'] + '/$', views.add_jobs),
-    url(r'^' + URLS['sort-jobs'] + '/$', views.sort_jobs),
     url(r'^' + URLS['get-total-jobs'] + '/$', views.get_total_jobs),
     url(r'^' + URLS['job_random_string_regex'] + '/$', views.DetailView.as_view(), name='detail'),
     url(r'^' + URLS['job_random_string_regex'] + '/' + URLS['sort'] + '/$', views.add_to_detail_table),
-]
+];
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT);

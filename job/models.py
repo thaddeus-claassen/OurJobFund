@@ -8,7 +8,7 @@ alphanumeric = RegexValidator(r'^[0-9a-zA-Z_]+$', 'Alphanumeric characters only'
         
 class Job(models.Model):
     is_finished = models.BooleanField(default=False);
-    name = models.CharField(max_length=100);
+    title = models.CharField(max_length=100);
     date = models.DateTimeField(auto_now_add=True);
     pledged = models.FloatField(default=0);
     paid = models.FloatField(default=0);
@@ -20,12 +20,12 @@ class Job(models.Model):
     random_string = models.CharField(default='', max_length=100);
     
     def __str__(self):  
-        return self.name;
+        return self.title;
     
     @classmethod
-    def create(cls, name, latitude=None, longitude=None, location=''):
+    def create(cls, title, latitude=None, longitude=None, location=''):
         job = Job(
-            name = name,
+            title = title,
             latitude = latitude,
             longitude = longitude,
             location = location, 

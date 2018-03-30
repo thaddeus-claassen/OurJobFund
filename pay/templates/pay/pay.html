@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block import %}
+    <link rel="stylesheet" type="text/css" href="{% static 'pay/css/pay.css' %}" />
+    <script type="text/javascript" src="{% static 'pay/js/pay.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<form id="form" action="{{ request.get_full_path }}">
+{% for field in form %}
+    <div class="row">
+        <div class="col-md-2">
+            {{ field.label }}
+        </div>
+        <div class="col-md-10">
+            {{ field }}
+        </div>
+    </div>
+{% endfor %}
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+            <input id="pay" type="submit" value="Submit" />
+        </div>
+    </div>
+</form>
+{% endblock %}

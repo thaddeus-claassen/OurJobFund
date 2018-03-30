@@ -9,7 +9,7 @@
 {% block content %}
 <div class="row info_row">
     <div class="col-md-12">
-        <h4 id="job_name">{{ job.name }}</h4>
+        <h4 id="job_title">{{ job.title }}</h4>
     </div>
 </div>
 <div class="row info_row">
@@ -73,29 +73,39 @@
                 </table>
             </div>
         </div>
+        {% if jobuser %}
         <div class="row">
-            {% if jobuser %}
             <div class="col-md-12">
                 <form action="{% url 'create-update' job.random_string %}">
                     <input class="pledge_work_inputs" type="submit" value="Update" />
                 </form>
             </div>
-            {% endif %}
         </div>
-    </div>
-    <div class="col-md-7">
-        <div class="row info_row header">
-            <div class="col-md-6">
-                <h4>Pledges</h4>
-            </div>
-            <div class="col-md-6">
-                {% if request.user.is_authenticated %}
-                {% if not jobuser or jobuser.work_status == '' %}
+        {% endif %}
+        {% if request.user.is_authenticated and not jobuser or jobuser.work_status == '' %}
+        <div class="row">
+            <div class="col-md-12">
                 <form action="{% url 'pledge' job.random_string %}">
                     <input class="pledge_work_inputs" type="submit" value="Pledge" name="pledge" />
                 </form>
-                {% endif %}
-                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        {% if request.user.is_authenticated and not jobuser or jobuser.pledged == 0 and jobuser.work_status != 'finish' %}
+        <div class="row">
+            <div class="col-md-12">
+                <form action="{% url 'work' job.random_string %}">
+                    <input class="pledge_work_inputs" type="submit"
+                        value="{% if jobuser.work_status == 'work' %}Finish{% else %}Work{% endif %}" name="work" />
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-7">
+        <div class="row info_row header">
+            <div class="col-md-12">
+                <h4>Pledges</h4>
             </div>
         </div>
         <div class="row info_row">
@@ -140,19 +150,9 @@
             </div>
         </div>
         <div class="row info_row header">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <h4>Workers</h4>
             </div>
-            {% if request.user.is_authenticated %}
-            {% if not jobuser or jobuser.pledged == 0 and jobuser.work_status != 'finish' %}
-            <div class="col-md-6">
-                <form action="{% url 'work' job.random_string %}">
-                    <input class="pledge_work_inputs" type="submit"
-                        value="{% if jobuser.work_status == 'work' %}Finish{% else %}Work{% endif %}" name="work" />
-                </form>
-            </div>
-            {% endif %}
-            {% endif %}
         </div>
         <div class="row info_row">
             <div class="col-md-12">

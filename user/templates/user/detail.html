@@ -16,13 +16,8 @@
 <div class="row">
     <div class="col-md-4">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <h4>Info</h4>
-            </div>
-            <div class="col-md-6">
-                {% if request.user.username == detail_user.username %}
-                <input type="submit" value="Save" form="form" name="info" />
-                {% endif %}
             </div>
         </div>
         <form id="form" action="{{ request.get_full_path }}" method="POST">
@@ -33,11 +28,27 @@
                 </div>
             </div>
         </form>
+        <div class="row">
+            <div class="col-md-12">
+                {% if request.user.username == detail_user.username %}
+                <input id="save_info" type="submit" value="Save" form="form" name="info" />
+                {% endif %}
+            </div>
+        </div>
+        {% if request.user.is_authenticated and request.user.username == detail_user.username %}
+        <div class="row">
+            <div class="col-md-12">
+                <form action="{% url 'job:create' %}">
+                    <input id="create_job" type="submit" value="Create Job" />
+                </form>
+            </div>
+        </div>
+        {% endif %}
         {% if request.user.username == detail_user.username and detail_user.profile.stripe_account_id == "" %}
         <div class="row">
             <div class="col-md-12">
                 <span id="must-connect-to-stripe">
-                    To receive credit card payments, please sign into
+                    To receive credit card payments, sign into
                     <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write&state={{ request.user.username }}" id="stripe_connect" class="stripe-connect">
                         <span>Stripe</span></a>.
                 </span>
@@ -59,11 +70,9 @@
             <div class="col-md-6">
                 <h4>Current Jobs</h4>
             </div>
-            {% if request.user.is_authenticated and request.user.username == detail_user.username %}
+            {% if pay %}
             <div class="col-md-6">
-                <form action="{% url 'job:create' %}">
-                    <input id="create_job" type="submit" value="Create Job" />
-                </form>
+                <a id="pay" href="{% url 'pay' user.username %}">Pay</a>
             </div>
             {% endif %}
         </div>
@@ -72,7 +81,7 @@
                 <table id="current" class="table">
                     <thead>
                         <tr>
-                            <th class="current-name"><span class="table-header">Name</span></th>
+                            <th class="current-title"><span class="table-header">Title</span></th>
                             <th class="current-pledged"><span class="table-header">Pledged</span></th>
                             <th class="current-paid"><span class="table-header">Paid</span></th>
                             <th class="current-status"><span class="table-header">Status</span></th>
@@ -81,8 +90,8 @@
                     </thead>
                     <tbody>
                         {% for j in current %}
-                        <tr id="current_{{ j.job.name }}">
-                            <td class="current-name"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.name }}</a></td>
+                        <tr id="current_{{ j.job.title }}">
+                            <td class="current-title"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.title }}</a></td>
                             <td class="current-pledged">{% if j.pledged == 0 %}--{% else %}${{ j.pledged|floatformat:2 }}{% endif %}</td>
                             <td class="current-paid">{% if j.pledged == 0 %}--{% else %}${{ j.paid|floatformat:2 }}{% endif %}</td>
                             <td class="current-status">{% if j.work_status == '' %}--{% else %}{{ j.work_status }}{% endif %}</td>
@@ -92,7 +101,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="current-name">Total: <span id="current-total">{{ current.count }}</span></td>
+                            <td class="current-title">Total: <span id="current-total">{{ current.count }}</span></td>
                             <td class="current-pledged"></td>
                             <td class="current-paid"></td>
                             <td class="current-status"></td>
@@ -112,7 +121,7 @@
                 <table id="finished" class="table">
                     <thead>
                         <tr>
-                            <th class="finished-name"><span class="table-header">Name</span></th>
+                            <th class="finished-title"><span class="table-header">Title</span></th>
                             <th class="finished-pledged"><span class="table-header">Pledged</span></th>
                             <th class="finished-paid"><span class="table-header">Paid</span></th>
                             <th class="finished-status"><span class="table-header">Status</span></th>
@@ -121,8 +130,8 @@
                     </thead>
                     <tbody>
                         {% for j in finished %}
-                        <tr id="current_{{ j.job.name }}">
-                            <td class="finished-name"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.name }}</a></td>
+                        <tr id="current_{{ j.job.title }}">
+                            <td class="finished-title"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.title }}</a></td>
                             <td class="finished-pledged">${{ j.pledged|floatformat:2 }}</td>
                             <td class="finished-paid">${{ j.paid|floatformat:2 }}</td>
                             <td class="finished-status">{{ j.work_status }}</td>
@@ -132,7 +141,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="finished-name">Total: <span id="finished-total">{{ finished.count }}<span></td>
+                            <td class="finished-title">Total: <span id="finished-total">{{ finished.count }}<span></td>
                             <td class="finished-pledged"></td>
                             <td class="finished-paid"></td>
                             <td class="finished-status"></td>
