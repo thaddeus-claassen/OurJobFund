@@ -66,12 +66,11 @@ class WorkView(TemplateView):
             if (jobuser is None):
                 jobuser = JobUser(user=request.user, job=job);
             type = form.cleaned_data['type'];
-            title = type;
             jobuser.work_status = type;
             jobuser.save();
             description = form.cleaned_data['description'];
             if (description):
-                update = Update.create(jobuser=jobuser, title=title, description=description, work_status=type);
+                update = Update.create(jobuser=jobuser, description=description);
                 update.save();
             sendNotifications(jobuser);
             return redirect('job:detail', job_random_string=job.random_string);
