@@ -5,8 +5,8 @@ from django import forms;
 
 class PayForm(forms.Form):
     job = forms.ChoiceField();
-    amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}), required=True);
     type = forms.ChoiceField();
+    amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}), required=True);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     
     def __init__(self, sender, receiver, *args, **kwargs):
@@ -23,16 +23,16 @@ class PayForm(forms.Form):
             sender_jobs = sender_jobs | Job.objects.filter(pk=jb.job.id);
         jobs = receiver_jobs & sender_jobs;
         self.jobs = jobs;
-        choices = (('', ''),);
+        choices = (('', '(Please Select a Job)'),);
         for job in jobs:
-            choices = choices + ((job.name, job.name),);
+            choices = choices + ((job.title, job.title),);
         self.fields['job'] = forms.ChoiceField(choices=choices, required=True);
         
     def init_type(self, receiver):
         if (receiver.profile.stripe_account_id == ''):
-            self.fields['type'] = forms.ChoiceField(choices=(('', ''),('Other', 'Other')), required=True);
+            self.fields['type'] = forms.ChoiceField(choices=(('', '(Please select how you will pay.)'),('Other', 'Negotiated between us.')), required=True);
         else:
-            self.fields['type'] = forms.ChoiceField(choices=(('', ''),('Credit/Debit', 'Credit/Debit'),('Other', 'Other')), required=True);
+            self.fields['type'] = forms.ChoiceField(choices=(('', ''),('Credit/Debit', 'Credit/Debit'),('Other', 'Negotiated between us.')), required=True);
             
     def clean_job(self):
         job = get_object_or_None(Job, name=self.cleaned_data('job'));

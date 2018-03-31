@@ -64,17 +64,21 @@
             </div>
         </div>
         {% endif %}
+        {% if pay %}
+        <div class="row">
+            <div class="col-md-12">
+                <form action="{% url 'pay' user.username %}">
+                    <input id="pay-button" type="submit" value="Pay" />
+                </form>
+            </div>
+        </div>
+        {% endif %}
     </div>
     <div class="col-md-8">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <h4>Current Jobs</h4>
             </div>
-            {% if pay %}
-            <div class="col-md-6">
-                <a id="pay" href="{% url 'pay' user.username %}">Pay</a>
-            </div>
-            {% endif %}
         </div>
         <div class="row">
             <div class="col-md-12">

@@ -8,20 +8,20 @@
 
 {% block content %}
 <div class="row">
-
-</div>
-<div class="row">
     <div class="col-md-12">
+        <table>
+            <thead>
+                <th class="username"><span class="table-header">Username</span></th>
+                <th class="job"><span class="table-header">Job</span></th>
+                <th class="amount"><span class="table-header">Amount</span></th>
+                <th class="type"><span class="table-header">Type</span></th>
+            </thead>
         {% for p in payments %}
             {% if p.type == 'Other' and not p.verified %}
                 Ple
             {% endif %}
         {% endfor %}
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        Note: Confirming payments not processed on OurJobFund will reduce the money you requested by that amount. This will not increase the amount you are paid.
+        </table>
     </div>
 </div>
 {% endblock %}

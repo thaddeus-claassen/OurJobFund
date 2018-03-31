@@ -18,15 +18,15 @@
         {% if job.tag_set.all.count > 0 %}
             Tags:
         {% for tag in job.tag_set.all %}
-            {{ tag.tag }}
+            <a href="{% url 'home' %}?tag={{ tag.tag }}">{{ tag.tag }}</a>
         {% endfor %}
         {% endif %}
         </span>
     </div>
     <div class="col-md-6">
-         <span class="info_info">
+         <span id="location">
             {% if job.location %}
-            Location:&nbsp;{{ job.location }}            
+            Location:&nbsp;<a href="{% url 'home' %}?location={{ job.location }}&latitude={{ job.latitude }}&longitude={{ job.longitude }}">{{ job.location }}</a>            
             {% endif %}
         </span>
     </div>

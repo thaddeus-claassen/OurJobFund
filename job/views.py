@@ -22,11 +22,35 @@ from .forms import NewJobForm;
 import json, re, math;
 
 def home(request):
-    return render(request, 'job/home.html');
+    tag = None;
+    context = None;
+    if ('tag' in request.GET):
+        tag = request.GET['tag'];
+    if (tag):
+        jobs = findJobs(tag, "date-descending", "", "", "");
+        context = {
+            'tag' : tag,
+            'jobs' : jobs,
+        };
+    else:
+        location = None;
+        latitude = None;
+        longitude = None;
+        if ('location' in request.GET and 'latitude' in request.GET and 'longitude' in request.GET):
+            location = request.GET['location'];
+            latitude = request.GET['latitude'];
+            longitude = request.GET['longitude'];
+        if (location and latitude and longitude):
+            jobs = findJobs("", "date-descending", latitude, longitude, "10");
+            context = {
+                'location' : location,
+                'jobs' : jobs,
+            };
+    return render(request, 'job/home.html', context);
     
 def get_jobs(request):
     if (request.is_ajax()):
-        jobs = findJobs(request);
+        jobs = findJobs(request.GET['search'], request.GET['sort'], request.GET['latitude'], request.GET['longitude'], request.GET['radius']);
         if (jobs == "Invalid Search"):
             return HttpResponse(jobs, content_type="application/json");
         else:
@@ -41,7 +65,7 @@ def get_jobs(request):
 def get_total_jobs(request):
     if (request.is_ajax()):
         total = {};
-        jobs = findJobs(request);
+        jobs = findJobs(request.GET['search'], request.GET['sort'], request.GET['latitude'], request.GET['longitude'], request.GET['radius']);
         if (jobs == "Invalid Search"):
             total = "";
         else:
@@ -50,25 +74,21 @@ def get_total_jobs(request):
     else:
         return Http404();
         
-def findJobs(request):
-    search = request.GET['search'];
+def findJobs(search, sort, latitude_in_degrees_as_string, longitude_in_degrees_as_string, radius_in_miles_as_string):
     if (search == ""):
         jobs = Job.objects.all();
     else:
         if (re.match(r'^[A-Za-z0-9\s_]+$', search)):
             jobs = Job.objects.all();
             for word in search.split(" "):
-                jobs = jobs.filter(Q(name__icontains=word) | Q(tag__tag__icontains=word));
+                jobs = jobs.filter(Q(title__icontains=word) | Q(tag__tag__icontains=word));
         else:
             if (re.match(r'^[A-Za-z0-9\s_&\|\(\)~]+$', search)):
                 jobs = get_jobs_from_custom_search(search);
             else:
                 return "Invalid Search";
     jobs = jobs.distinct();
-    sort_array = request.GET['sort'].split("-");
-    latitude_in_degrees_as_string = request.GET['latitude'];
-    longitude_in_degrees_as_string = request.GET['longitude'];
-    radius_in_miles_as_string = request.GET['radius'];
+    sort_array = sort.split("-");
     if (latitude_in_degrees_as_string != "" and longitude_in_degrees_as_string != "" and radius_in_miles_as_string != ""):
         jobs = findJobsByRadius(jobs, float(latitude_in_degrees_as_string), float(longitude_in_degrees_as_string), float(radius_in_miles_as_string));
     if (sort_array[0] == 'created'):

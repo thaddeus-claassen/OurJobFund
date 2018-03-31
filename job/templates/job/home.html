@@ -13,7 +13,7 @@
     <div class="col-md-7">
         <div class="row margin-row">
             <div class="col-md-12">
-                <input id="search" class="search" type="text" placeholder="Search"/>
+                <input id="search" class="search" type="text" placeholder="Search" value="{{ tag }}" />
             </div>
         </div>
         <div class="row">
@@ -27,7 +27,16 @@
                             <th class="finished"><span class="table-header">Finished</span></th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody>
+                        {% for job in jobs %}
+                        <tr>
+                            <td class='title'><a id="{{ job.random_string }}" href="{% url 'job:detail' job.random_string %}">{{ job.title }}</a></td>
+                            <td class='date'>{{ job.date }}</td>
+                            <td class='paid'><sup>${{ job.paid }}</sup>&frasl;<sub>${{ job.pledged }}</sub></td>
+                            <td class='finished'><sup>{{ job.finished }}</sup>&frasl;<sub>{{ job.workers }}</sub></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
                     <tfoot>
                         <tr>
                             <td class="title">Total:&nbsp;<span id="num-jobs-found">0</span></td>
@@ -43,7 +52,7 @@
     <div class="col-md-5">
         <div class="row margin-row">
             <div class="col-md-12">
-                <input id="location" class="search" type="text" placeholder="Location" />
+                <input id="location" class="search" type="text" value="{{ location }}" placeholder="Location" />
             </div>
         </div>
         <div class="row margin-row">

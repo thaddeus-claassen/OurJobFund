@@ -24,12 +24,9 @@ input[type=submit] {
     resize: none;
 }
 
-.info_title {
-    float: left;
-}
-
-.info_info, #delete-stripe {
+#pay-button {
     float: right;
+    width: 100%;
 }
 
 #save_info, #create_job {

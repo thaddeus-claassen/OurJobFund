@@ -150,7 +150,13 @@ class DetailView(TemplateView):
         context['name_form'] = kwargs['name_form'];
         context['current'] = user.jobuser_set.filter(job__is_finished=False);
         context['finished'] = user.jobuser_set.filter(job__is_finished=True);
-        if (user != request.user):
+        if (user == request.user):
+            pass;
+            #payments_received = user.receiver_jobuser_set.all();
+            #for p in payments_received:
+            #    if (not p.verified):
+            #        context['verification'] = True;
+        else:
             receiver_jobs = Job.objects.none();
             sender_jobs = Job.objects.none();
             for jb in user.jobuser_set.all():
