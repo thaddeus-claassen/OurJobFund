@@ -8,7 +8,6 @@ class NewJobForm(forms.Form):
     latitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
     longitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
     tags = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '(Separated by spaces, alphanumeric characters or "_" only)'}), max_length=1000, required=False);
-    pledge = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}));
     image_set = forms.ImageField(label="Images", widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False);
     description = forms.CharField(widget=forms.Textarea(attrs={'placeholder': '(Required)'}), max_length=10000);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
@@ -27,18 +26,6 @@ class NewJobForm(forms.Form):
                 if (len(tag) > 30):
                     raise forms.ValidationError('Each tag cannot be more than 30 characters.');
         return tags;
-    
-    def clean_pledge(self):
-        pledge = self.cleaned_data.get('pledge');
-        if (pledge == '' or pledge == None):
-            pledge = 0;
-        else:
-            if (checkStringIsValidMoney(pledge)):
-                if (float(pledge) < 0.0):
-                    raise forms.ValidationError('You cannot pledge less than $0.00.'); 
-            else:
-                raise forms.ValidationError('Please enter a valid dollar amount.');
-        return pledge;
     
     def clean_honey_pot(self):
         if (not self.cleaned_data.get('honey_pot') == ""):
