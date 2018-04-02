@@ -4,8 +4,8 @@ var updates_num_searches = 0;
 var pledges_num_searches = 0;
 var workers_num_searches = 0;
 var updates_sort = 'date-descending';
-var pledges_sort = 'pledge-descending';
-var workers_sort = 'work-ascending';
+var pledging_sort = 'pledge-descending';
+var working_sort = 'work-ascending';
 
 $('document').ready(function() {
     changeTHeadTFootWidthToAccountForScrollBar();
@@ -35,12 +35,12 @@ function addToNumRows(table) {
     if (table === 'updates') {
         updates_num_searches = updates_num_searches + 1;
         rows = updates_num_searches;
-    } else if (table === 'pledges') {
-        pledges_num_searches = pledges_num_searches + 1;
-        rows = pledges_num_searches;
-    } else if (table === 'workers') {
-        workers_num_searches = workers_num_searches + 1;
-        rows = workers_num_searches;
+    } else if (table === 'pledging') {
+        pledging_num_searches = pledging_num_searches + 1;
+        rows = pledging_num_searches;
+    } else if (table === 'working') {
+        working_num_searches = working_num_searches + 1;
+        rows = working_num_searches;
     }// end if
     return rows;
 }// end addToNumRows()
@@ -48,10 +48,10 @@ function addToNumRows(table) {
 function setRowToZero(table) {
     if (table === 'updates') {
         updates_num_searches = 0;
-    } else if (table === 'pledges') {
-        pledges_num_searches = 0;
-    } else if (table === 'workers') {
-        workers_num_searches = 0;
+    } else if (table === 'pledging') {
+        pledging_num_searches = 0;
+    } else if (table === 'working') {
+        working_num_searches = 0;
     }// end if
 }// end setRowToZero()
 
@@ -74,28 +74,28 @@ function setSortVariable(table, type) {
             updates_sort = type + '-ascending';
         }// end if-else
         sort = updates_sort;
-    } else if (table === 'pledges') {
-        if (type === pledges_sort.split('-')[0]) {
-            if (pledges_sort.split('-')[1] === 'ascending') {
-                pledges_sort = type + '-descending';
+    } else if (table === 'pledging') {
+        if (type === pledging_sort.split('-')[0]) {
+            if (pledging_sort.split('-')[1] === 'ascending') {
+                pledging_sort = type + '-descending';
             } else {
-                pledges_sort = type + '-ascending';
+                pledging_sort = type + '-ascending';
             }// end if-else
         } else {
-            pledges_sort = type + '-ascending';
+            pledging_sort = type + '-ascending';
         }// end if-else
-        sort = pledges_sort;
+        sort = pledging_sort;
     } else if (table === 'workers')  {
-        if (type === workers_sort.split('-')[0]) {
-            if (workers_sort.split('-')[1] === 'ascending') {
-                workers_sort = type + '-descending';
+        if (type === working_sort.split('-')[0]) {
+            if (working_sort.split('-')[1] === 'ascending') {
+                working_sort = type + '-descending';
             } else {
-                workers_sort = type + '-ascending';
+                working_sort = type + '-ascending';
             }// end if-else
         } else {
-            workers_sort = type + '-ascending';
+            working_sort = type + '-ascending';
         }// end if-else
-        sort = workers_sort;
+        sort = working_sort;
     }// end if
     return sort;
 }// end setSortVariable()
@@ -113,12 +113,12 @@ function add_rows_to_tables(num_searches, table, column, order) {
             if (table === 'updates') {
                 if (updates_num_searches == 0) $('#updates tbody').empty();
                 addRowsToUpdatesTable(json);
-            } else if (table === 'pledges') {
-                if (pledges_num_searches == 0) $('#pledges tbody').empty();
-                addRowsToPledgesTable(json);
-            } else if (table === 'workers') {
-                if (workers_num_searches == 0) $('#workers tbody').empty();
-                addRowsToWorkersTable(json);
+            } else if (table === 'pledging') {
+                if (pledging_num_searches == 0) $('#pledging tbody').empty();
+                addRowsToPledgingTable(json);
+            } else if (table === 'working') {
+                if (working_num_searches == 0) $('#working tbody').empty();
+                addRowsToWorkingTable(json);
             }// end if
         },
     });
@@ -136,27 +136,35 @@ function addRowsToUpdatesTable(json) {
     }// end for
 }// end addRowsToUpdatesTable()
 
-function addRowsToPledgesTable(json) {
+function addRowsToPledgingTable(json) {
     for (var index = 0; index < json.length; index++) {
         var pledge = json[index];
         var string = "<tr>";
-        string = string + "<td class='pledges-username'><a href='user/ " + pledge['username'] + "'>" + pledge['username'] + "</a></td>";
-        string = string + "<td class='pledges-pledged'>" + changeNumberToCurrency(pledge['pledged']) + "</td>";
-        string = string + "<td class='pledges-paid'>" + changeNumberToCurrency(pledge['paid']) + "</td>";
+        string = string + "<td class='pledging-username'><a href='user/ " + pledge['username'] + "'>" + pledge['username'] + "</a></td>";
+        string = string + "<td class='pledging-pledged'>" + changeNumberToCurrency(pledge['pledging']) + "</td>";
+        string = string + "<td class='pledging-paid'>" + changeNumberToCurrency(pledge['paid']) + "</td>";
         string = string + "</tr>";
-        $('#pledges tbody').append(string);
+        $('#pledging tbody').append(string);
     }// end for
 }// end addRowsToPledgesTable()
 
-function addRowsToWorkersTable(json) {
+function addRowsToWorkingTable(json) {
     for (var index = 0; index < json.length; index++) {
         var worker = json[index];
         var string = "<tr>";
-        string = string + "<td class='workers-username'><a href='user/ " + worker['username'] + "'>" + worker['username'] + "</a></td>";
-        string = string + "<td class='workers-status'>" + worker['work_status'] + "</td>";
-        string = string + "<td class='workers-received'>" + changeNumberToCurrency(worker['received']) + "</td>";
+        string = string + "<td class='working-username'><a href='user/ " + worker['username'] + "'>" + worker['username'] + "</a></td>";
+        string = string + "<td class='working-status'>" + worker['work_status'] + "</td>";
+        string = string + "<td class='working-received'>" + changeNumberToCurrency(worker['received']) + "</td>";
+        string = string + "<td class='working-payment'>";
+        if (worker['username'] === $('#username').val()) {
+            if ($('#unconfirmed_payments').val() != '') {
+                string = string + "<a href='#'>Unconfirmed Payment/s</a></td>";
+            }// end if
+        } else {
+            string = string + "<a href='pay/" + $('#random_string').val() + "/" + worker['username'] + "'>Make Payment</a></td>";
+        }// end if-else
         string = string + "</tr>";
-        $('#workers tbody').append(string);
+        $('#working tbody').append(string);
     }// end for
 }// end addRowsToPledgesTable()
 

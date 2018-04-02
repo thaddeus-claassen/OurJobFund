@@ -25,25 +25,15 @@ def home(request):
     context = None;
     if ('tag' in request.GET):
         tag = request.GET['tag'];
-    if (tag):
-        jobs = findJobs(tag, "date-descending", "", "", "");
         context = {
             'tag' : tag,
-            'jobs' : jobs,
         };
     else:
         location = None;
-        latitude = None;
-        longitude = None;
-        if ('location' in request.GET and 'latitude' in request.GET and 'longitude' in request.GET):
+        if ('location' in request.GET):
             location = request.GET['location'];
-            latitude = request.GET['latitude'];
-            longitude = request.GET['longitude'];
-        if (location and latitude and longitude):
-            jobs = findJobs("", "date-descending", latitude, longitude, "10");
             context = {
                 'location' : location,
-                'jobs' : jobs,
             };
     return render(request, 'job/home.html', context);
     
@@ -135,8 +125,8 @@ class DetailView(TemplateView):
         context = {
             'job': job,
             'updates' : Update.objects.filter(jobuser__job=job).order_by('date')[:50],
-            'pledges' : JobUser.objects.filter(Q(job=job) & (Q(pledged__gt=0) | Q(paid__gt=0)))[:50],
-            'workers' : JobUser.objects.filter(job=job).exclude(work_status='')[:50],
+            'pledging' : JobUser.objects.filter(Q(job=job) & (Q(pledging__gt=0) | Q(paid__gt=0)))[:50],
+            'working' : JobUser.objects.filter(job=job).exclude(work_status='')[:50],
         }
         if (request.user.is_authenticated):
             serializer = JobSerializer(Job.objects.filter(pk=job.pk), many=True, context={'user' : request.user});

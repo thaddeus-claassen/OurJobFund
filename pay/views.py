@@ -26,14 +26,17 @@ class PayView(TemplateView):
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         user = get_object_or_None(User, username=kwargs['username']);
-        if (request.user != user):
-            return render(request, self.template_name, self.get_context_data(request, form=self.form(sender=request.user, receiver=user)));
-        else:
+        job = get_object_or_None(Job, random_string=kwargs['job_random_string']);
+        if (request.user == user):
             return redirect('user:detail', username=user.username);
+        else:
+            return render(request, self.template_name, self.get_context_data(user=user, job=job, form=self.form(sender=request.user, receiver=user)));
+
                     
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         user = get_object_or_None(User, username=kwargs['username']);
+        job = get_object_or_None(Job, random_string=kwargs['job_random_string']);
         form = self.form(request.POST);
         if (form.is_valid()):
             if (request.user != user):
@@ -50,10 +53,12 @@ class PayView(TemplateView):
                 return redirect('pay:confirmation');
             return redirect('home');
         else:
-            return render(request, self.template_name, self.get_context_data(job=job, receiver_jobuser=receiver_jobuser, form=form));
+            return render(request, self.template_name, self.get_context_data(user=user, job=job, form=form));
     
-    def get_context_data(self, request, *args, **kwargs):
+    def get_context_data(self, *args, **kwargs):
         context = super(PayView, self).get_context_data(**kwargs);
+        context['receiver'] = kwargs['user'];
+        context['job'] = kwargs['job'];
         context['form'] = kwargs['form'];
         return context; 
     

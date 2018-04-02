@@ -3,7 +3,7 @@ var numSearches = 0;
 var ENTER = 13;
 var map;
 var markers = [];
-var sort = "created-descending"
+var sort = "created-descending";
 
 $('document').ready(function() {
     changeTHeadTFootWidthToAccountForScrollBar();
@@ -173,16 +173,19 @@ function initMap() {
     bounds.extend({lat: 21.9, lng: -160.2});
     bounds.extend({lat: 71.3, lng: -156.8});
     map.fitBounds(bounds);
+    if ($('#search').val() != '' || $('#location').val() != ''){
+        search();
+    }// end if
 }// end initMap()
 
 function addBounds() {
-    map.setZoom(1)
+    map.setZoom(1);
     var bounds = new google.maps.LatLngBounds();
     for (var i = 0; i < markers.length; i++) {
         bounds.extend(markers[i].position);
         map.fitBounds(bounds);
     }// end for
-    if (map.zoom > 15) map.setZoom(15)
+    if (map.zoom > 15) map.setZoom(15);
 }// end addBounds()
 
 function addMarker(location, url) {

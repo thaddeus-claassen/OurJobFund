@@ -7,6 +7,9 @@
 {% endblock %}
 
 {% block content %}
+<input id="username" type="hidden" value="{% if request.user.is_authenticated %}{{ request.user.username }}{% endif %}" />
+<input id="unconfirmed_payments" type="hidden" value="{{ unconfirmed_payments }}" />
+<input id="random_string" type="hidden" value="{{ job.random_string }}" />
 <div class="row info_row">
     <div class="col-md-12">
         <h4 id="job_title">{{ job.title }}</h4>
@@ -26,7 +29,7 @@
     <div class="col-md-6">
          <span id="location">
             {% if job.location %}
-            Location:&nbsp;<a href="{% url 'home' %}?location={{ job.location }}&latitude={{ job.latitude }}&longitude={{ job.longitude }}">{{ job.location }}</a>            
+            Location:&nbsp;<a href="{% url 'home' %}?location={{ job.location }}">{{ job.location }}</a>            
             {% endif %}
         </span>
     </div>
@@ -35,7 +38,7 @@
     <div class="col-md-5">
         <div class="row">
             <div class="col-md-6">
-                <h4>Description</h4>
+                <h4>Updates</h4>
             </div>
         </div>
         <div class="row">
@@ -45,7 +48,6 @@
                         <tr>
                             <th class="updates-username"><span class="table-header">Username</span></th>
                             <th class="updates-date"><span class="table-header">Date</span></th>
-                            <th class="updates-images"><span class="table-header">Images</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,23 +59,23 @@
                             <td class="updates-date">
                                 {{ u.date|date:"F d, Y" }}
                             </td>
-                            <td class="updates-images">
-                                {% if job.image_set.all %}
+                        </tr>
+                        <tr class="description-tr">
+                            <td class="updates-description" colspan="2">
+                                {{ u.description }}
+                            </td>
+                        </tr>
+                        {% if job.image_set.all %}
+                        <tr>
+                            <td class="updates-images" colspan="2">
                                 <div id="images">
                                 {% for image in job.image_set.all %}
                                     <img src="{{ image.image.url }}" class="img-responsive image" />
                                 {% endfor %}
                                 </div>
-                                {% else %}
-                                No Images
-                                {% endif %}
                             </td>
                         </tr>
-                        <tr class="description-tr">
-                            <td class="updates-description" colspan="3">
-                                {{ u.description }}
-                            </td>
-                        </tr>
+                        {% endif %}
                     {% endfor %}
                     </tbody>
                     <tfoot>
@@ -90,7 +92,7 @@
         <div class="row">
             <div class="col-md-12">
                 <form action="{% url 'create-update' job.random_string %}">
-                    <input class="pledge_work_inputs" type="submit" value="Update" />
+                    <input id="update" type="submit" value="Update" />
                 </form>
             </div>
         </div>
@@ -99,14 +101,14 @@
         <div class="row">
             <div class="col-md-12">
                 <form action="{% url 'pledge' job.random_string %}">
-                    <input class="pledge_work_inputs" type="submit" value="Pledge" name="pledge" />
+                    <input id="pledge" type="submit" value="Pledge" name="pledge" />
                 </form>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <form action="{% url 'work' job.random_string %}">
-                    <input class="pledge_work_inputs" type="submit"
+                    <input id="work" type="submit"
                         value="{% if jobuser.work_status == 'work' %}Finish{% else %}Work{% endif %}" name="work" />
                 </form>
             </div>
@@ -116,23 +118,23 @@
     <div class="col-md-7">
         <div class="row info_row header">
             <div class="col-md-12">
-                <h4>Pledges</h4>
+                <h4>Pledging</h4>
             </div>
         </div>
         <div class="row info_row">
             <div class="col-md-12">
-                <table id="pledges" class="table">
+                <table id="pledging" class="table">
                     <thead>
                         <tr>
-                            <th class="pledges-username"><span class="table-header">Username<span></th>
-                            <th class="pledges-pledged"><span class="table-header">Pledged<span></th>
-                            <th class="pledges-paid"><span class="table-header">Paid</span></th>
+                            <th class="pledging-username"><span class="table-header">Username<span></th>
+                            <th class="pledging-pledged"><span class="table-header">Pledging<span></th>
+                            <th class="pledging-paid"><span class="table-header">Paid</span></th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for j in pledges %}
+                    {% for j in pledging %}
                         <tr>
-                            <td class="pledges-username">
+                            <td class="pledging-username">
                                 {% if j.user.is_active %}
                                 {% if request.user.is_authenticated %}
                                 <a href="{% url 'user:detail' j.user.username %}">
@@ -145,16 +147,16 @@
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
-                            <td class="pledges-pledged">${{ j.pledged|floatformat:2 }}</td>
-                            <td class="pledges-paid">${{ j.paid|floatformat:2 }}</td>
+                            <td class="pledging-pledged">${{ j.pledging|floatformat:2 }}</td>
+                            <td class="pledging-paid">${{ j.paid|floatformat:2 }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="pledges-username">Total: <span id="pledges-total">{{ pledges.count }}</span></td>
-                            <td class="pledges-pledges"></td>
-                            <td class="pledges-paid"></td>
+                            <td class="pledging-username">Total: <span id="pledging-total">{{ pledging.count }}</span></td>
+                            <td class="pledging-pledges"></td>
+                            <td class="pledging-paid"></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -162,23 +164,24 @@
         </div>
         <div class="row info_row header">
             <div class="col-md-12">
-                <h4>Workers</h4>
+                <h4>Working</h4>
             </div>
         </div>
         <div class="row info_row">
             <div class="col-md-12">
-                <table id="workers" class="table">
+                <table id="working" class="table">
                     <thead>
                         <tr>
-                            <th class="workers-username"><span class="table-header">Username</span></th>
-                            <th class="workers-status"><span class="table-header">Status</span></th>
-                            <th class="workers-received"><span class="table-header">Received</span></th>
+                            <th class="working-username"><span class="table-header">Username</span></th>
+                            <th class="working-status"><span class="table-header">Status</span></th>
+                            <th class="working-received"><span class="table-header">Received</span></th>
+                            <th class="working-payment"><span class="table-header">Payment</span></th>
                         </tr>
                     </thead>
                     <tbody>
                     {% for w in workers %}
                         <tr>
-                            <td class="workers-username">
+                            <td class="working-username">
                                 {% if w.user.is_active %}
                                 {% if request.user.is_authenticated %}
                                 <a href="{% url 'user:detail' w.user.username %}">
@@ -191,16 +194,24 @@
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
-                            <td class="workers-status">{{ w.work_status }}</td>
-                            <td class="workers-received">${{ w.received|floatformat:2 }}</td>
+                            <td class="working-status">{{ w.work_status }}</td>
+                            <td class="working-received">${{ w.received|floatformat:2 }}</td>
+                            <td class="working-payment">
+                                {% if unconfirmed_payments %}
+                                    <a href="#">Confirm Payment/s</a>
+                                {% else %}
+                                    <a href="{% url 'pay' job.random_string j.user.username %}">Make Payment</a>
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="workers-username">Total: <span id="workers-total">{{ workers.count }}</span></td>
-                            <td class="workers-status"></td>
-                            <td class="workers-received"></td>
+                            <td class="working-username">Total: <span id="working-total">{{ workers.count }}</span></td>
+                            <td class="working-status"></td>
+                            <td class="working-received"></td>
+                            <td class="working-payment"></td>
                         </tr>
                     </tfoot>
                 </table>

@@ -17,13 +17,15 @@ $('document').ready(function() {
         }// end if
     });
     $('tbody').scroll(function() {
-        var cls = $(this).attr('class');
-        var table = cls.split('-')[0];
-        var total = table + '-total';
-        if ($(this).scrollTop() + $(this).height() === $(this)[0].scrollHeight && $(this).children().count() < total) {
-            if (cls !== '') {        
-                var rows = addToNumRows(cls);
-                prepareToAddRows(cls, rows);
+        if ($(this).scrollTop() + $(this).height() === $(this)[0].scrollHeight) {
+            var cls = $(this).attr('class');
+            var table = cls.split('-')[0];
+            var total = $('#' + table + '-total').text();
+            if ($(this).children().count() < total) {
+                if (cls !== '') {        
+                    var rows = addToNumRows(cls);
+                    prepareToAddRows(cls, rows);
+                }// end if
             }// end if
         }// end if
     });

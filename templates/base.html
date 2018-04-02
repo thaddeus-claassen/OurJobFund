@@ -56,7 +56,7 @@
                             {% for notification in request.user.notification_set.all %}
                                 <li>
                                     <a href="{% url 'job:detail' notification.job.random_string %}" id="notification_{{ notification.id }}" >
-                                        {{ notification.job.name }}
+                                        {{ notification.job.title }}
                                     </a>
                                 </li>
                             {% empty %}

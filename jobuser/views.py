@@ -27,8 +27,7 @@ class PledgeView(TemplateView):
             if (jobuser is None):
                 jobuser = JobUser.create(user=request.user, job=job);
             amount = float(form.cleaned_data['amount']);
-            title = "Pledged $" + addDecimalPlacesForMoney(str(amount));
-            jobuser.pledged = jobuser.pledged + amount;
+            jobuser.pledging = jobuser.pledging + amount;
             jobuser.save();
             description = form.cleaned_data['description'];
             if (description):

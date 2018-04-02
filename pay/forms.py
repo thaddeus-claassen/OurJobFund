@@ -4,43 +4,19 @@ from .models import Pay;
 from django import forms;
 
 class PayForm(forms.Form):
-    job = forms.ChoiceField();
     type = forms.ChoiceField();
     amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}), required=True);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     
     def __init__(self, sender, receiver, *args, **kwargs):
         super(PayForm, self).__init__(*args, **kwargs);
-        self.init_job(sender=sender, receiver=receiver);
         self.init_type(receiver=receiver);
-        
-    def init_job(self, sender, receiver):
-        receiver_jobs = Job.objects.none();
-        sender_jobs = Job.objects.none();
-        for jb in receiver.jobuser_set.all():
-            receiver_jobs = receiver_jobs | Job.objects.filter(pk=jb.job.id);
-        for jb in sender.jobuser_set.all():
-            sender_jobs = sender_jobs | Job.objects.filter(pk=jb.job.id);
-        jobs = receiver_jobs & sender_jobs;
-        self.jobs = jobs;
-        choices = (('', '(Please Select a Job)'),);
-        for job in jobs:
-            choices = choices + ((job.title, job.title),);
-        self.fields['job'] = forms.ChoiceField(choices=choices, required=True);
         
     def init_type(self, receiver):
         if (receiver.profile.stripe_account_id == ''):
-            self.fields['type'] = forms.ChoiceField(choices=(('', '(Please select how you will pay.)'),('Other', 'Negotiated between us.')), required=True);
+            self.fields['type'] = forms.ChoiceField(choices=(('', '(Please select how you will pay.)'),('Other', 'Negotiate between us.')), required=True);
         else:
-            self.fields['type'] = forms.ChoiceField(choices=(('', ''),('Credit/Debit', 'Credit/Debit'),('Other', 'Negotiated between us.')), required=True);
-            
-    def clean_job(self):
-        job = get_object_or_None(Job, name=self.cleaned_data('job'));
-        if (job == ''):
-            raise forms.ValidationError('Please choose a job.');
-        elif (not job in  self.jobs):
-            raise forms.ValidationError('Please choose a valid job.');
-        return job;
+            self.fields['type'] = forms.ChoiceField(choices=(('', ''),('Credit/Debit', 'Credit/Debit'),('Other', 'Negotiate between us.')), required=True);
     
     def clean_amount(self):
         pay = self.cleaned_data.get('amount');

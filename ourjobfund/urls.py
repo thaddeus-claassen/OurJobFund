@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'^' + URLS['update'] + '/' + URLS['create'] + '/' + URLS['job_random_string_regex'] + '/', CreateUpdateView.as_view(), name='create-update'),
     url(r'^' + URLS['pledge'] + '/' + URLS['job_random_string_regex'] + '/$', PledgeView.as_view(), name='pledge'),
     url(r'^' + URLS['work'] + '/' + URLS['job_random_string_regex'] + '/$', WorkView.as_view(), name='work'),
-    url(r'^' + URLS['pay'] + '/' + URLS['username_regex'] + '/$', PayView.as_view(), name='pay'),
+    url(r'^' + URLS['pay'] + '/' + URLS['job_random_string_regex'] + '/' + URLS['username_regex'] + '/$', PayView.as_view(), name='pay'),
     url(r'^' + URLS['about'] + '/', include('about.urls')),
     url(r'^' + URLS['contact'] + '/', include('contact.urls')),
     url(r'^' + URLS['terms_of_service'] + '/', include('terms_of_service.urls')),

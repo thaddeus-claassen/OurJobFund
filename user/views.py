@@ -37,9 +37,9 @@ class LoginView(TemplateView):
         if ('sign-in' in request.POST):
             login_form = LoginForm(request.POST);
             if (login_form.is_valid()):
-                user = get_object_or_None(User, email=login_form.cleaned_data['username_or_password']);
+                user = get_object_or_None(User, email=login_form.cleaned_data['username_or_email']);
                 if (user is None):
-                    user = get_object_or_None(User, username=login_form.cleaned_data['username_or_password']);
+                    user = get_object_or_None(User, username=login_form.cleaned_data['username_or_email']);
                 user.is_active = True;
                 login(request, user);
                 return redirect('home');

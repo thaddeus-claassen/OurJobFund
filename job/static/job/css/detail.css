@@ -50,12 +50,12 @@ tbody {
     height: 500px;
 }
 
-#pledges tbody, #workers tbody {
+#pledging tbody, #working tbody {
     height: 280px;
 }
 
-#workers th, #workers td {
-    width: 33%;
+#working th, #working td {
+    width: 25%;
 }
 
 #updates_title {
@@ -63,26 +63,22 @@ tbody {
 }
 
 .updates-username {
-    width: 50%;
+    width: 75%;
 }
 
-.updates-date, .updates-images {
+.updates-date  {
     width: 25%;
 }
 
-.updates-description {
+.updates-description, .updates-images {
     width: 100%;
 }
 
-.description-tr {
-    border-top: none;
-}
-
-#pledges th, #pledges td {
+#pledging th, #pledging td {
     width: 33%;
 }
 
-.pledge_work_inputs {
+#update, #pledge, #work {
     width: 100%;
 }
 
