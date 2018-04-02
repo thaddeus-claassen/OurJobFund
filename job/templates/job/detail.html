@@ -43,21 +43,34 @@
                 <table id="updates" class="table">
                     <thead>
                         <tr>
-                            <th class="updates-date"><span class="table-header">Date</span></th>
                             <th class="updates-username"><span class="table-header">Username</span></th>
-                            <th class="updates-description"><span class="table-header">Description</span></th>
+                            <th class="updates-date"><span class="table-header">Date</span></th>
+                            <th class="updates-images"><span class="table-header">Images</span></th>
                         </tr>
                     </thead>
                     <tbody>
                     {% for u in updates %}
                         <tr>
-                            <td class="updates-date">
-                                {{ u.date|date:"F d, Y" }}
-                            </td>
                             <td class="updates-username">
                                 <a href="{% url 'user:detail' u.jobuser.user.username %}">{{ u.jobuser.user.username }}</a>
                             </td>
-                            <td class="updates-description">
+                            <td class="updates-date">
+                                {{ u.date|date:"F d, Y" }}
+                            </td>
+                            <td class="updates-images">
+                                {% if job.image_set.all %}
+                                <div id="images">
+                                {% for image in job.image_set.all %}
+                                    <img src="{{ image.image.url }}" class="img-responsive image" />
+                                {% endfor %}
+                                </div>
+                                {% else %}
+                                No Images
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="description-tr">
+                            <td class="updates-description" colspan="3">
                                 {{ u.description }}
                             </td>
                         </tr>
@@ -82,7 +95,7 @@
             </div>
         </div>
         {% endif %}
-        {% if request.user.is_authenticated and not jobuser or jobuser.work_status == '' %}
+        {% if request.user.is_authenticated %}
         <div class="row">
             <div class="col-md-12">
                 <form action="{% url 'pledge' job.random_string %}">
@@ -90,8 +103,6 @@
                 </form>
             </div>
         </div>
-        {% endif %}
-        {% if request.user.is_authenticated and not jobuser or jobuser.pledged == 0 and jobuser.work_status != 'finish' %}
         <div class="row">
             <div class="col-md-12">
                 <form action="{% url 'work' job.random_string %}">

@@ -62,12 +62,20 @@ tbody {
     margin-top: 30px;
 }
 
-.updates-username, .updates-date {
+.updates-username {
+    width: 50%;
+}
+
+.updates-date, .updates-images {
     width: 25%;
 }
 
 .updates-description {
-    width: 50%;
+    width: 100%;
+}
+
+.description-tr {
+    border-top: none;
 }
 
 #pledges th, #pledges td {

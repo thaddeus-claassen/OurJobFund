@@ -7,7 +7,6 @@ from notification.models import Notification;
 from jobuser.serializers import PledgeSerializer, WorkSerializer;
 from annoying.functions import get_object_or_None;
 from update.serializers import UpdateSerializer;
-from django.utils.html import escape;
 from django.shortcuts import render, get_object_or_404, redirect;
 from django.db.models import Q, F;
 from jobuser.models import JobUser;
