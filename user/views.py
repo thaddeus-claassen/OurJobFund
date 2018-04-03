@@ -69,33 +69,19 @@ def sign_out(request):
     logout(request);
     return redirect('user:login');
 
-class SearchUsersView(TemplateView):
-    template_name = 'user/search.html';
-    
-    @method_decorator(login_required)
-    def get(self, request, *args, **kwargs):
-        search = request.GET['search-users'];
-        context = {
-            'users' : self.getUsersFromQuery(search, 0),
-            'search' : search,
-            'total' : self.getTotalNumberOfUsersFromQuery(search),
-        };
-        return render(request, self.template_name, context);
-    
-    def getUsersFromQuery(self, search, num_searches):
-        users = User.objects.all();
-        for word in search.split():
-            users = users.filter(Q(username__icontains=word) | Q(first_name__istartswith=word) | Q(last_name__istartswith=word));
-            start = (50 * num_searches);
-            end = start + 50;
-        users = users[start:end];
-        return users;
-        
-    def getTotalNumberOfUsersFromQuery(self, search):
-        users = User.objects.all();
-        for word in search.split():
-            users = users.filter(Q(username__icontains=word) | Q(first_name__istartswith=word) | Q(last_name__istartswith=word));
-        return users.count();
+@login_required
+def search_user(request):
+    if (request.is_ajax()):
+        username = request.GET['username'][0];
+        user = get_object_or_None(User, username=username);
+        data = {};
+        if (user):
+            data['username'] = user.username;
+        else:
+            data = "";
+        return HttpResponse(json.dumps(data), content_type="application/json");
+    else:
+        return Http404();
 
 @login_required
 def see_more_users(request):

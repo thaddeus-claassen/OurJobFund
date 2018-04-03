@@ -11,8 +11,6 @@ urlpatterns = [
     url(r'^' + URLS['log-in'] + '/$', views.LoginView.as_view(), name='login'),
     url(r'^' + URLS['sign-out'] + '/$', views.sign_out, name='sign_out'),
     url(r'^' + URLS['account'] + '/$', views.AccountView.as_view(), name='account'),
-    url(r'^' + URLS['search-users'] + '/$', views.SearchUsersView.as_view(), name='search_users'),
-    url(r'^' + URLS['see-more-users'] + '/$', views.see_more_users, name='see_more_users'),
     url(r'^' + URLS['username_regex'] + '/$', views.DetailView.as_view(), name='detail'),
     url(r'^' + URLS['username_regex'] + '/' + URLS['sort'] + '/$', views.add_to_detail_table),
 ]

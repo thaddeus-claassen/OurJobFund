@@ -4,7 +4,7 @@ from django.conf import settings;
 from django.views.generic import TemplateView;
 from django.conf.urls.static import static;
 from django.contrib.auth import views as auth_views;
-from user.views import SearchUsersView, see_more_users;
+from user.views import search_user;
 from job.views import home;
 from update.views import CreateUpdateView;
 from pay.views import PayView;
@@ -20,8 +20,7 @@ urlpatterns = [
     url(r'^' + URLS['reset'] + '/' + URLS['uidb66_regex'] + '/' + URLS['token_regex'] + '/$',
         auth_views.password_reset_confirm, name='password_reset_confirm'),
     url(r'^' + URLS['reset'] + '/' + URLS['done'] + '/$', auth_views.password_reset_complete, name='password_reset_complete'),
-    url(r'' + URLS['search-users'] + '/$', SearchUsersView.as_view()),
-    url(r'^' + URLS['see-more-users'] + '/$', see_more_users),
+    url(r'' + URLS['search-user'] + '/$', search_user),
     url(r'^' + URLS['admin'] + '/', admin.site.urls),
     url(r'^' + URLS['job'] + '/', include('job.urls')),
     url(r'^$', home, name='home'),

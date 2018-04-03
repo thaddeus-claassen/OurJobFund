@@ -22,7 +22,7 @@ class PledgeForm(forms.Form):
         return "";
     
 class WorkForm(forms.Form):
-    type = forms.ChoiceField(label="Type:", choices=(('Working', 'Work'),('Finished Working', 'Finish Working'), ('Finished Accepting Payments', 'Finish Accepting Payment')));
+    type = forms.ChoiceField(label="Type:", choices=(('Working', 'Work'),('Finished', 'Finish')));
     description = forms.CharField(label="Description:", widget=forms.Textarea, max_length=10000, required=False);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     

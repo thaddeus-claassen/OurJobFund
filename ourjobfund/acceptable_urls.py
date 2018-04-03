@@ -19,7 +19,7 @@ URLS = {
     'about': 'about',
     'contact': 'contact',
     'home': 'home',
-    'search-users': 'search-users',
+    'search-user': 'search-user',
     'see-more-users': 'see-more-users',
     'job_random_string_regex': '(?P<job_random_string>[a-zA-Z0-9]+)',
     'username_regex': '(?P<username>[a-zA-Z0-9_]+)',
