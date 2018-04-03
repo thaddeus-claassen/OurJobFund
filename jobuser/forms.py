@@ -3,8 +3,8 @@ from .models import JobUser;
 import re;
 
 class PledgeForm(forms.Form):
-    amount = forms.CharField(label="Pledge:", widget=forms.TextInput(attrs={'placeholder': '$0.00'}));
-    description = forms.CharField(label="Description:", widget=forms.Textarea, max_length=10000, required=False);
+    amount = forms.CharField( widget=forms.TextInput(attrs={'placeholder': '$0.00'}));
+    comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     
     def clean_amount(self):
@@ -22,8 +22,9 @@ class PledgeForm(forms.Form):
         return "";
     
 class WorkForm(forms.Form):
-    type = forms.ChoiceField(label="Type:", choices=(('Working', 'Work'),('Finished', 'Finish')));
-    description = forms.CharField(label="Description:", widget=forms.Textarea, max_length=10000, required=False);
+    status = forms.ChoiceField(choices=(('', ''), ('Credit/Debit', 'Credit/Debit'), ('Other', 'Other')), required=True);
+    payment_type = forms.ChoiceField(choices=());
+    comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     
     def clean_amount(self):

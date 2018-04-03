@@ -69,7 +69,6 @@ def sign_out(request):
     logout(request);
     return redirect('user:login');
 
-@login_required
 def search_user(request):
     if (request.is_ajax()):
         username = request.GET['username'][0];
@@ -82,24 +81,12 @@ def search_user(request):
         return HttpResponse(json.dumps(data), content_type="application/json");
     else:
         return Http404();
-
-@login_required
-def see_more_users(request):
-    if (request.is_ajax()):
-        search = request.GET['search'];
-        num_searches = request.GET['num_searches'];
-        users = getUsersFromQuery(search, num_searches);
-        users = serializers.serialize("json", users);
-        return HttpResponse(users, content_type="application/json");
-    else:
-        return Http404();
         
 class DetailView(TemplateView):
     template_name = 'user/detail.html';
     description_form = DescriptionForm;
     name_form = NameForm;
     
-    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(User, username=kwargs['username']);
         description_form = self.description_form(initial={'description' : user.profile.description});
@@ -120,9 +107,6 @@ class DetailView(TemplateView):
                 request.user.profile.description = description_form.cleaned_data['description'];
                 request.user.profile.save();
                 return redirect('user:detail', username=request.user.username);
-        elif ('stripeToken' in request.POST):
-            self.pay(request, job, jobuser);
-            return redirect('user:confirmation', username=get_object_or_404(User, username=kwargs['username']));
         elif ('delete-stripe' in request.POST):
             request.user.profile.stripe_account_id = "";
             request.user.profile.save();
@@ -136,22 +120,6 @@ class DetailView(TemplateView):
         context['name_form'] = kwargs['name_form'];
         context['current'] = user.jobuser_set.filter(job__is_finished=False);
         context['finished'] = user.jobuser_set.filter(job__is_finished=True);
-        if (user == request.user):
-            pass;
-            #payments_received = user.receiver_jobuser_set.all();
-            #for p in payments_received:
-            #    if (not p.verified):
-            #        context['verification'] = True;
-        else:
-            receiver_jobs = Job.objects.none();
-            sender_jobs = Job.objects.none();
-            for jb in user.jobuser_set.all():
-                receiver_jobs = receiver_jobs | Job.objects.filter(pk=jb.job.id);
-            for jb in request.user.jobuser_set.all():
-                sender_jobs = sender_jobs | Job.objects.filter(pk=jb.job.id);
-            jobs = receiver_jobs & sender_jobs;
-            if (jobs.count() > 0):
-                context['pay'] = True;
         return context;
  
 def add_to_detail_table(request, username):

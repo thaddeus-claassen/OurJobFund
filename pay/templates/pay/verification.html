@@ -8,20 +8,16 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-md-12">
-        <table>
-            <thead>
-                <th class="username"><span class="table-header">Username</span></th>
-                <th class="job"><span class="table-header">Job</span></th>
-                <th class="amount"><span class="table-header">Amount</span></th>
-                <th class="type"><span class="table-header">Type</span></th>
-            </thead>
-        {% for p in payments %}
-            {% if p.type == 'Other' and not p.verified %}
-                Ple
-            {% endif %}
-        {% endfor %}
-        </table>
+    <div class="col-md-8 col-md-offset-2">
+    {% for p in payments %}
+        {% if p.type == 'Other' and not p.verified %}
+        <div class="row">
+            <div class="col-md-12">
+                <a href="{% url 'user:detail' p.sender.username %}">{{ p.sender.username }}</a> is awaiting verification on their payment of ${{ p.amount|floatformat:"2" }} to you on {{ p.date }}.
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
     </div>
 </div>
 {% endblock %}

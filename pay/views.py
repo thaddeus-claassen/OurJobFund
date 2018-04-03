@@ -8,7 +8,6 @@ from ourjobfund.settings import STRIPE_TEST_SECRET_KEY;
 from annoying.functions import get_object_or_None;
 from django.db.models import Q, F;
 from django.shortcuts import render, get_object_or_404, redirect;
-from django.forms import formset_factory;
 from django.http import JsonResponse, HttpResponse, Http404;
 from django.core import serializers;
 from user.models import Profile;
@@ -83,7 +82,39 @@ class PayView(TemplateView):
         receiver_jobuser.save();
         receiver_jobuser.job.paid = receiver_jobuser.job.paid + amount_paying_in_dollars;
         receiver_jobuser.job.save();
+        
+def VerifyPaymentView(request):
+    template_name = 'pay/verification.html';
     
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        job = get_object_or_404(Job, random_string=kwargs['random_string']);
+        user = get_object_or_404(User, username=kwargs['username']);
+        return render(request, self.template_name, get_context_data(job=job, user=user));
+    
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        job = get_object_or_404(Job, random_string=kwargs['random_string']);
+        user = get_object_or_404(User, username=kwargs['username']);
+        sender_jobuser = get_object_or_None(JobUser, job=job, user=user);
+        receiver_jobuser = get_object_or_None(JobUser, job=job, user=request.user);
+        payments = Pay.objects.filter(Q(sender_jobuser=sender_jobuser) & Q(receiver_jobuser=receiver_jobuser) & Q(verified=False));
+        for p in payments:
+            if ("verify-" + str(p.pk)):
+                p.verified = True;
+                p.save();
+                return redirect("job:detail", job_random_string=job.random_string);
+            if ("reject-" + str(p.pk)):
+                p.delete();
+                return redirect("job:detail", job_random_string=job.random_string);
+        return render(request, self.template_name, get_context_data(job=job, user=user));
+            
+    def get_context_data(self, *args, **kwargs):
+        context = {
+            'job' : kwargs['job'],
+            'user' : kwargs['user'],
+        };
+        return context;
 
 def payment_confirmation(request, job_random_string):
     job = get_object_or_404(Job, random_string = job_random_string);

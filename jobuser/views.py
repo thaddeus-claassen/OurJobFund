@@ -29,9 +29,9 @@ class PledgeView(TemplateView):
             amount = float(form.cleaned_data['amount']);
             jobuser.pledging = jobuser.pledging + amount;
             jobuser.save();
-            description = form.cleaned_data['description'];
-            if (description):
-                update = Update.create(jobuser=jobuser, description=description);
+            comment = form.cleaned_data['comment'];
+            if (comment):
+                update = Update.create(jobuser=jobuser, description=comment);
                 update.save();
             job.pledged = job.pledged + amount;
             job.save();
@@ -67,9 +67,9 @@ class WorkView(TemplateView):
             type = form.cleaned_data['type'];
             jobuser.work_status = type;
             jobuser.save();
-            description = form.cleaned_data['description'];
-            if (description):
-                update = Update.create(jobuser=jobuser, description=description);
+            comment = form.cleaned_data['comment'];
+            if (comment):
+                update = Update.create(jobuser=jobuser, description=comment);
                 update.save();
             sendNotifications(jobuser);
             return redirect('job:detail', job_random_string=job.random_string);

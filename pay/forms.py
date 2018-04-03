@@ -16,7 +16,7 @@ class PayForm(forms.Form):
         if (receiver.profile.stripe_account_id == ''):
             self.fields['type'] = forms.ChoiceField(choices=(('', '(Please select how you will pay.)'),('Other', 'Negotiate between us.')), required=True);
         else:
-            self.fields['type'] = forms.ChoiceField(choices=(('', ''),('Credit/Debit', 'Credit/Debit'),('Other', 'Negotiate between us.')), required=True);
+            self.fields['type'] = forms.ChoiceField(choices=(('', '(Please select how you will pay.)'),('Credit/Debit', 'Credit/Debit'),('Other', 'Negotiate between us.')), required=True);
     
     def clean_amount(self):
         pay = self.cleaned_data.get('amount');
