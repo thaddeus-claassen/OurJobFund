@@ -133,11 +133,12 @@ def add_to_detail_table(request, username):
             data = user.jobuser_set.filter(job__is_finished=False);
         else:
             data = user.jobuser_set.filter(job__is_finished=True);
-        if (column == 'name'):
+        print("Jobs count: " + str(data.count()))
+        if (column == 'title'):
             if (order == 'ascending'):
-                data = data.order_by(Lower('job__name'))[50 * numSearches : 50 * (numSearches + 1)][::-1];
+                data = data.order_by(Lower('job__title'))[50 * numSearches : 50 * (numSearches + 1)][::-1];
             else:
-                data = data.order_by(Lower('job__name'))[50 * numSearches : 50 * (numSearches + 1)];
+                data = data.order_by(Lower('job__title'))[50 * numSearches : 50 * (numSearches + 1)];
         else:
             if (order == 'ascending'):
                 data = data.order_by(column)[50 * numSearches : 50 * (numSearches + 1)][::-1];
@@ -147,8 +148,8 @@ def add_to_detail_table(request, username):
         json = JSONRenderer().render(serializer.data);
         return HttpResponse(json, 'application/json');
     else:
-        return Http404();        
-        
+        return Http404();
+    
 class AccountView(TemplateView):
     template_name = 'user/account.html';
     usernameForm = ChangeUsernameForm;

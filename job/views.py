@@ -82,10 +82,10 @@ def findJobs(search, sort, latitude_in_degrees_as_string, longitude_in_degrees_a
         jobs = findJobsByRadius(jobs, float(latitude_in_degrees_as_string), float(longitude_in_degrees_as_string), float(radius_in_miles_as_string));
     if (sort_array[0] == 'created'):
         jobs = jobs.order_by('date');
-    elif (sort_array[0] == 'pledged'):
-        jobs = jobs.order_by('pledged');
-    elif (sort_array[0] == 'workers'):
-        jobs = jobs.order_by('workers');
+    elif (sort_array[0] == 'pledging'):
+        jobs = jobs.order_by('pledging');
+    elif (sort_array[0] == 'working'):
+        jobs = jobs.order_by('working');
     else:
         jobs = jobs.extra(select={'case_insensitive_title': 'lower(title)'}).order_by('case_insensitive_title');
     if (sort_array[1] == 'descending'):
@@ -152,12 +152,12 @@ def add_to_detail_table(request, job_random_string):
                 data = Update.objects.filter(jobuser__job=job);
             else:
                 return Http404();
-        elif (table == 'pledges'):
-            if (column == 'username' or column == 'pledged' or column == 'paid'):
-                data = JobUser.objects.filter(Q(job=job) & (Q(pledged__gt=0) | Q(paid__gt=0)));
+        elif (table == 'pledging'):
+            if (column == 'username' or column == 'pledging' or column == 'paid'):
+                data = JobUser.objects.filter(Q(job=job) & (Q(pledging__gt=0) | Q(paid__gt=0)));
             else:
                 return Http404();
-        elif (table == 'workers'):
+        elif (table == 'working'):
             if (column == 'username' or column == 'work_status' or column == 'received'):
                 data = JobUser.objects.filter(job=job).exclude(work_status='');
             else:
@@ -180,39 +180,23 @@ def add_to_detail_table(request, job_random_string):
                 data = data.order_by(column)[50 * numSearches : 50 * (numSearches + 1)];
         if (table == 'updates'):
             serializer = UpdateSerializer(data, many=True);
-        elif (table == 'pledges'):
+        elif (table == 'pledging'):
             serializer = PledgeSerializer(data, many=True);
-        elif (table == 'workers'):
+        elif (table == 'working'):
             serializer = WorkSerializer(data, many=True);
         json = JSONRenderer().render(serializer.data);
         return HttpResponse(json, 'application/json');
     else:
         return Http404();
 
-@login_required
-def detail_sort(request, job_random_string):
-    if (request.is_ajax()):
-        job = get_object_or_404(Job, random_string=job_random_string);
-        sort = request.GET.get('sort');
-        descending_or_ascending = request.GET.get('descending_or_ascending');
-        updates = Update.objects.filter(jobuser__job=job);
-        if (sort == 'last_name'):
-            rows = updates.extra(select={'case_insensitive_last_name': 'lower(title)'}).order_by('case_insensitive_last_name');
-        elif (sort == 'date'):
-            rows = updates.order_by('date');
-        elif (sort == 'title'):
-            rows = updates.extra(select={'case_insensitive_title' : 'lower(title)'}).order_by('case_insensitive_title');
-        elif (sort == 'update-images'):
-            rows = updates.extra(select={'image_count' : 'image_set.count()'}).order_by('image_count');
-        if (descending_or_ascending == 'descending'):
-            updates = updates[::-1];
-        rows = serializers.serialize('json', rows);
-        return HttpResponse(rows, content_type="application/json");
-    else:
-        return Http404();
+class PledgeHistoryView(TemplateView):
+    template_name = 'job/pledge-history.html';
+    
+    def get(self, request, *args, **kwargs):
+        pass;
 
 class CreateView(TemplateView):
-    template_name = 'job/create.html'; 
+    template_name = 'job/create.html';
     form = NewJobForm;
 
     @method_decorator(login_required)
@@ -239,7 +223,9 @@ class CreateView(TemplateView):
                         tag = Tag.create(tag=tagString);
                         tag.save();
                     job.tag_set.add(tag);
-            update = Update(jobuser=jobuser, description=description);
+            jobuser = JobUser.create(user=request.user, job=job);
+            jobuser.save();
+            update = Update.create(jobuser=jobuser, description=description);
             update.save();
             for image in request.FILES.getlist('image_set'):
                 image = Image.create(update=update, image=image);

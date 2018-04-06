@@ -68,12 +68,12 @@ REST_FRAMEWORK = {
     ],
 };
 
+datetime_input_format = "";
 if (DEBUG):
     REST_FRAMEWORK['DATETIME_FORMAT'] = '%B %#d, %Y';
 else:
-    REST_FRAMEWORK['DATETIME_FORMAT'] = '%B %-d, %Y';
-
-
+    REST_FRAMEWORK['DATETIME_FORMAT']  = '%B %-d, %Y';
+    
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

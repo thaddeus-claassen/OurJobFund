@@ -25,7 +25,7 @@ class PledgeView(TemplateView):
         if (form.is_valid()):
             jobuser = get_object_or_None(JobUser, user=request.user, job=job);
             if (jobuser is None):
-                jobuser = JobUser.create(user=request.user, job=job);
+                jobuser = JobUser.create(user=request.user, job=job, pledging=0);
             amount = float(form.cleaned_data['amount']);
             jobuser.pledging = jobuser.pledging + amount;
             jobuser.save();
@@ -63,7 +63,7 @@ class WorkView(TemplateView):
         form = self.form(request.POST);
         if (form.is_valid()):
             if (jobuser is None):
-                jobuser = JobUser(user=request.user, job=job);
+                jobuser = JobUser(user=request.user, job=job, received=0);
             type = form.cleaned_data['type'];
             jobuser.work_status = type;
             jobuser.save();

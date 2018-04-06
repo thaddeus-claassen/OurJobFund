@@ -47,7 +47,7 @@
                     <thead>
                         <tr>
                             <th class="updates-username"><span class="table-header">Username</span></th>
-                            <th class="updates-date"><span class="table-header">Date</span></th>
+                            <th class="updates-date"><span id="updates-date" class="table-header">Date</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,10 +57,10 @@
                                 <a href="{% url 'user:detail' u.jobuser.user.username %}">{{ u.jobuser.user.username }}</a>
                             </td>
                             <td class="updates-date">
-                                {{ u.date|date:"F d, Y" }}
+                                <span class="updates-date-data">{{ u.date|date:"F d, Y" }}</span>
                             </td>
                         </tr>
-                        <tr class="description-tr">
+                        <tr>
                             <td class="updates-description" colspan="2">
                                 {{ u.description }}
                             </td>
@@ -82,13 +82,12 @@
                         <tr>
                             <td class="updates-date">Total: <span id="updates-total">{{ updates.count }}</span></td>
                             <td class="updates-username"></td>
-                            <td class="updates-description"></td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
         </div>
-        {% if jobuser %}
+        {% if request.user.is_authenticated %}
         <div class="row">
             <div class="col-md-12">
                 <form action="{% url 'create-update' job.random_string %}">
@@ -96,8 +95,6 @@
                 </form>
             </div>
         </div>
-        {% endif %}
-        {% if request.user.is_authenticated %}
         <div class="row">
             <div class="col-md-12">
                 <form action="{% url 'pledge' job.random_string %}">
@@ -127,7 +124,7 @@
                     <thead>
                         <tr>
                             <th class="pledging-username"><span class="table-header">Username<span></th>
-                            <th class="pledging-pledged"><span class="table-header">Pledging<span></th>
+                            <th class="pledging-pledging"><span class="table-header">Pledging<span></th>
                             <th class="pledging-paid"><span class="table-header">Paid</span></th>
                         </tr>
                     </thead>
@@ -136,26 +133,22 @@
                         <tr>
                             <td class="pledging-username">
                                 {% if j.user.is_active %}
-                                {% if request.user.is_authenticated %}
                                 <a href="{% url 'user:detail' j.user.username %}">
                                     {{ j.user.username }}
                                 </a>
                                 {% else %}
-                                <span>{{ j.user.username }}</span>
-                                {% endif %}
-                                {% else %}
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
-                            <td class="pledging-pledged">${{ j.pledging|floatformat:2 }}</td>
+                            <td class="pledging-pledging">${{ j.pledging|floatformat:2 }}</td>
                             <td class="pledging-paid">${{ j.paid|floatformat:2 }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="pledging-username">Total: <span id="pledging-total">{{ pledging.count }}</span></td>
-                            <td class="pledging-pledges"></td>
+                            <td class="pledging-username">Total: <span id="pledging-total">{% if pledging.count %}{{ pledging.count }}{% else %}0{% endif %}</span></td>
+                            <td class="pledging-pledging"></td>
                             <td class="pledging-paid"></td>
                         </tr>
                     </tfoot>
@@ -173,34 +166,30 @@
                     <thead>
                         <tr>
                             <th class="working-username"><span class="table-header">Username</span></th>
-                            <th class="working-status"><span class="table-header">Status</span></th>
+                            <th class="working-work_status"><span class="table-header">Status</span></th>
                             <th class="working-received"><span class="table-header">Received</span></th>
                             <th class="working-payment"><span class="table-header">Payment</span></th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for w in workers %}
+                    {% for w in working %}
                         <tr>
                             <td class="working-username">
                                 {% if w.user.is_active %}
-                                {% if request.user.is_authenticated %}
                                 <a href="{% url 'user:detail' w.user.username %}">
                                     {{ w.user.username }}
                                 </a>
                                 {% else %}
-                                <span>{{ w.user.username }}</span>
-                                {% endif %}
-                                {% else %}
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
-                            <td class="working-status">{{ w.work_status }}</td>
+                            <td class="working-work_status">{{ w.work_status }}</td>
                             <td class="working-received">${{ w.received|floatformat:2 }}</td>
                             <td class="working-payment">
                                 {% if unconfirmed_payments %}
                                     <a href="#">Confirm Payment/s</a>
                                 {% else %}
-                                    <a href="{% url 'pay' job.random_string j.user.username %}">Make Payment</a>
+                                    <a href="{% url 'pay' job.random_string w.user.username %}">Make Payment</a>
                                 {% endif %}
                             </td>
                         </tr>
@@ -208,8 +197,8 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="working-username">Total: <span id="working-total">{{ workers.count }}</span></td>
-                            <td class="working-status"></td>
+                            <td class="working-username">Total: <span id="working-total">{% if working.count %}{{ working.count }}{% else %}0{% endif %}</span></td>
+                            <td class="working-work_status"></td>
                             <td class="working-received"></td>
                             <td class="working-payment"></td>
                         </tr>

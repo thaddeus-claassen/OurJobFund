@@ -68,7 +68,7 @@ tbody {
     float: left;
 }
 
-.current-pledging, .current-paid, .current-status, .current-received, .finished-pledging, .finished-paid, .finished-status, .finished-received, .finished-paid {
+.current-pledging, .current-paid, .current-work_status, .current-received, .finished-pledging, .finished-paid, .finished-work_status, .finished-received, .finished-paid {
     width: 15%;
     float: left;
 }

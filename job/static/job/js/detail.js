@@ -4,8 +4,8 @@ var updates_num_searches = 0;
 var pledges_num_searches = 0;
 var workers_num_searches = 0;
 var updates_sort = 'date-descending';
-var pledging_sort = 'pledge-descending';
-var working_sort = 'work-ascending';
+var pledging_sort = 'pledging-descending';
+var working_sort = 'working-ascending';
 
 $('document').ready(function() {
     changeTHeadTFootWidthToAccountForScrollBar();
@@ -85,7 +85,7 @@ function setSortVariable(table, type) {
             pledging_sort = type + '-ascending';
         }// end if-else
         sort = pledging_sort;
-    } else if (table === 'workers')  {
+    } else if (table === 'working')  {
         if (type === working_sort.split('-')[0]) {
             if (working_sort.split('-')[1] === 'ascending') {
                 working_sort = type + '-descending';
@@ -128,8 +128,8 @@ function addRowsToUpdatesTable(json) {
     for (var index = 0; index < json.length; index++) {
         var update = json[index];
         var string = "<tr>";
-        string = string + "<td class='updates-date'>" + update['date'] + "</td>";
         string = string + "<td class='updates-username'><a href='user/ " + update['username'] + "'>" + update['username'] + "</a></td>";
+        string = string + "<td class='updates-date'>" + update['date'] + "</td>";
         string = string + "<td class='updates-description'>" + update['description'] + "</td>";
         string = string + "</tr>";
         $('#updates tbody').append(string);

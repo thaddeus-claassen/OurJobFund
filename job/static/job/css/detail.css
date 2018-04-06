@@ -50,6 +50,10 @@ tbody {
     height: 500px;
 }
 
+#updates td[class=updates-description] {
+    border-top: none;
+}
+
 #pledging tbody, #working tbody {
     height: 280px;
 }
@@ -63,11 +67,11 @@ tbody {
 }
 
 .updates-username {
-    width: 75%;
+    width: 50%;
 }
 
 .updates-date  {
-    width: 25%;
+    width: 50%;
 }
 
 .updates-description, .updates-images {

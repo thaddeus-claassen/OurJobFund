@@ -14,10 +14,10 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-5">
         <div class="row">
             <div class="col-md-12">
-                <h4>Info</h4>
+                <h4>Description</h4>
             </div>
         </div>
         <form id="form" action="{{ request.get_full_path }}" method="POST">
@@ -31,7 +31,7 @@
         <div class="row">
             <div class="col-md-12">
                 {% if request.user.username == detail_user.username %}
-                <input id="save_info" type="submit" value="Save Info" form="form" name="info" />
+                <input id="save_info" type="submit" value="Save Description" form="form" name="info" />
                 {% endif %}
             </div>
         </div>
@@ -65,7 +65,7 @@
         </div>
         {% endif %}
     </div>
-    <div class="col-md-8">
+    <div class="col-md-7">
         <div class="row">
             <div class="col-md-12">
                 <h4>Current Jobs</h4>
@@ -79,7 +79,7 @@
                             <th class="current-title"><span class="table-header">Title</span></th>
                             <th class="current-pledging"><span class="table-header">Pledging</span></th>
                             <th class="current-paid"><span class="table-header">Paid</span></th>
-                            <th class="current-status"><span class="table-header">Status</span></th>
+                            <th class="current-work_status"><span class="table-header">Status</span></th>
                             <th class="current-received"><span class="table-header">Received</span></th>
                         </tr>
                     </thead>
@@ -87,9 +87,9 @@
                         {% for j in current %}
                         <tr id="current_{{ j.job.title }}">
                             <td class="current-title"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.title }}</a></td>
-                            <td class="current-pledging">{% if j.pledging == 0 %}--{% else %}${{ j.pledging|floatformat:2 }}{% endif %}</td>
-                            <td class="current-paid">{% if j.pledging == 0 %}--{% else %}${{ j.paid|floatformat:2 }}{% endif %}</td>
-                            <td class="current-status">{% if j.work_status == '' %}--{% else %}{{ j.work_status }}{% endif %}</td>
+                            <td class="current-pledging">{% if j.pledging == None %}--{% else %}${{ j.pledging|floatformat:2 }}{% endif %}</td>
+                            <td class="current-paid">{% if j.pledging == None %}--{% else %}${{ j.paid|floatformat:2 }}{% endif %}</td>
+                            <td class="current-work_status">{% if j.work_status == '' %}--{% else %}{{ j.work_status }}{% endif %}</td>
                             <td class="current-received">{% if j.work_status == '' %}--{% else %}${{ j.received|floatformat:2 }}{% endif %}</td>
                         </tr>
                         {% endfor %}
@@ -99,7 +99,7 @@
                             <td class="current-title">Total: <span id="current-total">{{ current.count }}</span></td>
                             <td class="current-pledging"></td>
                             <td class="current-paid"></td>
-                            <td class="current-status"></td>
+                            <td class="current-work_status"></td>
                             <td class="current-received"></td>
                         </tr>
                     </tfoot>
@@ -119,7 +119,7 @@
                             <th class="finished-title"><span class="table-header">Title</span></th>
                             <th class="finished-pledging"><span class="table-header">Pledging</span></th>
                             <th class="finished-paid"><span class="table-header">Paid</span></th>
-                            <th class="finished-status"><span class="table-header">Status</span></th>
+                            <th class="finished-work_status"><span class="table-header">Status</span></th>
                             <th class="finished-received"><span class="table-header">Received</span></th>
                         </tr>
                     </thead>
@@ -129,7 +129,7 @@
                             <td class="finished-title"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.title }}</a></td>
                             <td class="finished-pledging">${{ j.pledging|floatformat:2 }}</td>
                             <td class="finished-paid">${{ j.paid|floatformat:2 }}</td>
-                            <td class="finished-status">{{ j.work_status }}</td>
+                            <td class="finished-work_status">{{ j.work_status }}</td>
                             <td class="finished-received">${{ j.received|floatformat:2 }}</td>
                         </tr>
                         {% endfor %}
@@ -139,7 +139,7 @@
                             <td class="finished-title">Total: <span id="finished-total">{{ finished.count }}<span></td>
                             <td class="finished-pledging"></td>
                             <td class="finished-paid"></td>
-                            <td class="finished-status"></td>
+                            <td class="finished-work_status"></td>
                             <td class="finished-received"></td>
                         </tr>
                     </tfoot>

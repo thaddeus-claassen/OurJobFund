@@ -119,23 +119,23 @@ function add_rows_to_tables(num_searches, table, column, order) {
 function addRowsToCurrentTable(json) {
     for (var index = 0; index < json.length; index++) {
         var current = json[index];
-        var pledged, paid, work_status, received;
-        if (current['pledged'] == 0) {
-            pledged = "--";
+        var pledging, paid, work_status, received;
+        if (current['pledging'] == null) {
+            pledging = "--";
             paid = "--";
             work_status = current['work_status'];
             received = changeNumberToCurrency(current['received']);
         } else {
-            pledged = changeNumberToCurrency(current['pledged']);
+            pledging = changeNumberToCurrency(current['pledging']);
             paid = changeNumberToCurrency(current['paid']);
             work_status = "--";
             received = "--"
         }// end if-else
         var string = "<tr>";
-        string = string + "<td class='current-title'><a href='job/" + current['random_string'] + "'>" + current['title'] + "</a></td>";
-        string = string + "<td class='current-pledged'>" + pledged + "</td>";
+        string = string + "<td class='current-title'><a href='/job/" + current['random_string'] + "'>" + current['title'] + "</a></td>";
+        string = string + "<td class='current-pledging'>" + pledging + "</td>";
         string = string + "<td class='current-paid'>" + paid + "</td>";
-        string = string + "<td class='current-status'>" + work_status + "</td>";
+        string = string + "<td class='current-work_status'>" + work_status + "</td>";
         string = string + "<td class='current-received'>" + received + "</td>";
         string = string + "</tr>";
         $('#current tbody').append(string);
@@ -145,12 +145,24 @@ function addRowsToCurrentTable(json) {
 function addRowsToFinishedTable(json) {
     for (var index = 0; index < json.length; index++) {
         var finished = json[index];
+        var pledging, paid, work_status, received;
+        if (current['pledging'] == 0) {
+            pledging = "--";
+            paid = "--";
+            work_status = current['work_status'];
+            received = changeNumberToCurrency(current['received']);
+        } else {
+            pledging = changeNumberToCurrency(current['pledging']);
+            paid = changeNumberToCurrency(current['paid']);
+            work_status = "--";
+            received = "--"
+        }// end if-else
         var string = "<tr>";
-        string = string + "<td class='finished-title'><a href='job/" + finished['random_string'] + "'>" + finished['title'] + "</a></td>";
-        string = string + "<td class='finished-pledged'>" + changeNumberToCurrency(finished['pledged']) + "</td>";
-        string = string + "<td class='finished-paid'>" + changeNumberToCurrency(finished['paid']) + "</td>";
-        string = string + "<td class='finished-status'>" + finished['work_status'] + "</td>";
-        string = string + "<td class='finished-received'>" + changeNumberToCurrency(finished['received']) + "</td>";
+        string = string + "<td class='finished-title'><a href='/job/" + finished['random_string'] + "'>" + finished['title'] + "</a></td>";
+        string = string + "<td class='finished-pledging'>" + pledging + "</td>";
+        string = string + "<td class='finished-paid'>" + paid + "</td>";
+        string = string + "<td class='finished-work_status'>" + work_status + "</td>";
+        string = string + "<td class='finished-received'>" + received + "</td>";
         string = string + "</tr>";
         $('#finished tbody').append(string);
     }// end for

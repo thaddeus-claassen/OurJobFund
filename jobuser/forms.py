@@ -4,7 +4,6 @@ import re;
 
 class PledgeForm(forms.Form):
     amount = forms.CharField( widget=forms.TextInput(attrs={'placeholder': '$0.00'}));
-    comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     
     def clean_amount(self):
@@ -22,9 +21,8 @@ class PledgeForm(forms.Form):
         return "";
     
 class WorkForm(forms.Form):
-    status = forms.ChoiceField(choices=(('', ''), ('Credit/Debit', 'Credit/Debit'), ('Other', 'Other')), required=True);
-    payment_type = forms.ChoiceField(choices=());
-    comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
+    payment_type = forms.ChoiceField(choices=(('', '((Preferred Payment Method))'), ('Credit/Debit', 'Credit/Debit'), ('', 'Other')), required=True);
+    type = forms.ChoiceField(choices=(('', ''), ('')));
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     
     def clean_amount(self):
@@ -33,7 +31,7 @@ class WorkForm(forms.Form):
             money = '0';
         if (checkStringIsValidMoney(money)):
             if (float(money) < 0):
-                raise forms.ValidationError('You cannot request less than $0.00.'); 
+                raise forms.ValidationError('You cannot request less than $0.00.');
         else:
             raise forms.ValidationError('Please enter a valid dollar amount.');
         return money;

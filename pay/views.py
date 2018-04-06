@@ -42,7 +42,9 @@ class PayView(TemplateView):
                 job = form.cleaned_data['job'];
                 amount = form.cleaned_data['amount'];
                 type = form.cleaned_data['type'];
-                sender_jobuser = JobUser.objects.get(user=request.user, job=job);
+                sender_jobuser = get_object_or_None(JobUser, user=request.user, job=job);
+                if (jobuser is None):
+                    jobuser = JobUser.create(user=request.user, job=job, paid=0);
                 receiver_jobuser = JobUser.objects.get(user=user, job=job);
                 if (type == 'Other'):
                     pay = Pay.create(sender_jobuser=sender_jobuser, receiver_jobuser=receiver_jobuser, type="Other", amount=float(amount));

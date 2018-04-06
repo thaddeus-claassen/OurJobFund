@@ -2,15 +2,15 @@ from rest_framework import serializers;
 from .models import JobUser;
 
 class JobUserSerializer(serializers.ModelSerializer):
-    name = serializers.SerializerMethodField();
+    title = serializers.SerializerMethodField();
     random_string = serializers.SerializerMethodField();
     
     class Meta:
         model = JobUser;
-        fields = ['pledged', 'paid', 'work_status', 'received', 'name', 'random_string'];
+        fields = ['pledging', 'paid', 'work_status', 'received', 'title', 'random_string'];
 
-    def get_name(self, jobuser):
-        return jobuser.job.name;
+    def get_title(self, jobuser):
+        return jobuser.job.title;
         
     def get_random_string(self, jobuser):
         return jobuser.job.random_string;
@@ -20,7 +20,7 @@ class PledgeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = JobUser;
-        fields = ['pledged', 'paid', 'username'];
+        fields = ['pledging', 'paid', 'username'];
         
     def get_username(self, jobuser):
         return jobuser.user.username;
