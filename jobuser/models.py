@@ -63,12 +63,10 @@ class StripePay(PledgePay):
     
 class Work(PledgePayWorkFinish):
     payment_type = models.CharField(choices=(('', '((Please Select your method of receiving payments))'), ('Credit/Debit', 'Credit/Debit'), ('Any', 'Any'), ('Contact Me', 'Contact Me')), max_length=100);
-    expected_finish_date = models.DateField();
-    minimum_amount_requesting = models.FloatField(blank=True, null=True);
     
     @classmethod
-    def create(jobuser, payment_type, expected_finish_date, minimum_amount_requesting):
-        work = Work(jobuser=jobuser, payment_type=payment_type, expected_finish_date=expected_finish_date, minimum_amount_requesting=minimum_amount_requesting);
+    def create(jobuser, payment_type):
+        work = Work(jobuser=jobuser, payment_type=payment_type);
         return work;
     
 class Finish(PledgePayWorkFinish):
