@@ -58,15 +58,13 @@ class PayForm(forms.Form):
         return "";        
     
 class WorkForm(forms.Form):
-    payment_type = forms.ChoiceField(choices=(('', '((Please Select your method of receiving payments))'), ('Credit/Debit', 'Credit/Debit'), ('Any', 'Any'), ('Contact Me', 'Contact Me')), required=True);
-    expected_finish_date = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'MM/DD/YYYY'}), max_length=100, required=True);
-    minimum_amount_requesting = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}), max_length=100, required=True);
+    payment_type = forms.ChoiceField(choices=(('', '(Please Select your method of receiving payments)'), ('Credit/Debit', 'Credit/Debit'), ('Any', 'Any'), ('Contact Me', 'Contact Me')), required=True);
     comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     
     class Meta:
         model = Work;
-        fields = ['payment_type', 'expected_finish_date', 'minimum_amount_requesting', 'comment'];
+        fields = ['payment_type', 'comment'];
     
     def clean_payment_type(self):
         payment_type = self.cleaned_data.get('payment_type');

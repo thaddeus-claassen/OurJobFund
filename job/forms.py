@@ -9,12 +9,12 @@ class NewJobForm(forms.Form):
     longitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
     tags = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '(Optional)'}), max_length=1000, required=False);
     image_set = forms.ImageField(label="Images", widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False);
-    description = forms.CharField(max_length=10000);
+    comment = forms.CharField(widget=forms.Textarea, max_length=10000);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
 
     class Meta: 
         model = Job;
-        fields = ['title', 'location', 'latitude', 'longitude', 'tags', 'image_set', 'description', 'pledge'];
+        fields = ['title', 'location', 'latitude', 'longitude', 'tags', 'image_set', 'comment', 'pledge'];
     
     def clean_tags(self):
         tags = self.cleaned_data.get('tags');

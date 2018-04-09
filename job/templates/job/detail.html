@@ -172,10 +172,10 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="pledging-username">Total: <span id="pledging-total">{% if pledging.count %}{{ pledging.count }}{% else %}0{% endif %}</span></td>
+                            <td class="pledging-username"><span id="pledging-total">{{ pledging_total }}</span></td>
                             <td class="pledging-date"></td>
-                            <td class="pledging-pledging"></td>
-                            <td class="pledging-paid"></td>
+                            <td class="pledging-pledging">${{ pledging_amount_total|floatformat:2 }}</td>
+                            <td class="pledging-paid">${{ paid_amount_total|floatformat:2 }}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -221,10 +221,10 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="working-username">Total: <span id="working-total">{% if working.count %}{{ working.count }}{% else %}0{% endif %}</span></td>
+                            <td class="working-username"><span id="working-total">{{ working_total }}</span></td>
                             <td class="working-date"></td>
                             <td class="working-work_status"></td>
-                            <td class="working-received"></td>
+                            <td class="working-received"><span id="received-total">${{ received_amount_total|floatformat:2 }}</span></td>
                         </tr>
                     </tfoot>
                 </table>

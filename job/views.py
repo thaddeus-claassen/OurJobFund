@@ -138,12 +138,27 @@ class DetailView(TemplateView):
     
     def get_context_data(self, request, **kwargs):
         job = kwargs['job'];
-        jbs = JobUser.objects.filter(job=job);
+        pledging = JobUser.objects.filter(Q(job=job) & (Q(pledging__gt=0) | Q(paid__gt=0)));
+        pledging_total = 0;
+        for p in pledging:
+            pledging_total = pledging_total + p.pledging;
+        paid_total = 0;
+        for p in pledging:
+            paid_total = paid_total + p.paid;
+        working = JobUser.objects.filter(job=job).exclude(work_status='');
+        received_total = 0;
+        for w in working:
+            received_total = received_total + w.received;
         context = {
             'job': job,
             'updates' : Update.objects.filter(jobuser__job=job).order_by('date')[:50],
-            'pledging' : JobUser.objects.filter(Q(job=job) & (Q(pledging__gt=0) | Q(paid__gt=0)))[:50],
-            'working' : JobUser.objects.filter(job=job).exclude(work_status='')[:50],
+            'pledging' : pledging[:50],
+            'pledging_total' : pledging.count(),
+            'pledging_amount_total' : pledging_total,
+            'paid_amount_total' : paid_total,
+            'working' : working[:50],
+            'working_total' : working.count(),
+            'received_amount_total' : received_total,
         }
         if (request.user.is_authenticated):
             serializer = JobSerializer(Job.objects.filter(pk=job.pk), many=True, context={'user' : request.user});
@@ -230,7 +245,7 @@ class CreateView(TemplateView):
             longitude = form.cleaned_data['longitude'];
             location = form.cleaned_data['location'];
             tags = form.cleaned_data['tags'];
-            description = form.cleaned_data['description'];
+            comment = form.cleaned_data['comment'];
             job = Job.create(title=title, latitude=latitude, longitude=longitude, location=location);
             job.save();
             if (tags != ''):
@@ -243,7 +258,7 @@ class CreateView(TemplateView):
                     job.tag_set.add(tag);
             jobuser = JobUser.create(user=request.user, job=job);
             jobuser.save();
-            update = Update.create(jobuser=jobuser, description=description);
+            update = Update.create(jobuser=jobuser, comment=comment);
             update.save();
             for image in request.FILES.getlist('image_set'):
                 image = Image.create(update=update, image=image);
