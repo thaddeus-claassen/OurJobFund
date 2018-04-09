@@ -7,7 +7,7 @@ class UpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Update;
-        fields = ['jobuser', 'date', 'description', 'username'];
+        fields = ['jobuser', 'date', 'comment', 'username'];
         
     def get_username(self, update):
         return update.jobuser.user.username;

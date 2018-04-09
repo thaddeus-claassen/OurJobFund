@@ -4,15 +4,15 @@ from random import randint;
 
 class Update(models.Model):
     jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);
-    description = models.CharField(default="", max_length=10000, blank=True);
+    comment = models.CharField(default="", max_length=10000, blank=True);
     date = models.DateTimeField(auto_now_add=True);
     random_string = models.CharField(max_length=50);
     
     @classmethod
-    def create(cls, jobuser, description):
+    def create(cls, jobuser, comment):
         update = Update(
             jobuser = jobuser,
-            description = description,
+            comment = comment,
             random_string = cls.createRandomString(),
         );
         return update;

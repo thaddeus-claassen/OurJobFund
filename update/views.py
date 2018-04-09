@@ -9,7 +9,6 @@ from jobuser.models import JobUser;
 from django.http import HttpResponse, Http404;
 from user.models import Profile;
 from job.models import Job;
-from pay.models import Pay;
 from .models import Update, Image;
 from .forms import UpdateForm;
 import stripe;

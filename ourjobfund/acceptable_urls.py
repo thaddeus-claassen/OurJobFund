@@ -12,6 +12,7 @@ URLS = {
     'pledge': 'pledge',
     'pay': 'pay',
     'work': 'work',
+    'finish': 'finish',
     'password_reset': 'password_reset',
     'reset': 'reset',
     'admin': 'admin',

@@ -61,8 +61,8 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="updates-description" colspan="2">
-                                {{ u.description }}
+                            <td class="updates-comment" colspan="2">
+                                {{ u.comment }}
                             </td>
                         </tr>
                         {% if job.image_set.all %}
@@ -95,6 +95,15 @@
                 </form>
             </div>
         </div>
+        {% if jobuser.pledge_set.exists %}
+        <div class="row">
+            <div class="col-md-12">
+                <form action="{% url 'pay' job.random_string %}">
+                    <input id="pay" type="submit" value="Pay" name="pay" />
+                </form>
+            </div>
+        </div>
+        {% else %}
         <div class="row">
             <div class="col-md-12">
                 <form action="{% url 'pledge' job.random_string %}">
@@ -102,14 +111,24 @@
                 </form>
             </div>
         </div>
+        {% endif %}
+        {% if jobuser.work_set.exists %}
         <div class="row">
             <div class="col-md-12">
-                <form action="{% url 'work' job.random_string %}">
-                    <input id="work" type="submit"
-                        value="{% if jobuser.work_status == 'work' %}Finish{% else %}Work{% endif %}" name="work" />
+                <form action="{% url 'finish' job.random_string %}">
+                    <input id="finish" type="submit" value="Finish" name="finish" />
                 </form>
             </div>
         </div>
+        {% elif not jobuser.finish_set.exists %}
+        <div class="row">
+            <div class="col-md-12">
+                <form action="{% url 'work' job.random_string %}">
+                    <input id="work" type="submit" value="Work" name="work" />
+                </form>
+            </div>
+        </div>
+        {% endif %}
         {% endif %}
     </div>
     <div class="col-md-7">
@@ -123,8 +142,9 @@
                 <table id="pledging" class="table">
                     <thead>
                         <tr>
-                            <th class="pledging-username"><span class="table-header">Username<span></th>
-                            <th class="pledging-pledging"><span class="table-header">Pledging<span></th>
+                            <th class="pledging-username"><span class="table-header">Username</span></th>
+                            <th class="pledging-username"><span class="table-header">Date Pledged</span></th>
+                            <th class="pledging-pledging"><span class="table-header">Pledging</span></th>
                             <th class="pledging-paid"><span class="table-header">Paid</span></th>
                         </tr>
                     </thead>
@@ -140,6 +160,11 @@
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
+                            <td class="pledging-date">
+                                {% with pledge=j.pledge_set.all|dictsort:"date"|first %}
+                                {{ pledge.date|date:"F d, Y" }}
+                                {% endwith %}
+                            </td>
                             <td class="pledging-pledging">${{ j.pledging|floatformat:2 }}</td>
                             <td class="pledging-paid">${{ j.paid|floatformat:2 }}</td>
                         </tr>
@@ -148,6 +173,7 @@
                     <tfoot>
                         <tr>
                             <td class="pledging-username">Total: <span id="pledging-total">{% if pledging.count %}{{ pledging.count }}{% else %}0{% endif %}</span></td>
+                            <td class="pledging-date"></td>
                             <td class="pledging-pledging"></td>
                             <td class="pledging-paid"></td>
                         </tr>
@@ -166,9 +192,9 @@
                     <thead>
                         <tr>
                             <th class="working-username"><span class="table-header">Username</span></th>
+                            <th class="working-date"><span class="table-header">Date Started</span></th>
                             <th class="working-work_status"><span class="table-header">Status</span></th>
                             <th class="working-received"><span class="table-header">Received</span></th>
-                            <th class="working-payment"><span class="table-header">Payment</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -183,24 +209,22 @@
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
+                            <td class="working-date">
+                                {% with work=w.pledge_set.all|dictsort:"date"|first %}
+                                {{ work.date|date:"F d, Y" }}
+                                {% endwith %}
+                            </td>
                             <td class="working-work_status">{{ w.work_status }}</td>
                             <td class="working-received">${{ w.received|floatformat:2 }}</td>
-                            <td class="working-payment">
-                                {% if unconfirmed_payments %}
-                                    <a href="#">Confirm Payment/s</a>
-                                {% else %}
-                                    <a href="{% url 'pay' job.random_string w.user.username %}">Make Payment</a>
-                                {% endif %}
-                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
                     <tfoot>
                         <tr>
                             <td class="working-username">Total: <span id="working-total">{% if working.count %}{{ working.count }}{% else %}0{% endif %}</span></td>
+                            <td class="working-date"></td>
                             <td class="working-work_status"></td>
                             <td class="working-received"></td>
-                            <td class="working-payment"></td>
                         </tr>
                     </tfoot>
                 </table>

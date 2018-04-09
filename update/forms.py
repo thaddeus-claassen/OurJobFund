@@ -3,8 +3,8 @@ from .models import Update;
 import re;
 
 class UpdateForm(forms.Form):
-    images = forms.ImageField(label="Images:", widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False);
-    description = forms.CharField(label="Description:", widget=forms.Textarea, max_length=10000, required=False);
+    images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False);
+    comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
 
     def clean_honey_pot(self):

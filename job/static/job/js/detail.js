@@ -130,7 +130,7 @@ function addRowsToUpdatesTable(json) {
         var string = "<tr>";
         string = string + "<td class='updates-username'><a href='user/ " + update['username'] + "'>" + update['username'] + "</a></td>";
         string = string + "<td class='updates-date'>" + update['date'] + "</td>";
-        string = string + "<td class='updates-description'>" + update['description'] + "</td>";
+        string = string + "<td class='updates-comment'>" + update['comment'] + "</td>";
         string = string + "</tr>";
         $('#updates tbody').append(string);
     }// end for
@@ -141,6 +141,7 @@ function addRowsToPledgingTable(json) {
         var pledge = json[index];
         var string = "<tr>";
         string = string + "<td class='pledging-username'><a href='user/ " + pledge['username'] + "'>" + pledge['username'] + "</a></td>";
+        string = string + "<td class='pledging-date'>" + pledge['date'] + "</td>";
         string = string + "<td class='pledging-pledged'>" + changeNumberToCurrency(pledge['pledging']) + "</td>";
         string = string + "<td class='pledging-paid'>" + changeNumberToCurrency(pledge['paid']) + "</td>";
         string = string + "</tr>";
@@ -153,6 +154,7 @@ function addRowsToWorkingTable(json) {
         var worker = json[index];
         var string = "<tr>";
         string = string + "<td class='working-username'><a href='user/ " + worker['username'] + "'>" + worker['username'] + "</a></td>";
+        string = string + "<td class='working-username'>" + worker['date'] + "</td>";
         string = string + "<td class='working-status'>" + worker['work_status'] + "</td>";
         string = string + "<td class='working-received'>" + changeNumberToCurrency(worker['received']) + "</td>";
         string = string + "<td class='working-payment'>";

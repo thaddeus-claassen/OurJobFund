@@ -1,7 +1,6 @@
 from rest_framework import serializers;
 from .models import Job;
 from jobuser.models import JobUser;
-from pay.models import Pay;
 import datetime;
 from django.db.models import Count, Q;
 from django.utils import timezone;

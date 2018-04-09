@@ -80,17 +80,15 @@
                             <th class="current-pledging"><span class="table-header">Pledging</span></th>
                             <th class="current-paid"><span class="table-header">Paid</span></th>
                             <th class="current-work_status"><span class="table-header">Status</span></th>
-                            <th class="current-received"><span class="table-header">Received</span></th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for j in current %}
-                        <tr id="current_{{ j.job.title }}">
+                        <tr>
                             <td class="current-title"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.title }}</a></td>
                             <td class="current-pledging">{% if j.pledging == None %}--{% else %}${{ j.pledging|floatformat:2 }}{% endif %}</td>
                             <td class="current-paid">{% if j.pledging == None %}--{% else %}${{ j.paid|floatformat:2 }}{% endif %}</td>
                             <td class="current-work_status">{% if j.work_status == '' %}--{% else %}{{ j.work_status }}{% endif %}</td>
-                            <td class="current-received">{% if j.work_status == '' %}--{% else %}${{ j.received|floatformat:2 }}{% endif %}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -100,7 +98,6 @@
                             <td class="current-pledging"></td>
                             <td class="current-paid"></td>
                             <td class="current-work_status"></td>
-                            <td class="current-received"></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -108,39 +105,36 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <h4>Finished Jobs</h4>
+                <h4>Completed Jobs</h4>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <table id="finished" class="table">
+                <table id="completed" class="table">
                     <thead>
                         <tr>
-                            <th class="finished-title"><span class="table-header">Title</span></th>
-                            <th class="finished-pledging"><span class="table-header">Pledging</span></th>
-                            <th class="finished-paid"><span class="table-header">Paid</span></th>
-                            <th class="finished-work_status"><span class="table-header">Status</span></th>
-                            <th class="finished-received"><span class="table-header">Received</span></th>
+                            <th class="completed-title"><span class="table-header">Title</span></th>
+                            <th class="completed-pledging"><span class="table-header">Pledging</span></th>
+                            <th class="completed-paid"><span class="table-header">Paid</span></th>
+                            <th class="completed-received"><span class="table-header">Received</span></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for j in finished %}
-                        <tr id="current_{{ j.job.title }}">
-                            <td class="finished-title"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.title }}</a></td>
-                            <td class="finished-pledging">${{ j.pledging|floatformat:2 }}</td>
-                            <td class="finished-paid">${{ j.paid|floatformat:2 }}</td>
-                            <td class="finished-work_status">{{ j.work_status }}</td>
-                            <td class="finished-received">${{ j.received|floatformat:2 }}</td>
+                        {% for j in completed %}
+                        <tr>
+                            <td class="completed-title"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.title }}</a></td>
+                            <td class="completed-pledging">${{ j.pledging|floatformat:2 }}</td>
+                            <td class="completed-paid">${{ j.paid|floatformat:2 }}</td>
+                            <td class="completed-received">${{ j.received|floatformat:2 }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="finished-title">Total: <span id="finished-total">{{ finished.count }}<span></td>
-                            <td class="finished-pledging"></td>
-                            <td class="finished-paid"></td>
-                            <td class="finished-work_status"></td>
-                            <td class="finished-received"></td>
+                            <td class="completed-title">Total: <span id="completed-total">{{ completed.count }}<span></td>
+                            <td class="completed-pledging"></td>
+                            <td class="completed-paid"></td>
+                            <td class="completed-received"></td>
                         </tr>
                     </tfoot>
                 </table>

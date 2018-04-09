@@ -50,16 +50,16 @@ tbody {
     height: 500px;
 }
 
-#updates td[class=updates-description] {
+#updates td[class=updates-comment] {
     border-top: none;
+}
+
+#update, #pledge, #work {
+    width: 100%;
 }
 
 #pledging tbody, #working tbody {
     height: 280px;
-}
-
-#working th, #working td {
-    width: 25%;
 }
 
 #updates_title {
@@ -74,16 +74,16 @@ tbody {
     width: 50%;
 }
 
-.updates-description, .updates-images {
+.updates-comment, .updates-images {
     width: 100%;
 }
 
 #pledging th, #pledging td {
-    width: 33%;
+    width: 25%;
 }
 
-#update, #pledge, #work {
-    width: 100%;
+.working-username, .working-date, .working-work_status, .working-received {
+    width: 25%;
 }
 
 #no_stripe_account {

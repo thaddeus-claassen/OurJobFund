@@ -17,20 +17,28 @@ class JobUserSerializer(serializers.ModelSerializer):
         
 class PledgeSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField();
+    date = serializers.SerializerMethodField();
 
     class Meta:
         model = JobUser;
-        fields = ['pledging', 'paid', 'username'];
+        fields = ['pledging', 'paid', 'username', 'date'];
         
     def get_username(self, jobuser):
         return jobuser.user.username;
+        
+    def get_date(self, jobuser):
+        return jobuser.pledge_set.all().first().date;
         
 class WorkSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField();
+    date = serializers.SerializerMethodField();
 
     class Meta:
         model = JobUser;
-        fields = ['work_status', 'received', 'username'];
+        fields = ['work_status', 'received', 'username', 'date'];
         
     def get_username(self, jobuser):
         return jobuser.user.username;
+        
+    def get_date(self, jobuser):
+        return jobuser.pledge_set.all().first().date;

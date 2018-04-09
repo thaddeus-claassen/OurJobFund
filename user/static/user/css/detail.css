@@ -63,12 +63,12 @@ tbody {
     overflow-y: scroll;
 }
 
-.current-title, .finished-title {
+.current-title, .completed-title {
     width: 40%;
     float: left;
 }
 
-.current-pledging, .current-paid, .current-work_status, .current-received, .finished-pledging, .finished-paid, .finished-work_status, .finished-received, .finished-paid {
-    width: 15%;
+.current-pledging, .current-paid, .current-work_status, .current-received, .completed-pledging, .completed-paid, .completed-work_status, .completed-received, .completed-paid {
+    width: 20%;
     float: left;
 }

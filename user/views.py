@@ -13,7 +13,6 @@ from django.shortcuts import render, get_object_or_404, redirect;
 from django.forms import formset_factory;
 from django.http import JsonResponse, HttpResponse, Http404;
 from django.core import serializers;
-from pay.models import Pay;
 from job.models import Job;
 from datetime import datetime;
 from .models import Profile;
@@ -119,7 +118,7 @@ class DetailView(TemplateView):
         context['description_form'] = kwargs['description_form'];
         context['name_form'] = kwargs['name_form'];
         context['current'] = user.jobuser_set.filter(job__is_finished=False);
-        context['finished'] = user.jobuser_set.filter(job__is_finished=True);
+        context['completed'] = user.jobuser_set.filter(job__is_finished=True);
         return context;
  
 def add_to_detail_table(request, username):
@@ -133,7 +132,6 @@ def add_to_detail_table(request, username):
             data = user.jobuser_set.filter(job__is_finished=False);
         else:
             data = user.jobuser_set.filter(job__is_finished=True);
-        print("Jobs count: " + str(data.count()))
         if (column == 'title'):
             if (order == 'ascending'):
                 data = data.order_by(Lower('job__title'))[50 * numSearches : 50 * (numSearches + 1)][::-1];

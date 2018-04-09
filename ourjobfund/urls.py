@@ -7,8 +7,7 @@ from django.contrib.auth import views as auth_views;
 from user.views import search_user;
 from job.views import home;
 from update.views import CreateUpdateView;
-from pay.views import PayView;
-from jobuser.views import WorkView, PledgeView;
+from jobuser.views import PledgeView, PayView, WorkView;
 from .acceptable_urls import URLS;
 
 app_name = 'ourjobfund';
@@ -27,8 +26,8 @@ urlpatterns = [
     url(r'^' + URLS['update'] + '/', include('update.urls')),
     url(r'^' + URLS['update'] + '/' + URLS['create'] + '/' + URLS['job_random_string_regex'] + '/', CreateUpdateView.as_view(), name='create-update'),
     url(r'^' + URLS['pledge'] + '/' + URLS['job_random_string_regex'] + '/$', PledgeView.as_view(), name='pledge'),
+    url(r'^' + URLS['pay'] + '/' + URLS['job_random_string_regex'], PayView.as_view(), name='pay'),
     url(r'^' + URLS['work'] + '/' + URLS['job_random_string_regex'] + '/$', WorkView.as_view(), name='work'),
-    url(r'^' + URLS['pay'] + '/' + URLS['job_random_string_regex'] + '/' + URLS['username_regex'] + '/$', PayView.as_view(), name='pay'),
     url(r'^' + URLS['about'] + '/', include('about.urls')),
     url(r'^' + URLS['contact'] + '/', include('contact.urls')),
     url(r'^' + URLS['terms_of_service'] + '/', include('terms_of_service.urls')),

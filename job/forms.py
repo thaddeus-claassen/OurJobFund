@@ -3,13 +3,13 @@ from .models import Job;
 import re;
 
 class NewJobForm(forms.Form):
-    title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '(Required)'}), max_length=100);
+    title = forms.CharField(max_length=100);
     location = forms.CharField(widget=forms.TextInput(attrs={'placeholder' : '(Any valid location on Google Maps)'}), max_length=1000, required=False);
     latitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
     longitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
-    tags = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '(Separated by spaces, alphanumeric characters or "_" only)'}), max_length=1000, required=False);
+    tags = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '(Optional)'}), max_length=1000, required=False);
     image_set = forms.ImageField(label="Images", widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False);
-    description = forms.CharField(widget=forms.Textarea(attrs={'placeholder': '(Required)'}), max_length=10000);
+    description = forms.CharField(max_length=10000);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
 
     class Meta: 
@@ -20,7 +20,7 @@ class NewJobForm(forms.Form):
         tags = self.cleaned_data.get('tags');
         if (len(tags) > 0):
             if (not re.match(r'^[A-Za-z0-9\s_]+$', tags)):
-                raise forms.ValidationError('Alphabetic, numbers, underscore ("_") characters allowed only.');
+                raise forms.ValidationError('Tags can only include alphabetic, numeric or "_" characters, separated by spaces.');
             tagsArray = tags.split();
             for tag in tagsArray:
                 if (len(tag) > 30):

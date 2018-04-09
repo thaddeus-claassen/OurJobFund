@@ -123,11 +123,14 @@ function addRowsToCurrentTable(json) {
         if (current['pledging'] == null) {
             pledging = "--";
             paid = "--";
-            work_status = current['work_status'];
-            received = changeNumberToCurrency(current['received']);
         } else {
             pledging = changeNumberToCurrency(current['pledging']);
             paid = changeNumberToCurrency(current['paid']);
+        }// end if
+        if (work_status !== '') {
+            work_status = current['work_status'];
+            received = changeNumberToCurrency(current['received']);
+        } else {
             work_status = "--";
             received = "--"
         }// end if-else
@@ -142,9 +145,9 @@ function addRowsToCurrentTable(json) {
     }// end for
 }// end addRowsToCurrentTable()
 
-function addRowsToFinishedTable(json) {
+function addRowsToCompletedTable(json) {
     for (var index = 0; index < json.length; index++) {
-        var finished = json[index];
+        var completed = json[index];
         var pledging, paid, work_status, received;
         if (current['pledging'] == 0) {
             pledging = "--";
@@ -158,15 +161,15 @@ function addRowsToFinishedTable(json) {
             received = "--"
         }// end if-else
         var string = "<tr>";
-        string = string + "<td class='finished-title'><a href='/job/" + finished['random_string'] + "'>" + finished['title'] + "</a></td>";
-        string = string + "<td class='finished-pledging'>" + pledging + "</td>";
-        string = string + "<td class='finished-paid'>" + paid + "</td>";
-        string = string + "<td class='finished-work_status'>" + work_status + "</td>";
-        string = string + "<td class='finished-received'>" + received + "</td>";
+        string = string + "<td class='completed-title'><a href='/job/" + completed['random_string'] + "'>" + completed['title'] + "</a></td>";
+        string = string + "<td class='completed-pledging'>" + pledging + "</td>";
+        string = string + "<td class='completed-paid'>" + paid + "</td>";
+        string = string + "<td class='completed-work_status'>" + work_status + "</td>";
+        string = string + "<td class='completed-received'>" + received + "</td>";
         string = string + "</tr>";
-        $('#finished tbody').append(string);
+        $('#completed tbody').append(string);
     }// end for
-}// end addRowsToFinishedTable()
+}// end addRowsToCompletedTable()
 
 function changeTHeadTFootWidthToAccountForScrollBar() {
     var oldTableWidth = $('table').width();

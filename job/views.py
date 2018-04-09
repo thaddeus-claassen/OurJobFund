@@ -15,7 +15,6 @@ from .serializers import JobSerializer;
 from filter.forms import PledgeFilterForm, WorkerFilterForm;
 from django.http import HttpResponse, Http404;
 from django.core import serializers;
-from pay.models import Pay;
 from .models import Job, Tag, User;
 from .forms import NewJobForm;
 import json, re, math;
@@ -116,12 +115,30 @@ class DetailView(TemplateView):
     def get(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
         if (request.user.is_authenticated):
-            if (Notification.objects.filter(user=request.user, job=job).exists()): 
+            if (Notification.objects.filter(user=request.user, job=job).exists()):
                 Notification.objects.get(user=request.user, job=job).delete();
-        return render(request, self.template_name, self.get_context_data(request, job=job))
+        return render(request, self.template_name, self.get_context_data(request, job=job));
+        
+    def post(self, request, *args, **kwargs):
+        job = get_object_or_404(Job, random_string=job_random_string);
+        if ('work' in request.POST):
+            jobuser = get_object_or_None(JobUser, user=request.user, job=job);
+            if (jobuser):
+                jobuser = JobUser.create(jobuser=jobuser, work_status='Working');
+                jobuse.save();
+            else:
+                jobuser.work_status = 'Working';
+            return redirect('job:detail', job_random_string=job.random_string);
+        elif ('finish' in request.POST):
+            jobuser = get_object_or_404(JobUser, user=request.user, job=job);
+            jobuser.work_status = 'Finished';
+            return redirect('job:detail', job_random_string=job.random_string);
+        else:
+            return render(request, self.template_name, self.get_context_data(job=job));
     
     def get_context_data(self, request, **kwargs):
         job = kwargs['job'];
+        jbs = JobUser.objects.filter(job=job);
         context = {
             'job': job,
             'updates' : Update.objects.filter(jobuser__job=job).order_by('date')[:50],
@@ -130,12 +147,13 @@ class DetailView(TemplateView):
         }
         if (request.user.is_authenticated):
             serializer = JobSerializer(Job.objects.filter(pk=job.pk), many=True, context={'user' : request.user});
-            jobuser = get_object_or_None(JobUser, user=request.user, job=job);
+            jobuser = JobUser.objects.filter(Q(user=request.user) & Q(job=job) & ~Q(work_status='')).first();
             payment_verification = False;
             if (jobuser):
-                for pay in jobuser.receiver_jobuser.all():
-                    if (pay.type == 'Other' and not pay.verified):
+                for pay in jobuser.misc_pay_receiver.all():
+                    if (not pay.verified):
                         payment_verification = True;
+                        break;
             context['jobuser'] = jobuser;
             context['payment_verification'] = payment_verification; 
         return context;
