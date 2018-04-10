@@ -11,6 +11,7 @@ URLS = {
     'update': 'update', 
     'pledge': 'pledge',
     'pay': 'pay',
+    'confirm' : 'confirm',
     'work': 'work',
     'finish': 'finish',
     'password_reset': 'password_reset',

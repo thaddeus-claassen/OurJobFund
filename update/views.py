@@ -27,10 +27,10 @@ class CreateUpdateView(TemplateView):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
         form = self.form(request.POST);
         if (form.is_valid()):
-            description = form.cleaned_data['description'];
-            if (description != "" or len(request.FILES) > 0):
+            comment = form.cleaned_data['comment'];
+            if (comment != "" or len(request.FILES) > 0):
                 jobuser = JobUser.objects.get(user=request.user, job=job);
-                update = Update.create(jobuser=jobuser, description=description);
+                update = Update.create(jobuser=jobuser, comment=comment);
                 update.save();
                 for image in request.FILES.getlist('images'):
                     image = Image(update=update, image=image);

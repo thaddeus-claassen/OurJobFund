@@ -170,14 +170,6 @@ function addRowsToWorkingTable(json) {
     }// end for
 }// end addRowsToPledgesTable()
 
-function changeTHeadTFootWidthToAccountForScrollBar() {
-    var oldTableWidth = $('table').width();
-    var newTableWidth = oldTableWidth - 17;
-    var percentageTableWidth = 100 * (newTableWidth / oldTableWidth);
-    $('thead').width(percentageTableWidth.toString() + '%');
-    $('tfoot').width(percentageTableWidth.toString() + '%');
-}// end changeTHeadTFootWidthToAccountForScrollBar()
-
 function changeNumberToCurrency(number) {
     var currency = null;
     var parts = number.toString().split('.');

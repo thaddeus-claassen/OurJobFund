@@ -67,7 +67,6 @@ REST_FRAMEWORK = {
     ],
 };
 
-datetime_input_format = "";
 if (DEBUG):
     REST_FRAMEWORK['DATETIME_FORMAT'] = '%B %#d, %Y';
 else:

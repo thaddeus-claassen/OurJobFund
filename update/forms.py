@@ -1,5 +1,5 @@
-from django import forms;
 from .models import Update;
+from django import forms;
 import re;
 
 class UpdateForm(forms.Form):
@@ -20,5 +20,3 @@ def checkStringIsValidMoney(money):
     elif (len(s) == 2 and s[0].isdigit() and (len(s[1]) == 0 or len(s[1]) == 1) and s[1].isdigit()):
         valid = True;
     return valid;
-    
-    

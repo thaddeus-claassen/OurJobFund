@@ -26,8 +26,8 @@ class JobUser(models.Model):
     
 class PledgePayWorkFinish(models.Model):        
     date = models.DateTimeField(auto_now_add=True);
-    jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);    
-        
+    jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);
+      
     class Meta:
         abstract = True;
         
@@ -40,16 +40,16 @@ class PledgePay(PledgePayWorkFinish):
 class Pledge(PledgePay):
     
     @classmethod
-    def create(jobuser, amount):
+    def create(cls, jobuser, amount):
         pledge = Pledge(jobuser=jobuser, amount=amount);
         return pledge;
     
 class MiscPay(PledgePay):
-    verified = models.BooleanField(default=False);
+    verified = models.NullBooleanField(default=None);
     receiver = models.ForeignKey(JobUser, on_delete=models.CASCADE, related_name='misc_pay_receiver');
     
     @classmethod
-    def create(sender, receiver, amount):
+    def create(cls, sender, receiver, amount):
         misc_pay = MiscPay(jobuser=sender, receiver=receiver, amount=amount);
         return misc_pay;
     
@@ -57,21 +57,21 @@ class StripePay(PledgePay):
     receiver = models.ForeignKey(JobUser, on_delete=models.CASCADE, related_name='stripe_pay_receiver');
     
     @classmethod
-    def create(sender, receiver, amount):
+    def create(cls, sender, receiver, amount):
         stripe_pay = StripePay(jobuser=sender, receiver=receiver, amount=amount);
         return stripe_pay;
     
 class Work(PledgePayWorkFinish):
-    payment_type = models.CharField(choices=(('', '((Please Select your method of receiving payments))'), ('Credit/Debit', 'Credit/Debit'), ('Any', 'Any'), ('Contact Me', 'Contact Me')), max_length=100);
+    payment_type = models.CharField(choices=(('', '(Please Select your method of receiving payments)'), ('Credit/Debit', 'Credit/Debit'), ('Either', 'Either'), ('Contact Me', 'Contact Me')), max_length=100);
     
     @classmethod
-    def create(jobuser, payment_type):
+    def create(cls, jobuser, payment_type):
         work = Work(jobuser=jobuser, payment_type=payment_type);
         return work;
     
 class Finish(PledgePayWorkFinish):
     
     @classmethod
-    def create(jobuser):
+    def create(cls, jobuser):
         finish = Finish(jobuser=jobuser);
         return finish;

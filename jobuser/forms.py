@@ -1,8 +1,8 @@
 from annoying.functions import get_object_or_None;
 from job.models import Job;
+from datetime import datetime;
 from .models import Work, MiscPay, Pledge;
 from django import forms;
-from datetime import datetime;
 
 class PledgeForm(forms.Form):
     amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}));
@@ -12,7 +12,6 @@ class PledgeForm(forms.Form):
     class Meta:
         model = Pledge;
         fields = ['amount', 'comment'];
-    
     
     def clean_amount(self):
         pledge = self.cleaned_data.get('amount');
@@ -58,47 +57,34 @@ class PayForm(forms.Form):
         return "";        
     
 class WorkForm(forms.Form):
-    payment_type = forms.ChoiceField(choices=(('', '(Please Select your method of receiving payments)'), ('Credit/Debit', 'Credit/Debit'), ('Any', 'Any'), ('Contact Me', 'Contact Me')), required=True);
+    payment_type = forms.ChoiceField(choices=(('', '(Please Select your method of receiving payments)'), ('Credit/Debit', 'Credit/Debit'), ('Either', 'Either'), ('Contact Me', 'Contact Me')), required=True);
     comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     
     class Meta:
         model = Work;
-        fields = ['payment_type', 'comment'];
+        fields = ['payment_type'];
     
     def clean_payment_type(self):
         payment_type = self.cleaned_data.get('payment_type');
         if (not payment_type in ['Credit/Debit', 'Any', 'Contact Me']):
             raise forms.ValidationError("Your payment type was not valid.");
         return payment_type;
-        
-    def clean_expected_finish_date(self):
-        date = self.cleaned_data.get('expected_finish_date');
-        if (re.match(r'^\d{2}/\d{2}/\d{4}$', date)):
-            try:
-                date = datetime(month=int(date.split('/')[0]), day=int(date.split('/')[1]), year=int(date.split('/')[2]));
-            except ValueError:
-                raise forms.ValidationError('Date incorrect.');
-        else:
-            raise forms.ValidationError("The date must be written in the form 'MM/DD/YYYY'");
-        return date;
-        
-    def clean_minimum_amount_requesting(self):
-        money = self.cleaned_data.get('minimum_amount_requesting');
-        if (money == ''):
-            money = '0';
-        if (checkStringIsValidMoney(money)):
-            if (float(money) < 0):
-                raise forms.ValidationError('You cannot request less than $0.00.');
-        else:
-            raise forms.ValidationError('Please enter a valid dollar amount.');
-        return money;
-        
+    
     def clean_honey_pot(self):
         if (not self.cleaned_data.get('honey_pot') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
-        
+    
+class FinishForm(forms.Form):
+    comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
+    honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
+    
+    def clean_honey_pot(self):
+        if (not self.cleaned_data.get('honey_pot') == ""):
+            raise forms.ValidationError('It seems you are a bot.');
+        return "";
+    
 def checkStringIsValidMoney(money):
     valid = False;
     s = money.split('.');

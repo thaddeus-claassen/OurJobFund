@@ -129,6 +129,15 @@
             </div>
         </div>
         {% endif %}
+        {% if unconfirmed_payments %}
+        <div class="row">
+            <div class="col-md-12">
+                <form action="{% url 'payment-confirmation' job.random_string %}">
+                    <input type="submit" value="Confirm Payments" />
+                </form>
+            </div>
+        <div>
+        {% endif %}
         {% endif %}
     </div>
     <div class="col-md-7">

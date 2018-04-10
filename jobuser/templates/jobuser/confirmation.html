@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% block import %}
+    <script type="text/javascript" src="{% static 'pay/js/confirmation.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'pay/css/confirmation.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <table>
+            <thead>
+                <th>From</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Confirm</th>
+            </thead>
+            <tbody>
+                <form id="form" action="{{ request.get_full_path }}" method="POST">
+                    {% for p in unconfirmed_payments %}
+                    <td><a href="{% url 'user:detail' p.jobuser.username %}">{{ p.jobuser.username }}</a></td>
+                    <td>{{ p.date|date:"F d, Y" }}</td>
+                    <td>{{ p.amount }}</td>
+                    <td>
+                        <input type="submit" value="Confirm" name="{{ p.auto_id }}-confirm" />
+                        <input type="submit" value="Reject" name="{{ p.auto_id }}-reject" />
+                    </td>
+                    {% endfor %}
+                </form>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
