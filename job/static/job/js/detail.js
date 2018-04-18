@@ -154,17 +154,9 @@ function addRowsToWorkingTable(json) {
         var worker = json[index];
         var string = "<tr>";
         string = string + "<td class='working-username'><a href='user/ " + worker['username'] + "'>" + worker['username'] + "</a></td>";
-        string = string + "<td class='working-username'>" + worker['date'] + "</td>";
+        string = string + "<td class='working-date'>" + worker['date'] + "</td>";
         string = string + "<td class='working-status'>" + worker['work_status'] + "</td>";
         string = string + "<td class='working-received'>" + changeNumberToCurrency(worker['received']) + "</td>";
-        string = string + "<td class='working-payment'>";
-        if (worker['username'] === $('#username').val()) {
-            if ($('#unconfirmed_payments').val() != '') {
-                string = string + "<a href='#'>Unconfirmed Payment/s</a></td>";
-            }// end if
-        } else {
-            string = string + "<a href='pay/" + $('#random_string').val() + "/" + worker['username'] + "'>Make Payment</a></td>";
-        }// end if-else
         string = string + "</tr>";
         $('#working tbody').append(string);
     }// end for
@@ -184,3 +176,11 @@ function changeNumberToCurrency(number) {
     }// end if
     return currency;
 }// end changeNumberToCurrencyFormat()
+
+function changeTHeadTFootWidthToAccountForScrollBar() {
+    var oldTableWidth = $('table').width();
+    var newTableWidth = oldTableWidth - 17;
+    var percentageTableWidth = 100 * (newTableWidth / oldTableWidth);
+    $('thead').width(percentageTableWidth.toString() + '%');
+    $('tfoot').width(percentageTableWidth.toString() + '%');
+}// end changeTHeadTFootWidthToAccountForScrollBar()

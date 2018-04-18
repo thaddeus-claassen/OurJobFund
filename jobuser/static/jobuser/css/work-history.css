@@ -7,14 +7,13 @@ table {
     border: 1px solid black;
 }
 
-thead, tbody, tr, td, th {
+thead, tbody, tfoot, tr, td, th {
     display: block;
 }
 
 th, td {
     word-wrap: break-word;
     float: left;
-    width: 20%;
 }
 
 tr:after {
@@ -32,4 +31,12 @@ tbody {
     overflow-x: auto;
     overflow-y: scroll;
     height: 300px;
+}
+
+.username {
+    width: 20%;
+}
+
+.date, .type, .amount, .from, .confirmed {
+    width: 16%;
 }

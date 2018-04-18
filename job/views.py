@@ -9,7 +9,7 @@ from annoying.functions import get_object_or_None;
 from update.serializers import UpdateSerializer;
 from django.shortcuts import render, get_object_or_404, redirect;
 from django.db.models import Q, F;
-from jobuser.models import JobUser;
+from jobuser.models import JobUser, MiscPay;
 from update.models import Update, Image;
 from .serializers import JobSerializer;
 from filter.forms import PledgeFilterForm, WorkerFilterForm;
@@ -162,15 +162,12 @@ class DetailView(TemplateView):
         }
         if (request.user.is_authenticated):
             serializer = JobSerializer(Job.objects.filter(pk=job.pk), many=True, context={'user' : request.user});
-            jobuser = JobUser.objects.filter(Q(user=request.user) & Q(job=job) & ~Q(work_status='')).first();
-            payment_verification = False;
+            jobuser = get_object_or_None(JobUser, user=request.user, job=job);
+            misc_payments = MiscPay.objects.none();
             if (jobuser):
-                for pay in jobuser.misc_pay_receiver.all():
-                    if (not pay.verified):
-                        payment_verification = True;
-                        break;
+                misc_payments = MiscPay.objects.filter(receiver=jobuser, confirmed=None);
             context['jobuser'] = jobuser;
-            context['payment_verification'] = payment_verification; 
+            context['unconfirmed_payments'] = misc_payments.exists(); 
         return context;
         
 def add_to_detail_table(request, job_random_string):
@@ -221,12 +218,6 @@ def add_to_detail_table(request, job_random_string):
         return HttpResponse(json, 'application/json');
     else:
         return Http404();
-
-class PledgeHistoryView(TemplateView):
-    template_name = 'job/pledge-history.html';
-    
-    def get(self, request, *args, **kwargs):
-        pass;
 
 class CreateView(TemplateView):
     template_name = 'job/create.html';

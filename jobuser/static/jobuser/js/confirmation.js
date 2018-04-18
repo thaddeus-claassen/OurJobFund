@@ -7,7 +7,7 @@ $(document).ready(function() {
     });
     $('#form').submit(function(e) {
         if (canSubmit) {
-            canSubmit = false; 
+            canSubmit = false;
         } else {
             e.preventDefault();
         }// end if-else

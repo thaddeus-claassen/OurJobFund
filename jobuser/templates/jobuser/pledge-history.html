@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block import %}
+    <link rel="stylesheet" type="text/css" href="{% static 'jobuser/css/pledge-history.css' %}" />
+    <script type="text/javascript" src="{% static 'jobuser/js/history.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jobuser/js/pledge-history.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h4 id="title">Pledge History for <a href="{% url 'job:detail' job.random_string %}">{{ job.title }}</a></h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table id="pledge-history" class="table">
+            <thead>
+                <tr>
+                    <th class="username"><span class="table-header">Username</span></th>
+                    <th class="date"><span class="table-header">Date</span></th>
+                    <th class="type"><span class="table-header">Type</span></th>
+                    <th class="amount"><span class="table-header">Amount</span></th>
+                    <th class="to"><span class="table-header">To</span></th>
+                    <th class="confirmed"><span class="table-header">Confirmed</span></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for p in set %}
+                <tr>
+                    <td class="username">
+                        <a href="{% url 'user:detail' p.jobuser.user.username %}">{{ p.jobuser.user.username }}</a>
+                    </td>
+                    <td class="date">
+                        {{ p.date|date:"F d, Y" }}
+                    </td>
+                    <td class="type">
+                        {{ p.get_type }}
+                    </td>
+                    <td class="amount">
+                        ${{ p.amount|floatformat:2 }}
+                    </td>
+                    <td class="to">
+                        {% if p.get_type == "Stripe Payment" or p.get_type == "Misc. Payment" %}
+                        <a href="{% url 'user:detail' p.receiver.user.username %}">{{ p.receiver.user.username }}</a>
+                        {% else %}
+                        N/A
+                        {% endif %}
+                    </td>
+                    <td class="confirmed">
+                        {% if p.get_type == "Misc. Payment" %}
+                        {{ p.confirmed }}
+                        {% else %}
+                        N/A
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="username"><span id="total">{{ total }}</span></td>
+                    <td class="date"></td>
+                    <td class="type"></td>
+                    <td class="amount"></td>
+                    <td class="to"></td>
+                    <td class="confirmed"></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+{% endblock %}

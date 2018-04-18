@@ -12,7 +12,6 @@ urlpatterns = [
     url(r'^' + URLS['get-total-jobs'] + '/$', views.get_total_jobs),
     url(r'^' + URLS['job_random_string_regex'] + '/$', views.DetailView.as_view(), name='detail'),
     url(r'^' + URLS['job_random_string_regex'] + '/' + URLS['sort'] + '/$', views.add_to_detail_table),
-    url(r'^' + URLS['job_random_string_regex'] + '/' + URLS['pledge-history'] + '/$', views.PledgeHistoryView.as_view(), name='pledge-history'),
 ];
 
 if settings.DEBUG:

@@ -2,24 +2,17 @@ var canSubmit = true;
 
 $('document').ready(function() {
     $('#create-job-form').submit(function(event) {
-        var format = correctFormat();
-        if (format === "") {
-            if (canSubmit) {
-                canSubmit = false;
-                if ($('#id_latitude').val() === "" || $('#id_longitude').val() === "") {
-                    var loc = $('#id_location').val();
-                    if (loc.length > 0) {
-                        event.preventDefault();
-                        applyLocation(loc);
-                    }// end if
+        if (canSubmit) {
+            canSubmit = false;
+            if ($('#id_latitude').val() === "" || $('#id_longitude').val() === "") {
+                var loc = $('#id_location').val();
+                if (loc.length > 0) {
+                    event.preventDefault();
+                    applyLocation(loc);
                 }// end if
-            } else {
-                event.preventDefault();
-            }// end if-else
+            }// end if
         } else {
-            $('#amount-error-message').remove();
-            $('#id_amount').after("&nbsp;&nbsp;&nbsp;<span id='amount-error-message'>" + format + "</span>");
-            e.preventDefault();
+            event.preventDefault();
         }// end if-else
     });
 });
@@ -34,27 +27,8 @@ function applyLocation(address) {
             $('#id_longitude').val(center.lng());
             $('#create-job-form').submit();
         } else {
-            $('#id_location').after("<span id='location-error'>Could not verify location.</span>");
+            $('#id_location').after("<span id='location-error'>Must be a valid location on Google Maps</span>");
             $('#location-error').css('color', 'red');
-            can 
         }// end if-else
     });
 }// end applyLocation()
-
-function correctFormat() {
-    var errorMessage = "";
-    var amount = parseFloat($('#id_pledge').val());
-    if (amount === "") {
-        amount = 0;
-    } else {
-        var isFloat = !isNaN(amount);
-        if (isFloat) {
-            if (amount != amount.toFixed(2)) {
-                errorMessage = "Cannot have more than two decimal places.";
-            }// end if
-        } else {
-            errorMessage = "Not a valid number";
-        }// end if-else
-    }// end if-else
-    return errorMessage;
-}// end pledgeErrorMessage()

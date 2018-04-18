@@ -2,19 +2,25 @@
 
 {% load static %}
 {% block import %}
-    <link rel="stylesheet" type="text/css" href="{% static 'pay/css/pay.css' %}" />
-    <script type="text/javascript" src="{% static 'pay/js/pay.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'jobuser/css/pay.css' %}" />
+    <script type="text/javascript" src="{% static 'jobuser/js/pay.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-<form id="form" action="{{ request.get_full_path }}">
+<div class="row">
+    <div class="col-md-12">
+        <h4 id="title">Payment for <a href="{% url 'job:detail' jobuser.job.random_string %}">{{ jobuser.job.title }}</a></h4>
+    </div>
+</div>
+<form id="form" action="{{ request.get_full_path }}" method="POST">
+{% csrf_token %}
 {% for field in form %}
     <div class="row">
         <div class="col-md-2">
             {{ field.label }}
         </div>
         <div class="col-md-10">
-            {{ field }}
+            {{ field }}{{ field.errors }}
         </div>
     </div>
 {% endfor %}
@@ -24,5 +30,6 @@
             <input id="pay" type="submit" value="Submit" />
         </div>
     </div>
+    {{ form.non_field_errors }}
 </form>
 {% endblock %}

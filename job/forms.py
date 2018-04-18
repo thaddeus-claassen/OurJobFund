@@ -2,7 +2,7 @@ from django import forms;
 from .models import Job;
 import re;
 
-class NewJobForm(forms.Form):
+class NewJobForm(forms.ModelForm):
     title = forms.CharField(max_length=100);
     location = forms.CharField(widget=forms.TextInput(attrs={'placeholder' : '(Any valid location on Google Maps)'}), max_length=1000, required=False);
     latitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
@@ -14,7 +14,7 @@ class NewJobForm(forms.Form):
 
     class Meta: 
         model = Job;
-        fields = ['title', 'location', 'latitude', 'longitude', 'tags', 'image_set', 'comment', 'pledge'];
+        fields = ['title', 'location', 'latitude', 'longitude', 'tags', 'image_set', 'comment'];
     
     def clean_tags(self):
         tags = self.cleaned_data.get('tags');

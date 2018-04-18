@@ -139,7 +139,6 @@ function addRowsToCurrentTable(json) {
         string = string + "<td class='current-pledging'>" + pledging + "</td>";
         string = string + "<td class='current-paid'>" + paid + "</td>";
         string = string + "<td class='current-work_status'>" + work_status + "</td>";
-        string = string + "<td class='current-received'>" + received + "</td>";
         string = string + "</tr>";
         $('#current tbody').append(string);
     }// end for
@@ -164,7 +163,6 @@ function addRowsToCompletedTable(json) {
         string = string + "<td class='completed-title'><a href='/job/" + completed['random_string'] + "'>" + completed['title'] + "</a></td>";
         string = string + "<td class='completed-pledging'>" + pledging + "</td>";
         string = string + "<td class='completed-paid'>" + paid + "</td>";
-        string = string + "<td class='completed-work_status'>" + work_status + "</td>";
         string = string + "<td class='completed-received'>" + received + "</td>";
         string = string + "</tr>";
         $('#completed tbody').append(string);

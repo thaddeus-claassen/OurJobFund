@@ -2,14 +2,19 @@
 
 {% load staticfiles %}
 {% block import %}
-    <script type="text/javascript" src="{% static 'pay/js/confirmation.js' %}" ></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'pay/css/confirmation.css' %}" />
+    <script type="text/javascript" src="{% static 'jobuser/js/confirmation.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'jobuser/css/confirmation.css' %}" />
 {% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <table>
+        <h4 id="title">Unconfirmed payments for <a href="{% url 'job:detail' jobuser.job.random_string %}">{{ jobuser.job.title }}</a></h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table">
             <thead>
                 <th>From</th>
                 <th>Date</th>
@@ -18,13 +23,15 @@
             </thead>
             <tbody>
                 <form id="form" action="{{ request.get_full_path }}" method="POST">
+                {% csrf_token %}
                     {% for p in unconfirmed_payments %}
-                    <td><a href="{% url 'user:detail' p.jobuser.username %}">{{ p.jobuser.username }}</a></td>
+                    <td><a href="{% url 'user:detail' p.jobuser.user.username %}">{{ p.jobuser.user.username }}</a></td>
                     <td>{{ p.date|date:"F d, Y" }}</td>
-                    <td>{{ p.amount }}</td>
+                    <td>${{ p.amount|floatformat:2 }}</td>
+                    
                     <td>
-                        <input type="submit" value="Confirm" name="{{ p.auto_id }}-confirm" />
-                        <input type="submit" value="Reject" name="{{ p.auto_id }}-reject" />
+                        <input type="submit" value="Confirm" name="{{ p.pk }}" />
+                        <input type="submit" value="Reject" name="{{ p.pk }}" />
                     </td>
                     {% endfor %}
                 </form>

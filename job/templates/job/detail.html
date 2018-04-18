@@ -80,7 +80,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="updates-date">Total: <span id="updates-total">{{ updates.count }}</span></td>
+                            <td class="updates-date"><span id="updates-total">{{ updates.count }}</span></td>
                             <td class="updates-username"></td>
                         </tr>
                     </tfoot>
@@ -95,7 +95,7 @@
                 </form>
             </div>
         </div>
-        {% if jobuser.pledge_set.exists %}
+        {% if jobuser.pledge_set.all.exists %}
         <div class="row">
             <div class="col-md-12">
                 <form action="{% url 'pay' job.random_string %}">
@@ -112,7 +112,7 @@
             </div>
         </div>
         {% endif %}
-        {% if jobuser.work_set.exists %}
+        {% if jobuser.work_set.all.exists %}
         <div class="row">
             <div class="col-md-12">
                 <form action="{% url 'finish' job.random_string %}">
@@ -133,17 +133,22 @@
         <div class="row">
             <div class="col-md-12">
                 <form action="{% url 'payment-confirmation' job.random_string %}">
-                    <input type="submit" value="Confirm Payments" />
+                    <input id="confirm_payments" type="submit" value="Confirm Payments" />
                 </form>
             </div>
-        <div>
+        </div>
         {% endif %}
         {% endif %}
     </div>
     <div class="col-md-7">
         <div class="row info_row header">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <h4>Pledging</h4>
+            </div>
+            <div class="col-md-6">
+                <a href="{% url 'pledge-history' job.random_string %}">
+                    <span class="history">History</span>
+                </a>
             </div>
         </div>
         <div class="row info_row">
@@ -152,7 +157,7 @@
                     <thead>
                         <tr>
                             <th class="pledging-username"><span class="table-header">Username</span></th>
-                            <th class="pledging-username"><span class="table-header">Date Pledged</span></th>
+                            <th class="pledging-date"><span class="table-header">Date Pledged</span></th>
                             <th class="pledging-pledging"><span class="table-header">Pledging</span></th>
                             <th class="pledging-paid"><span class="table-header">Paid</span></th>
                         </tr>
@@ -191,8 +196,13 @@
             </div>
         </div>
         <div class="row info_row header">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <h4>Working</h4>
+            </div>
+            <div class="col-md-6">
+                <a href="{% url 'work-history' job.random_string %}">
+                    <span class="history">History</span>
+                </a>
             </div>
         </div>
         <div class="row info_row">
@@ -219,7 +229,7 @@
                                 {% endif %}
                             </td>
                             <td class="working-date">
-                                {% with work=w.pledge_set.all|dictsort:"date"|first %}
+                                {% with work=w.work_set.all|dictsort:"date"|first %}
                                 {{ work.date|date:"F d, Y" }}
                                 {% endwith %}
                             </td>
@@ -233,7 +243,7 @@
                             <td class="working-username"><span id="working-total">{{ working_total }}</span></td>
                             <td class="working-date"></td>
                             <td class="working-work_status"></td>
-                            <td class="working-received"><span id="received-total">${{ received_amount_total|floatformat:2 }}</span></td>
+                            <td class="working-received"></td>
                         </tr>
                     </tfoot>
                 </table>
