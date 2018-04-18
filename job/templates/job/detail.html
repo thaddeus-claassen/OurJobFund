@@ -12,7 +12,7 @@
 <input id="random_string" type="hidden" value="{{ job.random_string }}" />
 <div class="row info_row">
     <div class="col-md-12">
-        <h4 id="job_title">{{ job.title }}</h4>
+        <h4 id="title">{{ job.title }}</h4>
     </div>
 </div>
 <div class="row info_row">
@@ -48,6 +48,7 @@
                         <tr>
                             <th class="updates-username"><span class="table-header">Username</span></th>
                             <th class="updates-date"><span id="updates-date" class="table-header">Date</span></th>
+                            <th class="updates-images"><span id="updates-images" class="table-header">Images</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,11 +58,22 @@
                                 <a href="{% url 'user:detail' u.jobuser.user.username %}">{{ u.jobuser.user.username }}</a>
                             </td>
                             <td class="updates-date">
-                                <span class="updates-date-data">{{ u.date|date:"F d, Y" }}</span>
+                                <span class="updates-date">{{ u.date|date:"F d, Y" }}</span>
+                            </td>
+                            <td class="updates-images">
+                                <span class="updates-images">
+                                    {% if u.image_set.all.exists %}
+                                    <a href="{% url 'update:images' u.random_string %}">
+                                        Images
+                                    </a>
+                                    {% else %}
+                                    N/A
+                                    {% endif %}
+                                </span>
                             </td>
                         </tr>
                         <tr>
-                            <td class="updates-comment" colspan="2">
+                            <td class="updates-comment" colspan="3">
                                 {{ u.comment }}
                             </td>
                         </tr>
@@ -82,6 +94,7 @@
                         <tr>
                             <td class="updates-date"><span id="updates-total">{{ updates.count }}</span></td>
                             <td class="updates-username"></td>
+                            <td class="updates-images"></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -90,7 +103,7 @@
         {% if request.user.is_authenticated %}
         <div class="row">
             <div class="col-md-12">
-                <form action="{% url 'create-update' job.random_string %}">
+                <form action="{% url 'update:create' job.random_string %}">
                     <input id="update" type="submit" value="Update" />
                 </form>
             </div>
@@ -146,9 +159,11 @@
                 <h4>Pledging</h4>
             </div>
             <div class="col-md-6">
-                <a href="{% url 'pledge-history' job.random_string %}">
-                    <span class="history">History</span>
-                </a>
+                <span class="history">
+                    <a href="{% url 'pledge-history' job.random_string %}">
+                        History
+                    </a>
+                </span>
             </div>
         </div>
         <div class="row info_row">
@@ -200,9 +215,11 @@
                 <h4>Working</h4>
             </div>
             <div class="col-md-6">
-                <a href="{% url 'work-history' job.random_string %}">
-                    <span class="history">History</span>
-                </a>
+                <span class="history">
+                    <a href="{% url 'work-history' job.random_string %}">
+                        History
+                    </a>
+                </span>
             </div>
         </div>
         <div class="row info_row">

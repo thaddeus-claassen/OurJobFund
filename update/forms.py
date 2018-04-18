@@ -6,7 +6,7 @@ class UpdateForm(forms.Form):
     images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False);
     comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
-
+    
     def clean_honey_pot(self):
         if (not self.cleaned_data.get('honey_pot') == ""):
             raise forms.ValidationError('It seems you are a bot.');

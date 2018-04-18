@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% block import %}
+    <link rel="stylesheet" type="text/css" href="{% static 'update/css/images.css' %}" />
+    <script type="text/javascript" src="{% static 'update/js/images.js' %}" ></script>
+{% endblock %}
+
+{% block content %}
+<input id="update_id" type="hidden" value="{{ update.id }}" />
+<div class="row">
+    <div class="col-md-12">
+        <h4 id="title">Images for <a href="{% url 'job:detail' update.jobuser.job.random_string %}">{{ update.jobuser.job.title }}</a></h4>
+    </div>
+</div>
+{% if update.image_set.all.count > 0 %}
+<div class="row">
+    <div class="col-md-12">
+        <div id="images">
+        {% for image in update.image_set.all %}
+            <img src="{{ image.image.url }}" class="img-responsive image" />
+        {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

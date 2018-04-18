@@ -8,7 +8,7 @@ from jobuser.serializers import PledgeSerializer, WorkSerializer;
 from annoying.functions import get_object_or_None;
 from update.serializers import UpdateSerializer;
 from django.shortcuts import render, get_object_or_404, redirect;
-from django.db.models import Q, F;
+from django.db.models import Q, F, Count;
 from jobuser.models import JobUser, MiscPay;
 from update.models import Update, Image;
 from .serializers import JobSerializer;
@@ -178,7 +178,7 @@ def add_to_detail_table(request, job_random_string):
         column = request.GET['column'];
         order = request.GET['order'];
         if (table == 'updates'):
-            if (column == 'username' or column == 'date'):
+            if (column == 'username' or column == 'date' or column == 'images'):
                 data = Update.objects.filter(jobuser__job=job);
             else:
                 return Http404();
@@ -203,6 +203,12 @@ def add_to_detail_table(request, job_random_string):
                     data = data.order_by(Lower('user__username'))[50 * numSearches : 50 * (numSearches + 1)][::-1];
                 else:
                     data = data.order_by(Lower('user__username'))[50 * numSearches : 50 * (numSearches + 1)];
+        elif (column == 'images'):
+            if (order == 'ascending'):
+                
+                data = data.annotate(num_images=Count('image')).order_by('num_images');
+            else:
+                data = data.annotate(num_images=Count('image')).order_by('num_images')[::-1];
         else:
             if (order == 'ascending'):
                 data = data.order_by(column)[50 * numSearches : 50 * (numSearches + 1)][::-1];
@@ -229,7 +235,7 @@ class CreateView(TemplateView):
     
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        form = self.form(request.POST);
+        form = self.form(request.POST, request.FILES);
         if (form.is_valid()):
             title = form.cleaned_data['title'];
             latitude = form.cleaned_data['latitude'];
@@ -251,6 +257,7 @@ class CreateView(TemplateView):
             jobuser.save();
             update = Update.create(jobuser=jobuser, comment=comment);
             update.save();
+            images = form.cleaned_data['images'];
             for image in request.FILES.getlist('image_set'):
                 image = Image.create(update=update, image=image);
                 image.save();

@@ -127,9 +127,13 @@ function add_rows_to_tables(num_searches, table, column, order) {
 function addRowsToUpdatesTable(json) {
     for (var index = 0; index < json.length; index++) {
         var update = json[index];
+        var img = update['images'];
+        if (img == true) img = "<a href='update/" + update['random_string'] + "/images'>Images</a>";
+        else img = "N/A";
         var string = "<tr>";
         string = string + "<td class='updates-username'><a href='user/ " + update['username'] + "'>" + update['username'] + "</a></td>";
         string = string + "<td class='updates-date'>" + update['date'] + "</td>";
+        string = string + "<td class='updates-images'>" + img + "</td>";
         string = string + "<td class='updates-comment'>" + update['comment'] + "</td>";
         string = string + "</tr>";
         $('#updates tbody').append(string);

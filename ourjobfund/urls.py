@@ -6,7 +6,6 @@ from django.conf.urls.static import static;
 from django.contrib.auth import views as auth_views;
 from user.views import search_user;
 from job.views import home;
-from update.views import CreateUpdateView;
 from jobuser.views import PledgeView, PayView, WorkView, FinishView, PledgeHistoryView, WorkHistoryView, PaymentConfirmationView, sort_pledge_history, sort_work_history;
 from .acceptable_urls import URLS;
 
@@ -24,7 +23,7 @@ urlpatterns = [
     url(r'^' + URLS['job'] + '/', include('job.urls')),
     url(r'^$', home, name='home'),
     url(r'^' + URLS['update'] + '/', include('update.urls')),
-    url(r'^' + URLS['update'] + '/' + URLS['create'] + '/' + URLS['job_random_string_regex'] + '/', CreateUpdateView.as_view(), name='create-update'),
+    url(r'^' + URLS['update'] + '/', include('update.urls')),
     url(r'^' + URLS['pledge'] + '/' + URLS['job_random_string_regex'] + '/$', PledgeView.as_view(), name='pledge'),
     url(r'^' + URLS['pledge-history'] + '/' + URLS['job_random_string_regex'] + '/$', PledgeHistoryView.as_view(), name='pledge-history'),
     url(r'^' + URLS['pledge-history'] + '/' + URLS['job_random_string_regex'] + '/' + URLS['sort'] + '/$', sort_pledge_history),

@@ -7,7 +7,7 @@
     float: right;
 }
 
-#job_title {
+#title {
     text-align: center;
 }
 
@@ -66,14 +66,18 @@ tbody {
 }
 
 .updates-username {
-    width: 50%;
+    width: 40%;
 }
 
 .updates-date  {
-    width: 50%;
+    width: 40%;
 }
 
-.updates-comment, .updates-images {
+.updates-images {
+    width: 20%;
+}
+
+.updates-comment {
     width: 100%;
 }
 

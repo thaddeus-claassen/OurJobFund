@@ -46,18 +46,10 @@ class CreateUpdateView(TemplateView):
         context['form'] = kwargs['form'];
         return context;
     
-def detail(request, update_random_string):
+def images(request, update_random_string):
     update = get_object_or_404(Update, random_string=update_random_string);
     context = {
         'update' : update,
     }
-    return render(request, 'update/detail.html', context);
+    return render(request, 'update/images.html', context);
     
-def addDecimalPlacesForMoney(amount):
-    nums = float(amount).split('.');
-    if (len(nums) == 2):
-        if (len(nums[1]) == 1):
-            amount = amount + '0';
-    else:
-        amount = amount + '.00'
-    return amount;
