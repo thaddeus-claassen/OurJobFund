@@ -257,7 +257,6 @@ class CreateView(TemplateView):
             jobuser.save();
             update = Update.create(jobuser=jobuser, comment=comment);
             update.save();
-            images = form.cleaned_data['images'];
             for image in request.FILES.getlist('image_set'):
                 image = Image.create(update=update, image=image);
                 image.save();
