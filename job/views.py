@@ -253,8 +253,6 @@ class CreateView(TemplateView):
                         tag = Tag.create(tag=tagString);
                         tag.save();
                     job.tag_set.add(tag);
-            update = Update.create(jobuser=jobuser, comment=comment);
-            update.save();
             for image in request.FILES.getlist('image_set'):
                 image = Image.create(update=update, image=image);
                 image.save();
