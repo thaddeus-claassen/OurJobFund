@@ -154,10 +154,7 @@ class DetailView(TemplateView):
             'updates' : Update.objects.filter(jobuser__job=job).order_by('date')[:50],
             'pledging' : pledging[:50],
             'pledging_total' : pledging.count(),
-            'pledging_amount_total' : pledging_total,
-            'paid_amount_total' : paid_total,
             'working' : working[:50],
-            'working_total' : working.count(),
             'received_amount_total' : received_total,
         }
         if (request.user.is_authenticated):

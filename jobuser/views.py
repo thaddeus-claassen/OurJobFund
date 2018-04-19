@@ -104,7 +104,6 @@ class PayView(TemplateView):
                 if (comment):
                     update = Update.create(jobuser=jobuser, comment=comment);
                     update.save();
-                
                 return redirect('job:detail', job.random_string);
             else:
                 return Http404();

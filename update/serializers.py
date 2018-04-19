@@ -14,4 +14,4 @@ class UpdateSerializer(serializers.ModelSerializer):
         return update.jobuser.user.username;
         
     def get_images(self, update):
-        return update.image_set.all().exists();
+        return update.image_set.all().count();

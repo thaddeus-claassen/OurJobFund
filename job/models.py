@@ -14,6 +14,7 @@ class Job(models.Model):
     paid = models.FloatField(default=0);
     working = models.PositiveIntegerField(default=0);
     finished = models.PositiveIntegerField(default=0);
+    received = models.FloatField(default=0);
     location = models.CharField(null=True, blank=True, max_length=1000);
     latitude = models.FloatField(null=True, blank=True);
     longitude = models.FloatField(null=True, blank=True);

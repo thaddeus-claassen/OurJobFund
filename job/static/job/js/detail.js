@@ -128,8 +128,8 @@ function addRowsToUpdatesTable(json) {
     for (var index = 0; index < json.length; index++) {
         var update = json[index];
         var img = update['images'];
-        if (img == true) img = "<a href='update/" + update['random_string'] + "/images'>Images</a>";
-        else img = "N/A";
+        if (img > 0) img = "<a href='update/" + update['random_string'] + "/images'>" + update['images'] + "</a>";
+        else img = 0;
         var string = "<tr>";
         string = string + "<td class='updates-username'><a href='user/ " + update['username'] + "'>" + update['username'] + "</a></td>";
         string = string + "<td class='updates-date'>" + update['date'] + "</td>";
