@@ -25,21 +25,3 @@ $(document).ready(function() {
         }// end if-else
     });
 });
-
-function correctFormat(type) {
-    var errorMessage = "";
-    if (type === 'pay' ) {
-        var amount = parseFloat($('#id_amount').val());
-        var isFloat = !isNaN(amount);
-        if (isFloat) {
-            if (amount != amount.toFixed(2)) {
-                errorMessage = "Must have at most two decimal places";
-            } else if (type === 'pay' && $('#type').val() === 'Credit' && amount < 0.5) {
-                errorMessage = "You cannot pay less than $0.50 with card."
-            }// end if
-        } else {
-            errorMessage = "Not a valid number";
-        }// end if-else
-    } // end if
-    return errorMessage;
-}// end pledgeErrorMessage()

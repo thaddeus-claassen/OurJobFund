@@ -118,27 +118,12 @@ function add_rows_to_tables(num_searches, table, column, order) {
 
 function addRowsToCurrentTable(json) {
     for (var index = 0; index < json.length; index++) {
-        var current = json[index];
-        var pledging, paid, work_status, received;
-        if (current['pledging'] == null) {
-            pledging = "--";
-            paid = "--";
-        } else {
-            pledging = changeNumberToCurrency(current['pledging']);
-            paid = changeNumberToCurrency(current['paid']);
-        }// end if
-        if (work_status !== '') {
-            work_status = current['work_status'];
-            received = changeNumberToCurrency(current['received']);
-        } else {
-            work_status = "--";
-            received = "--"
-        }// end if-else
+        var current = json[index];      
         var string = "<tr>";
         string = string + "<td class='current-title'><a href='/job/" + current['random_string'] + "'>" + current['title'] + "</a></td>";
-        string = string + "<td class='current-pledging'>" + pledging + "</td>";
-        string = string + "<td class='current-paid'>" + paid + "</td>";
-        string = string + "<td class='current-work_status'>" + work_status + "</td>";
+        string = string + "<td class='current-pledging'>" + changeNumberToCurrency(current['pledging']) + "</td>";
+        string = string + "<td class='current-paid'>" + changeNumberToCurrency(current['paid']) + "</td>";
+        string = string + "<td class='current-received'>" + changeNumberToCurrency(current['received']) + "</td>";
         string = string + "</tr>";
         $('#current tbody').append(string);
     }// end for

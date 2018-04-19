@@ -94,6 +94,9 @@ class PayView(TemplateView):
                     sender.save();
                     job.paid = job.paid + amount;
                     job.save();
+                    if (job.is_finished()):
+                        job.is_finished = True;
+                        job.save();
                 else:
                     pay = MiscPay.create(sender=jobuser, receiver=get_object_or_None(JobUser, user=get_object_or_None(User, username=receiver), job=job), amount=amount);
                     pay.save();
@@ -101,6 +104,7 @@ class PayView(TemplateView):
                 if (comment):
                     update = Update.create(jobuser=jobuser, comment=comment);
                     update.save();
+                
                 return redirect('job:detail', job.random_string);
             else:
                 return Http404();
@@ -114,19 +118,21 @@ class PayView(TemplateView):
         return context;
     
     def pay(self, request, **kwargs):
-        stripe.api_key = STRIPE_TEST_SECRET_KEY;
-        token = request.POST['stripeToken'];
-        amount_paying_in_cents = int(kwargs['amount']) * 100;
-        receiver = kwargs['receiver_username'];
-        charge = stripe.Charge.create(
-            amount = amount_paying_in_cents,
-            currency = "usd",
-            description = "Payment to " + receiver,
-            source = token,
-        );
+        user = get_object_or_None(User, username=kwargs['receiver_username'])
+        if (user):
+            stripe.api_key = STRIPE_TEST_SECRET_KEY;
+            token = request.POST['stripeToken'];
+            amount_paying_in_cents = int(kwargs['amount']) * 100;
+            charge = stripe.Charge.create(
+                amount = amount_paying_in_cents,
+                currency = "usd",
+                description = "Payment to " + receiver,
+                source = token,
+                destination = user.stripe_account_id, 
+            );
 
 class WorkView(TemplateView):
-    template_name = 'jobuser/work-finish.html';
+    template_name = 'jobuser/work.html';
     form = WorkForm;
     
     @method_decorator(login_required)
@@ -152,6 +158,8 @@ class WorkView(TemplateView):
                 jobuser = JobUser(user=request.user, job=job, work_status='Working');
             jobuser.save();
             payment_type = form.cleaned_data['payment_type'];
+            if (payment_type == 'Credit/Debit' or payment_type == 'Either'):
+                self.pay(request);
             work = Work.create(jobuser=jobuser, payment_type=payment_type);
             work.save();
             comment = form.cleaned_data['comment'];
@@ -159,6 +167,8 @@ class WorkView(TemplateView):
                 update = Update.create(jobuser=jobuser, comment=comment);
                 update.save();
             job.workers = job.workers + 1;
+            if (job.sFinished()):
+                job.is_finished = True;
             job.save();
             sendNotifications(jobuser);
             return redirect('job:detail', job_random_string=job.random_string);
@@ -171,8 +181,19 @@ class WorkView(TemplateView):
         context['form'] = kwargs['form'];
         return context;
         
+    def pay(self, request):
+        stripe.api_key = STRIPE_TEST_SECRET_KEY;
+        token = request.POST['stripeToken'];
+        amount_paying_in_cents = 100;
+        charge = stripe.Charge.create(
+            amount = amount_paying_in_cents,
+            currency = "usd",
+            description = "Payment to OurJobFund",
+            source = token,
+        );
+        
 class FinishView(TemplateView):
-    template_name = 'jobuser/work-finish.html';
+    template_name = 'jobuser/finish.html';
     form = FinishForm(prefix='finish');
     
     @method_decorator(login_required)
@@ -197,6 +218,9 @@ class FinishView(TemplateView):
                 update.save();
             job.finished = job.finished + 1;
             job.save();
+            if (job.check_is_finished()):
+                job.is_finished = True;
+                job.save();
             sendNotifications(jobuser);
             return redirect('job:detail', job_random_string=job.random_string);
         else:
@@ -327,6 +351,9 @@ class PaymentConfirmationView(TemplateView):
                 misc_pay.jobuser.save();
                 job.paid = job.paid + misc_pay.amount;
                 job.save();
+                if (job.check_is_finished()):
+                    job.is_finished = True;
+                    job.save();
             else:
                 misc_pay.verified = False;
             misc_pay.save();

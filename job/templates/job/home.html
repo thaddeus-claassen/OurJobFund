@@ -62,113 +62,15 @@
         </div>        
         <input id="latitude" type="hidden" value="" />
         <input id="longitude" type="hidden" value="" />
-        <!-- Hiding Radius
-        <div class="row margin-row">
-            <div class="col-md-6">
-                <input id="radius" class="search" type="text" placeholder="Radius (default: 10)" />
-            </div>
-            <div class="col-md-3">
-                mi
-            </div>
-            <div class="col-md-3">
-                <span id="search-error-message"></span>
-            </div>
-        </div>
-        End hiding radius -->
-
-        <!-- Hide Show Location ...... for now --------------------------------
-        <div class="row">
-            <div class="col-md-6">
-                <span id="show-location-span">
-                    <label for="show-location">Show Location:</label>
-                    <input id="show-location" type="checkbox" checked="checked"/>
-                </span>
-            </div>
-        </div>
-        -------------------->
-     
-        <!---- Hide pledge and worker filter ----------
         {% if request.user.is_authenticated %}
-        <div id="worker-filter-wrapper" class="margin-row">
-            <div class="row">
-                <div class="col-md-12">
-                    Ignore workers:
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <ul>
-                        <div class="row">
-                            <li>
-                                <div class="col-md-6">
-                                    <span class="filter_label">who have not been active in</span>
-                                </div>
-                                <div class="col-md-2">
-                                    <input id="worker-not_been_active_in_the_last_n_days" class="filter" type="text" min="0" value="{{ request.user.workerfilter.not_been_active_in_the_last_n_days }}" />
-                                </div>
-                                <div class="col-md-4">
-                                    <span class="filter_unit">or more days</span>
-                                </div>
-                            </li>
-                        </div>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div id="pledge-filter-wrapper" class="margin-row">
-            <div class="row">
-                <div class="col-md-12">
-                    Ignore pledges from people:
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <ul>
-                        <div class="row">
-                            <li>
-                                <div class="col-md-6">
-                                    <span class="filter_label">who have not been active in</span>
-                                </div>
-                                <div class="col-md-2">
-                                    <input id="pledge-not_been_active_in_the_last_n_days" class="filter" type="text" min="0" value="{{ request.user.pledgefilter.not_been_active_in_the_last_n_days }}"/>
-                                </div>
-                                <div class="col-md-4">
-                                    <span class="filter_unit">or more days</span>
-                                </div>
-                            </li>
-                        </div>
-                        <div class="row">
-                            <li>
-                                <div class="col-md-6">
-                                    <span class="filter_label">who have paid fewer than</span>
-                                </div>
-                                <div class="col-md-2">
-                                    <input id="pledge-paid_at_least_n_times" class="filter" type="text" min="0" value="{{ request.user.pledgefilter.paid_at_least_n_times }}" />
-                                </div>
-                                <div class="col-md-4">
-                                    <span class="filter_unit">times</span>
-                                </div>
-                            </li>
-                        </div>
-                        <div class="row">
-                            <li>
-                                <div class="col-md-6">
-                                    <span class="filter_label">who have paid less than</span>
-                                </div>
-                                <div class="col-md-2">
-                                    <input id="pledge-paid_at_least_n_amount_in_total" class="filter" type="text" value="{{ request.user.pledgefilter.paid_at_least_n_amount_in_total }}" />
-                                </div>
-                                <div class="col-md-4">
-                                    <span class="filter_unit">dollars</span>
-                                </div>
-                            </li>
-                        </div>
-                    </ul>
-                </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form action="{% url 'job:create' %}">
+                    <input id="create_job" type="submit" value="Create Job" />
+                </form>
             </div>
         </div>
         {% endif %}
-        ---->
     </div>
 </div>
 {% endblock %}

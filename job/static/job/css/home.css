@@ -22,10 +22,8 @@ input[type=text] {
 
 #worker-filter-wrapper, #pledge-filter-wrapper {
     height: 150px;
-    border: 1px solid black;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 5px;
 }
 
 .filter_label {

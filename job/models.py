@@ -10,9 +10,9 @@ class Job(models.Model):
     is_finished = models.BooleanField(default=False);
     title = models.CharField(max_length=100);
     date = models.DateTimeField(auto_now_add=True);
-    pledged = models.FloatField(default=0);
+    pledging = models.FloatField(default=0);
     paid = models.FloatField(default=0);
-    workers = models.PositiveIntegerField(default=0);
+    working = models.PositiveIntegerField(default=0);
     finished = models.PositiveIntegerField(default=0);
     location = models.CharField(null=True, blank=True, max_length=1000);
     latitude = models.FloatField(null=True, blank=True);
@@ -44,6 +44,15 @@ class Job(models.Model):
         if (Job.objects.filter(random_string=random_string).exists()):
             random_string = createRandomString();
         return random_string;
+        
+    def check_is_finished(self):
+        is_finished = False;
+        if ((datetime.now() - self.date.replace(tzinfo=None)).days >= 180):
+            is_finished = True;
+        else:
+            if (self.pledging > 0 and self.pledging <= self.paid and self.working > 0 and self.working == self.finished):
+                is_finished = True;
+        return is_finished;
     
 class Tag(models.Model):
     jobs = models.ManyToManyField(Job);    

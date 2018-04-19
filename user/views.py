@@ -117,8 +117,8 @@ class DetailView(TemplateView):
         context['detail_user'] = user;
         context['description_form'] = kwargs['description_form'];
         context['name_form'] = kwargs['name_form'];
-        context['current'] = user.jobuser_set.filter(job__is_finished=False);
-        context['completed'] = user.jobuser_set.filter(job__is_finished=True);
+        context['current'] =  user.jobuser_set.filter(Q(pledging__gt=F('paid')) | ~Q(work_status__exact='Finished'));
+        context['completed'] = user.jobuser_set.filter((Q(pledging__gt=0) & Q(pledging__lte=F('paid'))) | Q(work_status='Finished'));
         return context;
  
 def add_to_detail_table(request, username):

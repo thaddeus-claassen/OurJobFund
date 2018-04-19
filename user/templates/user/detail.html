@@ -35,15 +35,6 @@
                 {% endif %}
             </div>
         </div>
-        {% if request.user.is_authenticated and request.user.username == detail_user.username %}
-        <div class="row">
-            <div class="col-md-12">
-                <form action="{% url 'job:create' %}">
-                    <input id="create_job" type="submit" value="Create Job" />
-                </form>
-            </div>
-        </div>
-        {% endif %}
         {% if request.user.username == detail_user.username and detail_user.profile.stripe_account_id == "" %}
         <div class="row">
             <div class="col-md-12">
@@ -79,16 +70,16 @@
                             <th class="current-title"><span class="table-header">Title</span></th>
                             <th class="current-pledging"><span class="table-header">Pledging</span></th>
                             <th class="current-paid"><span class="table-header">Paid</span></th>
-                            <th class="current-work_status"><span class="table-header">Status</span></th>
+                            <th class="current-received"><span class="table-header">Received</span></th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for j in current %}
                         <tr>
                             <td class="current-title"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.title }}</a></td>
-                            <td class="current-pledging">{% if j.pledging == None %}--{% else %}${{ j.pledging|floatformat:2 }}{% endif %}</td>
-                            <td class="current-paid">{% if j.pledging == None %}--{% else %}${{ j.paid|floatformat:2 }}{% endif %}</td>
-                            <td class="current-work_status">{% if j.work_status == '' %}--{% else %}{{ j.work_status }}{% endif %}</td>
+                            <td class="current-pledging">${{ j.pledging|floatformat:2 }}</td>
+                            <td class="current-paid">${{ j.paid|floatformat:2 }}</td>
+                            <td class="current-work_status">${{ j.received|floatformat:2 }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

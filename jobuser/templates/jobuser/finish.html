@@ -2,8 +2,8 @@
  
 {% load staticfiles %}
 {% block import %}
-    <script type="text/javascript" src="{% static 'update/js/create.js' %}"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'update/css/create.css' %}" />
+    <script type="text/javascript" src="{% static 'jobuser/js/finish.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'jobuser/css/work-finish.css' %}" />
 {% endblock %}
  
 {% block content %}
@@ -12,7 +12,7 @@
     <div class="row info_row">
         <div class="col-md-12">
             <h4 id="title">
-                Update <a href="{% url 'job:detail' job.random_string %}">{{ job.name }}</a>
+                Finish <a href="{% url 'job:detail' job.random_string %}">{{ job.title }}</a>
             </h4>
         </div>
     </div>
@@ -32,7 +32,7 @@
     <div class="row info_row">
         <div class="col-md-2"></div>
         <div class="col-md-10">
-            <input id="submit_button" type="submit" value="Submit" name="submit_{{ type }}"/>
+            <input id="submit_button" type="submit" value="Submit" />
         </div>
     </div>
 </form>
