@@ -50,7 +50,7 @@ class PledgeView(TemplateView):
             if (comment):
                 update = Update.create(jobuser=jobuser, comment=comment);
                 update.save();
-            job.pledged = job.pledged + amount;
+            job.pledging = job.pledging + amount;
             job.save();
             sendNotifications(jobuser);
             return redirect('job:detail', job_random_string=job.random_string);
@@ -166,7 +166,7 @@ class WorkView(TemplateView):
             if (comment):
                 update = Update.create(jobuser=jobuser, comment=comment);
                 update.save();
-            job.workers = job.workers + 1;
+            job.working = job.working + 1;
             if (job.sFinished()):
                 job.is_finished = True;
             job.save();
