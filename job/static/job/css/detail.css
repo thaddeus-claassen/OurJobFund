@@ -88,19 +88,3 @@ tbody {
 .working-username, .working-date, .working-work_status, .working-received {
     width: 25%;
 }
-
-#no_stripe_account {
-    color: red;
-}
-
-#images {
-    width: 100%;
-    height: 150px;
-    overflow-x: scroll;
-    white-space: nowrap;
-}
-
-.image {
-    height: 100%;
-    display: inline-block;
-}

@@ -6,16 +6,6 @@ input[type=submit] {
     text-align: center;
 }
 
-.change-info-description {
-    float: right;
-    color: #0000EE;
-}
-
-.change-info-description:hover {
-    cursor: pointer;
-    text-decoration: underline;
-}
-
 #id_description {
     height: 400px;
     width: 100%;
@@ -24,12 +14,7 @@ input[type=submit] {
     resize: none;
 }
 
-#pay-button {
-    float: right;
-    width: 100%;
-}
-
-#save_info, #create_job {
+#save {
     width: 100%;
 }
 

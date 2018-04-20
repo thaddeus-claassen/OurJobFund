@@ -3,35 +3,14 @@ input[type=text] {
     max-width: 100%;
 }
 
-.search, #search_button, #location, #radius, #create_job, table {
+.search, #location, #create_job, table {
     width: 100%;
-}
-
-#custom_search {
-    height: 70px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    resize: none;
 }
 
 #map {
     height: 300px;
     width: 100%;
     border: 1px solid black;
-}
-
-#worker-filter-wrapper, #pledge-filter-wrapper {
-    height: 150px;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-.filter_label {
-    float: right;
-}
-
-.filter_unit {
-    float: left;
 }
 
 table {

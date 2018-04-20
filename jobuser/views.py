@@ -166,7 +166,7 @@ class WorkView(TemplateView):
                 update = Update.create(jobuser=jobuser, comment=comment);
                 update.save();
             job.working = job.working + 1;
-            if (job.sFinished()):
+            if (job.isFinished()):
                 job.is_finished = True;
             job.save();
             sendNotifications(jobuser);

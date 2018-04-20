@@ -20,11 +20,6 @@ $('document').ready(function() {
             search();
         }// end if
     });
-    $('#radius').keydown(function(event) {
-        if (event.which == ENTER) {
-            search();
-        }// end if
-    });
     $('.table-header').click(function() {
         var cls = $(this).parent().attr('class');
         setSortAndNumSearches(cls.split("-")[0]);
@@ -86,7 +81,7 @@ function get_jobs() {
             'search' : $('#search').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
-            'radius' : getRadius(),
+            'radius' : 10,
             'sort' : sort,
         },
         success: function(json) {
@@ -109,7 +104,7 @@ function get_total_jobs() {
             'search' : $('#search').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
-            'radius' : getRadius(),
+            'radius' : 10,
             'sort' : sort,
         },
         success: function(json) {
@@ -156,14 +151,6 @@ function applyLocation() {
         }// end if-else
     });
 }// end applyLocation()
-
-function getRadius() {
-    var radius = parseFloat($('#radius').val());
-    if (isNaN(radius)) {
-        radius = 10;
-    }// end if
-    return radius
-}// end getRadius()
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'));
@@ -226,21 +213,3 @@ function turnMoneyToString(number) {
     }// end if-else
     return number.toString();
 }// end turnMoneyToString()
-
-function toggleSearch() {
-    if ($('#basic').prop('checked')) {
-        $('#basic_search').css('display', 'inline');
-        $('#custom_search').css('display', 'none');
-    } else {
-        $('#basic_search').css('display', 'none');
-        $('#custom_search').css('display', 'inline');
-    }// end if-else
-}// end toggleSearch()
-
-function showLocation() {
-    if ($('#show-location').prop('checked')) {
-        $('#location-wrapper').css('display', 'inline');
-    } else {
-        $('#location-wrapper').css('display', 'none');
-    }// end if-else
-}// end showLocation()
