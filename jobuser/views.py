@@ -166,8 +166,6 @@ class WorkView(TemplateView):
                 update = Update.create(jobuser=jobuser, comment=comment);
                 update.save();
             job.working = job.working + 1;
-            if (job.isFinished()):
-                job.is_finished = True;
             job.save();
             sendNotifications(jobuser);
             return redirect('job:detail', job_random_string=job.random_string);
