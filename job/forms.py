@@ -4,10 +4,10 @@ import re;
 
 class NewJobForm(forms.ModelForm):
     title = forms.CharField(max_length=100);
-    location = forms.CharField(widget=forms.TextInput(attrs={'placeholder' : '(Any valid location on Google Maps)'}), max_length=1000, required=False);
+    location = forms.CharField(widget=forms.TextInput, max_length=1000, required=False);
     latitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
     longitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
-    tags = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '(Optional)'}), max_length=1000, required=False);
+    tags = forms.CharField(widget=forms.TextInput, max_length=1000, required=False);
     image_set = forms.ImageField(label="Images", widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False);
     comment = forms.CharField(widget=forms.Textarea, max_length=10000);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
