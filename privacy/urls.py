@@ -3,10 +3,10 @@ from django.conf.urls import url;
 from django.conf.urls.static import static;
 from . import views;
 
-app_name = 'contact';
+app_name = 'privacy';
 
 urlpatterns = [
 
-    url(r'^$', views.contact, name='contact'),
+    url(r'^$', views.privacy, name='privacy'),
 
 ]

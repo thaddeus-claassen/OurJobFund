@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^' + URLS['about'] + '/', include('about.urls')),
     url(r'^' + URLS['contact'] + '/', include('contact.urls')),
     url(r'^' + URLS['terms_of_service'] + '/', include('terms_of_service.urls')),
+    url(r'^' + URLS['privacy'] + '/', include('privacy.urls')),
     url(r'^', include('user.urls')),
 ]
 

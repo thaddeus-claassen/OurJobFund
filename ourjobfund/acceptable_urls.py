@@ -18,6 +18,7 @@ URLS = {
     'password_reset': 'password_reset',
     'reset': 'reset',
     'admin': 'admin',
+    'privacy': 'privacy',
     'job': 'job',
     'pledge-history': 'pledge-history',
     'work-history': 'work-history',

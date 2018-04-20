@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'notification',
     'about',
     'contact',
+    'privacy',
     'terms_of_service',
     'django_static_jquery',
     'bootstrap3',
