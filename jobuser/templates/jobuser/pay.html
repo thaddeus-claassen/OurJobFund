@@ -20,6 +20,9 @@
             {{ field.label }}
         </div>
         <div class="col-md-10">
+            {% if field.auto_id == 'id_amount' %}
+            $
+            {% endif %}
             {{ field }}{{ field.errors }}
         </div>
     </div>

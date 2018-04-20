@@ -5,7 +5,7 @@ from .models import Work, MiscPay, Pledge;
 from django import forms;
 
 class PledgeForm(forms.Form):
-    amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}));
+    amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '0.00'}));
     comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
 
@@ -30,7 +30,7 @@ class PledgeForm(forms.Form):
 class PayForm(forms.Form):
     type = forms.ChoiceField(choices=(('', '(Please Select Payment Method)'), ('Credit/Debit', 'Credit/Debit'), ('Already Paid', 'Already Paid')));
     pay_to = forms.ChoiceField();
-    amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}), required=True);
+    amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '0.00'}), required=True);
     comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     
