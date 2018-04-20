@@ -4,7 +4,7 @@ var handler;
 
 $(document).ready(function() {
     $('#form').submit(function(e) {
-        if ($('#id_work-payment_type').val() === 'Credit/Debit' || $('#id_work-payment_type').val() === 'Either') {
+        if ($('#id_work-payment_type').val() === 'Credit/Debit' || $('#id-payment_type').val() === 'Either') {
             if (stripeSubmitted) {
                 if (canSubmit) {
                     canSubmit = false;

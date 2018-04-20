@@ -141,12 +141,12 @@ class WorkView(TemplateView):
         if (Work.objects.filter(jobuser=jobuser).exists()):
             return redirect('job:detail', job_random_string=job.random_string);
         else:
-            return render(request, self.template_name, self.get_context_data(job=job, form=self.form(prefix='work')));
+            return render(request, self.template_name, self.get_context_data(job=job, form=self.form));
         
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
-        form = self.form(request.POST, prefix='work');
+        form = self.form(request.POST);
         jobuser = get_object_or_None(JobUser, user=request.user, job=job);
         if (jobuser and jobuser.work_set.all().exists()):
             return redirect('job:detail', job_random_string=job.random_string);
@@ -191,7 +191,7 @@ class WorkView(TemplateView):
         
 class FinishView(TemplateView):
     template_name = 'jobuser/finish.html';
-    form = FinishForm(prefix='finish');
+    form = FinishForm;
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
