@@ -1,0 +1,3 @@
+input[type=submit], .sign-up-input, #create-account {
+    float: right;
+}

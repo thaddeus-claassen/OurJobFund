@@ -77,17 +77,6 @@
                                 {{ u.comment }}
                             </td>
                         </tr>
-                        {% if job.image_set.all %}
-                        <tr>
-                            <td class="updates-images" colspan="2">
-                                <div id="images">
-                                {% for image in job.image_set.all %}
-                                    <img src="{{ image.image.url }}" class="img-responsive image" />
-                                {% endfor %}
-                                </div>
-                            </td>
-                        </tr>
-                        {% endif %}
                     {% endfor %}
                     </tbody>
                     <tfoot>

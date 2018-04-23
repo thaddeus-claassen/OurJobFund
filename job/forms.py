@@ -12,7 +12,7 @@ class NewJobForm(forms.ModelForm):
     comment = forms.CharField(widget=forms.Textarea, max_length=10000);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
 
-    class Meta: 
+    class Meta:
         model = Job;
         fields = ['title', 'location', 'latitude', 'longitude', 'tags', 'image_set', 'comment'];
     

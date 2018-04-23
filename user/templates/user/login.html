@@ -11,18 +11,20 @@
     <div class="col-md-12">
         <div class="row">
             <div class="col-md-12">
-                Create Account
+                <h4 id="create-account">Create Account</h4>
             </div>
         </div>
         <form id="sign-up-form" method="POST" action="{% url 'user:login' %}">
         {% csrf_token %}
         {% for field in sign_up_form %}
             <div class="row">
-                <div class="col-md-12 sign-up-input">
-                {% if field.auto_id == "id_signup-age_checkbox"%}
-                    {{ field.label }}
-                {% endif %}
-                {{ field }}{{ field.errors }}
+                <div class="col-md-12">
+                    <span class="sign-up-input">
+                    {% if field.auto_id == "id_signup-age_checkbox"%}
+                        {{ field.label }}
+                    {% endif %}
+                    {{ field }}{{ field.errors }}
+                    </span>
                 </div>
             </div>
         {% endfor %}

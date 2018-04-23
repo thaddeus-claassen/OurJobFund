@@ -11,11 +11,11 @@ $('document').ready(function() {
 });
 
 function createSpansAboveInputsForErrorMessages() {
-    $('#id_first_name').before("<div class='row'><div class='col-md-12'><span id='id_first_name_span'></span></div></div>'");
-    $('#id_last_name').before("<div class='row'><div class='col-md-12'><span id='id_last_name_span'></span></div></div>'");
-    $('#id_email').before("<div class='row'><div class='col-md-12'><span id='id_email_span'></span></div></div>'");
-    $('#id_password').before("<div class='row'><div class='col-md-12'><span id='id_password_span'></span></div></div>'");
-    $('#id_repeat_password').before("<div class='row'><div class='col-md-12'><span id='id_repeat_password_span'></span></div></div>'");
+    $('#id_first_name').after("<div class='row'><div class='col-md-12'><span id='id_first_name_span'></span></div></div>'");
+    $('#id_last_name').after("<div class='row'><div class='col-md-12'><span id='id_last_name_span'></span></div></div>'");
+    $('#id_email').after("<div class='row'><div class='col-md-12'><span id='id_email_span'></span></div></div>'");
+    $('#id_password').after("<div class='row'><div class='col-md-12'><span id='id_password_span'></span></div></div>'");
+    $('#id_repeat_password').after("<div class='row'><div class='col-md-12'><span id='id_repeat_password_span'></span></div></div>'");
 }// end createSpansAfterInputsForErrorMessages()
 
 function emailFailure() {
