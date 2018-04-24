@@ -156,10 +156,14 @@ function addRowsToPledgingTable(json) {
 function addRowsToWorkingTable(json) {
     for (var index = 0; index < json.length; index++) {
         var worker = json[index];
+        var finished = worker['finished'];
+        if (finished == 'January 1, 3000') {
+            finished = 'N/A';
+        }
         var string = "<tr>";
         string = string + "<td class='working-username'><a href='user/ " + worker['username'] + "'>" + worker['username'] + "</a></td>";
-        string = string + "<td class='working-date'>" + worker['date'] + "</td>";
-        string = string + "<td class='working-status'>" + worker['work_status'] + "</td>";
+        string = string + "<td class='working-started'>" + worker['started'] + "</td>";
+        string = string + "<td class='working-finished'>" + finished + "</td>";
         string = string + "<td class='working-received'>" + changeNumberToCurrency(worker['received']) + "</td>";
         string = string + "</tr>";
         $('#working tbody').append(string);

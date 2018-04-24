@@ -69,8 +69,9 @@ def sign_out(request):
     return redirect('user:login');
 
 def search_user(request):
+    print("Got into search_user")
     if (request.is_ajax()):
-        username = request.GET['username'][0];
+        username = request.GET['username'];
         user = get_object_or_None(User, username=username);
         data = {};
         if (user):
@@ -117,8 +118,8 @@ class DetailView(TemplateView):
         context['detail_user'] = user;
         context['description_form'] = kwargs['description_form'];
         context['name_form'] = kwargs['name_form'];
-        context['current'] =  user.jobuser_set.filter(Q(pledging__gt=F('paid')) | ~Q(work_status__exact='Finished'));
-        context['completed'] = user.jobuser_set.filter((Q(pledging__gt=0) & Q(pledging__lte=F('paid'))) | Q(work_status='Finished'));
+        context['current'] =  user.jobuser_set.filter(job__is_finished=False);
+        context['completed'] = user.jobuser_set.filter(job__is_finished=True);
         return context;
  
 def add_to_detail_table(request, username):

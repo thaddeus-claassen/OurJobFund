@@ -53,13 +53,13 @@ tbody {
     text-align: center;
 }
 
-.paid {
+.pledging {
     width: 15%;
     float: left;
     text-align: center;
 }
 
-.finished {
+.working {
     width: 15%;
     float: left;
     text-align: center;

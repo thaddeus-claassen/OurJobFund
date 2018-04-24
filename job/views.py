@@ -8,7 +8,7 @@ from jobuser.serializers import PledgeSerializer, WorkSerializer;
 from annoying.functions import get_object_or_None;
 from update.serializers import UpdateSerializer;
 from django.shortcuts import render, get_object_or_404, redirect;
-from django.db.models import Q, F, Count;
+from django.db.models import Q, F, Count, Max;
 from jobuser.models import JobUser, MiscPay;
 from update.models import Update, Image;
 from .serializers import JobSerializer;
@@ -125,7 +125,7 @@ class DetailView(TemplateView):
             jobuser = get_object_or_None(JobUser, user=request.user, job=job);
             if (jobuser):
                 jobuser = JobUser.create(jobuser=jobuser, work_status='Working');
-                jobuse.save();
+                jobuser.save();
             else:
                 jobuser.work_status = 'Working';
             return redirect('job:detail', job_random_string=job.random_string);
@@ -175,42 +175,29 @@ def add_to_detail_table(request, job_random_string):
         column = request.GET['column'];
         order = request.GET['order'];
         if (table == 'updates'):
-            if (column == 'username' or column == 'date' or column == 'images'):
-                data = Update.objects.filter(jobuser__job=job);
-            else:
-                return Http404();
+            data = Update.objects.filter(jobuser__job=job);
         elif (table == 'pledging'):
-            if (column == 'username' or column == 'pledging' or column == 'paid'):
-                data = JobUser.objects.filter(Q(job=job) & (Q(pledging__gt=0) | Q(paid__gt=0)));
-            else:
-                return Http404();
+            data = JobUser.objects.filter(Q(job=job) & (Q(pledging__gt=0) | Q(paid__gt=0)));
         elif (table == 'working'):
-            if (column == 'username' or column == 'work_status' or column == 'received'):
-                data = JobUser.objects.filter(job=job).exclude(work_status='');
-            else:
-                return Http404();
+            data = JobUser.objects.filter(job=job).exclude(work_status='');
         if (column == 'username'):
             if (table == 'updates'):
-                if (order == 'ascending'):
-                    data = data.order_by(Lower('jobuser__user__username'))[50 * numSearches : 50 * (numSearches + 1)][::-1];
-                else:
-                    data = data.order_by(Lower('jobuser__user__username'))[50 * numSearches : 50 * (numSearches + 1)];
+                data = data.order_by(Lower('jobuser__user__username'))[50 * numSearches : 50 * (numSearches + 1)];
             else:
-                if (order == 'ascending'):
-                    data = data.order_by(Lower('user__username'))[50 * numSearches : 50 * (numSearches + 1)][::-1];
-                else:
-                    data = data.order_by(Lower('user__username'))[50 * numSearches : 50 * (numSearches + 1)];
+                data = data.order_by(Lower('user__username'))[50 * numSearches : 50 * (numSearches + 1)];
         elif (column == 'images'):
-            if (order == 'ascending'):
-                
-                data = data.annotate(num_images=Count('image')).order_by('num_images');
+            data = data.annotate(num_images=Count('image')).order_by('num_images')[::-1];
+        elif (column == 'date' or column == 'started' or column == 'finished'):
+            if (column == 'date'):
+                data = data.annotate(date=Max('pledge__date')).order_by('date');
+            elif (column == 'started'):
+                data = data.annotate(date=Max('work__date')).order_by('date');
             else:
-                data = data.annotate(num_images=Count('image')).order_by('num_images')[::-1];
+                data = data.annotate(date=Max('finish__date')).order_by('date');
         else:
-            if (order == 'ascending'):
-                data = data.order_by(column)[50 * numSearches : 50 * (numSearches + 1)][::-1];
-            else:
-                data = data.order_by(column)[50 * numSearches : 50 * (numSearches + 1)];
+            data = data.order_by(column)[50 * numSearches : 50 * (numSearches + 1)];
+        if (order == 'ascending'):
+            data = data[::-1];
         if (table == 'updates'):
             serializer = UpdateSerializer(data, many=True);
         elif (table == 'pledging'):

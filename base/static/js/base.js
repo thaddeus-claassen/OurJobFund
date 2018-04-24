@@ -24,7 +24,7 @@ function check_if_user_exists(username) {
     $.ajax({
         url : 'search-user',
         data : {
-            'username' : username
+            'username' : username,
         },
         success: function(json) {
             if (json !== "") location = '/' + json['username'];

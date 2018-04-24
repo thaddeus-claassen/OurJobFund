@@ -219,8 +219,8 @@
                     <thead>
                         <tr>
                             <th class="working-username"><span class="table-header">Username</span></th>
-                            <th class="working-date"><span class="table-header">Date Started</span></th>
-                            <th class="working-work_status"><span class="table-header">Status</span></th>
+                            <th class="working-started"><span class="table-header">Started</span></th>
+                            <th class="working-finished"><span class="table-header">Finished</span></th>
                             <th class="working-received"><span class="table-header">Received</span></th>
                         </tr>
                     </thead>
@@ -236,12 +236,12 @@
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
-                            <td class="working-date">
+                            <td class="working-started">
                                 {% with work=w.work_set.all|dictsort:"date"|first %}
                                 {{ work.date|date:"F d, Y" }}
                                 {% endwith %}
                             </td>
-                            <td class="working-work_status">{{ w.work_status }}</td>
+                            <td class="working-finished">{% if w.finished_set.all.exists %}{{ w.finished_set.all.first.date }}{% else %}N/A{% endif %}</td>
                             <td class="working-received">${{ w.received|floatformat:2 }}</td>
                         </tr>
                     {% endfor %}

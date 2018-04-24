@@ -85,6 +85,6 @@ tbody {
     width: 25%;
 }
 
-.working-username, .working-date, .working-work_status, .working-received {
+.working-username, .working-started, .working-finished, .working-received {
     width: 25%;
 }
