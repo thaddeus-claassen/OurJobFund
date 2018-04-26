@@ -33,11 +33,6 @@ $('document').ready(function() {
             }// end if
         }// end if
     });
-    $(document).on('input', 'input:text', function() {
-        if ($(this).attr('class') === 'filter' && !isNaN($(this).val())) {
-            save_filter($(this));
-        }// end if
-    });
 });
 
 function setSortAndNumSearches(col) {
@@ -125,9 +120,7 @@ function addJobsToTable(json) {
         string = string + "</tr>";
         $('tbody').append(string);
         $('#' + job["random_string"]).text(job["title"]);
-        if ($('#location').val() != "") {
-            addMarker(new google.maps.LatLng(job['latitude'], job['longitude']), 'job/' + job["random_string"]);    
-        }// end if
+        addMarker(new google.maps.LatLng(job['latitude'], job['longitude']), 'job/' + job["random_string"]);    
     }// end for
     if ($('#location').val() !== "") {
         addBounds();
@@ -137,11 +130,12 @@ function addJobsToTable(json) {
 function applyLocation() {
     var address = $('#location').val();
     var geocoder = new google.maps.Geocoder();
-    geocoder.geocode( { 'address': address}, function(results, status) {
+    geocoder.geocode({ 'address': address}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             center = results[0].geometry.location;
             $('#latitude').val(center.lat());
             $('#longitude').val(center.lng());
+            map.setCenter(center)
             get_jobs();
             get_total_jobs();
         } else {
@@ -159,9 +153,7 @@ function initMap() {
     bounds.extend({lat: 21.9, lng: -160.2});
     bounds.extend({lat: 71.3, lng: -156.8});
     map.fitBounds(bounds);
-    if ($('#search').val() != '' || $('#location').val() != ''){
-        search();
-    }// end if
+    search();
 }// end initMap()
 
 function addBounds() {

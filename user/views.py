@@ -69,7 +69,6 @@ def sign_out(request):
     return redirect('user:login');
 
 def search_user(request):
-    print("Got into search_user")
     if (request.is_ajax()):
         username = request.GET['username'];
         user = get_object_or_None(User, username=username);

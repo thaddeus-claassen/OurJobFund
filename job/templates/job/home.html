@@ -2,7 +2,6 @@
 
 {% load static %}
 {% block import %}
-    <!-- Importing Google Maps Libary -->    
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3pteK4Epn8dFH03DGk97K7ICo_FwYht0&callback=initMap" async defer></script>
     <script type="text/javascript" src="{% static 'job/js/home.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'job/css/home.css' %}" />
@@ -23,20 +22,11 @@
                         <tr>
                             <th class="title"><span class="table-header">Title</span></th>
                             <th class="date"><span class="table-header">Created</span></th>
-                            <th class="pledging money"><span class="table-header">Pledging</span></th>
+                            <th class="pledging"><span class="table-header">Pledging</span></th>
                             <th class="working"><span class="table-header">Working</span></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {% for job in jobs %}
-                        <tr>
-                            <td class='title'><a id="{{ job.random_string }}" href="{% url 'job:detail' job.random_string %}">{{ job.title }}</a></td>
-                            <td class='date'>{{ job.date }}</td>
-                            <td class='pledging money'><sup>${{ job.paid }}</sup>&frasl;<sub>${{ job.pledged }}</sub></td>
-                            <td class='working'><sup>{{ job.finished }}</sup>&frasl;<sub>{{ job.workers }}</sub></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
+                    <tbody></tbody>
                     <tfoot>
                         <tr>
                             <td class="title"><span id="num-jobs-found">0</span></td>
