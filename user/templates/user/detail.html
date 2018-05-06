@@ -20,21 +20,25 @@
                 <h4>Description</h4>
             </div>
         </div>
-        <form id="form" action="{{ request.get_full_path }}" method="POST">
-        {% csrf_token %}
-            <div class="row">
-                <div class="col-md-12">
-                    {{ description_form.description }}
-                </div>
-            </div>
-        </form>
         <div class="row">
             <div class="col-md-12">
-                {% if request.user.username == detail_user.username %}
-                <input id="save" type="submit" value="Save" form="form" name="info" />
-                {% endif %}
+                {{ request.user.first_name }} {{ requset.user.last_name }}
             </div>
         </div>
+        <div id="description" class="row">
+            <div class="col-md-12">
+                <span>{{ request.user.profile.description }}</span>
+            </div>
+        </div>
+        {% if request.user.username == detail_user.username %}
+        <div class="row">
+            <div class="col-md-12">
+                <form action="{% url 'user:edit_profile' request.user.username %}">
+                    <input id="edit_profile" type="submit" value="Edit Profile" />
+                </form>
+            </div>
+        </div>
+        {% endif %}
         {% if request.user.username == detail_user.username and detail_user.profile.stripe_account_id == "" %}
         <div class="row">
             <div class="col-md-12">

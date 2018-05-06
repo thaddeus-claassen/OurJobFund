@@ -86,7 +86,7 @@ class SignUpForm(forms.ModelForm):
             raise forms.ValidationError('It seems you are a bot.');
         return "";   
         
-class DescriptionForm(forms.ModelForm):
+class ChangeDescriptionForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea, required=False);
     description_honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
     
@@ -99,9 +99,9 @@ class DescriptionForm(forms.ModelForm):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
     
-class NameForm(forms.ModelForm):
-    first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
-    last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
+class ChangeNameForm(forms.ModelForm):
+    first_name = forms.CharField(label="First Name", max_length=30, widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
+    last_name = forms.CharField(label="Last Name", max_length=30, widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
     name_honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
 
     class Meta:

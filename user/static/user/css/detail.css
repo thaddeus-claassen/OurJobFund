@@ -6,15 +6,14 @@ input[type=submit] {
     text-align: center;
 }
 
-#id_description {
+#description {
     height: 400px;
     width: 100%;
     overflow-x: hidden;
     overflow-y: auto;
-    resize: none;
 }
 
-#save {
+#edit_profile {
     width: 100%;
 }
 

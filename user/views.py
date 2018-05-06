@@ -16,7 +16,7 @@ from django.core import serializers;
 from job.models import Job;
 from datetime import datetime;
 from .models import Profile;
-from .forms import ChangeUsernameForm, ChangePasswordForm, ChangeEmailForm, DeactivateAccountForm, LoginForm, SignUpForm, DescriptionForm, NameForm;
+from .forms import ChangeUsernameForm, ChangePasswordForm, ChangeEmailForm, DeactivateAccountForm, LoginForm, SignUpForm, ChangeDescriptionForm, ChangeNameForm;
 import json, stripe;
 
 class LoginView(TemplateView):
@@ -83,30 +83,14 @@ def search_user(request):
         
 class DetailView(TemplateView):
     template_name = 'user/detail.html';
-    description_form = DescriptionForm;
-    name_form = NameForm;
     
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(User, username=kwargs['username']);
-        description_form = self.description_form(initial={'description' : user.profile.description});
-        name_form = self.name_form(initial={'first_name' : user.first_name, 'last_name' : user.last_name});
-        return render(request, self.template_name, self.get_context_data(request, user=user, description_form=description_form, name_form=name_form));
+        return render(request, self.template_name, self.get_context_data(request, user=user));
     
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        description_form = self.description_form;
-        name_form = self.name_form;
-        if ('info' in request.POST):
-            description_form = description_form(request.POST);
-            name_form = name_form(request.POST);
-            if (description_form.is_valid() and name_form.is_valid()):
-                request.user.first_name = name_form.cleaned_data['first_name'];
-                request.user.last_name = name_form.cleaned_data['last_name'];
-                request.user.save();
-                request.user.profile.description = description_form.cleaned_data['description'];
-                request.user.profile.save();
-                return redirect('user:detail', username=request.user.username);
-        elif ('delete-stripe' in request.POST):
+        if ('delete-stripe' in request.POST):
             request.user.profile.stripe_account_id = "";
             request.user.profile.save();
         return render(request, self.template_name, self.get_context_data(request, user=request.user, description_form = description_form, name_form=name_form));
@@ -115,8 +99,6 @@ class DetailView(TemplateView):
         context = super(DetailView, self).get_context_data(**kwargs);
         user = kwargs['user'];
         context['detail_user'] = user;
-        context['description_form'] = kwargs['description_form'];
-        context['name_form'] = kwargs['name_form'];
         context['current'] =  user.jobuser_set.filter(job__is_finished=False);
         context['completed'] = user.jobuser_set.filter(job__is_finished=True);
         return context;
@@ -147,6 +129,40 @@ def add_to_detail_table(request, username):
         return HttpResponse(json, 'application/json');
     else:
         return Http404();
+        
+class EditProfileView(TemplateView):
+    template_name = 'user/edit_profile.html';
+    description_form = ChangeDescriptionForm;
+    name_form = ChangeNameForm;
+    
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        if (request.user.username == kwargs['username']):
+            name_form = self.name_form(initial={'first_name' : request.user.first_name, 'last_name' : request.user.last_name});
+            description_form = self.description_form(initial={'description': request.user.profile.description});
+            return render(request, self.template_name, self.get_context_data(name_form=name_form, description_form=description_form));
+        else:
+            return redirect('user:edit_profile', username=request.user.username);
+
+    @method_decorator(login_required)      
+    def post(self, request ,*args, **kwargs):
+        name_form = name_form(request.POST);
+        description_form = description_form(request.POST);
+        if (description_form.is_valid() and name_form.is_valid()):
+            request.user.first_name = name_form.cleaned_data['first_name'];
+            request.user.last_name = name_form.cleaned_data['last_name'];
+            request.user.save();
+            request.user.profile.description = description_form.cleaned_data['description'];
+            request.user.profile.save();
+            return redirect('user:detail', username=request.user.username);
+        else:
+            return render(request, self.template_name, self.get_context_data(name_form=name_form, description_form=description_form));
+            
+    def get_context_data(self, **kwargs):
+        context = super(EditProfileView, self).get_context_data(**kwargs);
+        context['name_form'] = kwargs['name_form'];
+        context['description_form'] = kwargs['description_form'];
+        return context;
     
 class AccountView(TemplateView):
     template_name = 'user/account.html';

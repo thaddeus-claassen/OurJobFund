@@ -38,6 +38,7 @@ URLS = {
     'log-in': 'log-in',
     'sign-out': 'sign-out',
     'account': 'account',
+    'edit-profile': 'edit-profile',
     'search-users': 'search-users',
     'see-more-users': 'see-more-users',
 };
