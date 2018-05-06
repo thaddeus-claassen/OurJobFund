@@ -10,12 +10,12 @@
 <input id="username" type="hidden" value="{% if request.user.is_authenticated %}{{ request.user.username }}{% endif %}" />
 <input id="unconfirmed_payments" type="hidden" value="{{ unconfirmed_payments }}" />
 <input id="random_string" type="hidden" value="{{ job.random_string }}" />
-<div class="row info_row">
-    <div class="col-md-12">
+<div class="row">
+    <div class="col-md-7 col-md-offset-5">
         <h4 id="title">{{ job.title }}</h4>
     </div>
 </div>
-<div class="row info_row">
+<div class="row">
     <div class="col-md-6">
         <span id="tags">
         {% if job.tag_set.all.count > 0 %}
@@ -37,16 +37,11 @@
 <div class="row">
     <div class="col-md-5">
         <div class="row">
-            <div class="col-md-6">
-                <h4>Updates</h4>
-            </div>
-        </div>
-        <div class="row">
             <div class="col-md-12">
                 <table id="updates" class="table">
                     <thead>
                         <tr>
-                            <th class="updates-username"><span class="table-header">Username</span></th>
+                            <th class="updates-username"><span class="table-header">Updaters</span> <span id="updates-total">{{ updates.count }}</span></th>
                             <th class="updates-date"><span id="updates-date" class="table-header">Date</span></th>
                             <th class="updates-images"><span id="updates-images" class="table-header">Images</span></th>
                         </tr>
@@ -79,13 +74,6 @@
                         </tr>
                     {% endfor %}
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td class="updates-date"><span id="updates-total">{{ updates.count }}</span></td>
-                            <td class="updates-username"></td>
-                            <td class="updates-images"></td>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>
@@ -145,27 +133,14 @@
         {% endif %}
     </div>
     <div class="col-md-7">
-        <div class="row info_row header">
-            <div class="col-md-6">
-                <h4>Pledging</h4>
-            </div>
-            <div class="col-md-6">
-                <span class="history">
-                    <a href="{% url 'pledge-history' job.random_string %}">
-                        History
-                    </a>
-                </span>
-            </div>
-        </div>
-        <div class="row info_row">
+        <div class="row">
             <div class="col-md-12">
                 <table id="pledging" class="table">
                     <thead>
                         <tr>
-                            <th class="pledging-username"><span class="table-header">Username</span></th>
-                            <th class="pledging-date"><span class="table-header">Date Pledged</span></th>
-                            <th class="pledging-pledging"><span class="table-header">Pledging</span></th>
-                            <th class="pledging-paid"><span class="table-header">Paid</span></th>
+                            <th class="pledging-username"><span class="table-header">Pledgers</span> <span id="pledging-total">{{ pledging_total }}</span></th>
+                            <th class="pledging-pledging"><span class="table-header">Pledge</span> <span id="total-pledges">${{  job.pledging|floatformat:2 }}</span></th>
+                            <th class="pledging-paid"><span class="table-header">Paid</span> <span id="total-paid">${{ job.paid|floatformat:2 }}</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -180,45 +155,36 @@
                                 <span>[ Deleted User ]</span>
                                 {% endif %}
                             </td>
-                            <td class="pledging-date">
+                            <td class="pledging-pledging">
+                                ${{ j.pledging|floatformat:2 }} -
+                                <span id="date"> 
                                 {% with pledge=j.pledge_set.all|dictsort:"date"|first %}
                                 {{ pledge.date|date:"F d, Y" }}
                                 {% endwith %}
+                                </span>
                             </td>
-                            <td class="pledging-pledging">${{ j.pledging|floatformat:2 }}</td>
                             <td class="pledging-paid">${{ j.paid|floatformat:2 }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td class="pledging-username"><span id="pledging-total">{{ pledging_total }}</span></td>
-                            <td class="pledging-date"></td>
-                            <td class="pledging-pledging">${{ job.pledging|floatformat:2 }}</td>
-                            <td class="pledging-paid">${{ job.paid|floatformat:2 }}</td>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>
-        <div class="row info_row header">
-            <div class="col-md-6">
-                <h4>Working</h4>
-            </div>
-            <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-12">
                 <span class="history">
-                    <a href="{% url 'work-history' job.random_string %}">
+                    <a href="{% url 'pledge-history' job.random_string %}">
                         History
                     </a>
                 </span>
             </div>
         </div>
-        <div class="row info_row">
+        <div class="row">
             <div class="col-md-12">
                 <table id="working" class="table">
                     <thead>
                         <tr>
-                            <th class="working-username"><span class="table-header">Username</span></th>
+                            <th class="working-username"><span class="table-header">Workers</span> <span id="working-total">{{ job.working }}</span></th>
                             <th class="working-started"><span class="table-header">Started</span></th>
                             <th class="working-finished"><span class="table-header">Finished</span></th>
                             <th class="working-received"><span class="table-header">Received</span></th>
@@ -246,15 +212,16 @@
                         </tr>
                     {% endfor %}
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td class="working-username"><span id="working-total">{{ job.working }}</span></td>
-                            <td class="working-date"></td>
-                            <td class="working-work_status"></td>
-                            <td class="working-received"></td>
-                        </tr>
-                    </tfoot>
                 </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <span class="history">
+                    <a href="{% url 'work-history' job.random_string %}">
+                        History
+                    </a>
+                </span>
             </div>
         </div>
     </div>
