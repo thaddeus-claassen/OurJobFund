@@ -7,42 +7,45 @@
 {% endblock %}
 
 {% block content %}
+{% for field in name_form %}
+    <div class="row">
+        <div class="col-md-2">
+            {{ field.label }}
+        </div>
+        <div class="col-md-3">
+            {{ field }}
+        </div>
+    </div>
+    {% if field.errors %}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-2">
+            {{ field.errors }}
+        </div>
+    </div>
+    {% endif %}
+{% endfor %} 
+{% for field in description_form %}
+    <div class="row">
+        <div class="col-md-2">
+            {{ field.label }}
+        </div>
+        <div class="col-md-10">
+            {{ field }}
+        </div>
+    </div>
+    {% if field.errors %}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-2">
+            {{ field.errors }}
+        </div>
+    </div>
+    {% endif %}
+{% endfor %}
 <div class="row">
-    <div class="col-md-12">
-    {% for field in name_form %}
-        <div class="row">
-            <div class="col-md-2">
-                {{ field.label }}
-            </div>
-            <div class="col-md-3">
-                {{ field }}
-            </div>
-        </div>
-        {% if field.errors %}
-        <div class="row">
-            <div class="col-md-10 col-md-offset-2">
-                {{ field.errors }}
-            </div>
-        </div>
-        {% endif %}
-    {% endfor %} 
-    {% for field in description_form %}
-        <div class="row">
-            <div class="col-md-2">
-                {{ field.label }}
-            </div>
-            <div class="col-md-10">
-                {{ field }}
-            </div>
-        </div>
-        {% if field.errors %}
-        <div class="row">
-            <div class="col-md-10 col-md-offset-2">
-                {{ field.errors }}
-            </div>
-        </div>
-        {% endif %}
-    {% endfor %} 
+    <div class="col-md-offset-2 col-md-10">
+        <form action="{{ request.get_full_path }}" method="POST">
+            <input type="Submit" value="submit" />
+        </form>
     </div>
 </div>
 {% endblock %}
