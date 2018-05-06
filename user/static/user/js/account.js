@@ -36,6 +36,7 @@ $('document').ready(function() {
 
 function disableInputs() {
     $('#id_username').prop('disabled', true);
+    $('#username').prop('disabled', true);
     $('#id_email').prop('disabled', true);
     $('input[type=password]').prop('disabled', true);
 }// end disableInputs()

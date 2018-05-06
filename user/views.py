@@ -146,12 +146,9 @@ class EditProfileView(TemplateView):
 
     @method_decorator(login_required)      
     def post(self, request ,*args, **kwargs):
-        print(request.POST)
         name_form = self.name_form(request.POST);
         description_form = self.description_form(request.POST);
         if (description_form.is_valid() and name_form.is_valid()):
-            print(name_form.cleaned_data['first_name'])
-            print(name_form.cleaned_data['last_name'])
             request.user.first_name = name_form.cleaned_data['first_name'];
             request.user.last_name = name_form.cleaned_data['last_name'];
             request.user.save();
@@ -191,13 +188,14 @@ class AccountView(TemplateView):
         passwordForm = self.passwordForm;
         deactivateForm = self.deactivateForm;
         if ('change-username' in request.POST):
-            emailForm = usernameForm(request.POST);
-            if (usernameForm.is_valid()):
-                self.request.user.username = emailForm.cleaned_data['username'];
-                self.request.user.save();
-                self.request.user.profile.last_time_name_was_changed = datetime.now();
-                self.request.user.profile.save();
-                return redirect('user:account');
+            if ((datetime.now() - request.user.profile.last_time_username_was_changed.replace(tzinfo=None)).days >= 180):
+                usernameForm = usernameForm(request.POST);
+                if (usernameForm.is_valid()):
+                    self.request.user.username = usernameForm.cleaned_data['username'];
+                    self.request.user.save();
+                    self.request.user.profile.last_time_username_was_changed = datetime.now();
+                    self.request.user.profile.save();
+                    return redirect('user:account');
         elif ('change-email' in request.POST):
             emailForm = emailForm(request.POST);
             if (emailForm.is_valid()):
@@ -222,6 +220,7 @@ class AccountView(TemplateView):
     def get_context_data(self, request, **kwargs):
         context = super(AccountView, self).get_context_data(**kwargs);
         context['change_username_form'] = kwargs['usernameForm'];
+        context['next_time_username_can_be_changed'] = 180 - (datetime.now() - request.user.profile.last_time_username_was_changed.replace(tzinfo=None)).days;
         context['change_email_form'] = kwargs['emailForm'];
         context['change_password_form'] = kwargs['passwordForm'];
         context['deactivate_form'] = kwargs['deactivateForm'];

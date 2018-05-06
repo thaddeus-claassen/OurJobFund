@@ -11,6 +11,7 @@
     <div class="col-md-6 col-md-offset-3">
         <form id="username_form" action="{{ request.get_full_path }}" method="POST">
             {% csrf_token %}
+            {% if change_username_form %}
             <div class="row">
                 <div class="col-md-4">
                     {{ change_username_form.username.label }}
@@ -38,6 +39,18 @@
                     <span id="change-username-note">Note: Your username cannot be changed more than once every 180 days.</span>
                 </div>
             </div>
+            {% else %}
+            <div class="row">
+                <div class="col-md-4"><label id="username-label" for="username">Username</label></div>
+                <div class="col-md-4"><input id="username" value="{{ request.user.username }}" /></div>
+                <div class="col-md-4"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <span id="change-username-note">Note: You can change your username in {{ next_time_username_can_be_changed }} days.</span>
+                </div>
+            </div>
+            {% endif %}
         </form>
         <form id="change_email_form" action="{{ request.get_full_path }}" method="POST">
             {% csrf_token %}
