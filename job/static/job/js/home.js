@@ -110,21 +110,31 @@ function get_total_jobs() {
 
 function addJobsToTable(json) {
     $('#search-error-message').text('');
-    for (var index = 0; index < json.length; index++) {
-        var job = json[index];
+    if (json.length == 0) {
         var string = "<tr>";
-        string = string + "<td class='title'><a id='" + job["random_string"] + "' href='job/" + job["random_string"] + "'></a></td>";
-        string = string + "<td class='date'>" + job['date'] + "</td>";
-        string = string + "<td class='pledging'>$" + turnMoneyToString(job['pledging']) + "</sub></td>";
-        string = string + "<td class='working'>" + job['working'] + "</td>"
+        string = string + "<td class='title'>No Jobs were found.</td>";
+        string = string + "<td class='date'></td>";
+        string = string + "<td class='pledging'></td>";
+        string = string + "<td class='paid'></td>"
         string = string + "</tr>";
         $('tbody').append(string);
-        $('#' + job["random_string"]).text(job["title"]);
-        addMarker(new google.maps.LatLng(job['latitude'], job['longitude']), 'job/' + job["random_string"]);    
-    }// end for
-    if ($('#location').val() !== "") {
-        addBounds();
-    }// end if
+    } else {
+        for (var index = 0; index < json.length; index++) {
+            var job = json[index];
+            var string = "<tr>";
+            string = string + "<td class='title'><a id='" + job["random_string"] + "' href='job/" + job["random_string"] + "'></a></td>";
+            string = string + "<td class='date'>" + job['date'] + "</td>";
+            string = string + "<td class='pledging'>$" + turnMoneyToString(job['pledging']) + "</td>";
+            string = string + "<td class='paid'>$" + turnMoneyToString(job['paid']) + "</td>"
+            string = string + "</tr>";
+            $('tbody').append(string);
+            $('#' + job["random_string"]).text(job["title"]);
+            addMarker(new google.maps.LatLng(job['latitude'], job['longitude']), 'job/' + job["random_string"]);    
+        }// end for
+        if ($('#location').val() !== "") {
+            addBounds();
+        }// end if
+    }// end if-else
 }// end addJobsToTable()
 
 function applyLocation() {

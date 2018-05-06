@@ -59,7 +59,7 @@
     <div class="col-md-7">
         <div class="row">
             <div class="col-md-12">
-                <h4>Current Jobs</h4>
+                
             </div>
         </div>
         <div class="row">
@@ -67,7 +67,7 @@
                 <table id="current" class="table">
                     <thead>
                         <tr>
-                            <th class="current-title"><span class="table-header">Title</span></th>
+                            <th class="current-title"><span class="table-header"><span id="current-total">{{ current.count }}</span> Current Jobs</span></th>
                             <th class="current-pledging"><span class="table-header">Pledging</span></th>
                             <th class="current-paid"><span class="table-header">Paid</span></th>
                             <th class="current-received"><span class="table-header">Received</span></th>
@@ -83,20 +83,12 @@
                         </tr>
                         {% endfor %}
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td class="current-title"><span id="current-total">{{ current.count }}</span></td>
-                            <td class="current-pledging"></td>
-                            <td class="current-paid"></td>
-                            <td class="current-work_status"></td>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <h4>Completed Jobs</h4>
+                
             </div>
         </div>
         <div class="row">
@@ -104,7 +96,7 @@
                 <table id="completed" class="table">
                     <thead>
                         <tr>
-                            <th class="completed-title"><span class="table-header">Title</span></th>
+                            <th class="completed-title"><span class="table-header"><span id="completed-total">{{ completed.count }}<span> Completed Jobs</span></th>
                             <th class="completed-pledging"><span class="table-header">Pledging</span></th>
                             <th class="completed-paid"><span class="table-header">Paid</span></th>
                             <th class="completed-received"><span class="table-header">Received</span></th>
@@ -120,14 +112,6 @@
                         </tr>
                         {% endfor %}
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td class="completed-title"><span id="completed-total">{{ completed.count }}<span></td>
-                            <td class="completed-pledging"></td>
-                            <td class="completed-paid"></td>
-                            <td class="completed-received"></td>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>

@@ -19,8 +19,11 @@ input[type=submit] {
 }
 
 table {
-    border: 1px solid black;
     width: 100%;
+}
+
+tbody {
+    border: 1px solid gray;
 }
 
 td {
