@@ -146,9 +146,12 @@ class EditProfileView(TemplateView):
 
     @method_decorator(login_required)      
     def post(self, request ,*args, **kwargs):
-        name_form = name_form(request.POST);
-        description_form = description_form(request.POST);
+        print(request.POST)
+        name_form = self.name_form(request.POST);
+        description_form = self.description_form(request.POST);
         if (description_form.is_valid() and name_form.is_valid()):
+            print(name_form.cleaned_data['first_name'])
+            print(name_form.cleaned_data['last_name'])
             request.user.first_name = name_form.cleaned_data['first_name'];
             request.user.last_name = name_form.cleaned_data['last_name'];
             request.user.save();
