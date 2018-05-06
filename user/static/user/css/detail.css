@@ -2,10 +2,6 @@ input[type=submit] {
     float: right;
 }
 
-#username {
-    text-align: center;
-}
-
 #description {
     height: 400px;
     width: 100%;
