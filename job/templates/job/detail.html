@@ -41,7 +41,7 @@
                 <table id="updates" class="table">
                     <thead>
                         <tr>
-                            <th class="updates-username"><span class="table-header">Updaters</span> <span id="updates-total">{{ updates.count }}</span></th>
+                            <th class="updates-username"><span class="table-header">Updaters</span><span id="updates-total">{{ updates.count }}</span></th>
                             <th class="updates-date"><span id="updates-date" class="table-header">Date</span></th>
                             <th class="updates-images"><span id="updates-images" class="table-header">Images</span></th>
                         </tr>
@@ -80,7 +80,7 @@
         {% if not job.is_finished %}
         {% if request.user.is_authenticated %}
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6 col-md-offset-3">
                 <form action="{% url 'update:create' job.random_string %}">
                     <input id="update" type="submit" value="Update" />
                 </form>
@@ -88,7 +88,7 @@
         </div>
         {% if jobuser.pledge_set.all.exists %}
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6 col-md-offset-3">
                 <form action="{% url 'pay' job.random_string %}">
                     <input id="pay" type="submit" value="Pay" name="pay" />
                 </form>
@@ -96,7 +96,7 @@
         </div>
         {% else %}
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6 col-md-offset-3">
                 <form action="{% url 'pledge' job.random_string %}">
                     <input id="pledge" type="submit" value="Pledge" name="pledge" />
                 </form>
@@ -105,7 +105,7 @@
         {% endif %}
         {% if jobuser.work_set.all.exists %}
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6 col-md-offset-3">
                 <form action="{% url 'finish' job.random_string %}">
                     <input id="finish" type="submit" value="Finish" name="finish" />
                 </form>
@@ -113,7 +113,7 @@
         </div>
         {% elif not jobuser.finish_set.exists %}
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6 col-md-offset-3">
                 <form action="{% url 'work' job.random_string %}">
                     <input id="work" type="submit" value="Work" name="work" />
                 </form>
@@ -122,7 +122,7 @@
         {% endif %}
         {% if unconfirmed_payments %}
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6 col-md-offset-3">
                 <form action="{% url 'payment-confirmation' job.random_string %}">
                     <input id="confirm_payments" type="submit" value="Confirm Payments" />
                 </form>
@@ -138,9 +138,9 @@
                 <table id="pledging" class="table">
                     <thead>
                         <tr>
-                            <th class="pledging-username"><span class="table-header">Pledgers</span> <span id="pledging-total">{{ pledging_total }}</span></th>
-                            <th class="pledging-pledging"><span class="table-header">Pledge</span> <span id="total-pledges">${{  job.pledging|floatformat:2 }}</span></th>
-                            <th class="pledging-paid"><span class="table-header">Paid</span> <span id="total-paid">${{ job.paid|floatformat:2 }}</span></th>
+                            <th class="pledging-username"><span class="table-header">Pledgers</span><span id="pledging-total">{{ pledging_total }}</span></th>
+                            <th class="pledging-pledging"><span class="table-header">Pledge</span><span id="total-pledges">${{  job.pledging|floatformat:2 }}</span></th>
+                            <th class="pledging-paid"><span class="table-header">Paid</span><span id="total-paid">${{ job.paid|floatformat:2 }}</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -157,7 +157,7 @@
                             </td>
                             <td class="pledging-pledging">
                                 ${{ j.pledging|floatformat:2 }} -
-                                <span id="date"> 
+                                <span class="date">
                                 {% with pledge=j.pledge_set.all|dictsort:"date"|first %}
                                 {{ pledge.date|date:"F d, Y" }}
                                 {% endwith %}
@@ -184,7 +184,7 @@
                 <table id="working" class="table">
                     <thead>
                         <tr>
-                            <th class="working-username"><span class="table-header">Workers</span> <span id="working-total">{{ job.working }}</span></th>
+                            <th class="working-username"><span class="table-header">Workers</span><span id="working-total">{{ job.working }}</span></th>
                             <th class="working-started"><span class="table-header">Started</span></th>
                             <th class="working-finished"><span class="table-header">Finished</span></th>
                             <th class="working-received"><span class="table-header">Received</span></th>

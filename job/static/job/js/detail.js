@@ -145,8 +145,7 @@ function addRowsToPledgingTable(json) {
         var pledge = json[index];
         var string = "<tr>";
         string = string + "<td class='pledging-username'><a href='user/ " + pledge['username'] + "'>" + pledge['username'] + "</a></td>";
-        string = string + "<td class='pledging-date'>" + pledge['date'] + "</td>";
-        string = string + "<td class='pledging-pledged'>" + changeNumberToCurrency(pledge['pledging']) + "</td>";
+        string = string + "<td class='pledging-pledging'>" + changeNumberToCurrency(pledge['pledging']) + " - <span class='date'>" + pledge['date'] + "</span></td>";
         string = string + "<td class='pledging-paid'>" + changeNumberToCurrency(pledge['paid']) + "</td>";
         string = string + "</tr>";
         $('#pledging tbody').append(string);

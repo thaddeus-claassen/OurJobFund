@@ -4,6 +4,14 @@
     top: 0;
 }
 
+#pledging, #working {
+    margin-bottom: 0px;
+}
+
+#updates {
+    margin-bottom: 5px;
+}
+
 #location {
     float: right;
 }
@@ -48,6 +56,7 @@ tbody {
 
 #update, #pledge, #pay, #work, #finish, #confirm_payments {
     width: 100%;
+    margin: 1px;
 }
 
 #pledging tbody, #working tbody {
@@ -75,20 +84,21 @@ tbody {
 }
 
 .pledging-username, .pledging-paid {
-    width: 25%;   
+    width: 30%;   
 }
 
 .pledging-pledging {
-    width: 50%;
+    width: 40%;
 }
 
 #total-pledges, #total-paid, #pledging-total, #updates-total, #working-total {
     font-family: "Arial Narrow", Arial, sans-serif;
     color: lightgray;
-    text-align: center;
+    float: right;
+    width: 50%;
 }
 
-#date {
+.date {
     color: gray;
 }
 

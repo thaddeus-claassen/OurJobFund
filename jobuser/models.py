@@ -106,7 +106,7 @@ class WorkFinish(PledgePayWorkFinish):
     class Meta:
         abstract = True;
     
-    def get_amount():
+    def get_amount(self):
         return -1;
     
 class Work(WorkFinish):

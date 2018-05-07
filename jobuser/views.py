@@ -271,7 +271,10 @@ class WorkHistoryView(TemplateView):
 def sort_pledge_history(request, job_random_string):
     job = get_object_or_404(Job, random_string=job_random_string);
     if (request.is_ajax()):
-        data = sort_history(request, job);
+        pledges = Pledge.objects.filter(jobuser__job=job);
+        misc_payments = MiscPay.objects.filter(jobuser__job=job);
+        stripe_payments = StripePay.objects.filter(jobuser__job=job);
+        data = sort_history(request, job, chain(pledges, misc_payments, stripe_payments));
         serializer = PledgeHistorySerializer(data, many=True);
         json = JSONRenderer().render(serializer.data);
         return HttpResponse(json, 'application/json');
@@ -281,20 +284,21 @@ def sort_pledge_history(request, job_random_string):
 def sort_work_history(request, job_random_string):
     job = get_object_or_404(Job, random_string=job_random_string);
     if (request.is_ajax()):
-        data = sort_history(request, job);
+        work = Work.objects.filter(jobuser__job=job);
+        finish = Finish.objects.filter(jobuser__job=job);
+        misc_payments = MiscPay.objects.filter(jobuser__job=job);
+        stripe_payments = StripePay.objects.filter(jobuser__job=job);
+        data = sort_history(request, job, chain(work, finish, misc_payments, stripe_payments));
         serializer = WorkHistorySerializer(data, many=True);
         json = JSONRenderer().render(serializer.data);
         return HttpResponse(json, 'application/json');
     else:
         return redirect('pledge-history', job_random_string=job.random_string);
         
-def sort_history(request, job):
+def sort_history(request, job, chain):
     numSearches = request.GET['num_searches'];
     column = request.GET['column'];
     ascending_or_descending = request.GET['order'];
-    pledges = Pledge.objects.filter(jobuser__job=job);
-    misc_payments = MiscPay.objects.filter(jobuser__job=job);
-    stripe_payments = StripePay.objects.filter(jobuser__job=job);
     if (column == 'username'):
         key = lambda x: x.get_username().lower();
     elif (column == 'date'):
@@ -310,7 +314,7 @@ def sort_history(request, job):
     else:
         key = lambda x: x.get_confirmed();
     data = sorted(
-        chain(pledges, misc_payments, stripe_payments),
+        chain,
         key=key,
     );
     if (ascending_or_descending == 'descending'):

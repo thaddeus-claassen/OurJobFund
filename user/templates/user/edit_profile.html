@@ -9,48 +9,48 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h4 id="title">Edit Profile for {{ request.user.username }}</h4>
+        <h4 id="title">Edit Profile for <a href="{% url 'user:detail' request.user.username %}">{{ request.user.username }}</a></h4>
     </div>
 </div>
-<form action="{{ request.get_full_path }}" method="POST">
-    {% csrf_token %}
-    {% for field in name_form %}
-        <div class="row">
-            <div class="col-md-2">
-                {{ field.label }}
-            </div>
-            <div class="col-md-3">
-                {{ field }}
-            </div>
+<form id="form" action="{{ request.get_full_path }}" method="POST">
+{% csrf_token %}
+{% for field in name_form %}
+    <div class="row">
+        <div class="col-md-2">
+            {{ field.label }}
         </div>
-        {% if field.errors %}
-        <div class="row">
-            <div class="col-md-10 col-md-offset-2">
-                {{ field.errors }}
-            </div>
+        <div class="col-md-3">
+            {{ field }}
         </div>
-        {% endif %}
-    {% endfor %} 
-    {% for field in description_form %}
-        <div class="row">
-            <div class="col-md-2">
-                {{ field.label }}
-            </div>
-            <div class="col-md-10">
-                {{ field }}
-            </div>
+    </div>
+    {% if field.errors %}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-2">
+            {{ field.errors }}
         </div>
-        {% if field.errors %}
-        <div class="row">
-            <div class="col-md-10 col-md-offset-2">
-                {{ field.errors }}
-            </div>
+    </div>
+    {% endif %}
+{% endfor %} 
+{% for field in description_form %}
+    <div class="row">
+        <div class="col-md-2">
+            {{ field.label }}
         </div>
-        {% endif %}
-    {% endfor %}
+        <div class="col-md-10">
+            {{ field }}
+        </div>
+    </div>
+    {% if field.errors %}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-2">
+            {{ field.errors }}
+        </div>
+    </div>
+    {% endif %}
+{% endfor %}
     <div class="row">
         <div class="col-md-offset-2 col-md-10"> 
-            <input type="submit" value="Submit" />
+            <input form="form" type="submit" value="Submit" />
         </div>
     </div>
 </form>

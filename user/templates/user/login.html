@@ -23,10 +23,19 @@
                     {% if field.auto_id == "id_signup-age_checkbox"%}
                         {{ field.label }}
                     {% endif %}
-                    {{ field }}{{ field.errors }}
+                    {{ field }}
                     </span>
                 </div>
             </div>
+            {% if field.errors %}
+            <div class="row">
+                <div class="col-md-12">
+                    <span class="sign-up-input">
+                        {{ field.errors }}
+                    </span>
+                </div>
+            </div>
+            {% endif %}
         {% endfor %}
             <div class="row">
                 <div class="col-md-12 sign-up-input">

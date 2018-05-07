@@ -55,3 +55,10 @@ tbody {
     width: 20%;
     float: left;
 }
+
+#current-total,  #completed-total {
+    font-family: "Arial Narrow", Arial, sans-serif;
+    color: lightgray;
+    width: 50%;
+    float: right;
+}
