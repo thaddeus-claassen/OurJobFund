@@ -56,9 +56,9 @@ tbody {
     float: left;
 }
 
-#current-total,  #completed-total {
+#current-total,  #total-completed {
     font-family: "Arial Narrow", Arial, sans-serif;
     color: lightgray;
-    width: 50%;
+    width: 25%;
     float: right;
 }

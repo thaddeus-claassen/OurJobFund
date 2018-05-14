@@ -70,7 +70,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a href="{% url 'user:account' %}">Account</a></li>
-                                <li><a href="{% url 'user:login' %}">Logout</a></li>
+                                <li><a href="{% url 'user:sign_out' %}">Logout</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -81,8 +81,10 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li><a>
                                 {% for field in login_form %}
-                                    {{ field }}
+                                    {% if field.errors %}
                                     {{ field.errors }}
+                                    {% endif %}
+                                    {{ field }}
                                 {% endfor %}
                                 </a>
                                 <li><button type="submit" class="btn btn-default" name="sign-in">Log In</button></li>
