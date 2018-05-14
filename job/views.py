@@ -75,7 +75,7 @@ def findJobs(search, sort, latitude_in_degrees_as_string, longitude_in_degrees_a
                 jobs = get_jobs_from_custom_search(search);
             else:
                 return "Invalid Search";
-    jobs = jobs.distinct();
+    jobs = jobs.filter(is_finished=False).distinct();
     sort_array = sort.split("-");
     if (latitude_in_degrees_as_string != "" and longitude_in_degrees_as_string != "" and radius_in_miles_as_string != ""):
         jobs = findJobsByRadius(jobs, float(latitude_in_degrees_as_string), float(longitude_in_degrees_as_string), float(radius_in_miles_as_string));

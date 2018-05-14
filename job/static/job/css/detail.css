@@ -16,36 +16,6 @@
     float: right;
 }
 
-table {
-    width: 100%;
-}
-
-thead, tbody, tfoot, tr, td, th {
-    display: block;
-}
-
-th, td {
-    word-wrap: break-word;
-    float: left;
-}
-
-tr:after {
-    content: ' ';
-    display: block;
-    visibility: hidden;
-    clear: both;
-}
-
-thead th {
-    height: 30px;
-}
-
-tbody {
-    overflow-x: auto;
-    overflow-y: scroll;
-    border: 1px solid gray;
-}
-
 #updates tbody {
     height: 500px;
 }
@@ -89,13 +59,6 @@ tbody {
 
 .pledging-pledging {
     width: 40%;
-}
-
-#total-pledges, #total-paid, #pledging-total, #updates-total, #working-total {
-    font-family: "Arial Narrow", Arial, sans-serif;
-    color: lightgray;
-    float: right;
-    width: 25%;
 }
 
 .date {

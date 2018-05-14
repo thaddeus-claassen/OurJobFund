@@ -49,7 +49,7 @@ class Job(models.Model):
         
     def check_is_finished(self):
         is_finished = False;
-        if ((datetime.now() - self.date.replace(tzinfo=None)).days >= 180):
+        if ((datetime.now() - self.date.replace(tzinfo=None)).days >= 90):
             is_finished = True;
         else:
             if (self.pledging > 0 and self.pledging <= self.paid and self.working > 0 and self.working == self.finished):

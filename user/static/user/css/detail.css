@@ -13,37 +13,8 @@ input[type=submit] {
     width: 100%;
 }
 
-table {
-    width: 100%;
-}
-
-tbody {
-    border: 1px solid gray;
-}
-
-td {
-    word-wrap: break-word;
-}
-
-thead, tbody, tfoot, tr, td, th {
-    display: block;
-}
-
-tr:after {
-    content: ' ';
-    display: block;
-    visibility: hidden;
-    clear: both;
-}
-
-thead th {
-    height: 30px;
-}
-
 tbody {
     height: 250px;
-    overflow-x: auto;
-    overflow-y: scroll;
 }
 
 .current-title, .completed-title {

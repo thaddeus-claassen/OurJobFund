@@ -41,7 +41,8 @@
                 <table id="updates" class="table">
                     <thead>
                         <tr>
-                            <th class="updates-username"><span class="table-header">Updates</span><span id="updates-total">{{ updates.count }}</span></th>
+                            <th class="updates-username"><span class="table-header">Updates</span><span class="
+                            total">{{ updates.count }}</span></th>
                             <th class="updates-date"><span id="updates-date" class="table-header">Date</span></th>
                             <th class="updates-images"><span id="updates-images" class="table-header">Images</span></th>
                         </tr>
@@ -138,9 +139,9 @@
                 <table id="pledging" class="table">
                     <thead>
                         <tr>
-                            <th class="pledging-username"><span class="table-header">Pledgers</span><span id="pledging-total">{{ pledging_total }}</span></th>
-                            <th class="pledging-pledging"><span class="table-header">Pledge</span><span id="total-pledges">${{  job.pledging|floatformat:2 }}</span></th>
-                            <th class="pledging-paid"><span class="table-header">Paid</span><span id="total-paid">${{ job.paid|floatformat:2 }}</span></th>
+                            <th class="pledging-username"><span class="table-header">Pledgers</span><span class="total">{{ pledging_total }}</span></th>
+                            <th class="pledging-pledging"><span class="table-header">Pledge</span><span class="total">${{  job.pledging|floatformat:2 }}</span></th>
+                            <th class="pledging-paid"><span class="table-header">Paid</span><span class="total">${{ job.paid|floatformat:2 }}</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -184,7 +185,7 @@
                 <table id="working" class="table">
                     <thead>
                         <tr>
-                            <th class="working-username"><span class="table-header">Workers</span><span id="working-total">{{ job.working }}</span></th>
+                            <th class="working-username"><span class="table-header">Workers</span><span class="total">{{ job.working }}</span></th>
                             <th class="working-started"><span class="table-header">Started</span></th>
                             <th class="working-finished"><span class="table-header">Finished</span></th>
                             <th class="working-received"><span class="table-header">Received</span></th>

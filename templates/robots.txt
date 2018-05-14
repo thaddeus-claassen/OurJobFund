@@ -1,4 +1,9 @@
 User-agent: *
 Disallow: /update/
+noindex: /update/
 Disallow: /contact/
+noindex: /contact/
 Disallow: /terms-of-service/
+noindex: /terms-of-service/
+Disallow: /privacy/
+noindex: /privacy/

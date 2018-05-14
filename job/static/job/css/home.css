@@ -13,30 +13,8 @@ input[type=text] {
     border: 1px solid black;
 }
 
-thead, tbody, tfoot, tr, td, th {
-    display: block;
-}
-
-td {
-    word-wrap: break-word;
-}
-
-tr:after {
-    content: ' ';
-    display: block;
-    visibility: hidden;
-    clear: both;
-}
-
-thead th {
-    height: 30px;
-}
-
 tbody {
     height: 500px;
-    overflow-x: auto;
-    overflow-y: scroll;
-    border: 1px solid black;
 }
 
 .title {
