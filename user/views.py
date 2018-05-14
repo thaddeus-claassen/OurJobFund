@@ -163,7 +163,7 @@ class EditProfileView(TemplateView):
         context['name_form'] = kwargs['name_form'];
         context['description_form'] = kwargs['description_form'];
         return context;
-    
+        
 class AccountView(TemplateView):
     template_name = 'user/account.html';
     usernameForm = ChangeUsernameForm;

@@ -3,6 +3,7 @@ from . import views;
 from django.conf import settings;
 from ourjobfund.acceptable_urls import URLS;
 from django.conf.urls.static import static;
+from jobuser.views import StripePaymentView;
 
 app_name = 'user';
 
@@ -14,4 +15,5 @@ urlpatterns = [
     url(r'^' + URLS['username_regex'] + '/$', views.DetailView.as_view(), name='detail'),
     url(r'^' + URLS['username_regex'] + '/' + URLS['sort'] + '/$', views.add_to_detail_table),
     url(r'^' + URLS['username_regex'] + '/' + URLS['edit-profile'] + '/$', views.EditProfileView.as_view(), name='edit_profile'),
+    url(r'^' + URLS['username_regex'] + '/' + URLS['stripe-payment'] + '/$', StripePaymentView.as_view(), name='stripe-payment'),
 ]

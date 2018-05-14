@@ -1,11 +1,12 @@
 from annoying.functions import get_object_or_None;
 from job.models import Job;
+from django.db.models import Q;
 from datetime import datetime;
 from .models import Work, MiscPay, Pledge;
 from django import forms;
 
 class PledgeForm(forms.Form):
-    amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '0.00'}));
+    amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}));
     comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
 
@@ -27,32 +28,56 @@ class PledgeForm(forms.Form):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
         
-class PayForm(forms.Form):
-    type = forms.ChoiceField(choices=(('', '(Please Select Payment Method)'), ('Credit/Debit', 'Credit/Debit'), ('Already Paid', 'Already Paid')));
-    pay_to = forms.ChoiceField();
-    amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '0.00'}), required=True);
+class PaymentReceivedForm(forms.Form):
+    received_payment_from = forms.ChoiceField();
+    amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}), required=True);
     comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     
     def __init__(self, jobuser, *args, **kwargs):
-        super(PayForm, self).__init__(*args, **kwargs);
+        super(PaymentReceivedForm, self).__init__(*args, **kwargs);
         self.jobuser = jobuser;
-        workers = Work.objects.filter(jobuser__job=jobuser.job);
-        choices = (('', '(Please select someone to pay)'),) + tuple((w.jobuser.user.pk, w.jobuser.user.username) for w in workers);
-        self.fields['pay_to'] = forms.ChoiceField(choices=choices);
+        pledges = Pledge.objects.filter(Q(jobuser__job=jobuser.job) & ~Q(jobuser__user__username__exact=jobuser.user.username));
+        choices = (('', '(Please select a person)'),) + tuple((p.jobuser.user.pk, p.jobuser.user.username) for p in pledges);
+        self.fields['received_payment_from'] = forms.ChoiceField(choices=choices);
 
-    def clean_type(self):
-        type = self.cleaned_data.get('type');
-        if (type == ''):
-            raise forms.ValidationError('Please select and option.')
-        elif (type != 'Credit/Debit' and type != 'Already Paid'):
-            raise forms.ValidationError('Invalid Option Selected.');
-        return type;
+    def clean_pay_from(self):
+        received_payment_from = int(self.cleaned_data.get('received_payment_from'));
+        pledges = Pledge.objects.filter(jobuser__job=self.jobuser.job);
+        if (not received_payment_from in [ p.jobuser.user.pk for p in pledges ]):
+            raise forms.ValidationError('Invalid Option Selected');
+        return received_payment_from;
+        
+    def clean_amount(self):
+        pay = self.cleaned_data.get('amount');
+        if (checkStringIsValidMoney(pay)):
+            if (float(pay) == 0):
+                raise forms.ValidationError('$0.00 is invalid.');
+        else:
+            raise forms.ValidationError('Please enter a valid dollar amount.');
+        return pay;
+        
+    def clean_honey_pot(self):
+        if (not self.cleaned_data.get('honey_pot') == ""):
+            raise forms.ValidationError('It seems you are a bot.');
+        return "";
+        
+class StripePaymentForm(forms.Form):
+    job = forms.ChoiceField();
+    amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}), required=True);
+    comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
+    honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
+    
+    def __init__(self, receiver, *args, **kwargs):
+        super(StripePaymentForm, self).__init__(*args, **kwargs);
+        jobs = receiver.jobuser_set.filter(~Q(work_status=''));
+        choices = (('', '(Please select a job)'),) + tuple((j.job.random_string, j.job.title) for j in jobs);
+        self.fields['job'] = forms.ChoiceField(choices=choices);
 
-    def clean_pay_to(self):
-        pay_to = int(self.cleaned_data.get('pay_to'));
-        workers = Work.objects.filter(jobuser__job=self.jobuser.job);
-        if (not pay_to in [ w.jobuser.user.pk for w in workers ]):
+    def clean_job(self):
+        job_random_string = int(self.cleaned_data.get('job_random_string'));
+        jobs = receiver.jobuser_set.filter(~Q(work_status=''));
+        if (not job_random_string in [ j.job.ranom_string for j in jobs ]):
             raise forms.ValidationError('Invalid Option Selected');
         return pay_to;
         
@@ -68,7 +93,7 @@ class PayForm(forms.Form):
     def clean_honey_pot(self):
         if (not self.cleaned_data.get('honey_pot') == ""):
             raise forms.ValidationError('It seems you are a bot.');
-        return "";        
+        return "";
     
 class WorkForm(forms.Form):
     payment_type = forms.ChoiceField(choices=(('', '(Please Select your method of receiving payments)'), ('Credit/Debit', 'Credit/Debit'), ('Either', 'Either'), ('Contact Me', 'Contact Me')), required=True);

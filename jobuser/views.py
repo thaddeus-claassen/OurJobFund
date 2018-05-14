@@ -19,7 +19,7 @@ from itertools import chain;
 from operator import attrgetter
 from datetime import datetime;
 from .models import JobUser, PledgePay, Pledge, Work, Finish, StripePay, MiscPay;
-from .forms import PledgeForm, PayForm, WorkForm, FinishForm;
+from .forms import PledgeForm, PaymentReceivedForm, StripePaymentForm, WorkForm, FinishForm;
 from random import randint;
 import json, stripe;
 
@@ -63,61 +63,83 @@ class PledgeView(TemplateView):
         context['form'] = kwargs['form'];
         return context;
 
-class PayView(TemplateView):
-    template_name = 'jobuser/pay.html';
-    form = PayForm;
+class PaymentReceivedView(TemplateView):
+    template_name = 'jobuser/received-payment.html';
+    form = PaymentReceivedForm;
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
         jobuser = get_object_or_404(JobUser, user=request.user, job=job);
         return render(request, self.template_name, self.get_context_data(jobuser=jobuser, form=self.form(jobuser=jobuser)));
-                    
+    
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         job = get_object_or_None(Job, random_string=kwargs['job_random_string']);
         jobuser = get_object_or_None(JobUser, user=request.user, job=job);
         form = self.form(data=request.POST, jobuser=jobuser);
         if (form.is_valid()):
-            type = form.cleaned_data['type'];
-            pay_to = form.cleaned_data['pay_to'];
-            receiver= get_object_or_404(User, pk=int(pay_to));
-            if (Work.objects.filter(jobuser__user=receiver, jobuser__job=job)):
-                amount = float(form.cleaned_data['amount']);
-                if (type == 'Credit/Debit'):
-                    self.pay(request, amount=amount, receiver_username=receiver.username);
-                    pay = StripePay.create(sender=jobuser, receiver=receiver, amount=amount);
-                    pay.save();
-                    jobuser.paid = jobuser.paid + amount;
-                    jobuser.save();
-                    sender.received = sender.received + amount;
-                    sender.save();
-                    job.paid = job.paid + amount;
-                    job.save();
-                    if (job.is_finished()):
-                        job.is_finished = True;
-                        job.save();
-                else:
-                    pay = MiscPay.create(sender=jobuser, receiver=get_object_or_None(JobUser, user=get_object_or_None(User, username=receiver), job=job), amount=amount);
-                    pay.save();
-                comment = form.cleaned_data['comment'];
-                if (comment):
-                    update = Update.create(jobuser=jobuser, comment=comment);
-                    update.save();
-                return redirect('job:detail', job.random_string);
-            else:
-                return Http404();
+            payment_from = form.cleaned_data['received_payment_from'];
+            amount = float(form.cleaned_data['amount']);
+            sender = get_object_or_None(JobUser, user=get_object_or_None(User, pk=payment_from), job=job);
+            receiver = get_object_or_None(JobUser, user=request.user, job=job);
+            pay = MiscPay.create(sender=jobuser, receiver=receiver, amount=amount);
+            pay.save();
+            comment = form.cleaned_data['comment'];
+            if (comment):
+                update = Update.create(jobuser=jobuser, comment=comment);
+                update.save();
+            return redirect('job:detail', job.random_string);
         else:
             return render(request, self.template_name, self.get_context_data(jobuser=jobuser, form=form));
     
     def get_context_data(self, *args, **kwargs):
-        context = super(PayView, self).get_context_data(**kwargs);
+        context = super(PaymentReceivedView, self).get_context_data(**kwargs);
         context['jobuser'] = kwargs['jobuser'];
         context['form'] = kwargs['form'];
         return context;
+            
+class StripePaymentView(TemplateView):
+    template_name = 'jobuser/stripe-payment.html';
+    form = StripePaymentForm;
     
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        user = get_object_or_404(user, username=kwargs['username']);
+        return render(request, self.template_name, self.get_context_data(jobuser=jobuser, form=self.form(jobuser=jobuser)));
+                    
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        receiver_user = get_object_or_404(user, username=kwargs['username']);
+        form = self.form(data=request.POST, jobuser=jobuser);
+        if (form.is_valid()):
+            job = get_object_or_None(Job, random_string=kwargs['job_random_string'])
+            amount = form.cleaned_data['amount'];
+            self.pay(request, amount=amount, receiver_username=receiver_user.username);
+            sender = get_object_or_None(JobUser, user=request.user, job=job)
+            receiver = get_object_or_None(JobUser, user=receiver_user, job=job);
+            pay = StripePay.create(jobuser=sender, receiver=receiver, amount=amount);
+            pay.save();
+            sender.paid = sender.paid + amount;
+            sender.save();
+            receiver.received = receiver.received + amount;
+            receiver.save();
+            job.paid = job.paid + amount;
+            job.save();
+            if (job.is_finished()):
+                job.is_finished = True;
+                job.save();
+            return redirect('user:detail', username=kwargs['username']);
+        else:
+            return render(request, self.template_name, self.get_context_data(form=form));
+        
+    def get_context_data(self, *args, **kwargs):
+        context = super(StripePaymentView, self).get_context_data(**kwargs);
+        context['form'] = kwargs['form'];
+        return context;
+
     def pay(self, request, **kwargs):
-        user = get_object_or_None(User, username=kwargs['receiver_username'])
+        user = get_object_or_None(User, username=kwargs['receiver_username']);
         if (user):
             stripe.api_key = STRIPE_TEST_SECRET_KEY;
             token = request.POST['stripeToken'];
@@ -125,7 +147,7 @@ class PayView(TemplateView):
             charge = stripe.Charge.create(
                 amount = amount_paying_in_cents,
                 currency = "usd",
-                description = "Payment to " + receiver,
+                description = "Payment to " + user,
                 source = token,
                 destination = user.stripe_account_id, 
             );
@@ -321,7 +343,7 @@ def sort_history(request, job, chain):
         data = data[::-1];
     return data;
    
-class PaymentConfirmationView(TemplateView):
+class UnconfirmedPaymentView(TemplateView):
     template_name = 'jobuser/confirmation.html';
 
     @method_decorator(login_required)
@@ -330,12 +352,11 @@ class PaymentConfirmationView(TemplateView):
         jobuser = get_object_or_None(JobUser, user=request.user, job=job);
         return render(request, self.template_name, self.get_context_data(jobuser=jobuser));
 
-
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
         jobuser = get_object_or_None(JobUser, user=request.user, job=job);
-        payments = MiscPay.objects.filter(receiver=jobuser, verified=None);
+        payments = MiscPay.objects.filter(jobuser=jobuser, verified=None);
         confirm_or_reject = "";
         pk = "";
         for p in payments:
@@ -367,7 +388,7 @@ class PaymentConfirmationView(TemplateView):
         jobuser = kwargs['jobuser'];
         context = {
             'jobuser' : jobuser,
-            'unconfirmed_payments' : MiscPay.objects.filter(receiver=jobuser, verified=None),
+            'unconfirmed_payments' : MiscPay.objects.filter(sender=jobuser, verified=None),
         };
         return context;
         

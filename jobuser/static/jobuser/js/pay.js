@@ -1,7 +1,7 @@
 var canSubmit = true;
 
 $(document).ready(function() {
-    $('#form').submit(function(e) {
+    $('form').submit(function(e) {
         var format = correctFormat();
         if (format === "") {
             if (canSubmit) {
