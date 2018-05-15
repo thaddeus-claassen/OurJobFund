@@ -2,34 +2,7 @@
     text-align: center;
 }
 
-table {
-    width: 100%;
-    border: 1px solid black;
-}
-
-thead, tbody, tfoot, tr, td, th {
-    display: block;
-}
-
-th, td {
-    word-wrap: break-word;
-    float: left;
-}
-
-tr:after {
-    content: ' ';
-    display: block;
-    visibility: hidden;
-    clear: both;
-}
-
-thead th {
-    height: 30px;
-}
-
 tbody {
-    overflow-x: auto;
-    overflow-y: scroll;
     height: 300px;
 }
 

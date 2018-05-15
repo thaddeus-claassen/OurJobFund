@@ -82,8 +82,7 @@ class PaymentReceivedView(TemplateView):
             payment_from = form.cleaned_data['received_payment_from'];
             amount = float(form.cleaned_data['amount']);
             sender = get_object_or_None(JobUser, user=get_object_or_None(User, pk=payment_from), job=job);
-            receiver = get_object_or_None(JobUser, user=request.user, job=job);
-            pay = MiscPay.create(sender=jobuser, receiver=receiver, amount=amount);
+            pay = MiscPay.create(sender=sender, receiver=jobuser, amount=amount);
             pay.save();
             comment = form.cleaned_data['comment'];
             if (comment):
@@ -354,9 +353,10 @@ class UnconfirmedPaymentView(TemplateView):
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
+        print(request.POST)
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
         jobuser = get_object_or_None(JobUser, user=request.user, job=job);
-        payments = MiscPay.objects.filter(jobuser=jobuser, verified=None);
+        payments = MiscPay.objects.filter(jobuser=jobuser, confirmed=None);
         confirm_or_reject = "";
         pk = "";
         for p in payments:
@@ -366,7 +366,7 @@ class UnconfirmedPaymentView(TemplateView):
         misc_pay = get_object_or_None(MiscPay, pk=pk);
         if (misc_pay):
             if (confirm_or_reject == 'confirm'):
-                misc_pay.verified = True;
+                misc_pay.confirmed = True;
                 jobuser.received = jobuser.received + misc_pay.amount;
                 jobuser.save()
                 misc_pay.jobuser.paid = misc_pay.jobuser.paid +  misc_pay.amount;
@@ -377,18 +377,18 @@ class UnconfirmedPaymentView(TemplateView):
                     job.is_finished = True;
                     job.save();
             else:
-                misc_pay.verified = False;
+                misc_pay.confirmed = False;
             misc_pay.save();
-            return redirect('payment-confirmation', job_random_string=job.random_string);
+            return redirect('unconfirmed-payments', job_random_string=job.random_string);
         else:
             return render(request, self.template_name, self.get_context_data(jobuser=jobuser));
 
     def get_context_data(self, *args, **kwargs):
-        context = super(PaymentConfirmationView, self).get_context_data(**kwargs);
+        context = super(UnconfirmedPaymentView, self).get_context_data(**kwargs);
         jobuser = kwargs['jobuser'];
         context = {
             'jobuser' : jobuser,
-            'unconfirmed_payments' : MiscPay.objects.filter(sender=jobuser, verified=None),
+            'unconfirmed_payments' : MiscPay.objects.filter(jobuser=jobuser, confirmed=None),
         };
         return context;
         

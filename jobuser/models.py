@@ -67,7 +67,7 @@ class Pledge(PledgePay):
     
 class MiscPay(PledgePay):
     receiver = models.ForeignKey(JobUser, on_delete=models.CASCADE, related_name='misc_pay_receiver');
-    confirmed = models.CharField(default="Unconfirmed", choices=(('Unconfirmed', 'Unconfirmed'), ('Confirmed', 'Confirmed'), ('Rejected', 'Rejected')), max_length=100);
+    confirmed = models.NullBooleanField(default=None);
     
     @classmethod
     def create(cls, sender, receiver, amount):

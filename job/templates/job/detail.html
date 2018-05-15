@@ -113,7 +113,7 @@
                 </form>
             </div>
         </div>
-        {% elif not jobuser.finish_set.exists %}
+        {% elif not jobuser.finish_set.exists and not jobuser.pledge_set.exists %}
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <form action="{% url 'work' job.random_string %}">
@@ -125,7 +125,7 @@
         {% if unconfirmed_payments %}
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
-                <form action="{% url 'payment-confirmation' job.random_string %}">
+                <form action="{% url 'unconfirmed-payments' job.random_string %}">
                     <input id="confirm_payments" type="submit" value="Confirm Payments" />
                 </form>
             </div>
@@ -209,7 +209,7 @@
                                 {{ work.date|date:"F d, Y" }}
                                 {% endwith %}
                             </td>
-                            <td class="working-finished">{% if w.finished_set.all.exists %}{{ w.finished_set.all.first.date }}{% else %}N/A{% endif %}</td>
+                            <td class="working-finished">{% if w.finish_set.all.exists %}{{ w.finish_set.all.first.date|date:"F d, Y" }}{% else %}N/A{% endif %}</td>
                             <td class="working-received">${{ w.received|floatformat:2 }}</td>
                         </tr>
                     {% endfor %}

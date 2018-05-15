@@ -27,8 +27,7 @@
                     {% for p in unconfirmed_payments %}
                     <td><a href="{% url 'user:detail' p.jobuser.user.username %}">{{ p.jobuser.user.username }}</a></td>
                     <td>{{ p.date|date:"F d, Y" }}</td>
-                    <td>${{ p.amount|floatformat:2 }}</td>
-                    
+                    <td>${{ p.amount|floatformat:2 }}</td>  
                     <td>
                         <input type="submit" value="Confirm" name="{{ p.pk }}" />
                         <input type="submit" value="Reject" name="{{ p.pk }}" />

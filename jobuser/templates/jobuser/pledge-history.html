@@ -18,7 +18,7 @@
         <table id="pledge-history" class="table">
             <thead>
                 <tr>
-                    <th class="username"><span class="table-header">Username</span></th>
+                    <th class="username"><span class="table-header">Username</span><span class="total">{{ total }}</span></th>
                     <th class="date"><span class="table-header">Date</span></th>
                     <th class="type"><span class="table-header">Type</span></th>
                     <th class="amount"><span class="table-header">Amount</span></th>
@@ -60,7 +60,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td class="username"><span id="total">{{ total }}</span></td>
+                    <td class="username"></td>
                     <td class="date"></td>
                     <td class="type"></td>
                     <td class="amount"></td>
