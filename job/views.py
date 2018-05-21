@@ -174,6 +174,9 @@ def add_to_detail_table(request, job_random_string):
         table = request.GET['table'];
         column = request.GET['column'];
         order = request.GET['order'];
+        print("Table: " + table)
+        print("Column: " + column)
+        print("Order: " + order)
         if (table == 'updates'):
             data = Update.objects.filter(jobuser__job=job);
         elif (table == 'pledging'):
@@ -189,7 +192,10 @@ def add_to_detail_table(request, job_random_string):
             data = data.annotate(num_images=Count('image')).order_by('num_images')[::-1];
         elif (column == 'date' or column == 'started' or column == 'finished'):
             if (column == 'date'):
-                data = data.annotate(date=Max('pledge__date')).order_by('date');
+                if (table == 'updates'):
+                    data = data.order_by('date');
+                else:
+                    data = data.annotate(date=Max('pledge__date')).order_by('date');
             elif (column == 'started'):
                 data = data.annotate(date=Max('work__date')).order_by('date');
             else:

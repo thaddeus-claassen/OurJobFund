@@ -53,12 +53,8 @@
     width: 100%;
 }
 
-.pledging-username, .pledging-paid {
-    width: 30%;   
-}
-
-.pledging-pledging {
-    width: 40%;
+.pledging-username, .pledging-date, .pledging-pledging, .pledging-paid {
+    width: 25%;
 }
 
 .date {
