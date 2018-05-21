@@ -26,10 +26,3 @@ tbody {
     width: 20%;
     float: left;
 }
-
-#current-total,  #total-completed {
-    font-family: "Arial Narrow", Arial, sans-serif;
-    color: lightgray;
-    width: 25%;
-    float: right;
-}

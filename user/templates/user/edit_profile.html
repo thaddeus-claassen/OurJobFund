@@ -9,7 +9,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h4 id="title">Edit Profile for <a href="{% url 'user:detail' request.user.username %}">{{ request.user.username }}</a></h4>
+        <h4 class="title">Edit Profile for <a href="{% url 'user:detail' request.user.username %}">{{ request.user.username }}</a></h4>
     </div>
 </div>
 <form id="form" action="{{ request.get_full_path }}" method="POST">

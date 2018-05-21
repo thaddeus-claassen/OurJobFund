@@ -174,9 +174,6 @@ def add_to_detail_table(request, job_random_string):
         table = request.GET['table'];
         column = request.GET['column'];
         order = request.GET['order'];
-        print("Table: " + table)
-        print("Column: " + column)
-        print("Order: " + order)
         if (table == 'updates'):
             data = Update.objects.filter(jobuser__job=job);
         elif (table == 'pledging'):
@@ -245,6 +242,9 @@ class CreateView(TemplateView):
                     job.tag_set.add(tag);
             jobuser = JobUser.create(user=request.user, job=job);
             jobuser.save();
+            moderator = Moderator.create(jobuser=jobuser);
+            moderator.is_super = True;
+            moderator.save();
             update = Update.create(jobuser=jobuser, comment=comment);
             update.save();
             for image in request.FILES.getlist('image_set'):

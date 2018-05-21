@@ -17,24 +17,18 @@ tbody {
     height: 500px;
 }
 
-.title {
+.job-title {
     width: 35%;
     float: left;
 }
 
-.date {
+.job-date {
     width: 35%;
     float: left;
     text-align: center;
 }
 
-.pledging {
-    width: 15%;
-    float: left;
-    text-align: center;
-}
-
-.paid {
+.job-pledging, .job-paid {
     width: 15%;
     float: left;
     text-align: center;
@@ -48,11 +42,4 @@ tbody {
 #search-error-message {
     float: right;
     color: red;
-}
-
-#num-jobs-found {
-    font-family: "Arial Narrow", Arial, sans-serif;
-    color: lightgray;
-    float: right;
-    width: 50%;
 }

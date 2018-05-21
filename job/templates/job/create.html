@@ -9,6 +9,11 @@
 {% endblock %}
 
 {% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h4 class="title">Create Job</h4>
+    </div>
+</div>
 <form id="create-job-form" method="POST" action="{{ request.get_full_path }}" enctype="multipart/form-data">
 {% csrf_token %}
     {{ form.latitude }}{{ form.latitude.errors }}
@@ -17,7 +22,7 @@
     {% if field.auto_id != "id_longitude" and field.auto_id != "id_latitude" %} 
     <div class="row">
         <div class="col-md-2">
-            {{ field.label_tag }}
+            {{ field.label }}
         </div>
         <div class="col-md-10">
             {{ field }}{{ field.errors }}

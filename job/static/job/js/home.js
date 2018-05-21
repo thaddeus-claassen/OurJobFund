@@ -112,20 +112,20 @@ function addJobsToTable(json) {
     $('#search-error-message').text('');
     if (json.length == 0) {
         var string = "<tr>";
-        string = string + "<td class='title'>No Jobs were found.</td>";
-        string = string + "<td class='date'></td>";
-        string = string + "<td class='pledging'></td>";
-        string = string + "<td class='paid'></td>"
+        string = string + "<td class='job-title'>No Jobs were found.</td>";
+        string = string + "<td class='job-date'></td>";
+        string = string + "<td class='job-pledging'></td>";
+        string = string + "<td class='job-paid'></td>"
         string = string + "</tr>";
         $('tbody').append(string);
     } else {
         for (var index = 0; index < json.length; index++) {
             var job = json[index];
             var string = "<tr>";
-            string = string + "<td class='title'><a id='" + job["random_string"] + "' href='job/" + job["random_string"] + "'></a></td>";
-            string = string + "<td class='date'>" + job['date'] + "</td>";
-            string = string + "<td class='pledging'>$" + turnMoneyToString(job['pledging']) + "</td>";
-            string = string + "<td class='paid'>$" + turnMoneyToString(job['paid']) + "</td>"
+            string = string + "<td class='job-title'><a id='" + job["random_string"] + "' href='job/" + job["random_string"] + "'></a></td>";
+            string = string + "<td class='job-date'>" + job['date'] + "</td>";
+            string = string + "<td class='job-pledging'>$" + turnMoneyToString(job['pledging']) + "</td>";
+            string = string + "<td class='job-paid'>$" + turnMoneyToString(job['paid']) + "</td>"
             string = string + "</tr>";
             $('tbody').append(string);
             $('#' + job["random_string"]).text(job["title"]);

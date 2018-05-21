@@ -25,7 +25,7 @@ class Job(models.Model):
         return self.title;
     
     @classmethod
-    def create(cls, title, latitude=None, longitude=None, location=''):
+    def create(cls, user, title, latitude=None, longitude=None, location=''):
         job = Job(
             title = title,
             latitude = latitude,

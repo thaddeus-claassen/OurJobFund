@@ -23,6 +23,19 @@ class JobUser(models.Model):
             received = received,
         );
         return jobuser;
+       
+class Moderator(models.Model):
+    jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);
+    is_super = models.BooleanField(default=False);
+    active = models.BooleanField(default=True);
+    date = models.DateTimeField(auto_now_add=True);
+    
+    @classmethod
+    def create(cls, jobuser, is_super):
+        moderator = Moderator(
+            jobuser = jobuser,
+        );
+        return moderator;
     
 class PledgePayWorkFinish(models.Model):        
     jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);
