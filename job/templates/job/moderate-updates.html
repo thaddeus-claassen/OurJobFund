@@ -9,7 +9,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h4 class="title">Moderate updates for <a href="{% url 'job:detail' job.random_string %}">{{ job }}</a></h4>
+        <h4 class="title">Moderate updates for <a href="{% url 'job:detail' job.random_string %}">{{ job.title }}</a></h4>
     </div>
 </div>
 <div class="row">
@@ -35,7 +35,7 @@
                         <td class="date">
                             {{ u.date|date:"F d, Y" }}
                         </td>
-                        <td class="updates-images">
+                        <td class="images">
                             {% if u.image_set.all.exists %}
                             <a href="{% url 'update:images' u.random_string %}">
                                 {{ u.image_set.all.count }}
@@ -44,12 +44,12 @@
                             0
                             {% endif %}
                         </td>
-                        <td class="updates-delete">
+                        <td class="delete">
                             <input type="submit" value="Delete" name="{{ u.random_string }}" />
                         </td>
                     </tr>
                     <tr>
-                        <td class="updates-comment" colspan="3">
+                        <td class="comment" colspan="3">
                             {{ u.comment }}
                         </td>
                     </tr>

@@ -1,11 +1,15 @@
-th, td {
-    width: 25%;
-}
-
 tbody {
     height: 500px;
 }
 
-#updates td[class=updates-comment] {
+.username, .date, .images, .delete {
+    width: 25%;
+}
+
+.comment {
+    width: 100%;
+}
+
+.table td[class=comment] {
     border-top: none;
 }
