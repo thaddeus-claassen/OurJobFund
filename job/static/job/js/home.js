@@ -6,10 +6,6 @@ var markers = [];
 var sort = "created-descending";
 
 $('document').ready(function() {
-    changeTHeadTFootWidthToAccountForScrollBar();
-    $(window).resize(function() {
-        changeTHeadTFootWidthToAccountForScrollBar();
-    });
     $('#search').keydown(function(event) {
         if (event.which == ENTER) {
             search();
@@ -59,14 +55,6 @@ function search() {
     numSearches = 1;
     applyLocation();
 }// end search()
-
-function changeTHeadTFootWidthToAccountForScrollBar() {
-    var oldTableWidth = $('table').width();
-    var newTableWidth = oldTableWidth - 17;
-    var percentageTableWidth = 100 * (newTableWidth / oldTableWidth);
-    $('thead').width(percentageTableWidth.toString() + '%');
-    $('tfoot').width(percentageTableWidth.toString() + '%');
-}// end changeTHeadTFootWidthToAccountForScrollBar()
 
 function get_jobs() {
     $.ajax({

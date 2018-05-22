@@ -8,10 +8,6 @@ var pledging_sort = 'pledging-descending';
 var working_sort = 'working-ascending';
 
 $('document').ready(function() {
-    changeTHeadTFootWidthToAccountForScrollBar();
-    $(window).resize(function() {
-        changeTHeadTFootWidthToAccountForScrollBar();
-    });
     $('.table-header').click(function() {
         var cls = $(this).parent().attr('class');
         setRowToZero(cls.split('-')[0]);
@@ -134,7 +130,9 @@ function addRowsToUpdatesTable(json) {
         string = string + "<td class='updates-username'><a href='user/ " + update['username'] + "'>" + update['username'] + "</a></td>";
         string = string + "<td class='updates-date'>" + update['date'] + "</td>";
         string = string + "<td class='updates-images'>" + img + "</td>";
-        string = string + "<td class='updates-comment'>" + update['comment'] + "</td>";
+        string = string + "</tr>";
+        string = string + "<tr>";
+        string = string + "<td class='updates-comment' coslpan='3'>" + update['comment'] + "</td>";
         string = string + "</tr>";
         $('#updates tbody').append(string);
     }// end for
@@ -168,26 +166,3 @@ function addRowsToWorkingTable(json) {
         $('#working tbody').append(string);
     }// end for
 }// end addRowsToPledgesTable()
-
-function changeNumberToCurrency(number) {
-    var currency = null;
-    var parts = number.toString().split('.');
-    if (parts.length == 1) {
-        currency = "$" + number + ".00";
-    } else if (parts.length == 2) {
-        if (parts[1].length == 2) {
-            currency = "$" + number;
-        } else {
-            currency = "$" + number + "0";
-        }// end if-else
-    }// end if
-    return currency;
-}// end changeNumberToCurrencyFormat()
-
-function changeTHeadTFootWidthToAccountForScrollBar() {
-    var oldTableWidth = $('table').width();
-    var newTableWidth = oldTableWidth - 17;
-    var percentageTableWidth = 100 * (newTableWidth / oldTableWidth);
-    $('thead').width(percentageTableWidth.toString() + '%');
-    $('tfoot').width(percentageTableWidth.toString() + '%');
-}// end changeTHeadTFootWidthToAccountForScrollBar()

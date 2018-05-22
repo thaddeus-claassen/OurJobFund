@@ -9,7 +9,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h4 id="title">Received payment for <a href="{% url 'job:detail' jobuser.job.random_string %}">{{ jobuser.job.title }}</a></h4>
+        <h4 class="title">Received payment for <a href="{% url 'job:detail' jobuser.job.random_string %}">{{ jobuser.job.title }}</a></h4>
     </div>
 </div>
 <form action="{{ request.get_full_path }}" method="POST">

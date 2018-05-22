@@ -56,15 +56,13 @@
                                 <span class="updates-date">{{ u.date|date:"F d, Y" }}</span>
                             </td>
                             <td class="updates-images">
-                                <span class="updates-images">
-                                    {% if u.image_set.all.exists %}
-                                    <a href="{% url 'update:images' u.random_string %}">
-                                        {{ u.image_set.all.count }}
-                                    </a>
-                                    {% else %}
-                                    0
-                                    {% endif %}
-                                </span>
+                                {% if u.image_set.all.exists %}
+                                <a href="{% url 'update:images' u.random_string %}">
+                                    {{ u.image_set.all.count }}
+                                </a>
+                                {% else %}
+                                0
+                                {% endif %}
                             </td>
                         </tr>
                         <tr>
@@ -83,7 +81,7 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <form action="{% url 'update:create' job.random_string %}">
-                    <input id="update" type="submit" value="Update" />
+                    <input class="job-input" type="submit" value="Update" />
                 </form>
             </div>
         </div>
@@ -92,7 +90,7 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <form action="{% url 'job:received-payment' job.random_string %}">
-                    <input id="pay" type="submit" value="Outside Payment" name="pay" />
+                    <input class="job-input" type="submit" value="Outside Payment" name="pay" />
                 </form>
             </div>
         </div>
@@ -100,7 +98,7 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <form action="{% url 'pledge' job.random_string %}">
-                    <input id="pledge" type="submit" value="Pledge" name="pledge" />
+                    <input class="job-input" type="submit" value="Pledge" name="pledge" />
                 </form>
             </div>
         </div>
@@ -109,7 +107,7 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <form action="{% url 'finish' job.random_string %}">
-                    <input id="finish" type="submit" value="Finish" name="finish" />
+                    <input class="job-input" type="submit" value="Finish" name="finish" />
                 </form>
             </div>
         </div>
@@ -117,7 +115,7 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <form action="{% url 'work' job.random_string %}">
-                    <input id="work" type="submit" value="Work" name="work" />
+                    <input class="job-input" type="submit" value="Work" name="work" />
                 </form>
             </div>
         </div>
@@ -126,7 +124,16 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <form action="{% url 'unconfirmed-payments' job.random_string %}">
-                    <input id="confirm_payments" type="submit" value="Confirm Payments" />
+                    <input class="job-input" type="submit" value="Confirm Payments" />
+                </form>
+            </div>
+        </div>
+        {% endif %}
+        {% if jobuser.moderator_set.exists %}
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <form action="{% url 'job:moderate-updates' job.random_string %}">
+                    <input class="job-input" type="submit" value="Moderate Updates" />
                 </form>
             </div>
         </div>

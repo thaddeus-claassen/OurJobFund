@@ -1,0 +1,11 @@
+th, td {
+    width: 25%;
+}
+
+tbody {
+    height: 500px;
+}
+
+#updates td[class=updates-comment] {
+    border-top: none;
+}

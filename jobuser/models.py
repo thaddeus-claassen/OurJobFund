@@ -31,7 +31,7 @@ class Moderator(models.Model):
     date = models.DateTimeField(auto_now_add=True);
     
     @classmethod
-    def create(cls, jobuser, is_super):
+    def create(cls, jobuser):
         moderator = Moderator(
             jobuser = jobuser,
         );

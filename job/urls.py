@@ -14,6 +14,8 @@ urlpatterns = [
     url(r'^' + URLS['job_random_string_regex'] + '/$', views.DetailView.as_view(), name='detail'),
     url(r'^' + URLS['job_random_string_regex'] + '/' + URLS['sort'] + '/$', views.add_to_detail_table),
     url(r'^' + URLS['job_random_string_regex'] + '/' + URLS['received-payment'] + '/$', PaymentReceivedView.as_view(), name='received-payment'),
+    url(r'^' + URLS['job_random_string_regex'] + '/' + URLS['moderate-updates'] + '/$', views.ModerateUpdatesView.as_view(), name='moderate-updates'),
+    url(r'^' + URLS['job_random_string_regex'] + '/' + URLS['moderate-updates'] + '/$', views.ModerateUpdatesView.as_view()),
 ];
 
 if settings.DEBUG:

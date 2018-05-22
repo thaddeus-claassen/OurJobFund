@@ -9,7 +9,7 @@ from annoying.functions import get_object_or_None;
 from update.serializers import UpdateSerializer;
 from django.shortcuts import render, get_object_or_404, redirect;
 from django.db.models import Q, F, Count, Max;
-from jobuser.models import JobUser, MiscPay;
+from jobuser.models import JobUser, MiscPay, Moderator;
 from update.models import Update, Image;
 from .serializers import JobSerializer;
 from filter.forms import PledgeFilterForm, WorkerFilterForm;
@@ -137,6 +137,7 @@ class DetailView(TemplateView):
             return render(request, self.template_name, self.get_context_data(job=job));
     
     def get_context_data(self, request, **kwargs):
+        context = super(DetailView, self).get_context_data(**kwargs);
         job = kwargs['job'];
         pledging = JobUser.objects.filter(Q(job=job) & (Q(pledging__gt=0) | Q(paid__gt=0)));
         pledging_total = 0;
@@ -149,14 +150,12 @@ class DetailView(TemplateView):
         received_total = 0;
         for w in working:
             received_total = received_total + w.received;
-        context = {
-            'job': job,
-            'updates' : Update.objects.filter(jobuser__job=job).order_by('date')[:50],
-            'pledging' : pledging[:50],
-            'pledging_total' : pledging.count(),
-            'working' : working[:50],
-            'received_amount_total' : received_total,
-        }
+        context['job'] = job;
+        context['updates'] = Update.objects.filter(Q(jobuser__job=job) & Q(deleted=False)).order_by('date')[:50];
+        context['pledging'] = pledging[:50];
+        context['pledging_total'] = pledging.count();
+        context['working'] = working[:50];
+        context['received_amount_total'] = received_total;
         if (request.user.is_authenticated):
             serializer = JobSerializer(Job.objects.filter(pk=job.pk), many=True, context={'user' : request.user});
             jobuser = get_object_or_None(JobUser, user=request.user, job=job);
@@ -175,7 +174,7 @@ def add_to_detail_table(request, job_random_string):
         column = request.GET['column'];
         order = request.GET['order'];
         if (table == 'updates'):
-            data = Update.objects.filter(jobuser__job=job);
+            data = Update.objects.filter(Q(jobuser__job=job) & Q(deleted=False));
         elif (table == 'pledging'):
             data = JobUser.objects.filter(Q(job=job) & (Q(pledging__gt=0) | Q(paid__gt=0)));
         elif (table == 'working'):
@@ -211,6 +210,43 @@ def add_to_detail_table(request, job_random_string):
         return HttpResponse(json, 'application/json');
     else:
         return Http404();
+        
+class ModerateUpdatesView(TemplateView):
+    template_name = 'job/moderate-updates.html';
+    
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        job = get_object_or_None(Job, random_string=kwargs['job_random_string']);
+        if (job):
+            jobuser = get_object_or_None(JobUser, user=request.user, job=job);
+            if (jobuser):
+                moderator = get_object_or_None(Moderator, jobuser=jobuser);
+                if (moderator):        
+                    return render(request, self.template_name, self.get_context_data(job=job));
+        return redirect('job:detail', random_string=job.random_string);
+        
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        job = get_object_or_None(Job, random_string=kwargs['job_random_string']);
+        if (job):
+            jobuser = get_object_or_None(JobUser, user=request.user, job=job);
+            if (jobuser):
+                moderator = get_object_or_None(Moderator, jobuser=jobuser);
+                if (moderator):
+                    updates = Update.objects.filter(jobuser__job=job);
+                    for u in updates:
+                        if (u.random_string in request.POST):
+                            u.deleted = True;
+                            u.save();
+                            break;
+                    return render(request, self.template_name, self.get_context_data(job=job));
+        return redirect('job:detail', random_string=job.random_string);
+        
+    def get_context_data(self, **kwargs):
+        context = super(ModerateUpdatesView, self).get_context_data(**kwargs);            
+        context['job'] = kwargs['job'];
+        context['updates'] = Update.objects.filter(Q(jobuser__job=kwargs['job']) & Q(deleted=False));
+        return context;
 
 class CreateView(TemplateView):
     template_name = 'job/create.html';

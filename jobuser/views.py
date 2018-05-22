@@ -353,7 +353,6 @@ class UnconfirmedPaymentView(TemplateView):
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        print(request.POST)
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
         jobuser = get_object_or_None(JobUser, user=request.user, job=job);
         payments = MiscPay.objects.filter(jobuser=jobuser, confirmed=None);

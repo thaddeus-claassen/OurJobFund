@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block import %}
+    <link rel="stylesheet" type="text/css" href="{% static 'job/css/moderate-updates.css' %}" />
+    <script type="text/javascript" src="{% static 'job/js/moderate-updates.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h4 class="title">Moderate updates for <a href="{% url 'job:detail' job.random_string %}">{{ job }}</a></h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="username"><span class="table-header">Updates</span><span class="
+                    total">{{ updates.count }}</span></th>
+                    <th class="date"><span class="table-header">Date</span></th>
+                    <th class="images"><span class="table-header">Images</span></th>
+                    <th class="delete"><span class="table-header">Delete</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <form action="{{ request.get_full_path }}" method="POST">
+                {% csrf_token %}
+                {% for u in updates %}
+                    <tr>
+                        <td class="username">
+                            <a href="{% url 'user:detail' u.jobuser.user.username %}">{{ u.jobuser.user.username }}</a>
+                        </td>
+                        <td class="date">
+                            {{ u.date|date:"F d, Y" }}
+                        </td>
+                        <td class="updates-images">
+                            {% if u.image_set.all.exists %}
+                            <a href="{% url 'update:images' u.random_string %}">
+                                {{ u.image_set.all.count }}
+                            </a>
+                            {% else %}
+                            0
+                            {% endif %}
+                        </td>
+                        <td class="updates-delete">
+                            <input type="submit" value="Delete" name="{{ u.random_string }}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="updates-comment" colspan="3">
+                            {{ u.comment }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </form>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

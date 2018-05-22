@@ -31,7 +31,7 @@ class NewJobForm(forms.ModelForm):
         if (not self.cleaned_data.get('honey_pot') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
-        
+             
 def checkStringIsValidMoney(money):
     valid = False;
     s = money.split('.');

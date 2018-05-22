@@ -24,7 +24,7 @@
     border-top: none;
 }
 
-#update, #pledge, #pay, #work, #finish, #confirm_payments {
+.job-input {
     width: 100%;
     margin: 1px;
 }
@@ -55,10 +55,6 @@
 
 .pledging-username, .pledging-date, .pledging-pledging, .pledging-paid {
     width: 25%;
-}
-
-.date {
-    color: gray;
 }
 
 .working-username, .working-started, .working-finished, .working-received {
