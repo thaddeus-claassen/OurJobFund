@@ -9,7 +9,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h4 class="title">Moderate updates for <a href="{% url 'job:detail' job.random_string %}">{{ job.title }}</a></h4>
+        <h4 class="title">Hide updates for <a href="{% url 'job:detail' job.random_string %}">{{ job.title }}</a></h4>
     </div>
 </div>
 <div class="row">
@@ -21,7 +21,7 @@
                     total">{{ updates.count }}</span></th>
                     <th class="date"><span class="table-header">Date</span></th>
                     <th class="images"><span class="table-header">Images</span></th>
-                    <th class="delete"><span class="table-header">Delete</span></th>
+                    <th class="ban"><span class="table-header">Hide</span></th>
                 </tr>
             </thead>
             <tbody>
@@ -44,8 +44,12 @@
                             0
                             {% endif %}
                         </td>
-                        <td class="delete">
-                            <input type="submit" value="Delete" name="{{ u.random_string }}" />
+                        <td class="ban">
+                            {% if u.hidden %}
+                            <input type="submit" value="Unhide" name="{{ u.random_string }}" />
+                            {% else %}
+                            <input type="submit" value="Hide" name="{{ u.random_string }}" />
+                            {% endif %}
                         </td>
                     </tr>
                     <tr>

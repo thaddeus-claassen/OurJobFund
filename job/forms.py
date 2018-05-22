@@ -1,5 +1,6 @@
 from django import forms;
 from .models import Job;
+from annoying.functions import get_object_or_None;
 import re;
 
 class NewJobForm(forms.ModelForm):

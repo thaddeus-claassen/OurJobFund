@@ -6,7 +6,7 @@ class Update(models.Model):
     jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);
     comment = models.CharField(default="", max_length=10000, blank=True);
     date = models.DateTimeField(auto_now_add=True);
-    deleted = models.BooleanField(default=False);
+    hidden = models.BooleanField(default=False);
     random_string = models.CharField(max_length=50);
     
     @classmethod

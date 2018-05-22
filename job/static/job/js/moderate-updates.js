@@ -65,7 +65,7 @@ function addRowsToTable(json) {
         string = string + "<td class='username'><a href='user/ " + update['username'] + "'>" + update['username'] + "</a></td>";
         string = string + "<td class='date'>" + update['date'] + "</td>";
         string = string + "<td class='images'>" + img + "</td>";
-        string = string + "<td class='delete'><input type='submit' value='Delete' name='" + update['random_string'] + "'/></td>";
+        string = string + "<td class='hide'><input type='submit' value='Delete' name='" + update['random_string'] + "'/></td>";
         string = string + "</tr>";
         string = string + "<tr>";
         string = string + "<td class='updates-comment' colspan='3'>" + update['comment'] + "</td>";

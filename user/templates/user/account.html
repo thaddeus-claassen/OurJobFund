@@ -30,7 +30,7 @@
             {% if change_username_form.errors %}
             <div class="row">
                 <div class="col-md-12">
-                    {{ change_username_form.errors }}
+                    {{ change_username_form.error_list }}
                 </div>
             </div>
             {% endif %}
@@ -94,25 +94,6 @@
             </div>
             {% endif %}
         {% endfor %}
-        </form>
-        <form id="deactivate-account-form" action="{{ request.get_full_path }}" method="POST">
-        {% csrf_token %}
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <input id="deactivate-account" type="button" value="Deactivate Account" />
-                    <span class="deactivate">Are you sure?</span>
-                    <input class="deactivate" type="submit" value="Yes" name="deactivate-account"/>
-                    <input id="cancel-deactivate-account" class="deactivate" type="button" value="No" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <span class="deactivate">
-                        Note: Deactivating your account will disallow users from viewing your profile, and will replace any links to your account with "[ Deactivated User]".
-                        All your data will be saved and your account will automatically reactivate by logging back in.
-                    </span>
-                </div>
-            </div>
         </form>
     </div>   
 </div>

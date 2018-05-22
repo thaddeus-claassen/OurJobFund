@@ -151,7 +151,7 @@ class DetailView(TemplateView):
         for w in working:
             received_total = received_total + w.received;
         context['job'] = job;
-        context['updates'] = Update.objects.filter(Q(jobuser__job=job) & Q(deleted=False)).order_by('date')[:50];
+        context['updates'] = Update.objects.filter(Q(jobuser__job=job) & Q(hidden=False)).order_by('date')[:50];
         context['pledging'] = pledging[:50];
         context['pledging_total'] = pledging.count();
         context['working'] = working[:50];
@@ -174,7 +174,7 @@ def add_to_detail_table(request, job_random_string):
         column = request.GET['column'];
         order = request.GET['order'];
         if (table == 'updates'):
-            data = Update.objects.filter(Q(jobuser__job=job) & Q(deleted=False));
+            data = Update.objects.filter(Q(jobuser__job=job) & Q(hidden=False));
         elif (table == 'pledging'):
             data = JobUser.objects.filter(Q(job=job) & (Q(pledging__gt=0) | Q(paid__gt=0)));
         elif (table == 'working'):
@@ -236,7 +236,10 @@ class ModerateUpdatesView(TemplateView):
                     updates = Update.objects.filter(jobuser__job=job);
                     for u in updates:
                         if (u.random_string in request.POST):
-                            u.deleted = True;
+                            if (request.POST[u.random_string] == 'Hide'):
+                                u.hidden = True;
+                            else:
+                                u.hidden = False;
                             u.save();
                             break;
                     return render(request, self.template_name, self.get_context_data(job=job));
@@ -245,7 +248,7 @@ class ModerateUpdatesView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ModerateUpdatesView, self).get_context_data(**kwargs);            
         context['job'] = kwargs['job'];
-        context['updates'] = Update.objects.filter(Q(jobuser__job=kwargs['job']) & Q(deleted=False));
+        context['updates'] = Update.objects.filter(Q(jobuser__job=kwargs['job']));
         return context;
 
 class CreateView(TemplateView):
