@@ -177,10 +177,13 @@ class WorkView(TemplateView):
             else:
                 jobuser = JobUser(user=request.user, job=job, work_status='Working');
             jobuser.save();
-            payment_type = form.cleaned_data['payment_type'];
-            if (payment_type == 'Credit/Debit' or payment_type == 'Either'):
-                self.pay(request);
-            work = Work.create(jobuser=jobuser, payment_type=payment_type);
+            #payment_type = form.cleaned_data['payment_type'];
+            #if (payment_type == 'Credit/Debit' or payment_type == 'Either'):
+            #    self.pay(request);
+            work = Work.create(
+                jobuser=jobuser,
+                #payment_type=payment_type
+            );
             work.save();
             comment = form.cleaned_data['comment'];
             if (comment):

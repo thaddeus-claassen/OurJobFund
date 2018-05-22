@@ -38,7 +38,7 @@ class PaymentReceivedForm(forms.Form):
         super(PaymentReceivedForm, self).__init__(*args, **kwargs);
         self.jobuser = jobuser;
         pledges = Pledge.objects.filter(Q(jobuser__job=jobuser.job) & ~Q(jobuser__user__username__exact=jobuser.user.username));
-        choices = (('', '(Please select a person)'),) + tuple((p.jobuser.user.pk, p.jobuser.user.username) for p in pledges);
+        choices = list(set((('', '(Please select a person)'),) + tuple((p.jobuser.user.pk, p.jobuser.user.username) for p in pledges)));
         self.fields['received_payment_from'] = forms.ChoiceField(choices=choices);
 
     def clean_pay_from(self):
@@ -96,7 +96,7 @@ class StripePaymentForm(forms.Form):
         return "";
     
 class WorkForm(forms.Form):
-    payment_type = forms.ChoiceField(choices=(('', '(Please Select your method of receiving payments)'), ('Credit/Debit', 'Credit/Debit'), ('Either', 'Either'), ('Contact Me', 'Contact Me')), required=True);
+    #payment_type = forms.ChoiceField(choices=(('', '(Please Select your method of receiving payments)'), ('Credit/Debit', 'Credit/Debit'), ('Either', 'Either'), ('Contact Me', 'Contact Me')), required=True);
     comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     
@@ -104,11 +104,11 @@ class WorkForm(forms.Form):
         model = Work;
         fields = ['payment_type'];
 
-    def clean_payment_type(self):
-        payment_type = self.cleaned_data.get('payment_type');
-        if (not payment_type in ['Credit/Debit', 'Any', 'Contact Me']):
-            raise forms.ValidationError("Your payment type was not valid.");
-        return payment_type;
+    #def clean_payment_type(self):
+    #    payment_type = self.cleaned_data.get('payment_type');
+    #    if (not payment_type in ['Credit/Debit', 'Any', 'Contact Me']):
+    #        raise forms.ValidationError("Your payment type was not valid.");
+    #    return payment_type;
 
     def clean_honey_pot(self):
         if (not self.cleaned_data.get('honey_pot') == ""):

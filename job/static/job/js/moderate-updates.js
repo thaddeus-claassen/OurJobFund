@@ -17,7 +17,7 @@ $('document').ready(function() {
             
     });
     $('tbody').scroll(function() {
-        var cls = $(this).attr('class');
+        var cls = $(this).parent().attr('class');
         var table = cls.split('-')[0];
         var total = table + '-total';
         if ($(this).scrollTop() + $(this).height() === $(this)[0].scrollHeight && $(this).children().count() < total) {

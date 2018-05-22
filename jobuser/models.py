@@ -123,18 +123,18 @@ class WorkFinish(PledgePayWorkFinish):
         return -1;
     
 class Work(WorkFinish):
-    payment_type = models.CharField(choices=(('', '(Please Select your method of receiving payments)'), ('Credit/Debit', 'Credit/Debit'), ('Either', 'Either'), ('Contact Me', 'Contact Me')), max_length=100);
+    #payment_type = models.CharField(choices=(('', '(Please Select your method of receiving payments)'), ('Credit/Debit', 'Credit/Debit'), ('Either', 'Either'), ('Contact Me', 'Contact Me')), max_length=100);
     
     @classmethod
-    def create(cls, jobuser, payment_type):
-        work = Work(jobuser=jobuser, payment_type=payment_type);
+    def create(cls, jobuser):
+        work = Work(jobuser=jobuser);
         return work;
         
     def get_type(self):
         return 'Work';
         
-    def get_payment_type(self):
-        return self.payment_type;
+    #def get_payment_type(self):
+        #return self.payment_type;
     
 class Finish(WorkFinish):
     

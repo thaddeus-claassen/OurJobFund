@@ -16,13 +16,14 @@
 <div class="row">
     <div class="col-md-5">
         <div class="row">
-            <div class="col-md-12">
-                <h4>{{ request.user.first_name }} {{ request.user.last_name }}</h4>
+            <div class="col-md-6">
+                <h4>{{ detail_user.first_name }} {{ detail_user.last_name }}</h4>
             </div>
         </div>
+        <br>
         <div id="description" class="row">
             <div class="col-md-12">
-                <span>{{ request.user.profile.description }}</span>
+                <span>{{ request.user.profile.description|linebreaks }}</span>
             </div>
         </div>
         {% if request.user.username == detail_user.username %}
@@ -34,6 +35,7 @@
             </div>
         </div>
         {% if detail_user.profile.stripe_account_id == "" %}
+        <!--
         <div class="row">
             <div class="col-md-12">
                 <span id="must-connect-to-stripe">
@@ -43,15 +45,17 @@
                 </span>
             </div>
         </div>
+        -->
         {% else %}
+        <!-- 
         <div class="row">
             <div class="col-md-12">
                 <form id="remove-stripe-account-form" action="{{ request.get_full_path }}" method="POST">
-                    {% csrf_token %}
                     <input id="delete-stripe" type="submit" value="Remove Stripe" name="delete-stripe" />
                 </form>
             </div>
         </div>
+        --> <!-- Don't Forget to Add CSRF token to the previous form when you delete stripe! -->
         {% endif %}
         {% elif detail_user.profile.stripe_account_id != "" %}
         <div class="row">

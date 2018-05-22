@@ -3,6 +3,7 @@
 <head>
     {% load static %}
     <meta charset="UTF-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
     <script src="{% static 'static_jquery/js/jquery.js' %}"></script>
     {% load bootstrap3 %}
     {% bootstrap_css %}
@@ -111,16 +112,13 @@
         <div class="row footer-div">
             <div class="col-md-10 col-md-offset-1 footer-div">
                 <div class="row footer-div">
-                    <div class="col-md-3 footer-div info_col">
+                    <div class="col-md-4 footer-div info_col">
                         <div class="info_link"><a href="{% url 'about:about' %}">About</a></div>
                     </div>
-                    <div class="col-md-3 footer-div info_col">
+                    <div class="col-md-4 footer-div info_col">
                         <div class="info_link"><a href="{% url 'contact:contact' %}">Contact</a></div>
                     </div>
-                    <div class="col-md-3 footer-div info_col">
-                        <div class="info_link">Terms of Service</div>
-                    </div>
-                    <div class="col-md-3 footer-div info_col">
+                    <div class="col-md-4 footer-div info_col">
                         <div class="info_link"><a href="{% url 'privacy:privacy' %}">Privacy</a></div>
                     </div>
                 </div>
