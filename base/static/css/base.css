@@ -92,7 +92,7 @@ tbody {
     border: 1px solid gray;
 }
 
-.footer-link {
+.footer-link, .footer-link:hover {
     color: gray;
 }
     
