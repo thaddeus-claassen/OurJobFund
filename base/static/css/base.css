@@ -91,7 +91,10 @@ tbody {
     overflow-y: scroll;
     border: 1px solid gray;
 }
-    
+
+.footer-link {
+    color: gray;
+}
     
     
     
