@@ -52,7 +52,7 @@ class Job(models.Model):
         if ((datetime.now() - self.date.replace(tzinfo=None)).days >= 30):
             is_finished = True;
         else:
-            if (self.pledging > 0 and self.pledging <= self.paid and self.working > 0 and self.working == self.finished):
+            if (self.pledging > 0 and self.pledging >= self.paid and self.working > 0 and self.working == self.finished):
                 is_finished = True;
         return is_finished;
     

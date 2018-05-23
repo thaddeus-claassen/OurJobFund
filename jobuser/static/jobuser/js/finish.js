@@ -1,11 +1,11 @@
 var canSubmit = true;
 
 $(document).ready(function() {
-    $('#form').submit(function(e) {
+    $('form').submit(function(event) {
         if (canSubmit) {
             canSubmit = false; 
         } else {
-            e.preventDefault();
+            event.preventDefault();
         }// end if-else
     });
 });

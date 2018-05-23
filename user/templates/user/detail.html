@@ -87,6 +87,13 @@
                             <td class="current-paid">${{ j.paid|floatformat:2 }}</td>
                             <td class="current-work_status">${{ j.received|floatformat:2 }}</td>
                         </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="current-title">You have no current jobs.</td>
+                            <td class="current-pledging"></td>
+                            <td class="current-paid"></td>
+                            <td class="current-work_status"></td>
+                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -110,6 +117,13 @@
                             <td class="completed-pledging">${{ j.pledging|floatformat:2 }}</td>
                             <td class="completed-paid">${{ j.paid|floatformat:2 }}</td>
                             <td class="completed-received">${{ j.received|floatformat:2 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="completed-title">You have no completed jobs.</td>
+                            <td class="completed-pledging"></td>
+                            <td class="completed-paid"></td>
+                            <td class="completed-received"></td>
                         </tr>
                         {% endfor %}
                     </tbody>
