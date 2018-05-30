@@ -16,11 +16,17 @@
 <div class="row">
     <div class="col-md-5">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <h4>{{ detail_user.first_name }} {{ detail_user.last_name }}</h4>
             </div>
         </div>
-        <br>
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <h4>{{ detail_user.profile.location }}</h4>
+            </div>
+        </div>
+        <br />
         <div id="description" class="row">
             <div class="col-md-12">
                 <span>{{ request.user.profile.description|linebreaks }}</span>
@@ -89,7 +95,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td class="current-title">You have no current jobs.</td>
+                            <td class="current-title">No current jobs.</td>
                             <td class="current-pledging"></td>
                             <td class="current-paid"></td>
                             <td class="current-work_status"></td>
@@ -120,7 +126,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td class="completed-title">You have no completed jobs.</td>
+                            <td class="completed-title">No completed jobs.</td>
                             <td class="completed-pledging"></td>
                             <td class="completed-paid"></td>
                             <td class="completed-received"></td>

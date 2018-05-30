@@ -11,12 +11,9 @@ alphabetic = RegexValidator(r'^[a-zA-Z\s]+$', 'Alphabetic characters only');
 
 class Profile(models.Model):
     user = AutoOneToOneField(User, primary_key=True, on_delete=models.CASCADE);
-    hide_location = models.BooleanField(default=True);
-    basic_search = models.BooleanField(default=True);
     type_of_account = models.CharField(default="personal", max_length=10);
     description = models.CharField(default='', max_length=10000, blank=True);
-    city = models.CharField(default='', max_length=100, blank=True);
-    state = models.CharField(default='', max_length=2, choices=STATES);
+    location = models.CharField(default='', max_length=100, blank=True);
     occupation = models.CharField(default='', max_length=100, blank=True);
     education = models.CharField(default='', max_length=100, blank=True);
     contact = models.CharField(default='', max_length=100, blank=True);

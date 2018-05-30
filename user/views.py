@@ -16,7 +16,7 @@ from django.core import serializers;
 from job.models import Job;
 from datetime import datetime;
 from .models import Profile;
-from .forms import ChangeUsernameForm, ChangePasswordForm, ChangeEmailForm, DeactivateAccountForm, LoginForm, SignUpForm, ChangeDescriptionForm, ChangeNameForm;
+from .forms import ChangeUsernameForm, ChangePasswordForm, ChangeEmailForm, DeactivateAccountForm, LoginForm, SignUpForm, ChangeProfileForm, ChangeNameForm;
 import json, stripe;
 
 class LoginView(TemplateView):
@@ -132,36 +132,37 @@ def add_to_detail_table(request, username):
         
 class EditProfileView(TemplateView):
     template_name = 'user/edit_profile.html';
-    description_form = ChangeDescriptionForm;
+    profile_form = ChangeProfileForm;
     name_form = ChangeNameForm;
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         if (request.user.username == kwargs['username']):
             name_form = self.name_form(initial={'first_name' : request.user.first_name, 'last_name' : request.user.last_name});
-            description_form = self.description_form(initial={'description': request.user.profile.description});
-            return render(request, self.template_name, self.get_context_data(name_form=name_form, description_form=description_form));
+            profile_form = self.profile_form(initial={'location': request.user.profile.location, 'description': request.user.profile.description});
+            return render(request, self.template_name, self.get_context_data(name_form=name_form, profile_form=profile_form));
         else:
             return redirect('user:edit_profile', username=request.user.username);
 
     @method_decorator(login_required)      
     def post(self, request ,*args, **kwargs):
         name_form = self.name_form(request.POST);
-        description_form = self.description_form(request.POST);
-        if (description_form.is_valid() and name_form.is_valid()):
+        profile_form = self.profile_form(request.POST);
+        if (profile_form.is_valid() and name_form.is_valid()):
             request.user.first_name = name_form.cleaned_data['first_name'];
             request.user.last_name = name_form.cleaned_data['last_name'];
             request.user.save();
-            request.user.profile.description = description_form.cleaned_data['description'];
+            request.user.profile.location = profile_form.cleaned_data['location'];
+            request.user.profile.description = profile_form.cleaned_data['description'];
             request.user.profile.save();
             return redirect('user:detail', username=request.user.username);
         else:
-            return render(request, self.template_name, self.get_context_data(name_form=name_form, description_form=description_form));
+            return render(request, self.template_name, self.get_context_data(name_form=name_form, profile_form=profile_form));
             
     def get_context_data(self, **kwargs):
         context = super(EditProfileView, self).get_context_data(**kwargs);
         context['name_form'] = kwargs['name_form'];
-        context['description_form'] = kwargs['description_form'];
+        context['profile_form'] = kwargs['profile_form'];
         return context;
         
 class AccountView(TemplateView):
@@ -173,9 +174,7 @@ class AccountView(TemplateView):
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
-        usernameForm = '';
-        if ((datetime.now() - request.user.profile.last_time_username_was_changed.replace(tzinfo=None)).days >= 180):
-            usernameForm = self.usernameForm(initial={'username' : request.user.username});
+        usernameForm = self.usernameForm(initial={'username' : request.user.username});
         emailForm = self.emailForm(initial={'email' : request.user.email});
         passwordForm = self.passwordForm;
         deactivateForm = self.deactivateForm(initial={'is_active' : True});
@@ -188,14 +187,15 @@ class AccountView(TemplateView):
         passwordForm = self.passwordForm;
         deactivateForm = self.deactivateForm;
         if ('change-username' in request.POST):
-            if ((datetime.now() - request.user.profile.last_time_username_was_changed.replace(tzinfo=None)).days >= 180):
-                usernameForm = usernameForm(request.POST);
-                if (usernameForm.is_valid()):
-                    self.request.user.username = usernameForm.cleaned_data['username'];
-                    self.request.user.save();
-                    self.request.user.profile.last_time_username_was_changed = datetime.now();
-                    self.request.user.profile.save();
-                    return redirect('user:account');
+            usernameForm = usernameForm(request.POST);
+            print("Form is valid: " + str(usernameForm.is_valid()))
+            if (usernameForm.is_valid()):
+                print(usernameForm.cleaned_data['username'])
+                self.request.user.username = usernameForm.cleaned_data['username'];
+                self.request.user.save();
+                self.request.user.profile.last_time_username_was_changed = datetime.now();
+                self.request.user.profile.save();
+                return redirect('user:account');
         elif ('change-email' in request.POST):
             emailForm = emailForm(request.POST);
             if (emailForm.is_valid()):

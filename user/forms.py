@@ -84,15 +84,16 @@ class SignUpForm(forms.ModelForm):
     def clean_protection(self):
         if (not self.cleaned_data.get('protection') == ""):
             raise forms.ValidationError('It seems you are a bot.');
-        return "";   
+        return "";
         
-class ChangeDescriptionForm(forms.ModelForm):
+class ChangeProfileForm(forms.ModelForm):
+    location = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '(City, State, etc.)'}), required=False);
     description = forms.CharField(widget=forms.Textarea, required=False);
     description_honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
     
     class Meta:
         model = Profile;
-        fields = ['description'];
+        fields = ['location', 'description'];
     
     def clean_profile_honey_pot(self):
         if (not self.cleaned_data.get('honey_pot') == ""):
@@ -100,8 +101,8 @@ class ChangeDescriptionForm(forms.ModelForm):
         return "";
     
 class ChangeNameForm(forms.ModelForm):
-    first_name = forms.CharField(label="First Name", max_length=30, widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
-    last_name = forms.CharField(label="Last Name", max_length=30, widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
+    first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
+    last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
     name_honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
 
     class Meta:
@@ -142,6 +143,8 @@ class ChangeUsernameForm(forms.ModelForm):
             raise forms.ValidationError('Your first name must not exceed 150 characters.');
         if (not re.match(r'^[A-Za-z0-9_]+$', username)):
             raise forms.ValidationError('Your username may only include alphanumeric characters or "_".');
+        if (get_object_or_None(User, username=username)):
+            raise forms.ValidationError('Username is already taken.');
         return username;
         
     def clean_username_honey_pot(self):
