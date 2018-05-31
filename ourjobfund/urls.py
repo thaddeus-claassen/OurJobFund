@@ -1,4 +1,5 @@
 from django.conf.urls import include, url;
+from django.urls import path;
 from django.contrib import admin;
 from django.conf import settings;
 from django.views.generic import TemplateView;
@@ -13,11 +14,7 @@ app_name = 'ourjobfund';
 
 urlpatterns = [
     url(r'^' + URLS['robots'] + '/$', TemplateView.as_view(template_name='robots.txt', content_type="text/plain")),
-    url(r'^' + URLS['password_reset'] + '/$', auth_views.password_reset, name='password_reset'),
-    url(r'^' + URLS['password_reset'] + '/' + URLS['done'] + '/$', auth_views.password_reset_done, name='password_reset_done'),
-    url(r'^' + URLS['reset'] + '/' + URLS['uidb66_regex'] + '/' + URLS['token_regex'] + '/$',
-        auth_views.password_reset_confirm, name='password_reset_confirm'),
-    url(r'^' + URLS['reset'] + '/' + URLS['done'] + '/$', auth_views.password_reset_complete, name='password_reset_complete'),
+    path('accounts/', include('django.contrib.auth.urls')),
     url(r'' + URLS['search-user'] + '/$', search_user),
     url(r'^' + URLS['admin'] + '/', admin.site.urls),
     url(r'^' + URLS['job'] + '/', include('job.urls')),
