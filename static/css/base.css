@@ -16,6 +16,10 @@ ul {
     list-style-type: none;
 }
 
+.title {
+    text-align: center;
+}
+
 .errorlist {
     color: red;
 }
@@ -53,11 +57,10 @@ ul {
 
 .total {
     font-family: "Arial Narrow", Arial, sans-serif;
-    color: lightgray;
+    color: gray;
     float: right;
-    width: 25%;
+    width: 40%;
 }
-
 
 table {
     width: 100%;
@@ -88,7 +91,10 @@ tbody {
     overflow-y: scroll;
     border: 1px solid gray;
 }
-    
+
+.footer-link, .footer-link:hover {
+    color: gray;
+}
     
     
     
