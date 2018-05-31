@@ -6,6 +6,7 @@ URLS = {
     'uidb66_regex': '(?P<uidb64>[0-9A-Za-z_\-]+)',
     'token_regex': '(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})',
     'account': 'account',
+    'accounts' : 'accounts',
     'privacy': 'privacy',
     'create': 'create',
     'update': 'update', 

@@ -14,7 +14,7 @@ app_name = 'ourjobfund';
 
 urlpatterns = [
     url(r'^' + URLS['robots'] + '/$', TemplateView.as_view(template_name='robots.txt', content_type="text/plain")),
-    path('accounts/', include('django.contrib.auth.urls')),
+    path('' + URLS['accounts'] + '/', include('django.contrib.auth.urls')),
     url(r'' + URLS['search-user'] + '/$', search_user),
     url(r'^' + URLS['admin'] + '/', admin.site.urls),
     url(r'^' + URLS['job'] + '/', include('job.urls')),
