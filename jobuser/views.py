@@ -239,7 +239,7 @@ class FinishView(TemplateView):
                 update.save();
             job.finished = job.finished + 1;
             job.save();
-            if (job.check_is_finished()):
+            if (job.set_is_finished()):
                 job.is_finished = True;
                 job.save();
             sendNotifications(jobuser);
@@ -375,7 +375,7 @@ class UnconfirmedPaymentView(TemplateView):
                 misc_pay.jobuser.save();
                 job.paid = job.paid + misc_pay.amount;
                 job.save();
-                if (job.check_is_finished()):
+                if (job.set_is_finished()):
                     job.is_finished = True;
                     job.save();
             else:

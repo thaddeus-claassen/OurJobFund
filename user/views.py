@@ -103,8 +103,8 @@ class DetailView(TemplateView):
             context['current'] =  user.jobuser_set.filter(job__is_finished=False);
             context['completed'] = user.jobuser_set.filter(job__is_finished=True);
         else:
-            context['current'] =  user.jobuser_set.filter(Q(job__is_finished=False) and Q(public=False));
-            context['completed'] = user.jobuser_set.filter(Q(job__is_finished=True) and Q(public=False));
+            context['current'] =  user.jobuser_set.filter(Q(job__is_finished=False) & Q(job__public=True));
+            context['completed'] = user.jobuser_set.filter(Q(job__is_finished=True) & Q(job__public=True));
         return context;
  
 def add_to_detail_table(request, username):

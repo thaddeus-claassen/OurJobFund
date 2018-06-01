@@ -49,13 +49,10 @@ class Job(models.Model):
             random_string = createRandomString();
         return random_string;
         
-    def check_is_finished(self):
+    def set_is_finished(self):
         is_finished = False;
-        if ((datetime.now() - self.date.replace(tzinfo=None)).days >= 30):
+        if ((self.working > 0 and self.working == self.finished) and ((self.pledging > 0 and self.pledging >= self.paid) or (self.pledging == 0))):
             is_finished = True;
-        else:
-            if (self.pledging > 0 and self.pledging >= self.paid and self.working > 0 and self.working == self.finished):
-                is_finished = True;
         return is_finished;
     
 class Tag(models.Model):

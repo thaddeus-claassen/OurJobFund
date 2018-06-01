@@ -1,3 +1,10 @@
+#is_finished {
+    color: red;
+}
+
+#private {
+    float: right;
+}
 
 .history {
     float: right;

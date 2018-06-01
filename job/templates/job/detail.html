@@ -10,8 +10,18 @@
 <input id="username" type="hidden" value="{% if request.user.is_authenticated %}{{ request.user.username }}{% endif %}" />
 <input id="random_string" type="hidden" value="{{ job.random_string }}" />
 <div class="row">
-    <div class="col-md-7 col-md-offset-5">
+    <div class="col-md-5">
+        {% if job.is_finished %}
+        <span id="is_finished">Completed</span>
+        {% endif %}
+    </div>
+    <div class="col-md-4">
         <h4>{{ job.title }}</h4>
+    </div>
+    <div class="col-md-3">
+        {% if not job.public %}
+        <span id="private">Private</span>
+        {% endif %}
     </div>
 </div>
 <div class="row">
