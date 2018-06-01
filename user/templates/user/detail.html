@@ -40,6 +40,13 @@
                 </form>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <form action="{% url 'job:create' %}">
+                    <input id="create_job" type="submit" value="Create Job" />
+                </form>
+            </div>
+        </div>
         {% if detail_user.profile.stripe_account_id == "" %}
         <!--
         <div class="row">

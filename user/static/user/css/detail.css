@@ -3,13 +3,13 @@ input[type=submit] {
 }
 
 #description {
-    height: 400px;
+    height: 300px;
     width: 100%;
     overflow-x: hidden;
     overflow-y: auto;
 }
 
-#edit_profile {
+#edit_profile, #create_job {
     width: 100%;
 }
 

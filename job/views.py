@@ -75,7 +75,7 @@ def findJobs(search, sort, latitude_in_degrees_as_string, longitude_in_degrees_a
                 jobs = get_jobs_from_custom_search(search);
             else:
                 return "Invalid Search";
-    jobs = jobs.filter(is_finished=False).distinct();
+    jobs = jobs.filter(Q(is_finished=False) and Q(public=True)).distinct();
     sort_array = sort.split("-");
     if (latitude_in_degrees_as_string != "" and longitude_in_degrees_as_string != "" and radius_in_miles_as_string != ""):
         jobs = findJobsByRadius(jobs, float(latitude_in_degrees_as_string), float(longitude_in_degrees_as_string), float(radius_in_miles_as_string));
@@ -263,13 +263,14 @@ class CreateView(TemplateView):
     def post(self, request, *args, **kwargs):
         form = self.form(request.POST, request.FILES);
         if (form.is_valid()):
+            type = ('Public' == form.cleaned_data['public']);
             title = form.cleaned_data['title'];
             latitude = form.cleaned_data['latitude'];
             longitude = form.cleaned_data['longitude'];
             location = form.cleaned_data['location'];
             tags = form.cleaned_data['tags'];
             comment = form.cleaned_data['comment'];
-            job = Job.create(title=title, latitude=latitude, longitude=longitude, location=location);
+            job = Job.create(public=public, title=title, latitude=latitude, longitude=longitude, location=location);
             job.save();
             if (tags != ''):
                 tagsArray = tags.split(" ");

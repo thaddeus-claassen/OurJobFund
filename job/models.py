@@ -8,6 +8,7 @@ from datetime import datetime;
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z_]+$', 'Alphanumeric characters only');        
         
 class Job(models.Model):
+    public = models.BooleanField(default=False);
     is_finished = models.BooleanField(default=False);
     title = models.CharField(max_length=100);
     date = models.DateTimeField(auto_now_add=True);
@@ -25,8 +26,9 @@ class Job(models.Model):
         return self.title;
     
     @classmethod
-    def create(cls, title, latitude=None, longitude=None, location=''):
+    def create(cls, public, title, latitude=None, longitude=None, location=''):
         job = Job(
+            public = public,
             title = title,
             latitude = latitude,
             longitude = longitude,
