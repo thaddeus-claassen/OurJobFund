@@ -104,7 +104,7 @@ class StripePaymentView(TemplateView):
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
-        user = get_object_or_404(user, username=kwargs['username']);
+        job = get_object_or_404(Job, random_string=kwargs['random_string']);
         return render(request, self.template_name, self.get_context_data(jobuser=jobuser, form=self.form(jobuser=jobuser)));
                     
     @method_decorator(login_required)

@@ -63,23 +63,25 @@ class PaymentReceivedForm(forms.Form):
         return "";
         
 class StripePaymentForm(forms.Form):
-    job = forms.ChoiceField();
+    job = None;
+    receiver = forms.ChoiceField();
     amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}), required=True);
     comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
     honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
     
-    def __init__(self, receiver, *args, **kwargs):
+    def __init__(self, job, *args, **kwargs):
         super(StripePaymentForm, self).__init__(*args, **kwargs);
-        jobs = receiver.jobuser_set.filter(~Q(work_status=''));
-        choices = (('', '(Please select a job)'),) + tuple((j.job.random_string, j.job.title) for j in jobs);
-        self.fields['job'] = forms.ChoiceField(choices=choices);
+        self.job = job;
+        receivers = job.jobuser_set.filter(~Q(work_status=''));
+        choices = (('', '(Please select someone to pay)'),) + tuple((r.user.username, r.user.username) for r in receivers);
+        self.fields['receiver'] = forms.ChoiceField(choices=choices);
 
-    def clean_job(self):
-        job_random_string = int(self.cleaned_data.get('job_random_string'));
-        jobs = receiver.jobuser_set.filter(~Q(work_status=''));
-        if (not job_random_string in [ j.job.ranom_string for j in jobs ]):
+    def clean_receiver(self):
+        receiver_username = self.cleaned_data.get('receiver');
+        receivers = self.job.jobuser_set.filter(~Q(work_status=''));
+        if (not receiver_username in [ r.user.username for r in receivers ]):
             raise forms.ValidationError('Invalid Option Selected');
-        return pay_to;
+        return receiver_username;
         
     def clean_amount(self):
         pay = self.cleaned_data.get('amount');

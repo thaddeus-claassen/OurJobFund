@@ -8,7 +8,7 @@ class JobUserTestCase(TestCase):
     def setUp(self):
         user = User(username="user_in_notification", email="user@user.com");
         user.save();
-        job = Job.create(title="job_in_notification");
+        job = Job.create(public=True, title="job_in_notification");
         job.save();
         notification = Notification.create(user=user, job=job);
         notification.save();

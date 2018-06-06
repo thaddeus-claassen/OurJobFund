@@ -85,8 +85,7 @@
                 </table>
             </div>
         </div>
-        {% if not job.is_finished %}
-        {% if request.user.is_authenticated %}
+        {% if not job.is_finished and request.user.is_authenticated %}
         {% if jobuser %}
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
@@ -97,6 +96,15 @@
         </div>
         {% endif %}
         {% if jobuser.work_set.all.exists %}
+        {% if not jobuser.finish_set.all.exists %}
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <form action="{% url 'finish' job.random_string %}">
+                    <input class="job-input" type="submit" value="Finish" name="finish" />
+                </form>
+            </div>
+        </div>
+        {% endif %}
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <form action="{% url 'job:received-payment' job.random_string %}">
@@ -105,31 +113,12 @@
             </div>
         </div>
         {% else %}
+        {% if jobuser.pledge_set.all.exists %}
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
-                <form action="{% url 'pledge' job.random_string %}">
-                    <input class="job-input" type="submit" value="Pledge" name="pledge" />
-                </form>
+                
             </div>
         </div>
-        {% endif %}
-        {% if jobuser.work_set.all.exists and not jobuser.finish_set.exists %}
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3">
-                <form action="{% url 'finish' job.random_string %}">
-                    <input class="job-input" type="submit" value="Finish" name="finish" />
-                </form>
-            </div>
-        </div>
-        {% elif not jobuser.finish_set.exists and not jobuser.pledge_set.exists %}
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3">
-                <form action="{% url 'work' job.random_string %}">
-                    <input class="job-input" type="submit" value="Work" name="work" />
-                </form>
-            </div>
-        </div>
-        {% endif %}
         {% if unconfirmed_payments %}
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
@@ -139,6 +128,23 @@
             </div>
         </div>
         {% endif %}
+        {% else %}
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <form action="{% url 'work' job.random_string %}">
+                    <input class="job-input" type="submit" value="Work" name="work" />
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <form action="{% url 'pledge' job.random_string %}">
+                    <input class="job-input" type="submit" value="Pledge" name="pledge" />
+                </form>
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
         {% if jobuser.moderator_set.exists %}
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
@@ -147,7 +153,6 @@
                 </form>
             </div>
         </div>
-        {% endif %}
         {% endif %}
         {% endif %}
     </div>

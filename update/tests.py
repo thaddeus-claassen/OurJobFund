@@ -8,7 +8,7 @@ class UpdateTestCase(TestCase):
     def setUp(self):
         user = User(username="user_in_update", email="user@user.com");
         user.save();
-        job = Job.create(title="job_in_update");
+        job = Job.create(public=True, title="job_in_update");
         job.save();
         jobuser = JobUser.create(user=user, job=job);
         jobuser.save();

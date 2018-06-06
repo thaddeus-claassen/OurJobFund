@@ -157,6 +157,7 @@ class EditProfileView(TemplateView):
             request.user.last_name = name_form.cleaned_data['last_name'];
             request.user.save();
             request.user.profile.location = profile_form.cleaned_data['location'];
+            request.user.profile.contact = profile_form.cleaned_data['contact'];
             request.user.profile.description = profile_form.cleaned_data['description'];
             request.user.profile.save();
             return redirect('user:detail', username=request.user.username);

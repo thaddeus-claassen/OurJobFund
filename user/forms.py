@@ -88,12 +88,13 @@ class SignUpForm(forms.ModelForm):
         
 class ChangeProfileForm(forms.ModelForm):
     location = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '(City, State, etc.)'}), required=False);
+    contact = forms.CharField(required=False);
     description = forms.CharField(widget=forms.Textarea, required=False);
     description_honey_pot = forms.CharField(label="", widget=forms.HiddenInput(), initial="", required=False);
     
     class Meta:
         model = Profile;
-        fields = ['location', 'description'];
+        fields = ['location', 'contact', 'description'];
     
     def clean_profile_honey_pot(self):
         if (not self.cleaned_data.get('honey_pot') == ""):
