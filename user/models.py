@@ -7,8 +7,6 @@ from annoying.fields import AutoOneToOneField;
 from .choices import STATES;
 import datetime, pytz;
 
-alphabetic = RegexValidator(r'^[a-zA-Z\s]+$', 'Alphabetic characters only');
-
 class Profile(models.Model):
     user = AutoOneToOneField(User, primary_key=True, on_delete=models.CASCADE);
     type_of_account = models.CharField(default="personal", max_length=10);
@@ -24,8 +22,6 @@ class Profile(models.Model):
     
     def get_absolute_url(self):
         return reverse("user.views.detail", args=[self.random_string]);
-    
-    
     
     
     

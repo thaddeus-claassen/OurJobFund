@@ -11,6 +11,9 @@ class JobUser(models.Model):
     work_status = models.CharField(default='', max_length=100, null=True, blank=True);
     preferred_payment_method = models.CharField(default='', max_length=100);
     received = models.FloatField(default=0);
+    joined = models.DateTimeField(default=datetime.min);
+    banned = models.BooleanField(default=False);
+    random_string = models.CharField(max_length=50);
     
     @classmethod
     def create(cls, user, job, pledging=0, paid=0, work_status='', received=0):
@@ -21,8 +24,22 @@ class JobUser(models.Model):
             paid = paid,
             work_status = work_status,
             received = received,
+            random_string = cls.createRandomString(),
         );
         return jobuser;
+        
+    @classmethod
+    def createRandomString(cls):
+        from random import randint;
+        random_string = '';
+        available_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        for i in range(50):
+            index = randint(0, 61);
+            random_char = available_chars[index];
+            random_string = random_string + random_char;
+        if (JobUser.objects.filter(random_string=random_string).exists()):
+            random_string = createRandomString();
+        return random_string;
        
 class Moderator(models.Model):
     jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);

@@ -30,7 +30,13 @@
             {% for p in set %}
                 <tr>
                     <td class="username">
-                        <a href="{% url 'user:detail' p.jobuser.user.username %}">{{ p.jobuser.user.username }}</a>
+                        {% if p.jobuser.user.is_active %}
+                        <a href="{% url 'user:detail' p.jobuser.user.get_username %}">
+                            {{ p.jobuser.user.get_username }}
+                        </a>
+                        {% else %}
+                        [ Deleted User ]
+                        {% endif %}
                     </td>
                     <td class="date">
                         {{ p.date|date:"F d, Y" }}
@@ -58,16 +64,6 @@
                 </tr>
             {% endfor %}
             </tbody>
-            <tfoot>
-                <tr>
-                    <td class="username"></td>
-                    <td class="date"></td>
-                    <td class="type"></td>
-                    <td class="amount"></td>
-                    <td class="to"></td>
-                    <td class="confirmed"></td>
-                </tr>
-            </tfoot>
         </table>
     </div>
 </div>

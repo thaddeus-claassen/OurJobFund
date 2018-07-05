@@ -193,9 +193,7 @@ class AccountView(TemplateView):
         deactivateForm = self.deactivateForm;
         if ('change-username' in request.POST):
             usernameForm = usernameForm(request.POST);
-            print("Form is valid: " + str(usernameForm.is_valid()))
             if (usernameForm.is_valid()):
-                print(usernameForm.cleaned_data['username'])
                 self.request.user.username = usernameForm.cleaned_data['username'];
                 self.request.user.save();
                 self.request.user.profile.last_time_username_was_changed = datetime.now();

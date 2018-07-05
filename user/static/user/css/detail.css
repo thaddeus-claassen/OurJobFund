@@ -7,6 +7,12 @@ input[type=submit] {
     width: 100%;
     overflow-x: hidden;
     overflow-y: auto;
+    border: 1px solid grey;
+}
+
+#no-name, #no-description {
+    opacity: 0.5;
+    text-align: center;
 }
 
 #edit_profile, #create_job {

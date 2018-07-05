@@ -151,7 +151,7 @@ class DetailView(TemplateView):
         for w in working:
             received_total = received_total + w.received;
         context['job'] = job;
-        context['updates'] = Update.objects.filter(Q(jobuser__job=job) & Q(hidden=False)).order_by('date')[:50];
+        context['updates'] = Update.objects.filter(Q(jobuser__job=job) & Q(banned=False)).order_by('date')[:50];
         context['pledging'] = pledging[:50];
         context['pledging_total'] = pledging.count();
         context['working'] = working[:50];
@@ -211,7 +211,7 @@ def add_to_detail_table(request, job_random_string):
     else:
         return Http404();
         
-class ModerateUpdatesView(TemplateView):
+class ModerateView(TemplateView):
     template_name = 'job/moderate-updates.html';
     
     @method_decorator(login_required)
@@ -250,6 +250,37 @@ class ModerateUpdatesView(TemplateView):
         context['job'] = kwargs['job'];
         context['updates'] = Update.objects.filter(Q(jobuser__job=kwargs['job']));
         return context;
+        
+class ModerateUserView(TemplateView):
+    template_name = 'job/moderate-user';
+    
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
+        this_jobuser = get_object_or_None(user=request.user, job=job);
+        if (this_jobuser.moderator_set.filter(active=True).first().exists()):
+            jobuser = get_object_or_None(JobUser, job=job, user=get_object_or_404(User, username=kwargs['username']));
+            return render(request, self.template_name, self.get_context_data(jobuser=jobuser));
+        else:
+            return redirect('job:detail', random_string=job.random_string);
+        
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
+        this_jobuser = get_object_or_None(user=request.user, job=job);
+        if (this_jobuser.moderator_set.filter(active=True).first().exists()):
+            jobuser = get_object_or_None(JobUser, job=job, user=get_object_or_404(User, username=kwargs['username']));
+            if ('ban' in request.POST):
+                jobuser.banned = True;
+                jobuser.save();
+            return render(request, self.template_name, self.get_context_data(jobuser=jobuser));
+        else:
+            return redirect('job:detail', random_string=job.random_string);
+            
+    def get_context_data(self, **kwargs):
+        context = super(ModerateUserView, self).get_context_data(**kwargs);            
+        context['jobuser'] = kwargs['jobuser'];
+        return context;
 
 class CreateView(TemplateView):
     template_name = 'job/create.html';
@@ -268,9 +299,10 @@ class CreateView(TemplateView):
             latitude = form.cleaned_data['latitude'];
             longitude = form.cleaned_data['longitude'];
             location = form.cleaned_data['location'];
+            formatted_location = form.cleaned_data['formatted_location'];
             tags = form.cleaned_data['tags'];
             comment = form.cleaned_data['comment'];
-            job = Job.create(public=public, title=title, latitude=latitude, longitude=longitude, location=location);
+            job = Job.create(public=public, title=title, latitude=latitude, longitude=longitude, location=location, formatted_location=formatted_location);
             job.save();
             if (tags != ''):
                 tagsArray = tags.split(" ");

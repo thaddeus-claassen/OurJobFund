@@ -4,7 +4,6 @@ var current_sort = 'date-descending';
 var finished_sort = 'pledge-descending';
 
 $('document').ready(function() {
-    removeBorder();
     $('.table-header').click(function() {
         var cls = $(this).parent().attr('class');
         if (cls !== '') {
@@ -26,14 +25,6 @@ $('document').ready(function() {
         }// end if
     });
 });
-
-function removeBorder() {
-    var user = $('#this_user').val();
-    var detail_user = $('#username').text();
-    if (user !== detail_user) {
-        $('textarea').css('border', 'none');
-    }// end if
-}// end removeBorder()
 
 function setSortVariable(table, type) {
     var sort = null;

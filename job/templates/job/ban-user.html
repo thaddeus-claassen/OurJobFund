@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block import %}
+    <link rel="stylesheet" type="text/css" href="{% static 'job/css/ban-user.css' %}" />
+    <script type="text/javascript" src="{% static 'job/js/ban-user.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h4 class="title">
+        Ban
+        <a href="{% url 'user:detail' user.get_username }}">{{ user.get_username }}</a>
+        from
+        <a href="{% url 'job:detail' job.random_string }}">{{ job.random_string }}</a>
+        </h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table>
+            <thead>
+                <tr>
+                    <td>Date</td>
+                    <td>Type</td>
+                    <td>Amount</td>
+                    <td>To</td>
+                </tr>
+            </thead>
+            <tbody>
+            {% for event in user_events %}
+                <tr>
+                    <td>{{ event.date|date"F d, Y" }}</td>
+                    <td>{{ event.get_type }}</td>
+                    <td>{{ event.get_amount }}</td>
+                    <td>{{ event.get_to }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

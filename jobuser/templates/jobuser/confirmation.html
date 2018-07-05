@@ -25,7 +25,15 @@
                 <form id="form" action="{{ request.get_full_path }}" method="POST">
                 {% csrf_token %}
                     {% for p in unconfirmed_payments %}
-                    <td><a href="{% url 'user:detail' p.jobuser.user.username %}">{{ p.jobuser.user.username }}</a></td>
+                    <td>
+                        {% if p.jobuser.user.is_active %}
+                        <a href="{% url 'user:detail' p.jobuser.user.get_username %}">
+                            {{ p.jobuser.user.get_username }}
+                        </a>
+                        {% else %}
+                        [ Deleted User ]
+                        {% endif %}
+                    </td>
                     <td>{{ p.date|date:"F d, Y" }}</td>
                     <td>${{ p.amount|floatformat:2 }}</td>  
                     <td>

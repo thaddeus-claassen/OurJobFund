@@ -1,0 +1,44 @@
+{% load static %}
+{% block import %}
+    <link rel="stylesheet" type="text/css" href="{% static 'job/css/delete-update.css' %}" />
+    <script type="text/javascript" src="{% static 'job/js/delete-update.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h4 class="title">Delete Update</h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="row">
+            <div class="col-md-6">
+                <a href="{% url 'user:detail' update.jobuser.user.get_username %}">{{ update.jobuser.user.get_username }}</a>
+            </div>
+            <div class="col-md-6">
+                {{ update.date|date:"F d, Y" }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{ update.comment }}
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div id="images">
+            {% for image in update.image_set.all %}
+                <img src="{{ image.image.url }}" class="img-responsive image" />
+            {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form action="{{ request.get_full_path }}" method="POST">
+                    <input type="submit" value="Delete" name="Delete" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,12 +1,11 @@
 from django.db import models;
 from jobuser.models import JobUser;
-from random import randint;
 
 class Update(models.Model):
     jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);
     comment = models.CharField(default="", max_length=10000, blank=True);
     date = models.DateTimeField(auto_now_add=True);
-    hidden = models.BooleanField(default=False);
+    banned = models.BooleanField(default=False);
     random_string = models.CharField(max_length=50);
     
     @classmethod
@@ -20,6 +19,7 @@ class Update(models.Model):
 
     @classmethod
     def createRandomString(cls):
+        from random import randint;
         random_string = '';
         available_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
         for i in range(50):

@@ -4,7 +4,7 @@ var handler;
 
 $(document).ready(function() {
     $('#form').submit(function(e) {
-        if ($('#id_work-payment_type').val() === 'Credit/Debit' || $('#id-payment_type').val() === 'Either') {
+        if ($('#id_pay_through').val() === 'Stripe') {
             if (stripeSubmitted) {
                 if (canSubmit) {
                     canSubmit = false;
@@ -14,8 +14,8 @@ $(document).ready(function() {
             } else {
                 stripeSubmitted = true;
                 handler.open({
-                    amount: 100,
-                    description: "Payment to OurJobFund",
+                    amount: $('#id_amount').val() * 100,
+                    description: "Payment to " + $('#id_receiver').val(), 
                 });
                 e.preventDefault();
             }// end if-else

@@ -7,35 +7,55 @@
 {% endblock %}
 
 {% block content %}
-<input id="this_user" type="hidden" value="{{ request.user.username }}"/>
+<input id="this_user" type="hidden" value="{{ request.user.get_username }}"/>
 <div class="row">
     <div class="col-md-7 col-md-offset-5">
-        <h4 id="username">{{ detail_user.username }}</h4>
+        <h3 id="username">{{ detail_user.get_username }}</h3>
     </div>
 </div>
 <div class="row">
     <div class="col-md-5">
         <div class="row">
             <div class="col-md-12">
-                <h4>{{ detail_user.first_name }} {{ detail_user.last_name }}</h4>
+                <h4>
+                    {% if detail_user.get_full_name %}
+                    {{ detail_user.get_full_name }}
+                    {% else %}
+                    <span id="no-name">Full Name</span>
+                    {% endif %}
+                </h4>
             </div>
         </div>
+        {% if detail_user.profile.location %}
         <div class="row">
             <div class="col-md-12">
-                <h4>{{ detail_user.profile.location }}</h4>
+                <h4>
+                    {{ detail_user.profile.location }}
+                </h4>
             </div>
         </div>
+        {% endif %}
+        {% if detail_user.profile.contact %}
         <div class="row">
             <div class="col-md-12">
-                <h4>{{ detail_user.profile.contact }}</h4>
+                <h4>
+                    {{ detail_user.profile.contact }}
+                </h4>
             </div>
         </div>
+        {% endif %}
         <div id="description" class="row">
             <div class="col-md-12">
-                <span>{{ request.user.profile.description|linebreaks }}</span>
+                <span>
+                    {% if request.user.profile.description %}
+                    {{ request.user.profile.description|linebreaks }}
+                    {% else %}
+                    <span id="no-description">Description</span>
+                    {% endif %}
+                </span>
             </div>
         </div>
-        {% if request.user.username == detail_user.username %}
+        {% if request.user.get_username == detail_user.get_username %}
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <form action="{% url 'user:edit_profile' request.user.username %}">

@@ -15,11 +15,12 @@
     </div>
 </div>
 <form id="create-job-form" method="POST" action="{{ request.get_full_path }}" enctype="multipart/form-data">
-{% csrf_token %}
+    {% csrf_token %}
+    {{ form.editted_location }}
     {{ form.latitude }}{{ form.latitude.errors }}
     {{ form.longitude }}{{ form.longitude.errors }}
 {% for field in form %}
-    {% if field.auto_id != "id_longitude" and field.auto_id != "id_latitude" %} 
+    {% if field.auto_id != "id_longitude" and field.auto_id != "id_latitude" and field.auto_id != "id_editted_location" %}
     <div class="row">
         <div class="col-md-2">
             {{ field.label }}
@@ -29,7 +30,7 @@
         </div>
     </div>
     {% endif %}
-{% endfor %} 
+{% endfor %}
     <div class="row info_row">
         <div class="col-md-10 col-md-offset-2">
             <input type="submit" value="Create Job" name="create-job" />

@@ -7,7 +7,6 @@
 {% endblock %}
 
 {% block content %}
-<input id="update_id" type="hidden" value="{{ update.id }}" />
 <div class="row">
     <div class="col-md-12">
         <h4 id="title">Images for <a href="{% url 'job:detail' update.jobuser.job.random_string %}">{{ update.jobuser.job.title }}</a></h4>

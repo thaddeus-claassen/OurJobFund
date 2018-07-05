@@ -1,0 +1,15 @@
+#title {
+    text-align: center;
+}
+
+#images {
+    width: 100%;
+    height: 300px;
+    overflow-x: scroll;
+    white-space: nowrap;
+}
+
+.image {
+    height: 100%;
+    display: inline-block;
+}

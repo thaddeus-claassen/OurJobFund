@@ -17,7 +17,8 @@ class Job(models.Model):
     working = models.PositiveIntegerField(default=0);
     finished = models.PositiveIntegerField(default=0);
     received = models.FloatField(default=0);
-    location = models.CharField(null=True, blank=True, max_length=1000);
+    location = models.CharField(null=True, blank=True, max_length=10000);
+    formatted_location = models.CharField(null=True, blank=True, max_length=10000);
     latitude = models.FloatField(null=True, blank=True);
     longitude = models.FloatField(null=True, blank=True);
     random_string = models.CharField(default='', max_length=100);
@@ -26,13 +27,14 @@ class Job(models.Model):
         return self.title;
     
     @classmethod
-    def create(cls, public, title, latitude=None, longitude=None, location=''):
+    def create(cls, public, title, latitude=None, longitude=None, location='', formatted_location=''):
         job = Job(
             public = public,
             title = title,
             latitude = latitude,
             longitude = longitude,
-            location = location, 
+            location = location,
+            formatted_location = formatted_location,
             random_string = cls.createRandomString(),
         );
         return job;

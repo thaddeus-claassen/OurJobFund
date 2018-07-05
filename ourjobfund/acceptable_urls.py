@@ -22,7 +22,7 @@ URLS = {
     'admin': 'admin',
     'privacy': 'privacy',
     'job': 'job',
-    'moderate-updates': 'moderate-updates',
+    'moderate': 'moderate',
     'received-payment': 'received-payment',
     'pledge-history': 'pledge-history',
     'work-history': 'work-history',

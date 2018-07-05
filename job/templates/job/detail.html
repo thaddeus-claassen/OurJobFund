@@ -7,7 +7,6 @@
 {% endblock %}
 
 {% block content %}
-<input id="username" type="hidden" value="{% if request.user.is_authenticated %}{{ request.user.username }}{% endif %}" />
 <input id="random_string" type="hidden" value="{{ job.random_string }}" />
 <div class="row">
     <div class="col-md-5">
@@ -37,8 +36,8 @@
     </div>
     <div class="col-md-6">
          <span id="location">
-            {% if job.location %}
-            Location:&nbsp;<a href="{% url 'home' %}?location={{ job.location }}">{{ job.location }}</a>            
+            {% if job.formatted_location %}
+            Location:&nbsp;<a href="{% url 'home' %}?location={{ job.formatted_location }}">{{ job.formatted_location }}</a>
             {% endif %}
         </span>
     </div>
@@ -60,7 +59,13 @@
                     {% for u in updates %}
                         <tr>
                             <td class="updates-username">
-                                <a href="{% url 'user:detail' u.jobuser.user.username %}">{{ u.jobuser.user.username }}</a>
+                                {% if u.jobuser.user.is_active %}
+                                <a href="{% url 'user:detail' u.jobuser.user.get_username %}">
+                                    {{ u.jobuser.user.get_username }}
+                                </a>
+                                {% else %}
+                                [ Deleted User ]
+                                {% endif %}
                             </td>
                             <td class="updates-date">
                                 <span class="updates-date">{{ u.date|date:"F d, Y" }}</span>
@@ -105,18 +110,13 @@
             </div>
         </div>
         {% endif %}
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3">
-                <form action="{% url 'job:received-payment' job.random_string %}">
-                    <input class="job-input" type="submit" value="Outside Payment" name="pay" />
-                </form>
-            </div>
-        </div>
         {% else %}
         {% if jobuser.pledge_set.all.exists %}
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
-                
+                <form action="{% url 'job:pay' job.random_string %}">
+                    <input class="job-input" type="submit" value="Pay" />
+                </form>
             </div>
         </div>
         {% if unconfirmed_payments %}
@@ -148,8 +148,8 @@
         {% if jobuser.moderator_set.exists %}
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
-                <form action="{% url 'job:moderate-updates' job.random_string %}">
-                    <input class="job-input" type="submit" value="Hide Updates" />
+                <form action="{% url 'job:moderate' job.random_string %}">
+                    <input class="job-input" type="submit" value="Moderate" />
                 </form>
             </div>
         </div>
@@ -164,7 +164,7 @@
                         <tr>
                             <th class="pledging-username"><span class="table-header">Pledgers</span><span class="total">{{ pledging_total }}</span></th>
                             <th class="pledging-date"><span class="table-header">Date Pledged</span></th>
-                            <th class="pledging-pledging"><span class="table-header">Pledge</span><span class="total">${{  job.pledging|floatformat:2 }}</span></th>
+                            <th class="pledging-pledging"><span class="table-header">Pledge</span><span class="total">${{ job.pledging|floatformat:2 }}</span></th>
                             <th class="pledging-paid"><span class="table-header">Paid</span><span class="total">${{ job.paid|floatformat:2 }}</span></th>
                         </tr>
                     </thead>
@@ -173,8 +173,8 @@
                         <tr>
                             <td class="pledging-username">
                                 {% if j.user.is_active %}
-                                <a href="{% url 'user:detail' j.user.username %}">
-                                    {{ j.user.username }}
+                                <a href="{% url 'user:detail' j.user.get_username %}">
+                                    {{ j.user.get_username }}
                                 </a>
                                 {% else %}
                                 <span>[ Deleted User ]</span>
@@ -220,8 +220,8 @@
                         <tr>
                             <td class="working-username">
                                 {% if w.user.is_active %}
-                                <a href="{% url 'user:detail' w.user.username %}">
-                                    {{ w.user.username }}
+                                <a href="{% url 'user:detail' w.user.get_username %}">
+                                    {{ w.user.get_username }}
                                 </a>
                                 {% else %}
                                 <span>[ Deleted User ]</span>

@@ -10,7 +10,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h4 id="title">Work History for <a href="{% url 'job:detail' job.random_string %}">{{ job.title }}</a></h4>
+        <h4 class="title">Work History for <a href="{% url 'job:detail' job.random_string %}">{{ job.title }}</a></h4>
     </div>
 </div>
 <div class="row">
@@ -30,7 +30,13 @@
             {% for p in set %}
                 <tr>
                     <td class="username">
-                        <a href="{% url 'user:detail' p.jobuser.user.username %}">{{ p.jobuser.user.username }}</a>
+                        {% if p.jobuser.user.is_active %}
+                        <a href="{% url 'user:detail' p.jobuser.user.get_username %}">
+                            {{ p.jobuser.user.get_username }}
+                        </a>
+                        {% else %}
+                        [ Deleted User ]
+                        {% endif %}
                     </td>
                     <td class="date">
                         {{ p.date|date:"F d, Y" }}

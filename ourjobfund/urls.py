@@ -7,7 +7,7 @@ from django.conf.urls.static import static;
 from django.contrib.auth import views as auth_views;
 from user.views import search_user;
 from job.views import home;
-from jobuser.views import PledgeView, StripePaymentView, WorkView, FinishView, PledgeHistoryView, WorkHistoryView, UnconfirmedPaymentView, sort_pledge_history, sort_work_history;
+from jobuser.views import PledgeView, WorkView, FinishView, PledgeHistoryView, WorkHistoryView, UnconfirmedPaymentView, sort_pledge_history, sort_work_history;
 from .acceptable_urls import URLS;
 
 app_name = 'ourjobfund';
