@@ -100,11 +100,11 @@ class DetailView(TemplateView):
         user = kwargs['user'];
         context['detail_user'] = user;
         if (user.username == request.user.username):
-            context['current'] =  user.jobuser_set.filter(job__is_finished=False);
-            context['completed'] = user.jobuser_set.filter(job__is_finished=True);
+            context['current'] =  user.jobuser_set.filter(job__is_finished=False, banned=False);
+            context['completed'] = user.jobuser_set.filter(job__is_finished=True, banned=False);
         else:
-            context['current'] =  user.jobuser_set.filter(Q(job__is_finished=False) & Q(job__public=True));
-            context['completed'] = user.jobuser_set.filter(Q(job__is_finished=True) & Q(job__public=True));
+            context['current'] =  user.jobuser_set.filter(job__is_finished=False, job__public=True, banned=False);
+            context['completed'] = user.jobuser_set.filter(job__is_finished=True, job__public=True, banned=False);
         return context;
  
 def add_to_detail_table(request, username):
@@ -115,9 +115,9 @@ def add_to_detail_table(request, username):
         column = request.GET['column'];
         order = request.GET['order'];
         if (table == 'current'):
-            data = user.jobuser_set.filter(job__is_finished=False);
+            data = user.jobuser_set.filter(job__is_finished=False, banned=False);
         else:
-            data = user.jobuser_set.filter(job__is_finished=True);
+            data = user.jobuser_set.filter(job__is_finished=True, banned=False);
         if (column == 'title'):
             if (order == 'ascending'):
                 data = data.order_by(Lower('job__title'))[50 * numSearches : 50 * (numSearches + 1)][::-1];

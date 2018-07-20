@@ -40,6 +40,14 @@ class JobUser(models.Model):
         if (JobUser.objects.filter(random_string=random_string).exists()):
             random_string = createRandomString();
         return random_string;
+        
+    def set_banned(self, value):
+        self.banned = value;
+        if (not value):
+            for mod in self.moderator_set.filter(active=True):
+                mod.active = False;
+                mod.save();
+        
        
 class Moderator(models.Model):
     jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);
@@ -53,6 +61,21 @@ class Moderator(models.Model):
             jobuser = jobuser,
         );
         return moderator;
+        
+    def get_date(self):
+        return self.date;
+            
+    def get_type(self):
+        if (self.is_super):
+            return "Super Moderator";
+        else:
+            return "Moderator";
+                
+    def get_amount(self):
+        return "N/A";
+        
+    def get_to(self):
+        return "N/A";
     
 class PledgePayWorkFinish(models.Model):        
     jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);

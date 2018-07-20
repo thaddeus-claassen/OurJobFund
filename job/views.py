@@ -139,14 +139,14 @@ class DetailView(TemplateView):
     def get_context_data(self, request, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs);
         job = kwargs['job'];
-        pledging = JobUser.objects.filter(Q(job=job) & (Q(pledging__gt=0) | Q(paid__gt=0)));
+        pledging = JobUser.objects.filter(Q(banned=False) & Q(job=job) & (Q(pledging__gt=0) | Q(paid__gt=0)));
         pledging_total = 0;
         for p in pledging:
             pledging_total = pledging_total + p.pledging;
         paid_total = 0;
         for p in pledging:
             paid_total = paid_total + p.paid;
-        working = JobUser.objects.filter(job=job).exclude(work_status='');
+        working = JobUser.objects.filter(job=job, banned=False).exclude(work_status='');
         received_total = 0;
         for w in working:
             received_total = received_total + w.received;
@@ -174,7 +174,7 @@ def add_to_detail_table(request, job_random_string):
         column = request.GET['column'];
         order = request.GET['order'];
         if (table == 'updates'):
-            data = Update.objects.filter(Q(jobuser__job=job) & Q(hidden=False));
+            data = Update.objects.filter(jobuser__job=job, banned=False);
         elif (table == 'pledging'):
             data = JobUser.objects.filter(Q(job=job) & (Q(pledging__gt=0) | Q(paid__gt=0)));
         elif (table == 'working'):
@@ -210,77 +210,6 @@ def add_to_detail_table(request, job_random_string):
         return HttpResponse(json, 'application/json');
     else:
         return Http404();
-        
-class ModerateView(TemplateView):
-    template_name = 'job/moderate-updates.html';
-    
-    @method_decorator(login_required)
-    def get(self, request, *args, **kwargs):
-        job = get_object_or_None(Job, random_string=kwargs['job_random_string']);
-        if (job):
-            jobuser = get_object_or_None(JobUser, user=request.user, job=job);
-            if (jobuser):
-                moderator = get_object_or_None(Moderator, jobuser=jobuser);
-                if (moderator):        
-                    return render(request, self.template_name, self.get_context_data(job=job));
-        return redirect('job:detail', random_string=job.random_string);
-        
-    @method_decorator(login_required)
-    def post(self, request, *args, **kwargs):
-        job = get_object_or_None(Job, random_string=kwargs['job_random_string']);
-        if (job):
-            jobuser = get_object_or_None(JobUser, user=request.user, job=job);
-            if (jobuser):
-                moderator = get_object_or_None(Moderator, jobuser=jobuser);
-                if (moderator):
-                    updates = Update.objects.filter(jobuser__job=job);
-                    for u in updates:
-                        if (u.random_string in request.POST):
-                            if (request.POST[u.random_string] == 'Hide'):
-                                u.hidden = True;
-                            else:
-                                u.hidden = False;
-                            u.save();
-                            break;
-                    return render(request, self.template_name, self.get_context_data(job=job));
-        return redirect('job:detail', random_string=job.random_string);
-        
-    def get_context_data(self, **kwargs):
-        context = super(ModerateUpdatesView, self).get_context_data(**kwargs);            
-        context['job'] = kwargs['job'];
-        context['updates'] = Update.objects.filter(Q(jobuser__job=kwargs['job']));
-        return context;
-        
-class ModerateUserView(TemplateView):
-    template_name = 'job/moderate-user';
-    
-    @method_decorator(login_required)
-    def get(self, request, *args, **kwargs):
-        job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
-        this_jobuser = get_object_or_None(user=request.user, job=job);
-        if (this_jobuser.moderator_set.filter(active=True).first().exists()):
-            jobuser = get_object_or_None(JobUser, job=job, user=get_object_or_404(User, username=kwargs['username']));
-            return render(request, self.template_name, self.get_context_data(jobuser=jobuser));
-        else:
-            return redirect('job:detail', random_string=job.random_string);
-        
-    @method_decorator(login_required)
-    def post(self, request, *args, **kwargs):
-        job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
-        this_jobuser = get_object_or_None(user=request.user, job=job);
-        if (this_jobuser.moderator_set.filter(active=True).first().exists()):
-            jobuser = get_object_or_None(JobUser, job=job, user=get_object_or_404(User, username=kwargs['username']));
-            if ('ban' in request.POST):
-                jobuser.banned = True;
-                jobuser.save();
-            return render(request, self.template_name, self.get_context_data(jobuser=jobuser));
-        else:
-            return redirect('job:detail', random_string=job.random_string);
-            
-    def get_context_data(self, **kwargs):
-        context = super(ModerateUserView, self).get_context_data(**kwargs);            
-        context['jobuser'] = kwargs['jobuser'];
-        return context;
 
 class CreateView(TemplateView):
     template_name = 'job/create.html';

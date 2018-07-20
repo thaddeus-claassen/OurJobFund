@@ -6,7 +6,7 @@ import re;
 class NewJobForm(forms.ModelForm):
     public = forms.ChoiceField(label="Type", choices=(("True", "Public"),("False", "Private")));
     title = forms.CharField(max_length=100);
-    editted_location = forms.CharField(widget=forms.HiddenInput(), initial=None, required=False);
+    formatted_location = forms.CharField(label="", widget=forms.HiddenInput(), initial=None, required=False);
     location = forms.CharField(widget=forms.TextInput, max_length=1000, required=False);
     latitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
     longitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
@@ -17,7 +17,7 @@ class NewJobForm(forms.ModelForm):
 
     class Meta:
         model = Job;
-        fields = ['public', 'title', 'editted_location', 'location', 'latitude', 'longitude', 'tags', 'image_set', 'comment'];
+        fields = ['public', 'title', 'formatted_location', 'location', 'latitude', 'longitude', 'tags', 'image_set', 'comment'];
     
     def clean_tags(self):
         tags = self.cleaned_data.get('tags');

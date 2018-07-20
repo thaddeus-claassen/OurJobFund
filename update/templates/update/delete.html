@@ -1,7 +1,9 @@
+{% extends 'base.html' %}
+
 {% load static %}
 {% block import %}
-    <link rel="stylesheet" type="text/css" href="{% static 'job/css/delete-update.css' %}" />
-    <script type="text/javascript" src="{% static 'job/js/delete-update.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'update/css/delete.css' %}" />
+    <script type="text/javascript" src="{% static 'update/js/delete.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -17,7 +19,7 @@
                 <a href="{% url 'user:detail' update.jobuser.user.get_username %}">{{ update.jobuser.user.get_username }}</a>
             </div>
             <div class="col-md-6">
-                {{ update.date|date:"F d, Y" }}
+                <span id="date">{{ update.date|date:"F d, Y" }}</span>
             </div>
         </div>
         <div class="row">
@@ -25,16 +27,21 @@
                 {{ update.comment }}
             </div>
         </div>
-        <div class="col-md-12">
-            <div id="images">
-            {% for image in update.image_set.all %}
-                <img src="{{ image.image.url }}" class="img-responsive image" />
-            {% endfor %}
+        <div id="image-wrapper">
+            {% if update.image_set.all.exists %}
+            <div class="col-md-12">
+                <div id="images">
+                {% for image in update.image_set.all %}
+                    <img src="{{ image.image.url }}" class="img-responsive image" />
+                {% endfor %}
+                </div>
             </div>
+            {% endif %}
         </div>
         <div class="row">
             <div class="col-md-12">
                 <form action="{{ request.get_full_path }}" method="POST">
+                {% csrf_token %}
                     <input type="submit" value="Delete" name="Delete" />
                 </form>
             </div>

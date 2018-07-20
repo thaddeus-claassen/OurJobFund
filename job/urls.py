@@ -3,7 +3,7 @@ from django.conf.urls import include, url;
 from django.conf.urls.static import static;
 from ourjobfund.acceptable_urls import URLS
 from . import views;
-from jobuser.views import PayView;
+from jobuser.views import PayView, ModerateView, BanUserView;
 
 app_name = 'job';
 
@@ -13,7 +13,8 @@ urlpatterns = [
     url(r'^' + URLS['get-total-jobs'] + '/$', views.get_total_jobs),
     url(r'^' + URLS['job_random_string_regex'] + '/$', views.DetailView.as_view(), name='detail'),
     url(r'^' + URLS['job_random_string_regex'] + '/' + URLS['sort'] + '/$', views.add_to_detail_table),
-    url(r'^' + URLS['job_random_string_regex'] + '/' + URLS['moderate'] + '/$', views.ModerateView.as_view(), name='moderate'),
+    url(r'^' + URLS['job_random_string_regex'] + '/' + URLS['moderate'] + '/$', ModerateView.as_view(), name='moderate'),
+    url(r'^' + URLS['ban-user'] + '/' + URLS['jobuser_random_string_regex'] + '/$', BanUserView.as_view(), name='ban-user'),
     url(r'^' + URLS['job_random_string_regex'] + '/' + URLS['pay'] + '/$', PayView.as_view(), name='pay'),
 ];
 

@@ -29,6 +29,18 @@ class Update(models.Model):
         if (Update.objects.filter(random_string=random_string).exists()):
             random_string = createRandomString();
         return random_string;
+        
+    def get_date(self):
+        return self.date;
+        
+    def get_type(self):
+        return "Update";
+        
+    def get_amount(self):
+        return "N/A";
+        
+    def get_to(self):
+        return "N/A";
     
 class Image(models.Model):
     update = models.ForeignKey(Update, on_delete=models.CASCADE, null=True);

@@ -18,7 +18,7 @@ from job.models import Job;
 from itertools import chain;
 from operator import attrgetter
 from datetime import datetime;
-from .models import JobUser, PledgePay, Pledge, Work, Finish, StripePay, MiscPay;
+from .models import JobUser, PledgePay, Pledge, Work, Finish, StripePay, MiscPay, Moderator;
 from .forms import PledgeForm, PayForm, WorkForm, FinishForm;
 from random import randint;
 import json, stripe;
@@ -364,33 +364,82 @@ class UnconfirmedPaymentView(TemplateView):
         return context;
         
 class ModerateView(TemplateView):
-    template_name = 'jobuser/moderate.html';
+    template_name = 'job/moderate.html';
     
     @method_decorator(login_required)    
     def get(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
         jobuser = get_object_or_None(JobUser, user=request.user, job=job);
-        if (jobuser.moderator_set.all().first()):
-            return render(request, self.template_name, self.get_context_data(job=job, jobuser=jobuser));
+        if (jobuser.moderator_set.filter(active=True).order_by('-date').first()):
+            return render(request, self.template_name, self.get_context_data(jobuser=jobuser));
         else:
             return redirect('job:detail', job.random_string);
         
-    def get_context_data(self, request):
+    def get_context_data(self, *args, **kwargs):
         context = super(ModerateView, self).get_context_data(**kwargs);
+        jobuser = kwargs['jobuser'];
+        job = jobuser.job;
         mods = None;
-        mod = kwargs['jobuser'].moderator_set.filter(active=True).order_by('-date').first();
+        mod = jobuser.moderator_set.filter(active=True).order_by('-date').first();
         if (mod.is_super):
             moderators = Moderator.objects.filter(active=True, jobuser=mod.jobuser);
         else:
-            moderators = Moderator.objects.filter(active=True, jobuser__job=kwargs['job']);
+            moderators = Moderator.objects.filter(active=True, jobuser__job=job);
         users_jobusers = JobUser.objects.filter(job=job);
         for m in moderators:
-            users_jobusers = users_jobusers.exclude(jobuser=m.jobuser);
-        context['job'] = kwargs['job'];
-        context['jobuser'] = kwargs['jobuser'];
-        context['updates'] = Update.objects.filter(jobuser__job=kwargs['job']);
+            users_jobusers = users_jobusers.exclude(id=m.pk);
+        context['job'] = job;
+        context['jobuser'] = jobuser;
+        context['updates'] = Update.objects.filter(banned=False, jobuser__job=job);
         context['users_jobusers'] = users_jobusers;
+        return context;
+
+class BanUserView(TemplateView):
+    template_name = 'job/ban-user.html';
+    
+    @method_decorator(login_required)    
+    def get(self, request, *args, **kwargs):
+        user_jobuser = get_object_or_404(JobUser, random_string=kwargs['jobuser_random_string']);
+        jobuser = get_object_or_None(JobUser, user=request.user, job=user_jobuser.job);
+        if (user_jobuser and jobuser):
+            if (jobuser.moderator_set.filter(active=True).order_by('-date').first()):
+                return render(request, self.template_name, self.get_context_data(job=jobuser.job, user_jobuser=user_jobuser, jobuser=jobuser));
+        return redirect('job:detail', random_string=job.random_string);
+    
+    @method_decorator(login_required)    
+    def post(self, request, *args, **kwargs):
+        user_jobuser = get_object_or_404(JobUser, random_string=kwargs['jobuser_random_string']);
+        jobuser = get_object_or_None(JobUser, user=request.user, job=user_jobuser.job);
+        if (user_jobuser and jobuser):
+            if (jobuser.moderator_set.filter(active=True).order_by('-date').first()):
+                if ('Ban' in request.POST):
+                    user_jobuser.banned = True;
+                    user_jobuser.save();
+                elif ('Unban' in request.POST):
+                    user_jobuser.banned = False;
+                    user_jobuser.save();
+                return render(request, self.template_name, self.get_context_data(job=jobuser.job, user_jobuser=user_jobuser, jobuser=jobuser));
+        return redirect('job:detail', random_string=job.random_string);
         
+    def get_context_data(self, *args, **kwargs):
+        context = super(BanUserView, self).get_context_data(**kwargs);
+        user_jobuser = kwargs['user_jobuser'];
+        pledges = Pledge.objects.filter(jobuser=user_jobuser);
+        misc_pay = MiscPay.objects.filter(jobuser=user_jobuser);
+        stripe_pay = StripePay.objects.filter(jobuser=user_jobuser);
+        work = Work.objects.filter(jobuser=user_jobuser);
+        finish = Finish.objects.filter(jobuser=user_jobuser);
+        update = Update.objects.filter(jobuser=user_jobuser);
+        moderator = Moderator.objects.filter(jobuser=user_jobuser);
+        data = sorted(
+            chain(pledges, misc_pay, stripe_pay, work, finish, update, moderator),
+            key=lambda x: x.get_date(),
+        );
+        context['user_events'] = data;
+        context['user'] = user_jobuser.user;
+        context['jobuser'] = kwargs['jobuser'];
+        return context;
+                
 def addDecimalPlacesForMoney(amount):
     nums = str(amount).split('.');
     if (len(nums) == 2):

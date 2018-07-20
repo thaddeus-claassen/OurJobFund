@@ -2,14 +2,26 @@ tbody {
     height: 500px;
 }
 
-.username, .date, .images, .ban {
-    width: 25%;
-}
-
-.comment {
+table, tbody {
     width: 100%;
 }
 
-.table td[class=comment] {
+.updates-username, .updates-date, .updates-images, .updates-ban {
+    width: 25%;
+}
+
+.updates-comment {
+    width: 100%;
+}
+
+.table td[class=updates-comment] {
     border-top: none;
+}
+
+.users-username {
+    width: 34%
+}
+
+.users-date, .users-ban {
+    width: 33%;
 }

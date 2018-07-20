@@ -91,6 +91,13 @@
             </div>
         </div>
         {% if not job.is_finished and request.user.is_authenticated %}
+        {% if jobuser.banned %}
+        <div class="row">
+            <div class="col-md-12">
+                <span id="banned">You have been banned from this job.</span>
+            </div>
+        </div>
+        {% else %}
         {% if jobuser %}
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
@@ -153,6 +160,7 @@
                 </form>
             </div>
         </div>
+        {% endif %}
         {% endif %}
         {% endif %}
     </div>
