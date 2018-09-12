@@ -81,7 +81,7 @@ class PayView(TemplateView):
         form = self.form(data=request.POST, receiver=receiver);
         if (form.is_valid()):
             receiver_jobuser = get_object_or_404(JobUser, job=job, user=receiver);
-            amount = form.cleaned_data['amount'];
+            amount = float(form.cleaned_data['amount']);
             sender_jobuser = get_object_or_None(JobUser, user=request.user, job=job);
             if (form.cleaned_data['pay_through'] == 'Stripe'):
                 self.pay(request, amount=amount, receiver=receiver);
@@ -118,7 +118,7 @@ class PayView(TemplateView):
         stripe.api_key = STRIPE_TEST_SECRET_KEY;
         token = request.POST['stripeToken'];
         print(token)
-        #amount_paying_in_cents = int(kwargs['amount']) * 100;
+        #amount_paying_in_cents = kwargs['amount'] / 100;
         #charge = stripe.Charge.create(
         #    amount = amount_paying_in_cents,
         #    currency = "usd",
