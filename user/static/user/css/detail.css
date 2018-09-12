@@ -15,7 +15,7 @@ input[type=submit] {
     text-align: center;
 }
 
-#edit_profile, #create_job {
+#edit_profile, #create_job, #delete-stripe {
     width: 100%;
 }
 

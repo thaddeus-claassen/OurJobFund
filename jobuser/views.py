@@ -123,7 +123,9 @@ class PayView(TemplateView):
             currency = "usd",
             description = "Payment to " + receiver.get_username(),
             source = token,
-            destination = receiver.profile.stripe_account_id,
+            destination = {
+                "account" : receiver.profile.stripe_account_id,
+            }
         );
         
 class WorkView(TemplateView):
