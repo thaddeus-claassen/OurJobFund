@@ -4,7 +4,7 @@ from rest_framework.renderers import JSONRenderer;
 from django.utils.decorators import method_decorator;
 from django.views.generic import TemplateView;
 from django.contrib.auth import authenticate, login, logout;
-from ourjobfund.settings import STRIPE_TEST_SECRET_KEY;
+from ourjobfund.settings import STRIPE_TEST_SECRET_KEY, STRIPE_TEST_PUBLIC_KEY;
 from notification.views import sendNotifications;
 from annoying.functions import get_object_or_None;
 from django.db.models import Q, F;
@@ -70,32 +70,33 @@ class PayView(TemplateView):
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
-        jobuser = get_object_or_404(JobUser, user=request.user, job=job);
-        return render(request, self.template_name, self.get_context_data(jobuser=jobuser, form=self.form(job=job)));
+        receiver = get_object_or_404(User, username=kwargs['username']);
+        sender_jobuser = get_object_or_404(JobUser, user=request.user, job=job);
+        return render(request, self.template_name, self.get_context_data(receiver=receiver, sender_jobuser=sender_jobuser, form=self.form(receiver=receiver)));
         
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
-        form = self.form(data=request.POST, job=job);
+        receiver = get_object_or_404(User, username=kwargs['username']);
+        form = self.form(data=request.POST, receiver=receiver);
         if (form.is_valid()):
+            receiver_jobuser = get_object_or_404(JobUser, job=job, user=receiver);
             amount = form.cleaned_data['amount'];
-            sender = get_object_or_None(JobUser, user=request.user, job=job);
-            receiver_user = get_object_or_404(User, username=form.cleaned_data['receiver']);
-            receiver = get_object_or_None(JobUser, user=receiver_user, job=job);
+            sender_jobuser = get_object_or_None(JobUser, user=request.user, job=job);
             if (form.cleaned_data['pay_through'] == 'Stripe'):
                 self.pay(request, amount=amount, receiver=receiver);
-                pay = StripePay.create(jobuser=sender, receiver=receiver, amount=amount);
+                pay = StripePay.create(jobuser=sender_jobuser, receiver=receiver_jobuser, amount=amount);
             else:
-                pay = MiscPay.create(jobuser=sender, receiver=receiver, amount=amount);
+                pay = MiscPay.create(jobuser=sender_jobuser, receiver=receiver_jobuser, amount=amount);
             pay.save();
             comment = form.cleaned_data['comment'];
             if (comment):
-                update = Update.create(jobuser=jobuser, comment=comment);
+                update = Update.create(jobuser=sender_jobuser, comment=comment);
                 update.save();
-            sender.paid = sender.paid + amount;
-            sender.save();
-            receiver.received = receiver.received + amount;
-            receiver.save();
+            sender_jobuser.paid = sender_jobuser.paid + amount;
+            sender_jobuser.save();
+            receiver_jobuser.received = receiver_jobuser.received + amount;
+            receiver_jobuser.save();
             job.paid = job.paid + amount;
             job.save();
             if (job.is_finished()):
@@ -103,26 +104,27 @@ class PayView(TemplateView):
                 job.save();
             return redirect('user:detail', username=kwargs['username']);
         else:
-            return render(request, self.template_name, self.get_context_data(form=form));
+            return render(request, self.template_name, self.get_context_data(receiver=receiver, sender_jobuser=sender_jobuser, form=form));
         
     def get_context_data(self, *args, **kwargs):
         context = super(PayView, self).get_context_data(**kwargs);
+        context['sender_jobuser'] = kwargs['sender_jobuser'];
+        context['receiver'] = kwargs['receiver'];
         context['form'] = kwargs['form'];
         return context;
 
     def pay(self, request, **kwargs):
-        user = get_object_or_None(User, username=kwargs['receiver']);
-        if (user):
-            stripe.api_key = STRIPE_TEST_SECRET_KEY;
-            token = request.POST['stripeToken'];
-            amount_paying_in_cents = int(kwargs['amount']) * 100;
-            charge = stripe.Charge.create(
-                amount = amount_paying_in_cents,
-                currency = "usd",
-                description = "Payment to " + user.get_username(),
-                source = token,
-                destination = user.profile.stripe_account_id,
-            );
+        receiver = kwargs['receiver'];
+        stripe.api_key = STRIPE_TEST_SECRET_KEY;
+        token = request.POST['stripeToken'];
+        amount_paying_in_cents = int(kwargs['amount']) * 100;
+        charge = stripe.Charge.create(
+            amount = amount_paying_in_cents,
+            currency = "usd",
+            description = "Payment to " + receiver.get_username(),
+            source = token,
+            destination = receiver.profile.stripe_account_id,
+        );
         
 class WorkView(TemplateView):
     template_name = 'jobuser/work.html';

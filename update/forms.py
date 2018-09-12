@@ -5,10 +5,11 @@ import re;
 class UpdateForm(forms.Form):
     images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False);
     comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
-    honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
+    #This is honey pot
+    username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
     
-    def clean_honey_pot(self):
-        if (not self.cleaned_data.get('honey_pot') == ""):
+    def clean_username(self):
+        if (not self.cleaned_data.get('username') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
     

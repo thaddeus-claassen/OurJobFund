@@ -7,9 +7,9 @@
 {% endblock %}
  
 {% block content %}
-<form action="{{ request.get_full_path }}" method="POST" enctype="multipart/form-data">
+<form id="update-form" action="{{ request.get_full_path }}" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
-    <div class="row info_row">
+    <div class="row">
         <div class="col-md-12">
             <h4 id="title">
                 Update <a href="{% url 'job:detail' job.random_string %}">{{ job.name }}</a>
@@ -18,7 +18,7 @@
     </div>
     {% for field in form %}
     <div id="{{ field.auto_id }}-wrapper">
-        <div class="row info_row">
+        <div class="row">
             <div class="col-md-2">
                 {{ field.label }}
             </div>
@@ -29,11 +29,16 @@
         </div>
     </div>
     {% endfor %}
-    <div class="row info_row">
-        <div class="col-md-2"></div>
-        <div class="col-md-10">
-            <input id="submit_button" type="submit" value="Submit" name="submit_{{ type }}"/>
-        </div>
-    </div>
 </form>
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-5">
+        <input form="update-form" id="submit_button" type="submit" value="Submit" name="submit_{{ type }}"/>
+    </div>
+    <div class="col-md-5">
+        <form action="{% url 'job:detail' job.random_string %}">
+            <input type="submit" value="Cancel" />
+        </form>
+    </div>
+</div>
 {% endblock %}

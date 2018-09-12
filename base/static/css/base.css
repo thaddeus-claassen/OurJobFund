@@ -95,7 +95,11 @@ tbody {
 .footer-link, .footer-link:hover {
     color: gray;
 }
-    
+
+
+.make-this-disappear {
+    display: none;
+}
     
     
     

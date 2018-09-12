@@ -4,7 +4,6 @@
 {% block import %}
     <script type="text/javascript" src="{% static 'jobuser/js/work.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'jobuser/css/work-finish.css' %}" />
-    <script src="https://checkout.stripe.com/checkout.js"></script>
 {% endblock %}
  
 {% block content %}
@@ -19,26 +18,28 @@
 {% csrf_token %}
 {% for field in form %}
     <div id="{{ field.auto_id }}-wrapper">
-        <div class="row info_row">
+        <div class="row">
             <div class="col-md-2">
                 {{ field.label }}
             </div>
             <div class="col-md-10">
                 {{ field }}
                 {{ field.errors }}
-                {% if field.auto_id == 'id-payment_type' %}
-                $1.00 must be paid to OurJobFund if choosing 'Credit/Debit' or 'Either'.
-                {% endif %}
             </div>
         </div>
     </div>
     {% endfor %}
-    <div class="row info_row">
-        <div class="col-md-2"></div>
-        <div class="col-md-10">
-            <input id="submit_button" type="submit" value="Submit" />
-        </div>
-    </div>
     <input id="stripe_token" type="hidden" name="stripeToken" />
 </form>
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-5">
+        <input form="form" id="submit_button" type="submit" value="Submit" />
+    </div>
+    <div class="col-md-5">
+        <form action="{% url 'job:detail' job.random_string %}">
+            <input type="submit" value="Cancel" />
+        </form>
+    </div>
+</div>
 {% endblock %}

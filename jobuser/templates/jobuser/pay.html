@@ -10,7 +10,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h4 class="title">Payment for <a href="{% url 'job:detail' jobuser.job.random_string %}">{{ jobuser.job.title }}</a></h4>
+        <h4 class="title">Payment to <a href="{% url 'user:detail' receiver.get_username %}">{{ receiver.get_username }}</a></h4>
     </div>
 </div>
 <form action="{{ request.get_full_path }}" method="POST">
@@ -33,5 +33,6 @@
         </div>
     </div>
     {{ form.non_field_errors }}
+    <input id="stripe_token" name="stripeToken" type="hidden" />
 </form>
 {% endblock %}

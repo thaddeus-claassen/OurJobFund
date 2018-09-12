@@ -8,7 +8,8 @@ from django import forms;
 class PledgeForm(forms.Form):
     amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}));
     comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
-    honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
+    #This is honey pot
+    username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
 
     class Meta:
         model = Pledge;
@@ -23,33 +24,26 @@ class PledgeForm(forms.Form):
             raise forms.ValidationError('Please enter a valid dollar amount.');
         return pledge;
 
-    def clean_honey_pot(self):
-        if (not self.cleaned_data.get('honey_pot') == ""):
+    def clean_username(self):
+        if (not self.cleaned_data.get('username') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
 
 class PayForm(forms.Form):
-    job = None;                                                       
-    pay_through = forms.ChoiceField(choices=(('Outside OurJobFund', 'Outside OurJobFund'), ('Stripe', 'Stripe')))
-    receiver = forms.ChoiceField();
+    pay_through = None;
     amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}), required=True);
     comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
-    honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
-    
-    def __init__(self, job, *args, **kwargs):
-        super(PayForm, self).__init__(*args, **kwargs);
-        self.job = job;
-        receivers = job.jobuser_set.filter(~Q(work_status='') & Q(user__is_active=True));
-        choices = (('', '(Please select someone to pay)'),) + tuple((r.user.get_username, r.user.get_username) for r in receivers);
-        self.fields['receiver'] = forms.ChoiceField(choices=choices);
-
-    def clean_receiver(self):
-        receiver_username = self.cleaned_data.get('receiver');
-        receivers = self.job.jobuser_set.filter(~Q(work_status='') and Q(user__is_active=True));
-        if (not receiver_username in [ r.user.get_username for r in receivers ]):
-            raise forms.ValidationError('Invalid Option Selected');
-        return receiver_username;
+    #This is honey pot
+    username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
         
+    def __init__(self, *args, **kwargs):
+        self.receiver = kwargs.pop('receiver', None);
+        super(PayForm, self).__init__(*args, **kwargs);
+        if (self.receiver.profile.stripe_account_id == ''):
+            self.fields['pay_through'] = forms.ChoiceField(choices=(('Outside OurJobFund', 'Outside OurJobFund'), ('hi', 'hi')));
+        else:
+            self.fields['pay_through'] = forms.ChoiceField(choices=(('Outside OurJobFund', 'Outside OurJobFund'), ('Stripe', 'Stripe')));            
+       
     def clean_amount(self):
         pay = self.cleaned_data.get('amount');
         if (checkStringIsValidMoney(pay)):
@@ -59,30 +53,32 @@ class PayForm(forms.Form):
             raise forms.ValidationError('Please enter a valid dollar amount.');
         return pay;
         
-    def clean_honey_pot(self):
-        if (not self.cleaned_data.get('honey_pot') == ""):
+    def clean_username(self):
+        if (not self.cleaned_data.get('username') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
     
 class WorkForm(forms.Form):
     comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
-    honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
+    #This is honey pot
+    username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
     
     class Meta:
         model = Work;
         fields = ['payment_type'];
 
-    def clean_honey_pot(self):
-        if (not self.cleaned_data.get('honey_pot') == ""):
+    def clean_username(self):
+        if (not self.cleaned_data.get('username') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
 
 class FinishForm(forms.Form):
     comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
-    honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
-
-    def clean_honey_pot(self):
-        if (not self.cleaned_data.get('honey_pot') == ""):
+    #This is honey pot
+    username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
+    
+    def clean_username(self):
+        if (not self.cleaned_data.get('username') == ""):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
 

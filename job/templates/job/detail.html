@@ -119,13 +119,6 @@
         {% endif %}
         {% else %}
         {% if jobuser.pledge_set.all.exists %}
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3">
-                <form action="{% url 'job:pay' job.random_string %}">
-                    <input class="job-input" type="submit" value="Pay" />
-                </form>
-            </div>
-        </div>
         {% if unconfirmed_payments %}
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
@@ -241,7 +234,16 @@
                                 {% endwith %}
                             </td>
                             <td class="working-finished">{% if w.finish_set.all.exists %}{{ w.finish_set.all.first.date|date:"F d, Y" }}{% else %}N/A{% endif %}</td>
-                            <td class="working-received">${{ w.received|floatformat:2 }}</td>
+                            <td class="working-received">
+                                <div class="col-md-6">${{ w.received|floatformat:2 }}</div>
+                                <div class="col-md-6">
+                                    {% if jobuser and jobuser.pledge_set.exists %}
+                                    <form action="{% url 'job:pay' job.random_string w.user.username %}">
+                                        <input class="job-input" type="submit" value="Pay" />
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>

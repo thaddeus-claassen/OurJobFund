@@ -75,7 +75,7 @@ class DeleteUpdateView(TemplateView):
                     update.banned = True;
                     update.save();
                     return redirect('job:moderate', job_random_string=jobuser.job.random_string);
-        return redirect('job:detail', random_string=update.jobuser.job);
+        return redirect('job:detail', random_string=update.random_string);
         
     def get_context_data(self, *args, **kwargs):
         context = super(DeleteUpdateView, self).get_context_data(**kwargs);

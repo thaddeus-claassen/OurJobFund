@@ -8,6 +8,11 @@
 
 {% block content %}
 <div class="row">
+    <div class="col-md-12">
+        <h4 class="title">Moderate for <a href="{% url 'job:detail' job.random_string %}">{{ job.title }}</a></h4>
+    </div>
+</div>
+<div class="row">
     <div class="col-md-6">
         <table class="table">
             <thead>

@@ -5,3 +5,7 @@ tbody {
 th, td {
     width: 25%;
 }
+
+input[type="submit"] {
+    width: 100%;
+}

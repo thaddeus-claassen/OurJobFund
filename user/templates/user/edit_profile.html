@@ -48,10 +48,16 @@
     </div>
     {% endif %}
 {% endfor %}
-    <div class="row">
-        <div class="col-md-offset-2 col-md-10"> 
-            <input form="form" type="submit" value="Submit" />
-        </div>
-    </div>
 </form>
+<div class="row">
+    <div class="col-md-offset-2 col-md-5"> 
+        <input form="form" type="submit" value="Submit" />
+    </div>
+    <form action="{% url 'user:detail' request.user.username %}">
+        <div class="col-md-5">
+            <input type="submit" value="Cancel" />
+        </div>
+    </form>
+</div>
+
 {% endblock %}

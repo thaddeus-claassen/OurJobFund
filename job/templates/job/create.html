@@ -31,10 +31,16 @@
     </div>
     {% endif %}
 {% endfor %}
-    <div class="row info_row">
-        <div class="col-md-10 col-md-offset-2">
-            <input type="submit" value="Create Job" name="create-job" />
-        </div>
-    </div>
 </form>
+<div class="row">
+    <div class="col-md-5 col-md-offset-2">
+        <input form="create-job-form" type="submit" value="Create Job" name="create-job" />
+    </div>
+    <div class="col-md-5">
+        <form action="{% url 'user:detail' request.user.username %}">
+            <input type="submit" value="Cancel" />
+        </form>
+    </div>
+</div>
+
 {% endblock %}
