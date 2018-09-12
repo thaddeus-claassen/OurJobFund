@@ -117,6 +117,7 @@ class PayView(TemplateView):
         receiver = kwargs['receiver'];
         stripe.api_key = STRIPE_TEST_SECRET_KEY;
         token = request.POST['stripeToken'];
+        print(stripeToken)
         amount_paying_in_cents = int(kwargs['amount']) * 100;
         charge = stripe.Charge.create(
             amount = amount_paying_in_cents,
@@ -125,7 +126,7 @@ class PayView(TemplateView):
             source = token,
             destination = {
                 "account" : receiver.profile.stripe_account_id,
-            }
+            },
         );
         
 class WorkView(TemplateView):
@@ -174,17 +175,6 @@ class WorkView(TemplateView):
         context['job'] = kwargs['job'];
         context['form'] = kwargs['form'];
         return context;
-        
-    def pay(self, request):
-        stripe.api_key = STRIPE_TEST_SECRET_KEY;
-        token = request.POST['stripeToken'];
-        amount_paying_in_cents = 100;
-        charge = stripe.Charge.create(
-            amount = amount_paying_in_cents,
-            currency = "usd",
-            description = "Payment to OurJobFund",
-            source = token,
-        );
         
 class FinishView(TemplateView):
     template_name = 'jobuser/finish.html';

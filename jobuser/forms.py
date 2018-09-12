@@ -30,19 +30,24 @@ class PledgeForm(forms.Form):
         return "";
 
 class PayForm(forms.Form):
-    pay_through = None;
+    
     amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}), required=True);
     comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
+    pay_through = None;
     #This is honey pot
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
-        
+    
+    class Meta:
+        model = StripePay;
+        fields = ['pay_through', 'amount', 'comment', 'username'];
+    
     def __init__(self, *args, **kwargs):
         self.receiver = kwargs.pop('receiver', None);
         super(PayForm, self).__init__(*args, **kwargs);
         if (self.receiver.profile.stripe_account_id == ''):
-            self.fields['pay_through'] = forms.ChoiceField(choices=(('Outside OurJobFund', 'Outside OurJobFund'), ('hi', 'hi')));
+            self.fields['pay_through'] = forms.ChoiceField(choices=(('', ''), ('Outside OurJobFund', 'Outside OurJobFund')), required=True);
         else:
-            self.fields['pay_through'] = forms.ChoiceField(choices=(('Outside OurJobFund', 'Outside OurJobFund'), ('Stripe', 'Stripe')));            
+            self.fields['pay_through'] = forms.ChoiceField(choices=(('', ''), ('Outside OurJobFund', 'Outside OurJobFund'), ('Stripe', 'Stripe')), required=True);            
        
     def clean_amount(self):
         pay = self.cleaned_data.get('amount');
