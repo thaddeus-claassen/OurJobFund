@@ -123,9 +123,9 @@ class MiscPay(PledgePay):
     confirmed = models.NullBooleanField(default=None);
     
     @classmethod
-    def create(cls, sender, receiver, amount):
+    def create(cls, jobuser, receiver, amount):
         misc_pay = MiscPay(
-            jobuser=sender,
+            jobuser=jobuser,
             receiver=receiver,
             amount=amount,
         );
@@ -144,8 +144,8 @@ class StripePay(PledgePay):
     receiver = models.ForeignKey(JobUser, on_delete=models.CASCADE, related_name='stripe_pay_receiver');
     
     @classmethod
-    def create(cls, sender, receiver, amount):
-        stripe_pay = StripePay(jobuser=sender, receiver=receiver, amount=amount);
+    def create(cls, jobuser, receiver, amount):
+        stripe_pay = StripePay(jobuser=jobuser, receiver=receiver, amount=amount);
         return stripe_pay;
     
     def get_to(self):
