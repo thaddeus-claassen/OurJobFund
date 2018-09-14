@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout;
 from ourjobfund.settings import STRIPE_TEST_SECRET_KEY, STRIPE_TEST_PUBLIC_KEY;
 from notification.views import sendNotifications;
 from annoying.functions import get_object_or_None;
+from django.http import HttpResponse
 from django.db.models import Q, F;
 from django.shortcuts import render, get_object_or_404, redirect;
 from update.models import Update;
@@ -117,14 +118,15 @@ class PayView(TemplateView):
         receiver = kwargs['receiver'];
         stripe.api_key = STRIPE_TEST_SECRET_KEY;
         token = request.POST['stripeToken'];
-        amount_paying_in_cents = kwargs['amount'] / 100;
-        charge = stripe.Charge.create(
-            amount = amount_paying_in_cents,
-            currency = "usd",
-            description = "Payment to " + receiver.get_username(),
-            source = token,
-            destination = receiver.profile.stripe_account_id,
-        );
+        return HttpResponse(token)
+        #amount_paying_in_cents = kwargs['amount'] / 100;
+        #charge = stripe.Charge.create(
+        #    amount = amount_paying_in_cents,
+        #    currency = "usd",
+        #    description = "Payment to " + receiver.get_username(),
+        #    source = token,
+        #    destination = receiver.profile.stripe_account_id,
+        #);
         
 class WorkView(TemplateView):
     template_name = 'jobuser/work.html';
