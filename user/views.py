@@ -93,7 +93,7 @@ class DetailView(TemplateView):
         if ('delete-stripe' in request.POST):
             request.user.profile.stripe_account_id = "";
             request.user.profile.save();
-        return render(request, self.template_name, self.get_context_data(request, user=request.user, description_form = description_form, name_form=name_form));
+        return render(request, self.template_name, self.get_context_data(request, user=user));
         
     def get_context_data(self, request, *args, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs);
@@ -105,7 +105,6 @@ class DetailView(TemplateView):
         else:
             context['current'] =  user.jobuser_set.filter(job__is_finished=False, job__public=True, banned=False);
             context['completed'] = user.jobuser_set.filter(job__is_finished=True, job__public=True, banned=False);
-        print(context['current'])
         return context;
  
 def add_to_detail_table(request, username):
