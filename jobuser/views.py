@@ -85,9 +85,8 @@ class PayView(TemplateView):
             amount = float(form.cleaned_data['amount']);
             sender_jobuser = get_object_or_None(JobUser, user=request.user, job=job);
             if (form.cleaned_data['pay_through'] == 'Stripe'):
-                return HttpResponse(request.POST['stripeToken'])
-                #self.pay(request, amount=amount, receiver=receiver);
-                #pay = StripePay.create(jobuser=sender_jobuser, receiver=receiver_jobuser, amount=amount);
+                self.pay(request, amount=amount, receiver=receiver);
+                pay = StripePay.create(jobuser=sender_jobuser, receiver=receiver_jobuser, amount=amount);
             else:
                 pay = MiscPay.create(jobuser=sender_jobuser, receiver=receiver_jobuser, amount=amount);
             pay.save();
@@ -119,14 +118,14 @@ class PayView(TemplateView):
         receiver = kwargs['receiver'];
         stripe.api_key = STRIPE_TEST_SECRET_KEY;
         token = request.POST['stripeToken'];
-        #amount_paying_in_cents = kwargs['amount'] / 100;
-        #charge = stripe.Charge.create(
-        #    amount = amount_paying_in_cents,
-        #    currency = "usd",
-        #    description = "Payment to " + receiver.get_username(),
-        #    source = token,
-        #    destination = receiver.profile.stripe_account_id,
-        #);
+        amount_paying_in_cents = kwargs['amount'] / 100;
+        charge = stripe.Charge.create(
+            amount = amount_paying_in_cents,
+            currency = "usd",
+            description = "Payment to " + receiver.get_username(),
+            source = token,
+            destination = receiver.profile.stripe_account_id,
+        );
         
 class WorkView(TemplateView):
     template_name = 'jobuser/work.html';
