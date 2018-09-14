@@ -76,6 +76,7 @@ class PayView(TemplateView):
         
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
+        print("Got into post")
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
         receiver = get_object_or_404(User, username=kwargs['username']);
         form = self.form(data=request.POST, receiver=receiver);
