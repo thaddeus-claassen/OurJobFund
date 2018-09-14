@@ -57,6 +57,9 @@ class Job(models.Model):
             is_finished = True;
         return is_finished;
     
+    def is_finished(self):
+        return self.finished;
+    
 class Tag(models.Model):
     jobs = models.ManyToManyField(Job);    
     tag = models.CharField(max_length=30, validators=[alphanumeric]);
