@@ -100,7 +100,7 @@ class PayView(TemplateView):
             receiver_jobuser.save();
             job.paid = job.paid + amount;
             job.save();
-            if (job.is_finished()):
+            if (job.is_finished):
                 job.is_finished = True;
                 job.save();
             return redirect('user:detail', username=kwargs['username']);
