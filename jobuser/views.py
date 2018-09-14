@@ -118,7 +118,7 @@ class PayView(TemplateView):
         receiver = kwargs['receiver'];
         stripe.api_key = STRIPE_TEST_SECRET_KEY;
         token = request.POST['stripeToken'];
-        amount_paying_in_cents = kwargs['amount'] / 100;
+        amount_paying_in_cents = kwargs['amount'] * 100;
         charge = stripe.Charge.create(
             amount = amount_paying_in_cents,
             currency = "usd",
