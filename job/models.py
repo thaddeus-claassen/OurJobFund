@@ -58,7 +58,7 @@ class Job(models.Model):
         return is_finished;
     
     def is_finished(self):
-        return self.finished;
+        return self.is_finished;
     
 class Tag(models.Model):
     jobs = models.ManyToManyField(Job);    
