@@ -76,7 +76,6 @@ class PayView(TemplateView):
         
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        print("Got into post")
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
         receiver = get_object_or_404(User, username=kwargs['username']);
         form = self.form(data=request.POST, receiver=receiver);
@@ -118,17 +117,14 @@ class PayView(TemplateView):
         receiver = kwargs['receiver'];
         stripe.api_key = STRIPE_TEST_SECRET_KEY;
         token = request.POST['stripeToken'];
-        print(token)
-        #amount_paying_in_cents = kwargs['amount'] / 100;
-        #charge = stripe.Charge.create(
-        #    amount = amount_paying_in_cents,
-        #    currency = "usd",
-        #   description = "Payment to " + receiver.get_username(),
-        #    source = token,
-        #    destination = {
-        #        "account" : receiver.profile.stripe_account_id,
-        #    },
-        #);
+        amount_paying_in_cents = kwargs['amount'] / 100;
+        charge = stripe.Charge.create(
+            amount = amount_paying_in_cents,
+            currency = "usd",
+            description = "Payment to " + receiver.get_username(),
+            source = token,
+            destination = receiver.profile.stripe_account_id,
+        );
         
 class WorkView(TemplateView):
     template_name = 'jobuser/work.html';
