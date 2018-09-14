@@ -105,6 +105,7 @@ class DetailView(TemplateView):
         else:
             context['current'] =  user.jobuser_set.filter(job__is_finished=False, job__public=True, banned=False);
             context['completed'] = user.jobuser_set.filter(job__is_finished=True, job__public=True, banned=False);
+        print(context['current'])
         return context;
  
 def add_to_detail_table(request, username):
