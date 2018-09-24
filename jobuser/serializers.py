@@ -89,7 +89,7 @@ class WorkHistorySerializer(serializers.Serializer):
     confirmed = serializers.SerializerMethodField();
     
     def get_username(self, work_finish):
-        return work_finish.get_username();
+        return work_finish.get_to();
         
     def get_date(self, work_finish):
         return work_finish.get_date().strftime(format=REST_FRAMEWORK['DATETIME_FORMAT']);
@@ -101,7 +101,7 @@ class WorkHistorySerializer(serializers.Serializer):
         return work_finish.get_amount();
         
     def get_sender(self, work_finish):
-        return work_finish.get_sender();
+        return work_finish.get_from();
         
     def get_confirmed(self, work_finish):
         return work_finish.get_confirmed();
