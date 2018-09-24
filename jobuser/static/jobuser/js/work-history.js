@@ -5,7 +5,7 @@ function addRowsToTable(json) {
         var receiver, confirmed, amount;
         var type = p['type'];
         if (type === 'Stripe Payment' || type === 'Misc. Payment') {
-            receiver = "<a href='user/'" + p['username'] + ">" + p['from'] + "</a>";
+            receiver = "<a href='user/'" + p['username'] + ">" + p['sender'] + "</a>";
         } else {
             receiver = 'N/A';
         }// end if-else
