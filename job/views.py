@@ -64,10 +64,10 @@ def get_total_jobs(request):
         
 def findJobs(search, sort, latitude_in_degrees_as_string, longitude_in_degrees_as_string, radius_in_miles_as_string):
     if (search == ""):
-        jobs = Job.objects.all();
+        jobs = Job.objects.filter(public=True);
     else:
         if (re.match(r'^[A-Za-z0-9\s_]+$', search)):
-            jobs = Job.objects.all();
+            jobs = Job.objects.filter(public=True);
             for word in search.split(" "):
                 jobs = jobs.filter(Q(title__icontains=word) | Q(tag__tag__icontains=word));
         else:
@@ -92,7 +92,7 @@ def findJobs(search, sort, latitude_in_degrees_as_string, longitude_in_degrees_a
     return jobs;
     
 def get_jobs_from_custom_search(tags):
-        return eval(re.sub(r'([a-zA-Z0-9_]+)', "Job.objects.filter(tag__tag__iexact='" + r'\1' + "')", tags));
+        return eval(re.sub(r'([a-zA-Z0-9_]+)', "Job.objects.filter(public=True, tag__tag__iexact='" + r'\1' + "')", tags));
     
 def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_miles):
     radius_in_degrees = radius_in_miles / 69;

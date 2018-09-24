@@ -101,7 +101,7 @@ class WorkHistorySerializer(serializers.Serializer):
         return work_finish.get_amount();
         
     def get_sender(self, work_finish):
-        return work_finish.get_from();
+        return work_finish.get_sender();
         
     def get_confirmed(self, work_finish):
         return work_finish.get_confirmed();
