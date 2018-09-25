@@ -18,7 +18,7 @@ $('document').ready(function() {
     });
     $('.table-header').click(function() {
         var cls = $(this).parent().attr('class');
-        setSortAndNumSearches(cls.split("-")[0]);
+        setSortAndNumSearches(cls.split("-")[1]);
         get_jobs();
     });
     $('tbody').scroll(function() {
@@ -101,7 +101,7 @@ function addJobsToTable(json) {
     if (json.length == 0) {
         var string = "<tr>";
         string = string + "<td class='job-title'>No Jobs were found.</td>";
-        string = string + "<td class='job-date'></td>";
+        string = string + "<td class='job-created'></td>";
         string = string + "<td class='job-pledging'></td>";
         string = string + "<td class='job-paid'></td>"
         string = string + "</tr>";
@@ -111,7 +111,7 @@ function addJobsToTable(json) {
             var job = json[index];
             var string = "<tr>";
             string = string + "<td class='job-title'><a id='" + job["random_string"] + "' href='job/" + job["random_string"] + "'></a></td>";
-            string = string + "<td class='job-date'>" + job['date'] + "</td>";
+            string = string + "<td class='job-created'>" + job['date'] + "</td>";
             string = string + "<td class='job-pledging'>$" + turnMoneyToString(job['pledging']) + "</td>";
             string = string + "<td class='job-paid'>$" + turnMoneyToString(job['paid']) + "</td>"
             string = string + "</tr>";

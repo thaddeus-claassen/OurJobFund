@@ -68,7 +68,7 @@
                                 {% endif %}
                             </td>
                             <td class="updates-date">
-                                <span class="updates-date">{{ u.date|date:"F d, Y" }}</span>
+                                <span class="updates-date">{{ u.date|date:"m/d/Y" }}</span>
                             </td>
                             <td class="updates-images">
                                 {% if u.image_set.all.exists %}
@@ -183,7 +183,7 @@
                             </td>
                             <td class="pledging-date">
                                 {% with pledge=j.pledge_set.all|dictsort:"date"|first %}
-                                {{ pledge.date|date:"F d, Y" }}
+                                {{ pledge.date|date:"m/d/Y" }}
                                 {% endwith %}
                             </td>
                             <td class="pledging-pledging">
@@ -230,7 +230,7 @@
                             </td>
                             <td class="working-started">
                                 {% with work=w.work_set.all|dictsort:"date"|first %}
-                                {{ work.date|date:"F d, Y" }}
+                                {{ work.date|date:"m/d/Y" }}
                                 {% endwith %}
                             </td>
                             <td class="working-finished">{% if w.finish_set.all.exists %}{{ w.finish_set.all.first.date|date:"F d, Y" }}{% else %}N/A{% endif %}</td>

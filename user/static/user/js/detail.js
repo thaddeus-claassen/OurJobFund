@@ -137,7 +137,7 @@ function addRowsToCompletedTable(json) {
             pledging = changeNumberToCurrency(current['pledging']);
             paid = changeNumberToCurrency(current['paid']);
             work_status = "--";
-            received = "--"
+            received = "--";
         }// end if-else
         var string = "<tr>";
         string = string + "<td class='completed-title'><a href='/job/" + completed['random_string'] + "'>" + completed['title'] + "</a></td>";

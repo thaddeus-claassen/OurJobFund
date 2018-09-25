@@ -69,9 +69,9 @@ REST_FRAMEWORK = {
 };
 
 if (DEBUG):
-    REST_FRAMEWORK['DATETIME_FORMAT'] = '%B %#d, %Y';
+    REST_FRAMEWORK['DATETIME_FORMAT'] = '%m/%#d/%Y';
 else:
-    REST_FRAMEWORK['DATETIME_FORMAT']  = '%B %-d, %Y';
+    REST_FRAMEWORK['DATETIME_FORMAT']  = '%B/%-d/%Y';
     
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

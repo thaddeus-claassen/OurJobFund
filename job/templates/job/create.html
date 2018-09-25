@@ -33,10 +33,10 @@
 {% endfor %}
 </form>
 <div class="row">
-    <div class="col-md-5 col-md-offset-2">
-        <input form="create-job-form" type="submit" value="Create Job" name="create-job" />
+    <div class="col-md-2 col-md-offset-2">
+        <input form="create-job-form" type="submit" value="Submit" name="create-job" />
     </div>
-    <div class="col-md-5">
+    <div class="col-md-2">
         <form action="{% url 'user:detail' request.user.username %}">
             <input type="submit" value="Cancel" />
         </form>

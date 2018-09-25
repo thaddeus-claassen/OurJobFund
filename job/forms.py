@@ -4,7 +4,7 @@ from annoying.functions import get_object_or_None;
 import re;
 
 class NewJobForm(forms.ModelForm):
-    public = forms.ChoiceField(label="Type", choices=(("True", "Public"),("False", "Private")));
+    #public = forms.ChoiceField(label="Type", choices=(("True", "Public"),("False", "Private")));
     title = forms.CharField(max_length=100);
     formatted_location = forms.CharField(label="", widget=forms.HiddenInput(), initial=None, required=False);
     location = forms.CharField(widget=forms.TextInput, max_length=1000, required=False);
@@ -18,7 +18,7 @@ class NewJobForm(forms.ModelForm):
 
     class Meta:
         model = Job;
-        fields = ['public', 'title', 'formatted_location', 'location', 'latitude', 'longitude', 'tags', 'image_set', 'comment'];
+        fields = ['title', 'formatted_location', 'location', 'latitude', 'longitude', 'tags', 'image_set', 'comment']; #public
     
     def clean_tags(self):
         tags = self.cleaned_data.get('tags');

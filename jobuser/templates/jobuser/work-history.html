@@ -39,7 +39,7 @@
                         {% endif %}
                     </td>
                     <td class="date">
-                        {{ p.date|date:"F d, Y" }}
+                        {{ p.date|date:"m/d/Y" }}
                     </td>
                     <td class="type">
                         {% if p.get_type == 'Misc. Payment' or p.get_type == 'Stripe Payment' %}

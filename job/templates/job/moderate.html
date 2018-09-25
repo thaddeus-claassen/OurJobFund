@@ -36,7 +36,7 @@
                         {% endif %}
                     </td>
                     <td class="updates-date">
-                        {{ u.date|date:"F d, Y" }}
+                        {{ u.date|date:"m/d/Y" }}
                     </td>
                     <td class="updates-images">
                         {% if u.image_set.all.exists %}
@@ -81,7 +81,7 @@
                         [ Deleted User ]
                         {% endif %}
                     </td>
-                    <td class="users-date">{{ jb.joined|date:"F d, Y" }}</td>
+                    <td class="users-date">{{ jb.joined|date:"m/d/Y" }}</td>
                     <td class="users-ban">
                         <form action="{% url 'job:ban-user' jb.random_string %}">
                             <input type="submit" value="{% if jb.banned %}Unban{% else %}Ban{% endif %}" />
