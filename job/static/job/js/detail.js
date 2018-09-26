@@ -127,7 +127,7 @@ function addRowsToUpdatesTable(json) {
         if (img > 0) img = "<a href='update/" + update['random_string'] + "/images'>" + update['images'] + "</a>";
         else img = 0;
         var string = "<tr>";
-        string = string + "<td class='updates-username'><a href='user/ " + update['username'] + "'>" + update['username'] + "</a></td>";
+        string = string + "<td class='updates-username'><a href='" + update['username'] + "'>" + update['username'] + "</a></td>";
         string = string + "<td class='updates-date'>" + update['date'] + "</td>";
         string = string + "<td class='updates-images'>" + img + "</td>";
         string = string + "</tr>";
@@ -142,7 +142,7 @@ function addRowsToPledgingTable(json) {
     for (var index = 0; index < json.length; index++) {
         var pledge = json[index];
         var string = "<tr>";
-        string = string + "<td class='pledging-username'><a href='user/ " + pledge['username'] + "'>" + pledge['username'] + "</a></td>";
+        string = string + "<td class='pledging-username'><a href='"+ pledge['username'] + "'>" + pledge['username'] + "</a></td>";
         string = string + "<td class='pledging-date'>" + pledge['date'] + "</td>";
         string = string + "<td class='pledging-pledging'>" + changeNumberToCurrency(pledge['pledging']) + "</td>";
         string = string + "<td class='pledging-paid'>" + changeNumberToCurrency(pledge['paid']) + "</td>";
@@ -159,7 +159,7 @@ function addRowsToWorkingTable(json) {
             finished = 'N/A';
         }
         var string = "<tr>";
-        string = string + "<td class='working-username'><a href='user/ " + worker['username'] + "'>" + worker['username'] + "</a></td>";
+        string = string + "<td class='working-username'><a href='" + worker['username'] + "'>" + worker['username'] + "</a></td>";
         string = string + "<td class='working-started'>" + worker['started'] + "</td>";
         string = string + "<td class='working-finished'>" + finished + "</td>";
         string = string + "<td class='working-received'>" + changeNumberToCurrency(worker['received']) + "</td>";

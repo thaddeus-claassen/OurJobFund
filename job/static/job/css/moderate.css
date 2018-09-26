@@ -25,3 +25,7 @@ table, tbody {
 .users-date, .users-ban {
     width: 33%;
 }
+
+#back {
+    width: 100%;
+}

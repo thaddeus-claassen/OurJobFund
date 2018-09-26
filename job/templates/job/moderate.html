@@ -8,8 +8,12 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
         <h4 class="title">Moderate for <a href="{% url 'job:detail' job.random_string %}">{{ job.title }}</a></h4>
+    </div>
+    <div class="col-md-2">
+        
     </div>
 </div>
 <div class="row">
@@ -91,6 +95,13 @@
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2 col-md-offset-10">
+        <form action="{% url 'job:detail' job.random_string %}">
+            <input id="back" type="submit" value="Back" />
+        </form>
     </div>
 </div>
 {% endblock %}

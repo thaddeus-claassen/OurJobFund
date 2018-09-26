@@ -39,7 +39,7 @@ function setSortVariable(table, type) {
             current_sort = type + '-ascending';
         }// end if-else
         sort = current_sort;
-    } else if (table === 'finished') {
+    } else if (table === 'completed') {
         if (type === finished_sort.split('-')[0]) {
             if (finished_sort.split('-')[1] === 'ascending') {
                 finished_sort = type + '-descending';
