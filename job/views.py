@@ -83,8 +83,8 @@ def findJobs(search, sort, latitude_in_degrees_as_string, longitude_in_degrees_a
         jobs = jobs.order_by('date');
     elif (sort_array[0] == 'pledging'):
         jobs = jobs.order_by('pledging');
-    elif (sort_array[0] == 'working'):
-        jobs = jobs.order_by('working');
+    elif (sort_array[0] == 'paid'):
+        jobs = jobs.order_by('paid');
     else:
         jobs = jobs.extra(select={'case_insensitive_title': 'lower(title)'}).order_by('case_insensitive_title');
     if (sort_array[1] == 'descending'):
