@@ -35,7 +35,7 @@
         <input form="create-job" id="pay" type="submit" value="Submit" />
     </div>
     <div class="col-md-2">
-        <form action="{% 'job:detail' sender_jobuser.job.random_string %}">
+        <form action="{% url 'job:detail' sender_jobuser.job.random_string %}">
             <input type="submit" value="Cancel" />
         </form>
     </div>
