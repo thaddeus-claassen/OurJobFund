@@ -223,7 +223,8 @@ class CreateView(TemplateView):
     def post(self, request, *args, **kwargs):
         form = self.form(request.POST, request.FILES);
         if (form.is_valid()):
-            public = ('True' == form.cleaned_data['public']);
+            #public = ('True' == form.cleaned_data['public']);
+            public = True;
             title = form.cleaned_data['title'];
             latitude = form.cleaned_data['latitude'];
             longitude = form.cleaned_data['longitude'];

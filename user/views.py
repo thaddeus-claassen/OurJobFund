@@ -93,7 +93,7 @@ class DetailView(TemplateView):
         if ('delete-stripe' in request.POST):
             request.user.profile.stripe_account_id = "";
             request.user.profile.save();
-        return render(request, self.template_name, self.get_context_data(request, user=user));
+        return render(request, self.template_name, self.get_context_data(request, user=request.user));
         
     def get_context_data(self, request, *args, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs);
