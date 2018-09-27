@@ -12,7 +12,7 @@
     <div class="col-md-12">
         <h4 class="title">
             Payment to <a href="{% url 'user:detail' receiver.get_username %}">{{ receiver.get_username }}</a>
-            for <a href="{% 'job:detail' sender_jobuser.job.random_string %}">{{ sender_jobuser.job.title }}</a>
+            for <a href="{% url 'job:detail' sender_jobuser.job.random_string %}">{{ sender_jobuser.job.title }}</a>
         </h4>
     </div>
 </div>
