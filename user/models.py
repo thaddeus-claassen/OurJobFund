@@ -22,6 +22,9 @@ class Profile(models.Model):
     
     def get_absolute_url(self):
         return reverse("user.views.detail", args=[self.random_string]);
+        
+    def get_stripe_account_id(self):
+        return self.stripe_account_id;
     
     
     
