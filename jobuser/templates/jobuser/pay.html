@@ -10,10 +10,13 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h4 class="title">Payment to <a href="{% url 'user:detail' receiver.get_username %}">{{ receiver.get_username }}</a></h4>
+        <h4 class="title">
+            Payment to <a href="{% url 'user:detail' receiver.get_username %}">{{ receiver.get_username }}</a>
+            for <a href="{% 'job:detail' sender_jobuser.job.random_string %}">{{ sender_jobuser.job.title }}</a>
+        </h4>
     </div>
 </div>
-<form action="{{ request.get_full_path }}" method="POST">
+<form id="create-job" action="{{ request.get_full_path }}" method="POST">
 {% csrf_token %}
 {% for field in form %}
     <div class="row">
@@ -26,13 +29,16 @@
         </div>
     </div>
 {% endfor %}
-    <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-10">
-            <input id="pay" type="submit" value="Submit" />
-        </div>
-    </div>
-    {{ form.non_field_errors }}
-    <input id="stripe_token" name="stripeToken" type="hidden" />
 </form>
+<div class="row">
+    <div class="col-md-2 col-md-offset-2">
+        <input form="create-job" id="pay" type="submit" value="Submit" />
+    </div>
+    <div class="col-md-2">
+        <form action="{% 'job:detail' sender_jobuser.job.random_string %}">
+            <input type="submit" value="Cancel" />
+        </form>
+    </div>
+</div>   
+<input id="stripe_token" name="stripeToken" type="hidden" />
 {% endblock %}
