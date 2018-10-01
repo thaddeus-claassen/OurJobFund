@@ -128,6 +128,8 @@ class PayView(TemplateView):
             #    "account" : receiver.profile.get_stripe_account_id(),
             #},
         );
+        x = 1 / 0;
+        
         
 class WorkView(TemplateView):
     template_name = 'jobuser/work.html';
