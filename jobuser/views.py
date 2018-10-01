@@ -128,7 +128,7 @@ class PayView(TemplateView):
             #    "account" : receiver.profile.get_stripe_account_id(),
             #},
         );
-        x = 1 / 0;
+        return HttpResponse("Did the Stripe charge work?");
         
         
 class WorkView(TemplateView):
