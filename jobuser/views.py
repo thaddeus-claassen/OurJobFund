@@ -80,6 +80,7 @@ class PayView(TemplateView):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
         receiver = get_object_or_404(User, username=kwargs['username']);
         form = self.form(data=request.POST, receiver=receiver);
+        print(form)
         if (form.is_valid()):
             receiver_jobuser = get_object_or_404(JobUser, job=job, user=receiver);
             amount = float(form.cleaned_data['amount']);
@@ -103,7 +104,7 @@ class PayView(TemplateView):
             if (job.is_finished()):
                 job.is_finished = True;
                 job.save();
-            return redirect('job:detail', random_string=job.random_string);
+            return redirect('job:detail', job_random_string=job.random_string);
         else:
             return render(request, self.template_name, self.get_context_data(receiver=receiver, sender_jobuser=sender_jobuser, form=form));
         
@@ -124,12 +125,10 @@ class PayView(TemplateView):
             currency = "usd",
             description = "Payment to " + receiver.get_username(),
             source = token,
-            #destination = {
-            #    "account" : receiver.profile.get_stripe_account_id(),
-            #},
-        );
-        return HttpResponse("Did the Stripe charge work?");
-        
+            destination = {
+                "account" : receiver.profile.get_stripe_account_id(),
+            },
+        );        
         
 class WorkView(TemplateView):
     template_name = 'jobuser/work.html';

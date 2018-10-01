@@ -51,7 +51,7 @@ class Job(models.Model):
             random_string = createRandomString();
         return random_string;
         
-    def set_is_finished(self):
+    def is_finished(self):
         is_finished = False;
         if ((self.working > 0 and self.working == self.finished) and ((self.pledging > 0 and self.pledging >= self.paid) or (self.pledging == 0))):
             is_finished = True;
