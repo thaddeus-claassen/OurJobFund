@@ -100,10 +100,10 @@ class PayView(TemplateView):
             receiver_jobuser.save();
             job.paid = job.paid + amount;
             job.save();
-            if (job.is_finished):
+            if (job.is_finished()):
                 job.is_finished = True;
                 job.save();
-            return redirect('user:detail', username=kwargs['username']);
+            return redirect('job:detail', random_string=job.random_string);
         else:
             return render(request, self.template_name, self.get_context_data(receiver=receiver, sender_jobuser=sender_jobuser, form=form));
         

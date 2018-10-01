@@ -30,7 +30,6 @@ class PledgeForm(forms.Form):
         return "";
 
 class PayForm(forms.Form):
-    
     amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}), required=True);
     comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
     pay_through = None;
