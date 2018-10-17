@@ -9,12 +9,12 @@
 {% block content %}
 <input id="this_user" type="hidden" value="{{ request.user.get_username }}"/>
 <div class="row">
-    <div class="col-md-7 col-md-offset-5">
-        <h3 id="username">{{ detail_user.get_username }}</h3>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-5">
+    <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 id="username">{{ detail_user.get_username }}</h3>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <h4>
@@ -57,14 +57,14 @@
         </div>
         {% if request.user.get_username == detail_user.get_username %}
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-12">
                 <form action="{% url 'user:edit_profile' request.user.username %}">
                     <input id="edit_profile" type="submit" value="Edit Profile" />
                 </form>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-12">
                 <form action="{% url 'job:create' %}">
                     <input id="create_job" type="submit" value="Create Job" />
                 </form>
@@ -82,7 +82,7 @@
         </div>
         {% else %}
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-12">
                 <form id="remove-stripe-account-form" action="{{ request.get_full_path }}" method="POST">
                     {% csrf_token %}
                     <input id="delete-stripe" type="submit" value="Remove Stripe" name="delete-stripe" />
@@ -92,7 +92,7 @@
         {% endif %}
         {% endif %}
     </div>
-    <div class="col-md-7">
+    <div class="col-md-8">
         <div class="row">
             <div class="col-md-12">
                 <table id="current" class="table">

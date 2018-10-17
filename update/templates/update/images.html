@@ -16,11 +16,9 @@
 <div class="row">
     <div id="image-wrapper">
         <div class="col-md-12">
-            <div id="images">
-            {% for image in update.image_set.all %}
-                <img src="{{ image.image.url }}" class="img-responsive image" />
-            {% endfor %}
-            </div>
+        {% for image in update.image_set.all %}
+            <img src="{{ image.image.url }}" class="img-responsive image" />
+        {% endfor %}
         </div>
     </div>
 </div>

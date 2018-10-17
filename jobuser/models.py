@@ -8,6 +8,7 @@ class JobUser(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE);
     pledging = models.FloatField(default=0);
     paid = models.FloatField(default=0);
+    misc_paid = models.FloatField(default=0);
     work_status = models.CharField(default='', max_length=100, null=True, blank=True);
     preferred_payment_method = models.CharField(default='', max_length=100);
     received = models.FloatField(default=0);
@@ -16,12 +17,13 @@ class JobUser(models.Model):
     random_string = models.CharField(max_length=50);
     
     @classmethod
-    def create(cls, user, job, pledging=0, paid=0, work_status='', received=0):
+    def create(cls, user, job, pledging=0, paid=0, misc_paid=0, work_status='', received=0):
         jobuser = JobUser(
             user = user,
             job = job,
             pledging = pledging,
             paid = paid,
+            misc_paid = misc_paid,
             work_status = work_status,
             received = received,
             random_string = cls.createRandomString(),
@@ -47,7 +49,6 @@ class JobUser(models.Model):
             for mod in self.moderator_set.filter(active=True):
                 mod.active = False;
                 mod.save();
-        
        
 class Moderator(models.Model):
     jobuser = models.ForeignKey(JobUser, on_delete=models.CASCADE);

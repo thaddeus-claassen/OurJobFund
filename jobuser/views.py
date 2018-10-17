@@ -20,7 +20,7 @@ from itertools import chain;
 from operator import attrgetter
 from datetime import datetime;
 from .models import JobUser, PledgePay, Pledge, Work, Finish, StripePay, MiscPay, Moderator;
-from .forms import PledgeForm, PayForm, WorkForm, FinishForm;
+from .forms import PledgeForm, MiscPayForm, StripePayForm, WorkForm, FinishForm;
 from random import randint;
 import json, stripe;
 
@@ -64,9 +64,50 @@ class PledgeView(TemplateView):
         context['form'] = kwargs['form'];
         return context;
 
-class PayView(TemplateView):
-    template_name = 'jobuser/pay.html';
-    form = PayForm;
+class MiscPayView(TemplateView):
+    template_name = 'jobuser/misc-pay.html';
+    form = MiscPayForm;
+    
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
+        return render(request, self.template_name, self.get_context_data(job=job, form=self.form(job=job)));
+        
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
+        sender_jobuser = get_object_or_None(JobUser, user=request.user, job=job);
+        form = self.form(job=job, data=request.POST);
+        if (form.is_valid()):
+            amount = float(form.cleaned_data['amount']);
+            receiver = get_object_or_404(User, username=form.cleaned_data['receiver']);
+            receiver_jobuser = get_object_or_404(JobUser, job=job, user=receiver);
+            pay = MiscPay.create(jobuser=sender_jobuser, receiver=receiver_jobuser, amount=amount);
+            pay.save();
+            sender_jobuser.misc_paid = sender_jobuser.misc_paid + amount;
+            sender_jobuser.save();
+            receiver_jobuser.misc_paid = receiver_jobuser.misc_paid + amount;
+            receiver_jobuser.save();
+            comment = form.cleaned_data['comment'];
+            if (comment):
+                update = Update.create(jobuser=sender_jobuser, comment=comment);
+                update.save();
+            if (job.get_is_finished()):
+                job.set_is_finished(True);
+                job.save();
+            return redirect('job:detail', job_random_string=job.random_string);
+        else:
+            return render(request, self.template_name, self.get_context_data(job=job, form=form));
+        
+    def get_context_data(self, *args, **kwargs):
+        context = super(MiscPayView, self).get_context_data(**kwargs);
+        context['job'] = context['job'];
+        context['form'] = kwargs['form'];
+        return context;
+        
+class StripePayView(TemplateView):
+    template_name = 'jobuser/stripe-pay.html';
+    form = StripePayForm;
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
@@ -80,16 +121,12 @@ class PayView(TemplateView):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
         receiver = get_object_or_404(User, username=kwargs['username']);
         form = self.form(data=request.POST, receiver=receiver);
-        print(form)
         if (form.is_valid()):
             receiver_jobuser = get_object_or_404(JobUser, job=job, user=receiver);
             amount = float(form.cleaned_data['amount']);
             sender_jobuser = get_object_or_None(JobUser, user=request.user, job=job);
-            if (form.cleaned_data['pay_through'] == 'Stripe'):
-                self.pay(request, amount=amount, receiver=receiver);
-                pay = StripePay.create(jobuser=sender_jobuser, receiver=receiver_jobuser, amount=amount);
-            else:
-                pay = MiscPay.create(jobuser=sender_jobuser, receiver=receiver_jobuser, amount=amount);
+            self.pay(request, amount=amount, receiver=receiver);
+            pay = StripePay.create(jobuser=sender_jobuser, receiver=receiver_jobuser, amount=amount);
             pay.save();
             comment = form.cleaned_data['comment'];
             if (comment):
@@ -101,20 +138,20 @@ class PayView(TemplateView):
             receiver_jobuser.save();
             job.paid = job.paid + amount;
             job.save();
-            if (job.is_finished()):
-                job.is_finished = True;
+            if (job.get_is_finished()):
+                job.set_is_finished(True);
                 job.save();
             return redirect('job:detail', job_random_string=job.random_string);
         else:
             return render(request, self.template_name, self.get_context_data(receiver=receiver, sender_jobuser=sender_jobuser, form=form));
         
     def get_context_data(self, *args, **kwargs):
-        context = super(PayView, self).get_context_data(**kwargs);
+        context = super(StripePayView, self).get_context_data(**kwargs);
         context['sender_jobuser'] = kwargs['sender_jobuser'];
         context['receiver'] = kwargs['receiver'];
         context['form'] = kwargs['form'];
         return context;
-
+     
     def pay(self, request, **kwargs):
         receiver = kwargs['receiver'];
         stripe.api_key = STRIPE_TEST_SECRET_KEY;
@@ -128,7 +165,7 @@ class PayView(TemplateView):
             destination = {
                 "account" : receiver.profile.get_stripe_account_id(),
             },
-        );        
+        );       
         
 class WorkView(TemplateView):
     template_name = 'jobuser/work.html';
@@ -309,8 +346,8 @@ def sort_history(request, job, chain):
         data = data[::-1];
     return data;
    
-class UnconfirmedPaymentView(TemplateView):
-    template_name = 'jobuser/confirmation.html';
+class ConfirmPayView(TemplateView):
+    template_name = 'jobuser/confirm-pay.html';
 
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
@@ -333,10 +370,10 @@ class UnconfirmedPaymentView(TemplateView):
         if (misc_pay):
             if (confirm_or_reject == 'confirm'):
                 misc_pay.confirmed = True;
-                jobuser.received = jobuser.received + misc_pay.amount;
+                jobuser.paid = jobuser.paid + misc_pay.amount;
                 jobuser.save()
-                misc_pay.jobuser.paid = misc_pay.jobuser.paid +  misc_pay.amount;
-                misc_pay.jobuser.save();
+                misc_pay.receiver.received = misc_pay.receiver.received +  misc_pay.amount;
+                misc_pay.receiver.save();
                 job.paid = job.paid + misc_pay.amount;
                 job.save();
                 if (job.set_is_finished()):
@@ -345,12 +382,12 @@ class UnconfirmedPaymentView(TemplateView):
             else:
                 misc_pay.confirmed = False;
             misc_pay.save();
-            return redirect('unconfirmed-payments', job_random_string=job.random_string);
+            return redirect('jobs:confirm-pay', job_random_string=job.random_string);
         else:
             return render(request, self.template_name, self.get_context_data(jobuser=jobuser));
 
     def get_context_data(self, *args, **kwargs):
-        context = super(UnconfirmedPaymentView, self).get_context_data(**kwargs);
+        context = super(ConfirmPayView, self).get_context_data(**kwargs);
         jobuser = kwargs['jobuser'];
         context = {
             'jobuser' : jobuser,

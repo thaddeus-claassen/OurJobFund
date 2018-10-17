@@ -155,7 +155,7 @@ function addRowsToWorkingTable(json) {
     for (var index = 0; index < json.length; index++) {
         var worker = json[index];
         var finished = worker['finished'];
-        if (finished == 'January 1, 3000') {
+        if (finished == '01/1/3000') {
             finished = 'N/A';
         }
         var string = "<tr>";

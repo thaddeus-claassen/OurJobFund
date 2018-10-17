@@ -82,10 +82,6 @@ tr:after {
     clear: both;
 }
 
-thead th {
-    height: 30px;
-}
-
 tbody {
     overflow-x: auto;
     overflow-y: scroll;
@@ -96,14 +92,9 @@ tbody {
     color: gray;
 }
 
-
 .make-this-disappear {
     display: none;
 }
-    
-    
-    
-    
     
     
     

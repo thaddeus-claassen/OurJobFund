@@ -10,6 +10,7 @@ alphanumeric = RegexValidator(r'^[0-9a-zA-Z_]+$', 'Alphanumeric characters only'
 class Job(models.Model):
     public = models.BooleanField(default=False);
     is_finished = models.BooleanField(default=False);
+    stripe_enabled = models.BooleanField(default=False);
     title = models.CharField(max_length=100);
     date = models.DateTimeField(auto_now_add=True);
     pledging = models.FloatField(default=0);
@@ -51,11 +52,14 @@ class Job(models.Model):
             random_string = createRandomString();
         return random_string;
         
-    def is_finished(self):
+    def get_is_finished(self):
         is_finished = False;
         if ((self.working > 0 and self.working == self.finished) and ((self.pledging > 0 and self.pledging >= self.paid) or (self.pledging == 0))):
             is_finished = True;
         return is_finished;
+        
+    def set_is_finished(self, is_finished):
+        self.is_finished = is_finished;
     
 class Tag(models.Model):
     jobs = models.ManyToManyField(Job);    

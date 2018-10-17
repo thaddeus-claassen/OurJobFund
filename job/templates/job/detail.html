@@ -14,9 +14,6 @@
         <span id="is_finished">Completed</span>
         {% endif %}
     </div>
-    <div class="col-md-4">
-        <h4>{{ job.title }}</h4>
-    </div>
     <div class="col-md-3">
         {% if not job.public %}
         <span id="private">Private</span>
@@ -43,14 +40,18 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>{{ job.title }}</h4>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <table id="updates" class="table">
                     <thead>
                         <tr>
-                            <th class="updates-username"><span class="table-header">Updates</span><span class="
-                            total">{{ updates.count }}</span></th>
+                            <th class="updates-username"><span class="table-header">Updates</span><span class="total">{{ updates.count }}</span></th>
                             <th class="updates-date"><span class="table-header">Date</span></th>
                             <th class="updates-images"><span class="table-header">Images</span></th>
                         </tr>
@@ -100,7 +101,7 @@
         {% else %}
         {% if jobuser %}
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-12">
                 <form action="{% url 'update:create' job.random_string %}">
                     <input class="job-input" type="submit" value="Update" />
                 </form>
@@ -110,36 +111,34 @@
         {% if jobuser.work_set.all.exists %}
         {% if not jobuser.finish_set.all.exists %}
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-12">
                 <form action="{% url 'finish' job.random_string %}">
-                    <input class="job-input" type="submit" value="Finish" name="finish" />
+                    <input class="job-input" type="submit" value="Finish" />
                 </form>
             </div>
         </div>
         {% endif %}
         {% else %}
         {% if jobuser.pledge_set.all.exists %}
-        {% if unconfirmed_payments %}
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
-                <form action="{% url 'unconfirmed-payments' job.random_string %}">
-                    <input class="job-input" type="submit" value="Confirm Payments" />
+            <div class="col-md-12">
+                <form action="{% url 'job:misc-pay' job.random_string %}">
+                    <input class="job-input" type="submit" value="Pay" />
                 </form>
             </div>
         </div>
-        {% endif %}
         {% else %}
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-12">
                 <form action="{% url 'work' job.random_string %}">
-                    <input class="job-input" type="submit" value="Work" name="work" />
+                    <input class="job-input" type="submit" value="Work" />
                 </form>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-12">
                 <form action="{% url 'pledge' job.random_string %}">
-                    <input class="job-input" type="submit" value="Pledge" name="pledge" />
+                    <input class="job-input" type="submit" value="Pledge" />
                 </form>
             </div>
         </div>
@@ -147,9 +146,9 @@
         {% endif %}
         {% if jobuser.moderator_set.exists %}
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-12">
                 <form action="{% url 'job:moderate' job.random_string %}">
-                    <input class="job-input" type="submit" value="Ban" />
+                    <input class="job-input" type="submit" value="Moderate" />
                 </form>
             </div>
         </div>
@@ -157,28 +156,26 @@
         {% endif %}
         {% endif %}
     </div>
-    <div class="col-md-7">
+    <div class="col-md-8">
         <div class="row">
             <div class="col-md-12">
                 <table id="pledging" class="table">
                     <thead>
                         <tr>
-                            <th class="pledging-username"><span class="table-header">Pledgers</span><span class="total">{{ pledging_total }}</span></th>
-                            <th class="pledging-date"><span class="table-header">Date Pledged</span></th>
-                            <th class="pledging-pledging"><span class="table-header">Pledge</span><span class="total">${{ job.pledging|floatformat:2 }}</span></th>
-                            <th class="pledging-paid"><span class="table-header">Paid</span><span class="total">${{ job.paid|floatformat:2 }}</span></th>
+                            <th class="pledging-username"><span class="table-header">Pledgers</span><span class="total">{{ pledging.count }}</span></th>
+                            <th class="pledging-date"><span class="table-header">Date</span></th>
+                            <th class="pledging-pledging"><span class="table-header">Pledge</span></th>
+                            <th class="pledging-paid"><span class="table-header">Paid</span></th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for j in pledging %}
+                        {% for j in pledging %}
                         <tr>
                             <td class="pledging-username">
                                 {% if j.user.is_active %}
-                                <a href="{% url 'user:detail' j.user.get_username %}">
-                                    {{ j.user.get_username }}
-                                </a>
+                                <a href="{% url 'user:detail' j.user.get_username %}">{{ j.user.get_username }}</a>
                                 {% else %}
-                                <span>[ Deleted User ]</span>
+                                [ Deleted User ]
                                 {% endif %}
                             </td>
                             <td class="pledging-date">
@@ -186,12 +183,14 @@
                                 {{ pledge.date|date:"m/d/Y" }}
                                 {% endwith %}
                             </td>
-                            <td class="pledging-pledging">
-                                ${{ j.pledging|floatformat:2 }}
+                            <td class="pledging-pledging">${{ j.pledging|floatformat:2 }}</td>
+                            <td class="pledging-paid">
+                                <div class="col-md-12">
+                                    ${{ j.misc_paid|floatformat:2 }}
+                                </div>
                             </td>
-                            <td class="pledging-paid">${{ j.paid|floatformat:2 }}</td>
                         </tr>
-                    {% endfor %}
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -233,17 +232,16 @@
                                 {{ work.date|date:"m/d/Y" }}
                                 {% endwith %}
                             </td>
-                            <td class="working-finished">{% if w.finish_set.all.exists %}{{ w.finish_set.all.first.date|date:"F d, Y" }}{% else %}N/A{% endif %}</td>
-                            <td class="working-received">
-                                <div class="col-md-6">${{ w.received|floatformat:2 }}</div>
-                                <div class="col-md-6">
-                                    {% if jobuser and jobuser.pledge_set.exists %}
-                                    <form action="{% url 'job:pay' job.random_string w.user.username %}">
-                                        <input class="job-input" type="submit" value="Pay" />
-                                    </form>
-                                    {% endif %}
-                                </div>
+                            <td class="working-finished">
+                                {% with finish=w.finish_set.all|dictsort:"date"|first %}
+                                {% if finish %}
+                                    {{ finish.date|date:"m/d/Y" }}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                                {% endwith %}
                             </td>
+                            <td class="working-received">${{ w.misc_paid|floatformat:2 }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>

@@ -2,8 +2,8 @@
 
 {% load staticfiles %}
 {% block import %}
-    <script type="text/javascript" src="{% static 'jobuser/js/confirmation.js' %}" ></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'jobuser/css/confirmation.css' %}" />
+    <script type="text/javascript" src="{% static 'jobuser/js/confirm-pay.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'jobuser/css/confirm-pay.css' %}" />
 {% endblock %}
 
 {% block content %}
@@ -16,34 +16,41 @@
     <div class="col-md-12">
         <table class="table">
             <thead>
-                <th>From</th>
                 <th>Date</th>
                 <th>Amount</th>
+                <th>To</th>
                 <th>Confirm</th>
             </thead>
             <tbody>
                 <form id="form" action="{{ request.get_full_path }}" method="POST">
                 {% csrf_token %}
-                    {% for p in unconfirmed_payments %}
+                {% for p in unconfirmed_payments %}
+                    <td>{{ p.date|date:"m/d/Y" }}</td>
+                    <td>${{ p.amount|floatformat:2 }}</td>
                     <td>
-                        {% if p.jobuser.user.is_active %}
+                        {% if p.receiver.user.is_active %}
                         <a href="{% url 'user:detail' p.jobuser.user.get_username %}">
-                            {{ p.jobuser.user.get_username }}
+                            {{ p.receiver.user.get_username }}
                         </a>
                         {% else %}
                         [ Deleted User ]
                         {% endif %}
                     </td>
-                    <td>{{ p.date|date:"F d, Y" }}</td>
-                    <td>${{ p.amount|floatformat:2 }}</td>  
                     <td>
                         <input type="submit" value="Confirm" name="{{ p.pk }}" />
                         <input type="submit" value="Reject" name="{{ p.pk }}" />
                     </td>
-                    {% endfor %}
+                {% endfor %}
                 </form>
             </tbody>
         </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2 col-md-offset-10">
+        <form action="{% url 'job:detail' jobuser.job.random_string %}">
+            <input id="back" type="submit" value="Back" />
+        </form>
     </div>
 </div>
 {% endblock %}

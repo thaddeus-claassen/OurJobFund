@@ -12,13 +12,14 @@ class NewJobForm(forms.ModelForm):
     longitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
     tags = forms.CharField(widget=forms.TextInput, max_length=1000, required=False);
     image_set = forms.ImageField(label="Images", widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False);
+    payment = forms.ChoiceField(label="Payments", choices=(('', ''), ('Outside OurJobFund', 'OurJobFund'), ('Through Stripe', 'Through Stripe')), required=True);
     comment = forms.CharField(widget=forms.Textarea, max_length=10000);
     #This is honey pot
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
 
     class Meta:
         model = Job;
-        fields = ['title', 'formatted_location', 'location', 'latitude', 'longitude', 'tags', 'image_set', 'comment']; #public
+        fields = ['title', 'formatted_location', 'location', 'latitude', 'longitude', 'tags', 'image_set', 'payment', 'comment']; #public
     
     def clean_tags(self):
         tags = self.cleaned_data.get('tags');
@@ -31,10 +32,13 @@ class NewJobForm(forms.ModelForm):
                     raise forms.ValidationError('Each tag cannot be more than 30 characters.');
         return tags;
     
-    def clean_username(self):
-        if (not self.cleaned_data.get('username') == ""):
-            raise forms.ValidationError('It seems you are a bot.');
-        return "";
+    def clean_payments(self):
+        payment = self.cleaned_data.get('payment');
+        if (payment == ''):
+            raise forms.ValidationError('Please choose payment type');
+        elif (payment != 'Outside OurJobFund' or payment != 'Through Stripe'):
+            raise forms.ValidationError("Payment type must be either 'Outside OurJobFund' or 'Throught Stripe'");
+        return payment;
              
 def checkStringIsValidMoney(money):
     valid = False;

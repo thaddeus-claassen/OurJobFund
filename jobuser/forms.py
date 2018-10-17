@@ -19,7 +19,7 @@ class PledgeForm(forms.Form):
         pledge = self.cleaned_data.get('amount');
         if (checkStringIsValidMoney(pledge)):
             if (float(pledge) < 0.5):
-                raise forms.ValidationError('You cannot pledge less than $0.00.'); 
+                raise forms.ValidationError('You cannot pledge less than $0.50.'); 
         else:
             raise forms.ValidationError('Please enter a valid dollar amount.');
         return pledge;
@@ -29,25 +29,59 @@ class PledgeForm(forms.Form):
             raise forms.ValidationError('It seems you are a bot.');
         return "";
 
-class PayForm(forms.Form):
+class StripePayForm(forms.Form):
     amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}), required=True);
     comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
-    pay_through = None;
+    #This is honey pot
+    username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
+    
+    #def __init__(self, *args, **kwargs):
+    #    super(StripePayForm, self).__init__(*args, **kwargs);
+    
+    class Meta:
+        model = StripePay;
+        fields = ['amount', 'comment', 'username'];
+    
+    def clean_amount(self):
+        pay = self.cleaned_data.get('amount');
+        if (checkStringIsValidMoney(pay)):
+            if (float(pay) == 0):
+                raise forms.ValidationError('$0.00 is invalid.');
+        else:
+            raise forms.ValidationError('Please enter a valid dollar amount.');
+        return pay;
+        
+    def clean_username(self):
+        if (not self.cleaned_data.get('username') == ""):
+            raise forms.ValidationError('It seems you are a bot.');
+        return "";
+        
+class MiscPayForm(forms.Form):
+    receiver = None;
+    amount = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '$0.00'}), required=True);
+    comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
     #This is honey pot
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
     
     class Meta:
-        model = StripePay;
-        fields = ['pay_through', 'amount', 'comment', 'username'];
-    
+        model = MiscPay;
+        fields = ['receiver','amount', 'comment', 'username'];
+        
     def __init__(self, *args, **kwargs):
-        self.receiver = kwargs.pop('receiver', None);
-        super(PayForm, self).__init__(*args, **kwargs);
-        if (self.receiver.profile.stripe_account_id == ''):
-            self.fields['pay_through'] = forms.ChoiceField(choices=(('', ''), ('Outside OurJobFund', 'Outside OurJobFund')), required=True);
-        else:
-            self.fields['pay_through'] = forms.ChoiceField(choices=(('', ''), ('Outside OurJobFund', 'Outside OurJobFund'), ('Stripe', 'Stripe')), required=True);            
-       
+        job = kwargs.pop('job', None);
+        super(MiscPayForm, self).__init__(*args, **kwargs);
+        workers = job.jobuser_set.filter(~Q(work_status=''));
+        choices = ('', '');
+        for w in workers:
+            choices = choices,(w.user.username, w.user.username);
+        self.fields['receiver'] = forms.ChoiceField(choices = choices);
+    
+    def clean_receiver(self):
+        receiver = self.cleaned_data.get('receiver');
+        if ((receiver, receiver) not in self.fields['receiver'].choices):
+            raise forms.ValidationError('You cannot pay that person.');
+        return receiver;
+    
     def clean_amount(self):
         pay = self.cleaned_data.get('amount');
         if (checkStringIsValidMoney(pay)):

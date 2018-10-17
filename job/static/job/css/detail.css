@@ -15,6 +15,10 @@
     top: 0;
 }
 
+h4 {
+    top: 10px;
+}
+
 #pledging, #working {
     margin-bottom: 0px;
 }
@@ -49,11 +53,11 @@
 }
 
 .updates-username {
-    width: 40%;
+    width: 50%;
 }
 
 .updates-date  {
-    width: 40%;
+    width: 30%;
 }
 
 .updates-images {
@@ -66,8 +70,10 @@
 
 .pledging-username, .pledging-date, .pledging-pledging, .pledging-paid {
     width: 25%;
+    float: left;
 }
 
 .working-username, .working-started, .working-finished, .working-received {
     width: 25%;
+    float: left;
 }

@@ -7,7 +7,7 @@ from django.conf.urls.static import static;
 from django.contrib.auth import views as auth_views;
 from user.views import search_user;
 from job.views import home;
-from jobuser.views import PledgeView, WorkView, FinishView, PledgeHistoryView, WorkHistoryView, UnconfirmedPaymentView, sort_pledge_history, sort_work_history;
+from jobuser.views import PledgeView, WorkView, FinishView, PledgeHistoryView, WorkHistoryView, sort_pledge_history, sort_work_history;
 from .acceptable_urls import URLS;
 
 app_name = 'ourjobfund';
@@ -23,7 +23,6 @@ urlpatterns = [
     url(r'^' + URLS['pledge'] + '/' + URLS['job_random_string_regex'] + '/$', PledgeView.as_view(), name='pledge'),
     url(r'^' + URLS['pledge-history'] + '/' + URLS['job_random_string_regex'] + '/$', PledgeHistoryView.as_view(), name='pledge-history'),
     url(r'^' + URLS['pledge-history'] + '/' + URLS['job_random_string_regex'] + '/' + URLS['sort'] + '/$', sort_pledge_history),
-    url(r'^' + URLS['pay'] + '/' + URLS['confirm'] + '/' + URLS['job_random_string_regex'], UnconfirmedPaymentView.as_view(), name='unconfirmed-payments'),
     url(r'^' + URLS['work'] + '/' + URLS['job_random_string_regex'] + '/$', WorkView.as_view(), name='work'),
     url(r'^' + URLS['work-history'] + '/' + URLS['job_random_string_regex'] + '/$', WorkHistoryView.as_view(), name='work-history'),
     url(r'^' + URLS['work-history'] + '/' + URLS['job_random_string_regex'] + '/' + URLS['sort'] + '/$', sort_work_history),
@@ -32,7 +31,7 @@ urlpatterns = [
     url(r'^' + URLS['contact'] + '/', include('contact.urls')),
     url(r'^' + URLS['terms_of_service'] + '/', include('terms_of_service.urls')),
     url(r'^' + URLS['privacy'] + '/', include('privacy.urls')),
-    url(r'^', include('user.urls')),
+    url(r'^' + URLS['user'] + '/', include('user.urls')),
 ]
 
 if settings.DEBUG:

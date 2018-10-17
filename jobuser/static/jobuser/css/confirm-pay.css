@@ -9,3 +9,7 @@ tbody {
 td, th {
     width: 25%;
 }
+
+#back {
+    width: 100%;
+}

@@ -26,7 +26,7 @@ class LoginView(TemplateView):
     
     def get(self, request, *args, **kwargs):
         if (request.user.is_authenticated):
-            return redirect('home');
+            return redirect('user:detail', request.user.username);
         else:
             return render(request, self.template_name, self.get_context_data(login_form=self.login_form, sign_up_form=self.sign_up_form));
     
@@ -84,6 +84,7 @@ def search_user(request):
 class DetailView(TemplateView):
     template_name = 'user/detail.html';
     
+    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(User, username=kwargs['username']);
         return render(request, self.template_name, self.get_context_data(request, user=user));
