@@ -53,7 +53,6 @@
                         <tr>
                             <th class="updates-username"><span class="table-header">Updates</span><span class="total">{{ updates.count }}</span></th>
                             <th class="updates-date"><span class="table-header">Date</span></th>
-                            <th class="updates-images"><span class="table-header">Images</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,19 +70,16 @@
                             <td class="updates-date">
                                 <span class="updates-date">{{ u.date|date:"m/d/Y" }}</span>
                             </td>
-                            <td class="updates-images">
-                                {% if u.image_set.all.exists %}
-                                <a href="{% url 'update:images' u.random_string %}">
-                                    {{ u.image_set.all.count }}
-                                </a>
-                                {% else %}
-                                0
-                                {% endif %}
-                            </td>
                         </tr>
                         <tr>
                             <td class="updates-comment" colspan="3">
                                 {{ u.comment }}
+                                <br>
+                                <span class="images">
+                                {% if u.image_set.all.exists %}
+                                    <a href="{% url 'update:images' u.random_string %}">Images</a>
+                                {% endif %}
+                                </span>
                             </td>
                         </tr>
                     {% endfor %}
@@ -117,8 +113,16 @@
                 </form>
             </div>
         </div>
-        {% endif %}
         {% else %}
+        <div class="row">
+            <div class="col-md-12">
+                <form action="{% url 'work' job.random_string %}">
+                    <input class="job-input" type="submit" value="Work" />
+                </form>
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
         {% if jobuser.pledge_set.all.exists %}
         <div class="row">
             <div class="col-md-12">
@@ -130,19 +134,11 @@
         {% else %}
         <div class="row">
             <div class="col-md-12">
-                <form action="{% url 'work' job.random_string %}">
-                    <input class="job-input" type="submit" value="Work" />
-                </form>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
                 <form action="{% url 'pledge' job.random_string %}">
                     <input class="job-input" type="submit" value="Pledge" />
                 </form>
             </div>
         </div>
-        {% endif %}
         {% endif %}
         {% if jobuser.moderator_set.exists %}
         <div class="row">

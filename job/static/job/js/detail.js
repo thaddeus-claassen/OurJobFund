@@ -123,16 +123,15 @@ function add_rows_to_tables(num_searches, table, column, order) {
 function addRowsToUpdatesTable(json) {
     for (var index = 0; index < json.length; index++) {
         var update = json[index];
-        var img = update['images'];
-        if (img > 0) img = "<a href='update/" + update['random_string'] + "/images'>" + update['images'] + "</a>";
-        else img = 0;
+        var img = '';
+        if (update['images'] > 0) img = "<a href='/update/" + update['random_string'] + "/images'>Images</a>";
         var string = "<tr>";
         string = string + "<td class='updates-username'><a href='" + update['username'] + "'>" + update['username'] + "</a></td>";
         string = string + "<td class='updates-date'>" + update['date'] + "</td>";
-        string = string + "<td class='updates-images'>" + img + "</td>";
         string = string + "</tr>";
         string = string + "<tr>";
-        string = string + "<td class='updates-comment' coslpan='3'>" + update['comment'] + "</td>";
+        string = string + "<td class='updates-comment' coslpan='3'>" + update['comment'];
+        string = string + "<span class='images'>" + img + "</span></td>";
         string = string + "</tr>";
         $('#updates tbody').append(string);
     }// end for
