@@ -1,7 +1,7 @@
 var current_num_searches = 0;
-var finished_num_searches = 0;
+var completed_num_searches = 0;
 var current_sort = 'date-descending';
-var finished_sort = 'pledge-descending';
+var completed_sort = 'pledge-descending';
 
 $('document').ready(function() {
     $('.table-header').click(function() {
@@ -40,16 +40,16 @@ function setSortVariable(table, type) {
         }// end if-else
         sort = current_sort;
     } else if (table === 'completed') {
-        if (type === finished_sort.split('-')[0]) {
-            if (finished_sort.split('-')[1] === 'ascending') {
-                finished_sort = type + '-descending';
+        if (type === completed_sort.split('-')[0]) {
+            if (completed_sort.split('-')[1] === 'ascending') {
+                completed_sort = type + '-descending';
             } else {
-                finished_sort = type + '-ascending';
+                completed_sort = type + '-ascending';
             }// end if-else
         } else {
-            finished_sort = type + '-ascending';
+            completed_sort = type + '-ascending';
         }// end if-else
-        sort = finished_sort;
+        sort = completed_sort;
     }// end if
     return sort;
 }// end setSortVariable()
@@ -59,9 +59,9 @@ function addToNumRows(table) {
     if (table === 'current') {
         current_num_searches = current_num_searches + 1;
         rows = current_num_searches;
-    } else if (table === 'finished') {
-        finished_num_searches = finished_num_searches + 1;
-        rows = finished_num_searches;
+    } else if (table === 'completed') {
+        completed_num_searches = completed_num_searches + 1;
+        rows = completed_num_searches;
     }// end if
     return rows;
 }// end addToNumRows()
@@ -69,8 +69,8 @@ function addToNumRows(table) {
 function setRowToZero(table) {
     if (table === 'current') {
         current_num_searches = 0;
-    } else if (table === 'finished') {
-        finished_num_searches = 0;
+    } else if (table === 'completed') {
+        completed_num_searches = 0;
     }// end if
 }// end setRowToZero()
 
@@ -84,8 +84,8 @@ function getNumSearches(table) {
     var searches = null;
     if (table === 'current') {
         searches = current_num_searches;
-    } else if (table === 'finished') {
-        searches = finished_num_searches;
+    } else if (table === 'completed') {
+        searches = completed_num_searches;
     }// end if
     return searches;
 }// end getNumSearches();
@@ -100,12 +100,14 @@ function add_rows_to_tables(num_searches, table, column, order) {
             'order' : order,
         },
         success: function(json) {
-            if (table === 'current') {
-                if (current_num_searches == 0) $('#current tbody').empty();
-                addRowsToCurrentTable(json);
-            } else if (table === 'finished') {
-                if (finished_num_searches == 0) $('#finished tbody').empty();
-                addRowsToFinishedTable(json);
+            if (json.length > 0) {
+                if (table === 'current') {
+                    if (current_num_searches == 0) $('#current tbody').empty();
+                    addRowsToCurrentTable(json);
+                } else if (table === 'completed') {
+                    if (completed_num_searches == 0) $('#completed tbody').empty();
+                    addRowsToCompletedTable(json);
+                }// end if
             }// end if
         },
     });

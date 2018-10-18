@@ -16,7 +16,7 @@ $('document').ready(function() {
     $('tbody').scroll(function() {
         var cls = $(this).parent().attr('class');
         var table = cls.split('-')[0];
-        var total = table + '-total';
+        var total = $('#' + table + '-total').text();
         if ($(this).scrollTop() + $(this).height() === $(this)[0].scrollHeight && $(this).children().count() < total) {
             if (cls !== '') {
                 var rows = addToNumRows(cls);
@@ -106,15 +106,17 @@ function add_rows_to_tables(num_searches, table, column, order) {
             'order' : order,
         },
         success: function(json) {
-            if (table === 'updates') {
-                if (updates_num_searches == 0) $('#updates tbody').empty();
-                addRowsToUpdatesTable(json);
-            } else if (table === 'pledging') {
-                if (pledging_num_searches == 0) $('#pledging tbody').empty();
-                addRowsToPledgingTable(json);
-            } else if (table === 'working') {
-                if (working_num_searches == 0) $('#working tbody').empty();
-                addRowsToWorkingTable(json);
+            if (json.length > 0) {
+                if (table === 'updates') {
+                    if (updates_num_searches == 0) $('#updates tbody').empty();
+                    addRowsToUpdatesTable(json);
+                } else if (table === 'pledging') {
+                    if (pledging_num_searches == 0) $('#pledging tbody').empty();
+                    addRowsToPledgingTable(json);
+                } else if (table === 'working') {
+                    if (working_num_searches == 0) $('#working tbody').empty();
+                    addRowsToWorkingTable(json);
+                }// end if
             }// end if
         },
     });

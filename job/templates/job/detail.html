@@ -158,14 +158,16 @@
                 <table id="pledging" class="table">
                     <thead>
                         <tr>
-                            <th class="pledging-username"><span class="table-header">Pledgers</span><span class="total">{{ pledging.count }}</span></th>
+                            <th class="pledging-username"><span class="table-header">Pledgers</span><span class="total">
+                                {% if pledging.count %}{{ pledging.count }}{% else %}0{% endif %}
+                            </span></th>
                             <th class="pledging-date"><span class="table-header">Date</span></th>
                             <th class="pledging-pledging"><span class="table-header">Pledge</span></th>
                             <th class="pledging-paid"><span class="table-header">Paid</span></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for j in pledging %}
+                    {% for j in pledging %}
                         <tr>
                             <td class="pledging-username">
                                 {% if j.user.is_active %}
@@ -186,7 +188,14 @@
                                 </div>
                             </td>
                         </tr>
-                        {% endfor %}
+                    {% empty %}
+                        <tr>
+                            <td>No Pledges.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -238,6 +247,13 @@
                                 {% endwith %}
                             </td>
                             <td class="working-received">${{ w.misc_paid|floatformat:2 }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td>No Workers.</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     {% endfor %}
                     </tbody>
