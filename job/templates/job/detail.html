@@ -124,6 +124,7 @@
         {% endif %}
         {% endif %}
         {% if jobuser.pledge_set.all.exists %}
+        {% if working %}
         <div class="row">
             <div class="col-md-12">
                 <form action="{% url 'job:misc-pay' job.random_string %}">
@@ -131,6 +132,7 @@
                 </form>
             </div>
         </div>
+        {% endif %}
         {% else %}
         <div class="row">
             <div class="col-md-12">

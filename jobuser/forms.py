@@ -71,9 +71,7 @@ class MiscPayForm(forms.Form):
         job = kwargs.pop('job', None);
         super(MiscPayForm, self).__init__(*args, **kwargs);
         workers = job.jobuser_set.filter(~Q(work_status=''));
-        choices = ('', '');
-        for w in workers:
-            choices = choices,(w.user.username, w.user.username);
+        choices = [ (w.user.username, w.user.username) for w in workers ]
         self.fields['receiver'] = forms.ChoiceField(choices = choices);
     
     def clean_receiver(self):
