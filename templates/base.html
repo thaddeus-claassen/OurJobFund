@@ -26,8 +26,14 @@
 <body>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-10 col-md-offset-1">
+            
+            <div class="row">    
+                <div class="col-md-1">
+                    <div class="navbar-header">
+                        <a id="logo" href="{% url 'home' %}" class="navbar-brand">OurJobFund</a>
+                    </div>
+                </div>
+                <div class="col-md-10">
                     <ul class="nav navbar-nav navbar-left">
                         {% if request.user.is_authenticated %}
                         <li class="navbar_button"><a href="{% url 'user:detail' request.user.username %}">{{ request.user.username }}</a></li>
