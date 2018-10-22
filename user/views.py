@@ -26,7 +26,7 @@ class LoginView(TemplateView):
     
     def get(self, request, *args, **kwargs):
         if (request.user.is_authenticated):
-            return redirect('user:detail', request.user.username);
+            return redirect('user:detail', username=request.user.username);
         else:
             return render(request, self.template_name, self.get_context_data(login_form=self.login_form, sign_up_form=self.sign_up_form));
     
