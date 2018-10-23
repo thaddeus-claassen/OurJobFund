@@ -37,11 +37,13 @@ function check_if_user_exists(username) {
 }// end check_if_user_exists()
 
 function changeTHeadTFootWidthToAccountForScrollBar() {
-    var oldTableWidth = $('table').width();
-    var newTableWidth = oldTableWidth - 17;
-    var percentageTableWidth = 100 * (newTableWidth / oldTableWidth);
-    $('thead').width(percentageTableWidth.toString() + '%');
-    $('tfoot').width(percentageTableWidth.toString() + '%');
+    $('table').each(function(index) {
+        var oldTableWidth = $(this).width();
+        var newTableWidth = oldTableWidth - 17;
+        var percentageTableWidth = 100 * (newTableWidth / oldTableWidth);
+        $(this).find('thead').width(percentageTableWidth.toString() + '%');
+        $(this).find('tfoot').width(percentageTableWidth.toString() + '%');
+    });
 }// end changeTHeadTFootWidthToAccountForScrollBar()
 
 function changeNumberToCurrency(number) {
