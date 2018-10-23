@@ -7,6 +7,8 @@ html, .container, .container-fluid {
     width: 100%;
 }
 
+
+
 body {
     min-height: 100%;
     padding-bottom: 50px;
@@ -82,10 +84,6 @@ tr:after {
     clear: both;
 }
 
-thead th {
-    height: 30px;
-}
-
 tbody {
     overflow-x: auto;
     overflow-y: scroll;
@@ -96,14 +94,10 @@ tbody {
     color: gray;
 }
 
-
 .make-this-disappear {
     display: none;
 }
-    
-    
-    
-    
+
     
     
     

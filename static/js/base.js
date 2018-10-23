@@ -26,12 +26,12 @@ $('document').ready(function() {
 
 function check_if_user_exists(username) {
     $.ajax({
-        url : 'search-user',
+        url : '/user/search-user',
         data : {
             'username' : username,
         },
         success: function(json) {
-            if (json !== "") location = '/' + json['username'];
+            if (json !== "") location = '/user/' + json['username'];
         },
     });
 }// end check_if_user_exists()

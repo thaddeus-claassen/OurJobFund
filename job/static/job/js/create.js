@@ -25,7 +25,7 @@ function applyLocation(address) {
             var center = results[0].geometry.location;
             $('#id_latitude').val(center.lat());
             $('#id_longitude').val(center.lng());
-            $('#id_editted_location').val(results[0].formatted_address);
+            $('#id_formatted_location').val(results[0].formatted_address);
             $('#create-job-form').submit();
         } else {
             $('#id_location').after("<span id='location-error'>Must be a valid location on Google Maps</span>");
