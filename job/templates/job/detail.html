@@ -76,7 +76,7 @@
                         <tr>
                             <td class="updates-comment" colspan="3">
                                 {{ u.comment }}
-                                <br>
+                                <br />
                                 <span class="images">
                                 {% if u.image_set.all.exists %}
                                     <a href="{% url 'update:images' u.random_string %}">Images</a>
@@ -105,7 +105,7 @@
                 </form>
             </div>
         </div>
-        {% endif %}
+        {% endif %} 
         {% if jobuser.work_set.all.exists %}
         {% if not jobuser.finish_set.all.exists %}
         <div class="row">
@@ -115,6 +115,7 @@
                 </form>
             </div>
         </div>
+        {% endif %}
         {% else %}
         <div class="row">
             <div class="col-md-12">
@@ -123,7 +124,6 @@
                 </form>
             </div>
         </div>
-        {% endif %}
         {% endif %}
         {% if jobuser.pledge_set.all.exists %}
         {% if working %}
@@ -187,9 +187,7 @@
                             </td>
                             <td class="pledging-pledging">${{ j.pledging|floatformat:2 }}</td>
                             <td class="pledging-paid">
-                                <div class="col-md-12">
-                                    ${{ j.misc_paid|floatformat:2 }}
-                                </div>
+                                ${{ j.misc_paid|floatformat:2 }}
                             </td>
                         </tr>
                     {% empty %}
