@@ -240,8 +240,8 @@ class FinishView(TemplateView):
                 update.save();
             job.finished = job.finished + 1;
             job.save();
-            if (job.set_is_finished()):
-                job.is_finished = True;
+            if (job.get_is_finished()):
+                job.set_is_finished(True);
                 job.save();
             sendNotifications(jobuser);
             return redirect('job:detail', job_random_string=job.random_string);
