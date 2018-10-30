@@ -7,7 +7,6 @@ from django.conf.urls.static import static;
 app_name = 'user';
 
 urlpatterns = [
-    url(r'^' + URLS['stripe'] + '/$', views.stripe, name='stripe'),
     url(r'^' + URLS['log-in'] + '/$', views.LoginView.as_view(), name='login'),
     url(r'^' + URLS['sign-out'] + '/$', views.sign_out, name='sign_out'),
     url(r'^' + URLS['account'] + '/$', views.AccountView.as_view(), name='account'),
