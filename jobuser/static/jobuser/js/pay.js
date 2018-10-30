@@ -24,7 +24,7 @@ $(document).ready(function() {
                     stripeSubmitted = true;
                     handler.open({
                         amount: $('#id_amount').val() * 100,
-                        description: "Payment to " + $('#pay_to').text(), 
+                        description: "Payment to " + $('#pay_to').val(), 
                     });
                     e.preventDefault();
                 }// end if-else

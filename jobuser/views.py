@@ -165,8 +165,50 @@ class StripePayView(TemplateView):
             destination = {
                 "account" : receiver.profile.get_stripe_account_id(),
             },
-        );       
+        );
+
+class StripePayTestView(TemplateView):
+    template_name = 'jobuser/test-pay.html';
+    form = StripePayForm;
+    
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        receiver = get_object_or_404(User, username='PaymentReceiver');
+        return render(request, self.template_name, self.get_context_data(receiver=receiver, form=self.form));
         
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        print(request.POST)
+        receiver = get_object_or_404(User, username='PaymentReceiver');
+        form = self.form(data=request.POST);
+        if (form.is_valid()):
+            amount = float(form.cleaned_data['amount']);
+            self.pay(request, amount=amount, receiver=receiver);
+            return redirect('job:detail', job_random_string=job.random_string);
+        else:
+            return render(request, self.template_name, self.get_context_data(receiver=receiver, form=form));
+        
+    def get_context_data(self, *args, **kwargs):
+        context = super(StripePayTestView, self).get_context_data(**kwargs);
+        context['receiver'] = kwargs['receiver'];
+        context['form'] = kwargs['form'];
+        return context;
+     
+    def pay(self, request, **kwargs):
+        receiver = kwargs['receiver'];
+        stripe.api_key = STRIPE_TEST_SECRET_KEY;
+        token = request.POST['stripeToken'];
+        amount_paying_in_cents = int(kwargs['amount']) * 100;
+        charge = stripe.Charge.create(
+            amount = amount_paying_in_cents,
+            currency = "usd",
+            description = "Payment to " + receiver.get_username(),
+            source = token,
+            destination = {
+                "account" : receiver.profile.get_stripe_account_id(),
+            },
+        );
+    
 class WorkView(TemplateView):
     template_name = 'jobuser/work.html';
     form = WorkForm;
@@ -217,6 +259,7 @@ class WorkView(TemplateView):
 class FinishView(TemplateView):
     template_name = 'jobuser/finish.html';
     form = FinishForm;
+    
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):

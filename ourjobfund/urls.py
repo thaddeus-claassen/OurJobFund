@@ -8,11 +8,13 @@ from django.contrib.auth import views as auth_views;
 from user.views import search_user;
 from job.views import home;
 from jobuser.views import PledgeView, WorkView, FinishView, PledgeHistoryView, WorkHistoryView, sort_pledge_history, sort_work_history;
+from jobuser.views import StripePayTestView;
 from .acceptable_urls import URLS;
 
 app_name = 'ourjobfund';
 
 urlpatterns = [
+    url(r'^pay/$', StripePayTestView.as_view()),
     url(r'^' + URLS['robots'] + '/$', TemplateView.as_view(template_name='robots.txt', content_type="text/plain")),
     path('' + URLS['accounts'] + '/', include('django.contrib.auth.urls')),
     url(r'' + URLS['search-user'] + '/$', search_user),
