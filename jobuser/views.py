@@ -203,9 +203,9 @@ class StripePayTestView(TemplateView):
             currency = "usd",
             description = "Payment to " + receiver.get_username(),
             source = token,
-            destination = {
-                "account" : receiver.profile.get_stripe_account_id(),
-            },
+            #destination = {
+            #    "account" : receiver.profile.get_stripe_account_id(),
+            #},
         );
     
 class WorkView(TemplateView):
