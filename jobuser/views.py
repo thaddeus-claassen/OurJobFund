@@ -205,7 +205,7 @@ class StripePayTestView(TemplateView):
             source = token,
             destination = {
                 #"amount" : int(0.95 * amount_paying_in_cents),
-                "account" : receiver.profile.get_stripe_account_id(),
+                "account" : receiver.profile.get_stripe_account_id().split('_')[1],
             },
         );
     
