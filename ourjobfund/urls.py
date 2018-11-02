@@ -15,7 +15,7 @@ from .acceptable_urls import URLS;
 app_name = 'ourjobfund';
 
 urlpatterns = [
-    url(r'^pay/$', StripePayTestView.as_view()),
+    url(r'^' + URLS['stripe-pay'] + '/$', StripePayTestView.as_view(), name='stripe-pay'),
     url(r'^' + URLS['stripe'] + '/$', stripe, name='stripe'),
     url(r'^' + URLS['robots'] + '/$', TemplateView.as_view(template_name='robots.txt', content_type="text/plain")),
     path('' + URLS['accounts'] + '/', include('django.contrib.auth.urls')),
