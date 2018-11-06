@@ -202,7 +202,8 @@ class StripePayTestView(TemplateView):
             amount = amount_paying_in_cents,
             currency = "usd",
             description = "Payment to " + receiver.get_username(),
-            source = token,
+            #source = token,
+            source = "tok_visa",
             destination = {
                 "amount" : amount_paying_in_cents,
                 "account" : receiver.profile.get_stripe_account_id(),
