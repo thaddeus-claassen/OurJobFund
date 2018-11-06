@@ -204,7 +204,7 @@ class StripePayTestView(TemplateView):
             description = "Payment to " + receiver.get_username(),
             source = token,
             destination = {
-                "amount" = amount_paying_in_cents,
+                "amount" : amount_paying_in_cents,
                 "account" : receiver.profile.get_stripe_account_id(),
             },
         );
