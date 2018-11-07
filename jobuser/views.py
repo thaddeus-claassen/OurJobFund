@@ -205,7 +205,6 @@ class StripePayTestView(TemplateView):
             #source = token,
             source = "tok_visa",
             destination = {
-                "amount" : amount_paying_in_cents,
                 "account" : receiver.profile.get_stripe_account_id(),
             },
         );
