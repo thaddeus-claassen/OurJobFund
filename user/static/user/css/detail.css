@@ -19,7 +19,7 @@ input[type=submit] {
 }
 
 tbody {
-    height: 250px;
+    height: 230px;
 }
 
 .current-title, .completed-title {

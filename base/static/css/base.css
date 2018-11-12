@@ -85,7 +85,6 @@ tr:after {
 tbody {
     overflow-x: auto;
     overflow-y: scroll;
-    border: 1px solid gray;
 }
 
 .footer-link, .footer-link:hover {

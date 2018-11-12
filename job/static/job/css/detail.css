@@ -36,7 +36,7 @@ h4 {
 }
 
 #updates tbody {
-    height: 450px;
+    height: 350px;
 }
 
 #updates td[class=updates-comment] {
@@ -49,7 +49,7 @@ h4 {
 }
 
 #pledging tbody, #working tbody {
-    height: 280px;
+    height: 230px;
 }
 
 #updates_title {

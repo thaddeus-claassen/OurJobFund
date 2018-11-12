@@ -84,7 +84,10 @@
                     </ul>
                     {% else %}
                     {% if login_form == None %}
-                    <ul class="nav navbar-nav navbar-right"><li><a href="{% url 'user:login' %}">Login/Sign Up</a></li></ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="navbar_button"><a href="{% url 'home' %}">Jobs</a></li>
+                        <li><a href="{% url 'user:login' %}">Login/Sign Up</a></li>
+                    </ul>
                     {% else %}
                     <form id="sign-in-form" class="navbar-form navbar-right" method="POST" action="{{ request.get_full_path }}">
                     {% csrf_token %}
