@@ -8,6 +8,10 @@ var pledging_sort = 'pledging-descending';
 var working_sort = 'working-ascending';
 
 $('document').ready(function() {
+    fixHeader();
+    $(window).resize(function() {
+        fixHeader();
+    });
     $('.table-header').click(function() {
         var cls = $(this).parent().attr('class');
         setRowToZero(cls.split('-')[0]);
@@ -25,6 +29,21 @@ $('document').ready(function() {
         }// end if
     });
 });
+
+function fixHeader() {
+    var updatesWidth = $('#updates').find('thead').width() - 17;
+    $('#updates').find('thead').find('.updates-username').width(0.5 * updatesWidth - 16);
+    $('#updates').find('thead').find('.updates-date').width(0.5 * updatesWidth + 1);
+    var pledgeWorkWidth = $('#pledging').find('thead').width() - 17;
+    $('#pledging').find('thead').find('.pledging-username').width(0.25 * pledgeWorkWidth - 16);
+    $('#pledging').find('thead').find('.pledging-date').width(0.25 * pledgeWorkWidth - 16);
+    $('#pledging').find('thead').find('.pledging-pledging').width(0.25 * pledgeWorkWidth - 16);
+    $('#pledging').find('thead').find('.pledging-paid').width(0.25 * pledgeWorkWidth + 1);
+    $('#working').find('thead').find('.working-username').width(0.25 * pledgeWorkWidth - 16);
+    $('#working').find('thead').find('.working-started').width(0.25 * pledgeWorkWidth - 16);
+    $('#working').find('thead').find('.working-finished').width(0.25 * pledgeWorkWidth - 16);
+    $('#working').find('thead').find('.working-received').width(0.25 * pledgeWorkWidth + 1);
+}// end fixHeader()
 
 function addToNumRows(table) {
     var rows;

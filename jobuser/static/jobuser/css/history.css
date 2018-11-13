@@ -10,6 +10,6 @@ tbody {
     width: 20%;
 }
 
-.date, .type, .amount, .to, .confirmed {
+.date, .type, .amount, .to, .from, .confirmed {
     width: 16%;
 }

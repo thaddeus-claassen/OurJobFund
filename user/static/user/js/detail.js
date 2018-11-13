@@ -4,6 +4,10 @@ var current_sort = 'date-descending';
 var completed_sort = 'pledge-descending';
 
 $('document').ready(function() {
+    fixHeader();
+    $(window).resize(function() {
+        fixHeader();
+    });
     $('.table-header').click(function() {
         var cls = $(this).parent().attr('class');
         if (cls !== '') {
@@ -25,6 +29,18 @@ $('document').ready(function() {
         }// end if
     });
 });
+
+function fixHeader() {
+    var currentCompletedWidth = $('#current').find('thead').width() - 17;
+    $('#current').find('thead').find('.current-title').width(0.4 * currentCompletedWidth - 16);
+    $('#current').find('thead').find('.current-pledging').width(0.2 * currentCompletedWidth - 16);
+    $('#current').find('thead').find('.current-paid').width(0.2 * currentCompletedWidth - 16);
+    $('#current').find('thead').find('.current-received').width(0.2 * currentCompletedWidth + 1);
+    $('#completed').find('thead').find('.completed-title').width(0.4 * currentCompletedWidth - 16);
+    $('#completed').find('thead').find('.completed-pledging').width(0.2 * currentCompletedWidth - 16);
+    $('#completed').find('thead').find('.completed-paid').width(0.2 * currentCompletedWidth - 16);
+    $('#completed').find('thead').find('.completed-received').width(0.2 * currentCompletedWidth + 1);
+}// end fixHeader
 
 function setSortVariable(table, type) {
     var sort = null;

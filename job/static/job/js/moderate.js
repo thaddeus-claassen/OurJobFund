@@ -3,6 +3,10 @@ var num_searches = 0;
 var sort = 'date-descending';
 
 $('document').ready(function() {
+    fixHeader();
+    $(window).resize(function() {
+        fixHeader();
+    });
     $('form').submit(function(event) {
         if (canSubmit) {
             canSubmit = false;
@@ -28,6 +32,18 @@ $('document').ready(function() {
         }// end if
     });
 });
+
+function fixHeader() {
+    var updatesWidth = $('#updates').find('thead').width() - 17;
+    $('#updates').find('thead').find('.updates-username').width(0.25 * updatesWidth - 16);
+    $('#updates').find('thead').find('.updates-date').width(0.25 * updatesWidth - 16);
+    $('#updates').find('thead').find('.updates-images').width(0.25 * updatesWidth - 16);
+    $('#updates').find('thead').find('.updates-ban').width(0.25 * updatesWidth + 1);
+    var usersWidth = $('#users').find('thead').width() - 17;
+    $('#users').find('thead').find('.users-username').width(0.34 * usersWidth - 16);
+    $('#users').find('thead').find('.users-date').width(0.33 * usersWidth - 16);
+    $('#users').find('thead').find('.users-ban').width(0.33 * usersWidth + 1);
+}// end fixHeader()
 
 function setSort(cls) {
     if (sort.split('-')[0] === cls) {

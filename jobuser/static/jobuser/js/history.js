@@ -2,6 +2,10 @@ var num_searches = 0;
 var sort = 'date-descending';
 
 $('document').ready(function() {
+    fixHeader();
+    $(window).resize(function() {
+        fixHeader();
+    });
     $('.table-header').click(function() {
         var cls = $(this).parent().attr('class');
         num_searches = 0;
@@ -19,6 +23,17 @@ $('document').ready(function() {
         }// end if
     });
 });
+
+function fixHeader() {
+    var historyWidth = $('thead').width() - 17;
+    $('thead').find('.username').width(0.2 * historyWidth - 16);
+    $('thead').find('.date').width(0.16 * historyWidth - 16);
+    $('thead').find('.type').width(0.16 * historyWidth - 16);
+    $('thead').find('.amount').width(0.16 * historyWidth - 16);
+    $('thead').find('.to').width(0.16 * historyWidth - 16);
+    $('thead').find('.from').width(0.16 * historyWidth - 16);
+    $('thead').find('.confirmed').width(0.16 * historyWidth + 1);
+}// end fixHeader()
 
 function setSortVariable(cls) {
     var col = sort.split("-")[0];

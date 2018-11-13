@@ -25,13 +25,11 @@ tbody {
 .job-created {
     width: 35%;
     float: left;
-    text-align: center;
 }
 
 .job-pledging, .job-paid {
     width: 15%;
     float: left;
-    text-align: center;
 }
 
 .margin-row {

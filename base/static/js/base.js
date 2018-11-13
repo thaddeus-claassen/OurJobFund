@@ -4,10 +4,6 @@ $('document').ready(function() {
     if (window.top !== window.self) {
         window.top.location = window.self.location;
     }// end if
-    changeTHeadTFootWidthToAccountForScrollBar();
-    $(window).resize(function() {
-        changeTHeadTFootWidthToAccountForScrollBar();
-    });
     $('#go_to_user').submit(function(event) {
         if (canSubmit) {    
             canSubmit = false;
@@ -41,7 +37,7 @@ function changeTHeadTFootWidthToAccountForScrollBar() {
         var oldTableWidth = $(this).width();
         var newTableWidth = oldTableWidth - 17;
         var percentageTableWidth = 100 * (newTableWidth / oldTableWidth);
-        $(this).find('thead').width(percentageTableWidth.toString() + '%');
+        ///$(this).find('thead').width(percentageTableWidth.toString() + '%');
         $(this).find('tfoot').width(percentageTableWidth.toString() + '%');
     });
 }// end changeTHeadTFootWidthToAccountForScrollBar()

@@ -18,3 +18,7 @@
 input[type="submit"] {
     width: 100%;
 }
+
+#comment {
+    word-wrap: break-word;
+}

@@ -6,6 +6,10 @@ var markers = [];
 var sort = "created-descending";
 
 $('document').ready(function() {
+    fixHeader()
+    $(window).resize(function() {
+        fixHeader()
+    });
     $('#search').keydown(function(event) {
         if (event.which == ENTER) {
             search();
@@ -30,6 +34,15 @@ $('document').ready(function() {
         }// end if
     });
 });
+
+function fixHeader() {
+    var oldTableWidth = $('thead').width();
+    var newTableWidth = oldTableWidth - 17;
+    $('thead').find('.job-title').width(0.35 * newTableWidth - 16)
+    $('thead').find('.job-created').width(0.35 * newTableWidth - 16)
+    $('thead').find('.job-pledging').width(0.15 * newTableWidth - 16)
+    $('thead').find('.job-paid').width(0.15 * newTableWidth + 1)
+}
 
 function setSortAndNumSearches(col) {
     if (sort.split("-")[0] === col) {

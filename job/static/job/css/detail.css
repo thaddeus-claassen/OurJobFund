@@ -52,24 +52,24 @@ h4 {
     margin-top: 30px;
 }
 
-.updates-username {
+td[class=updates-username] {
     width: 50%;
 }
 
-.updates-date  {
+td[class=updates-date]  {
     width: 50%;
 }
 
-.updates-comment {
+td[class=updates-comment] {
     width: 100%;
 }
 
-.pledging-username, .pledging-date, .pledging-pledging, .pledging-paid {
+td[class=pledging-username], td[class=pledging-date], td[class=pledging-pledging], td[class=pledging-paid] {
     width: 25%;
     float: left;
 }
 
-.working-username, .working-started, .working-finished, .working-received {
+td[class=working-username], td[class=working-started], td[class=working-finished], td[class=working-received] {
     width: 25%;
     float: left;
 }

@@ -12,13 +12,10 @@
     <div class="col-md-8">
         <h4 class="title">Moderate for <a href="{% url 'job:detail' job.random_string %}">{{ job.title }}</a></h4>
     </div>
-    <div class="col-md-2">
-        
-    </div>
 </div>
 <div class="row">
     <div class="col-md-6">
-        <table class="table">
+        <table id="updates" class="table">
             <thead>
                 <tr>
                     <th class="updates-username"><span class="table-header">Updates</span><span class="total">{{ updates.count }}</span></th>
@@ -67,7 +64,7 @@
         </table>
     </div>
     <div class="col-md-6">
-        <table class="table">
+        <table id="users" class="table">
             <thead>
                 <tr>
                     <th class="users-username"><span class="table-header">User</span><span class="total">{{ users.count }}</span></th>

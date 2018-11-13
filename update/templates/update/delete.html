@@ -19,12 +19,12 @@
                 <a href="{% url 'user:detail' update.jobuser.user.get_username %}">{{ update.jobuser.user.get_username }}</a>
             </div>
             <div class="col-md-6">
-                <span id="date">{{ update.date|date:"F d, Y" }}</span>
+                <span id="date">{{ update.date|date:"m/d/Y" }}</span>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                {{ update.comment }}
+                <span id="comment">{{ update.comment }}</span>
             </div>
         </div>
         <div id="image-wrapper">
