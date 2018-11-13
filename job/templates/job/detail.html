@@ -9,20 +9,6 @@
 {% block content %}
 <input id="random_string" type="hidden" value="{{ job.random_string }}" />
 <div class="row">
-    <div class="col-md-5">
-        {% if job.is_finished %}
-        <span id="is_finished">Completed</span>
-        {% endif %}
-    </div>
-    <div class="col-md-3">
-        {% if not job.public %}
-        <span id="private">Private</span>
-        {% endif %}
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <div class="row">
             <div class="col-md-12">
                 <h3>{{ job.title }}</h3>
             </div>
@@ -48,6 +34,20 @@
                 </span>
             </div>
         </div>
+<div class="row">
+    <div class="col-md-5">
+        {% if job.is_finished %}
+        <span id="is_finished">Completed</span>
+        {% endif %}
+    </div>
+    <div class="col-md-3">
+        {% if not job.public %}
+        <span id="private">Private</span>
+        {% endif %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
         <div class="row">
             <div class="col-md-12">
                 <table id="updates" class="table">

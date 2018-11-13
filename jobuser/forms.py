@@ -123,6 +123,6 @@ def checkStringIsValidMoney(money):
     s = money.split('.');
     if (len(s) == 1 and s[0].isdigit()):
         valid = True;
-    elif (len(s) == 2 and s[0].isdigit() and (len(s[1]) == 0 or len(s[1]) == 1) and s[1].isdigit()):
+    elif (len(s) == 2 and s[0].isdigit() and (len(s[1]) == 1 or len(s[1]) == 2) and s[1].isdigit()):
         valid = True;
     return valid;

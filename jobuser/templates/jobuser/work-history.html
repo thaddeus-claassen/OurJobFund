@@ -70,18 +70,17 @@
                         {% endif %}
                     </td>
                 </tr>
-            {% endfor %}
-            </tbody>
-            <tfoot>
+            {% empty %}
                 <tr>
-                    <td class="username"></td>
+                    <td class="username">No Workers.</td>
                     <td class="date"></td>
                     <td class="type"></td>
                     <td class="amount"></td>
                     <td class="from"></td>
                     <td class="confirmed"></td>
                 </tr>
-            </tfoot>
+            {% endfor %}
+            </tbody>
         </table>
     </div>
 </div>

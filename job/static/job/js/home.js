@@ -171,7 +171,8 @@ function addMarker(location, url) {
         url: url,
     });
     google.maps.event.addListener(marker, 'click', function() {
-        window.location.href = this.url;
+        alert("Pin was clicked")
+        //window.location.href = this.url;
     });
     markers.push(marker);
 }// end addMarker()

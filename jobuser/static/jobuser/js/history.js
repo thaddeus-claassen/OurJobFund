@@ -42,7 +42,11 @@ function add_rows_to_tables(column, order) {
             'column' : sort.split("-")[0],
             'order' : sort.split("-")[1],
         },
-        success: addRowsToTable,
+        success: function(json) {
+            if (json.length > 0) {
+                addRowsToTable(json);
+            };
+        },
     });
 }// end sort()
 

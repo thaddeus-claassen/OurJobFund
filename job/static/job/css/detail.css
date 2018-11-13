@@ -31,12 +31,8 @@ h4 {
     margin-bottom: 5px;
 }
 
-#location {
-    float: right;
-}
-
 #updates tbody {
-    height: 250px;
+    height: 300px;
 }
 
 #updates td[class=updates-comment] {
