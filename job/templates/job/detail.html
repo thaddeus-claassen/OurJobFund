@@ -9,31 +9,31 @@
 {% block content %}
 <input id="random_string" type="hidden" value="{{ job.random_string }}" />
 <div class="row">
-            <div class="col-md-12">
-                <h3>{{ job.title }}</h3>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <span id="tags">
-                {% if job.tag_set.all.count > 0 %}
-                    Tags:
-                {% for tag in job.tag_set.all %}
-                    <a href="{% url 'home' %}?tag={{ tag.tag }}">{{ tag.tag }}</a>
-                {% endfor %}
-                {% endif %}
-                </span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <span id="location">
-                    {% if job.formatted_location %}
-                    <a href="{% url 'home' %}?location={{ job.formatted_location }}">{{ job.formatted_location }}</a>
-                    {% endif %}
-                </span>
-            </div>
-        </div>
+    <div class="col-md-12">
+        <h3>{{ job.title }}</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <span id="tags">
+            {% if job.tag_set.all.count > 0 %}
+                Tags:
+            {% for tag in job.tag_set.all %}
+                <a href="{% url 'home' %}?tag={{ tag.tag }}">{{ tag.tag }}</a>
+            {% endfor %}
+            {% endif %}
+        </span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <span id="location">
+            {% if job.formatted_location %}
+            <a href="{% url 'home' %}?location={{ job.formatted_location }}">{{ job.formatted_location }}</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-5">
         {% if job.is_finished %}
