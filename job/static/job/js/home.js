@@ -20,6 +20,11 @@ $('document').ready(function() {
             search();
         }// end if
     });
+    $('#radius').keydown(function(event) {
+        if (event.which == ENTER) {
+            search();
+        }// end if
+    });
     $('.table-header').click(function() {
         var cls = $(this).parent().attr('class');
         setSortAndNumSearches(cls.split("-")[1]);
@@ -77,7 +82,7 @@ function get_jobs() {
             'search' : $('#search').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
-            'radius' : 10,
+            'radius' : getRadius(),
             'sort' : sort,
         },
         success: function(json) {
@@ -100,7 +105,7 @@ function get_total_jobs() {
             'search' : $('#search').val(),
             'latitude' : $('#latitude').val(),
             'longitude' : $('#longitude').val(),
-            'radius' : 10,
+            'radius' : getRadius(),
             'sort' : sort,
         },
         success: function(json) {
@@ -172,8 +177,9 @@ function addBounds() {
     var bounds = new google.maps.LatLngBounds();
     for (var i = 0; i < markers.length; i++) {
         bounds.extend(markers[i].position);
-        map.fitBounds(bounds);
     }// end for
+    map.fitBounds(bounds);
+    alert("map.zoom: " + map.zoom)
     if (map.zoom > 15) map.setZoom(15);
 }// end addBounds()
 
@@ -184,8 +190,7 @@ function addMarker(location, url) {
         url: url,
     });
     google.maps.event.addListener(marker, 'click', function() {
-        alert("Pin was clicked")
-        //window.location.href = this.url;
+        window.location.href = this.url;
     });
     markers.push(marker);
 }// end addMarker()
@@ -204,6 +209,19 @@ function deleteMarkers() {
     clearMarkers();
     markers = [];
 }// end deleteMarkers()
+
+function getRadius() {
+    var radius = $('#radius').val();
+    if (radius == '') {
+        radius = 10;
+        $('#radius-error').text('');
+    } else if (isNaN(radius)) {
+        $('#radius-error').text('Please enter a valid number.');
+    } else {
+        $('#radius-error').text('');
+    }// end if-else
+    return radius;
+}// end getRadius()
 
 function turnMoneyToString(number) {
     parts = number.toString().split('.');
