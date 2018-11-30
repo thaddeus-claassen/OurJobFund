@@ -72,7 +72,6 @@ thead, tbody, tfoot, tr, td, th {
 
 th, td {
     word-wrap: break-word;
-    word-break: break-all;
     float: left;
 }
 

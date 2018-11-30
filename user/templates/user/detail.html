@@ -9,17 +9,15 @@
 {% block content %}
 <input id="this_user" type="hidden" value="{{ request.user.get_username }}"/>
 <div class="row">
+    <div class="col-md-12">
+        <h3 id="username">{{ detail_user.get_username }}</h3>
+    </div>
+</div>
+<div class="row">
     <div class="col-md-4">
         <div class="row">
             <div class="col-md-12">
-                <h3 id="username">{{ detail_user.get_username }}</h3>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <h4>
-                    {{ detail_user.get_full_name }}
-                </h4>
+                <h4>{{ detail_user.get_full_name }}</h4>
             </div>
         </div>
         {% if detail_user.profile.location %}

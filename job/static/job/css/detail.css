@@ -29,10 +29,12 @@ h4 {
 
 #updates {
     margin-bottom: 5px;
+    width: 100%;
 }
 
 #updates tbody {
     height: 300px;
+    width: 100%;
 }
 
 #updates td[class=updates-comment] {
@@ -52,11 +54,7 @@ h4 {
     margin-top: 30px;
 }
 
-td[class=updates-username] {
-    width: 50%;
-}
-
-td[class=updates-date]  {
+td[class=updates-username], td[class=updates-date] {
     width: 50%;
 }
 
