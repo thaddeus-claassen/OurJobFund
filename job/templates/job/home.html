@@ -7,12 +7,39 @@
     <script type="text/javascript" src="{% static 'job/js/home.js' %}"></script>
 {% endblock %}
 
-{% block content %}
+{% block home %}
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-2">
         <div class="row margin-row">
             <div class="col-md-12">
-                <input id="search" class="search" type="text" placeholder="Search" value="{{ tag }}" />
+                <input id="location" class="search" type="text" value="{{ location }}" placeholder="postal code" />
+            </div>
+        </div>
+        <!--
+        <div class="row margin-row">
+            <div class="col-md-12">
+                <div id="map"></div>
+            </div>
+        </div>
+        -->
+        <div class="row margin-row">
+            <div class="col-md-12">
+                <input id="radius" type="text" placeholder="radius" />
+                <span id="mi">mi</span>
+            </div>
+        </div>
+        <div class="row margin-row">
+            <div class="col-md-12">
+                <span id="radius-error"></span>
+            </div>
+        </div>
+        <input id="latitude" type="hidden" value="" />
+        <input id="longitude" type="hidden" value="" />
+    </div>
+    <div class="col-md-10">
+        <div class="row margin-row">
+            <div class="col-md-12">
+                <input id="search" class="search" type="text" placeholder="search jobs" value="{{ tag }}" />
             </div>
         </div>
         <div class="row">
@@ -24,37 +51,14 @@
                             <th class="job-created"><span class="table-header">Created</span></th>
                             <th class="job-pledging"><span class="table-header">Pledging</span></th>
                             <th class="job-paid"><span class="table-header">Paid</span></th>
+                            <th class="job-working"><span class="table-header">Working</span></th>
+                            <th class="job-finished"><span class="table-header">Finished</span></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
             </div>
         </div>
-    </div>
-    <div class="col-md-4">
-        <div class="row margin-row">
-            <div class="col-md-12">
-                <input id="location" class="search" type="text" value="{{ location }}" placeholder="Location" />
-            </div>
-        </div>
-        <div class="row margin-row">
-            <div class="col-md-12">
-                <div id="map"></div>
-            </div>
-        </div>
-        <div class="row margin-row">
-            <div class="col-md-12">
-                <input id="radius" type="text" placeholder="Radius" />
-                <span id="mi">mi</span>
-            </div>
-        </div>
-        <div class="row margin-row">
-            <div class="col-md-12">
-                <span id="radius-error"></span>
-            </div>
-        </div>
-        <input id="latitude" type="hidden" value="" />
-        <input id="longitude" type="hidden" value="" />
     </div>
 </div>
 {% endblock %}

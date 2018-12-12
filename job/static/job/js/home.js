@@ -43,10 +43,12 @@ $('document').ready(function() {
 function fixHeader() {
     var oldTableWidth = $('thead').width();
     var newTableWidth = oldTableWidth - 17;
-    $('thead').find('.job-title').width(0.35 * newTableWidth - 16)
-    $('thead').find('.job-created').width(0.35 * newTableWidth - 16)
-    $('thead').find('.job-pledging').width(0.15 * newTableWidth - 16)
-    $('thead').find('.job-paid').width(0.15 * newTableWidth + 1)
+    $('thead').find('.job-title').width(0.35 * newTableWidth - 16);
+    $('thead').find('.job-created').width(0.25 * newTableWidth - 16);
+    $('thead').find('.job-pledging').width(0.10 * newTableWidth - 16);
+    $('thead').find('.job-paid').width(0.10 * newTableWidth - 16);
+    $('thead').find('.job-working').width(0.10 * newTableWidth - 16)
+    $('thead').find('.job-finished').width(0.10 * newTableWidth + 1)
 }
 
 function setSortAndNumSearches(col) {
@@ -122,6 +124,8 @@ function addJobsToTable(json) {
         string = string + "<td class='job-created'></td>";
         string = string + "<td class='job-pledging'></td>";
         string = string + "<td class='job-paid'></td>"
+        string = string + "<td class='job-working'></td>";
+        string = string + "<td class='job-finished'></td>"
         string = string + "</tr>";
         $('tbody').append(string);
     } else {
@@ -132,6 +136,8 @@ function addJobsToTable(json) {
             string = string + "<td class='job-created'>" + job['date'] + "</td>";
             string = string + "<td class='job-pledging'>$" + turnMoneyToString(job['pledging']) + "</td>";
             string = string + "<td class='job-paid'>$" + turnMoneyToString(job['paid']) + "</td>"
+            string = string + "<td class='job-working'>" + job['working'] + "</td>";
+            string = string + "<td class='job-finished'>" + job['finished'] + "</td>"
             string = string + "</tr>";
             $('tbody').append(string);
             $('#' + job["random_string"]).text(job["title"]);
@@ -151,7 +157,7 @@ function applyLocation() {
             center = results[0].geometry.location;
             $('#latitude').val(center.lat());
             $('#longitude').val(center.lng());
-            map.setCenter(center)
+            //map.setCenter(center)
             get_jobs();
             get_total_jobs();
         } else {
@@ -162,6 +168,7 @@ function applyLocation() {
 }// end applyLocation()
 
 function initMap() {
+    /*
     map = new google.maps.Map(document.getElementById('map'));
     var bounds = new google.maps.LatLngBounds();
     bounds.extend({lat: 25.7617, lng: -80.1918});
@@ -169,6 +176,7 @@ function initMap() {
     bounds.extend({lat: 21.9, lng: -160.2});
     bounds.extend({lat: 71.3, lng: -156.8});
     map.fitBounds(bounds);
+    */
     search();
 }// end initMap()
 
@@ -179,7 +187,6 @@ function addBounds() {
         bounds.extend(markers[i].position);
     }// end for
     map.fitBounds(bounds);
-    alert("map.zoom: " + map.zoom)
     if (map.zoom > 15) map.setZoom(15);
 }// end addBounds()
 

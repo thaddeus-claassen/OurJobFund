@@ -23,12 +23,12 @@ tbody {
 }
 
 .job-created {
-    width: 35%;
+    width: 25%;
     float: left;
 }
 
-.job-pledging, .job-paid {
-    width: 15%;
+.job-pledging, .job-paid, .job-working, .job-finished  {
+    width: 10%;
     float: left;
 }
 

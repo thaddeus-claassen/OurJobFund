@@ -38,47 +38,64 @@ def home(request):
     
 def get_jobs(request):
     if (request.is_ajax()):
-        jobs = findJobs(request.GET['search'], request.GET['sort'], request.GET['latitude'], request.GET['longitude'], request.GET['radius']);
-        if (jobs == "Invalid Search"):
-            return HttpResponse(jobs, content_type="application/json");
-        else:
-            numSearches =  int(request.GET['numSearches']);
-            jobs = jobs[50 * (numSearches - 1):50 * numSearches];
-            serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
-            json = JSONRenderer().render(serializer.data);
-            return HttpResponse(json, content_type="application/json");
+        jobs = Job.objects.filter(Q(is_finished=False) and Q(public=True));
+        jobs = findJobsBySearch(jobs, request.GET['search']);
+        jobs = findJobsByLocation(jobs, request.GET['latitude'], request.GET['longitude'], request.GET['radius']);
+        jobs = sortJobs(jobs, request.GET['sort']);
+        jobs = cutJobs(jobs, request.GET['numSearches'])
+        serializer = JobSerializer(jobs, many=True, context={'user' : request.user});
+        json = JSONRenderer().render(serializer.data);
+        return HttpResponse(json, content_type="application/json");
     else:
         return Http404();
         
 def get_total_jobs(request):
     if (request.is_ajax()):
         total = {};
-        jobs = findJobs(request.GET['search'], request.GET['sort'], request.GET['latitude'], request.GET['longitude'], request.GET['radius']);
-        if (jobs == "Invalid Search"):
-            total = "";
-        else:
-            total['total'] = len(jobs);
+        jobs = Job.objects.filter(Q(is_finished=False) and Q(public=True));
+        jobs = findJobsBySearch(jobs, request.GET['search']);
+        jobs = findJobsByLocation(jobs, request.GET['latitude'], request.GET['longitude'], request.GET['radius']);
+        total['total'] = len(jobs);
         return HttpResponse(json.dumps(total), content_type="application/json");
     else:
         return Http404();
-        
-def findJobs(search, sort, latitude_in_degrees_as_string, longitude_in_degrees_as_string, radius_in_miles_as_string):
-    if (search == ""):
-        jobs = Job.objects.filter(public=True);
-    else:
+
+def findJobsBySearch(jobs, search):
+    if (not search == ""):
         if (re.match(r'^[A-Za-z0-9\s_]+$', search)):
-            jobs = Job.objects.filter(public=True);
             for word in search.split(" "):
                 jobs = jobs.filter(Q(title__icontains=word) | Q(tag__tag__icontains=word));
         else:
             if (re.match(r'^[A-Za-z0-9\s_&\|\(\)~]+$', search)):
                 jobs = get_jobs_from_custom_search(search);
             else:
-                return "Invalid Search";
-    jobs = jobs.filter(Q(is_finished=False) and Q(public=True)).distinct();
-    sort_array = sort.split("-");
+                jobs = Job.objects.none();
+    return jobs;
+    
+def get_jobs_from_custom_search(tags):
+    return eval(re.sub(r'([a-zA-Z0-9_]+)', "Job.objects.filter(public=True, tag__tag__iexact='" + r'\1' + "')", tags));
+
+def findJobsByLocation(jobs, latitude_in_degrees_as_string, longitude_in_degrees_as_string, radius_in_miles_as_string):
     if (latitude_in_degrees_as_string != "" and longitude_in_degrees_as_string != "" and radius_in_miles_as_string != ""):
-        jobs = findJobsByRadius(jobs, float(latitude_in_degrees_as_string), float(longitude_in_degrees_as_string), float(radius_in_miles_as_string));
+        latitude_in_degrees = float(latitude_in_degrees_as_string);
+        longitude_in_degrees = float(longitude_in_degrees_as_string);
+        radius_in_miles = float(radius_in_miles_as_string);
+        radius_in_degrees = radius_in_miles / 69;
+        latitude_in_radians = latitude_in_degrees * math.pi / 180;
+        longitude_in_radians = longitude_in_degrees * math.pi / 180;
+        radius_in_radians = radius_in_degrees * math.pi / 180;
+        jobs = jobs.filter(latitude__range=(latitude_in_degrees - radius_in_degrees, latitude_in_degrees + radius_in_degrees));
+        for job in jobs:
+            lat = job.latitude * math.pi / 180;
+            lon = job.longitude * math.pi / 180;
+            RADIUS_OF_EARTH_IN_MILES = 3959;
+            distance = RADIUS_OF_EARTH_IN_MILES * math.acos(math.sin(latitude_in_radians) * math.sin(lat) + math.cos(latitude_in_radians) * math.cos(lat) * math.cos(math.fabs(longitude_in_radians - lon))); #This is called the Spherical Law of Cosines and it is used to calculate distances on a sphere. (Note: Earth is not a sphere, thus this will have a margin of error, but it is small. Quicker computation speed compensates)
+            if (distance > radius_in_miles):
+                jobs = jobs.exclude(id=job.id);
+    return jobs;
+    
+def sortJobs(jobs, sort):
+    sort_array = sort.split("-");
     if (sort_array[0] == 'created'):
         jobs = jobs.order_by('date');
     elif (sort_array[0] == 'pledging'):
@@ -91,24 +108,11 @@ def findJobs(search, sort, latitude_in_degrees_as_string, longitude_in_degrees_a
         jobs = jobs[::-1];
     return jobs;
     
-def get_jobs_from_custom_search(tags):
-        return eval(re.sub(r'([a-zA-Z0-9_]+)', "Job.objects.filter(public=True, tag__tag__iexact='" + r'\1' + "')", tags));
-    
-def findJobsByRadius(jobs, latitude_in_degrees, longitude_in_degrees, radius_in_miles):
-    radius_in_degrees = radius_in_miles / 69;
-    latitude_in_radians = latitude_in_degrees * math.pi / 180;
-    longitude_in_radians = longitude_in_degrees * math.pi / 180;
-    radius_in_radians = radius_in_degrees * math.pi / 180;
-    jobs = jobs.filter(latitude__range=(latitude_in_degrees - radius_in_degrees, latitude_in_degrees + radius_in_degrees));
-    for job in jobs:
-        lat = job.latitude * math.pi / 180;
-        lon = job.longitude * math.pi / 180;
-        RADIUS_OF_EARTH_IN_MILES = 3959;
-        distance = RADIUS_OF_EARTH_IN_MILES * math.acos(math.sin(latitude_in_radians) * math.sin(lat) + math.cos(latitude_in_radians) * math.cos(lat) * math.cos(math.fabs(longitude_in_radians - lon))); #This is called the Spherical Law of Cosines and it is used to calculate distances on a sphere. (Note: Earth is not a sphere, thus this will have a margin of error, but it is small. Quicker computation speed compensates)
-        if (distance > radius_in_miles):
-            jobs = jobs.exclude(id=job.id);
+def cutJobs(jobs, numSearches_as_string):
+    numSearches =  int(numSearches_as_string);
+    jobs = jobs[50 * (numSearches - 1):50 * numSearches];
     return jobs;
-        
+    
 class DetailView(TemplateView):
     template_name = 'job/detail.html';
     

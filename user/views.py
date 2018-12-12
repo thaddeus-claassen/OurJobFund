@@ -149,7 +149,7 @@ class EditProfileView(TemplateView):
         else:
             return redirect('user:edit_profile', username=request.user.username);
 
-    @method_decorator(login_required)      
+    @method_decorator(login_required)
     def post(self, request ,*args, **kwargs):
         name_form = self.name_form(request.POST);
         profile_form = self.profile_form(request.POST);
