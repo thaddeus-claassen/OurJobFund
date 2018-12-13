@@ -10,36 +10,40 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-md-12">
-        <h4 class="title">Create Job</h4>
-    </div>
-</div>
-<form id="create-job-form" method="POST" action="{{ request.get_full_path }}" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.formatted_location }}
-    {{ form.latitude }}{{ form.latitude.errors }}
-    {{ form.longitude }}{{ form.longitude.errors }}
-{% for field in form %}
-    {% if field.auto_id != "id_longitude" and field.auto_id != "id_latitude" and field.auto_id != "id_formatted_location" %}
-    <div class="row">
-        <div class="col-md-2">
-            {{ field.label }}
+    <div class="col-md-10 col-md-offset-1">
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="title">Create Job</h4>
+            </div>
         </div>
-        <div class="col-md-10">
-            {{ field }}{{ field.errors }}
-        </div>
-    </div>
-    {% endif %}
-{% endfor %}
-</form>
-<div class="row">
-    <div class="col-md-2 col-md-offset-2">
-        <input form="create-job-form" type="submit" value="Submit" name="create-job" />
-    </div>
-    <div class="col-md-2">
-        <form action="{% url 'user:detail' request.user.username %}">
-            <input type="submit" value="Cancel" />
+        <form id="create-job-form" method="POST" action="{{ request.get_full_path }}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.formatted_location }}
+            {{ form.latitude }}{{ form.latitude.errors }}
+            {{ form.longitude }}{{ form.longitude.errors }}
+        {% for field in form %}
+            {% if field.auto_id != "id_longitude" and field.auto_id != "id_latitude" and field.auto_id != "id_formatted_location" %}
+            <div class="row">
+                <div class="col-md-2">
+                    {{ field.label }}
+                </div>
+                <div class="col-md-10">
+                    {{ field }}{{ field.errors }}
+            </div>
+            </div>
+            {% endif %}
+        {% endfor %}
         </form>
+        <div class="row">
+            <div class="col-md-2 col-md-offset-2">
+                <input form="create-job-form" type="submit" value="Submit" name="create-job" />
+            </div>
+            <div class="col-md-2">
+                <form action="{% url 'user:detail' request.user.username %}">
+                    <input type="submit" value="Cancel" />
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
