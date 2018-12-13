@@ -7,54 +7,52 @@
 {% endblock %}
 
 {% block content %}
-<input id="this_user" type="hidden" value="{{ request.user.get_username }}"/>
 <div class="row">
-    <div class="col-md-12">
-        <h3 id="username">{{ detail_user.get_username }}</h3>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
+    <div class="col-md-10 col-md-offset-1">
+        <input id="this_user" type="hidden" value="{{ request.user.get_username }}"/>
         <div class="row">
             <div class="col-md-12">
-                <h4>{{ detail_user.get_full_name }}</h4>
+                <h3 id="username">{{ detail_user.get_username }}</h3>
             </div>
         </div>
-        {% if detail_user.profile.location %}
         <div class="row">
-            <div class="col-md-12">
-                <h4>
-                    {{ detail_user.profile.location }}
-                </h4>
-            </div>
-        </div>
-        {% endif %}
-        {% if detail_user.profile.contact %}
-        <div class="row">
-            <div class="col-md-12">
-                <h4>
-                    {{ detail_user.profile.contact }}
-                </h4>
-            </div>
-        </div>
-        {% endif %}
-        <div id="description" class="row">
-            <div class="col-md-12">
-                <span>
-                    {% if request.user.profile.description %}
-                    {{ request.user.profile.description|linebreaks }}
-                    {% else %}
-                    <span id="no-description">Description</span>
-                    {% endif %}
-                </span>
-            </div>
-        </div>
-        {% if request.user.get_username == detail_user.get_username %}
-        <div class="row">
-            <div class="col-md-12">
-                <a href="{% url 'user:edit_profile' request.user.username %}">Edit Profile</a> 
-            </div>
-        </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>{{ detail_user.get_full_name }}</h4>
+                    </div>
+                </div>
+                {% if detail_user.profile.location %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>{{ detail_user.profile.location }}</h4>
+                    </div>
+                </div>
+                {% endif %}
+                {% if detail_user.profile.contact %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>{{ detail_user.profile.contact }}</h4>
+                    </div>
+                </div>
+                {% endif %}
+                <div id="description" class="row">
+                    <div class="col-md-12">
+                        <span>
+                            {% if request.user.profile.description %}
+                            {{ request.user.profile.description|linebreaks }}
+                            {% else %}
+                            <span id="no-description">Description</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                {% if request.user.get_username == detail_user.get_username %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="{% url 'user:edit_profile' request.user.username %}">Edit Profile</a> 
+                    </div>
+                </div>
         <!--
         <div class="row">
             <div class="col-md-12">
@@ -73,69 +71,71 @@
             </div>
         </div>
         -->
-        {% endif %}
-    </div>
-    <div class="col-md-8">
-        <div class="row">
-            <div class="col-md-12">
-                <table id="current" class="table">
-                    <thead>
-                        <tr>
-                            <th class="current-title"><span class="table-header">Current Jobs</span><span class="total">{{ current.count }}</span></th>
-                            <th class="current-pledging"><span class="table-header">Pledging</span></th>
-                            <th class="current-paid"><span class="table-header">Paid</span></th>
-                            <th class="current-received"><span class="table-header">Received</span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for j in current %}
-                        <tr>
-                            <td class="current-title"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.title }}</a></td>
-                            <td class="current-pledging">${{ j.pledging|floatformat:2 }}</td>
-                            <td class="current-paid">${{ j.paid|floatformat:2 }}</td>
-                            <td class="current-work_status">${{ j.received|floatformat:2 }}</td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td class="current-title">No current jobs.</td>
-                            <td class="current-pledging"></td>
-                            <td class="current-paid"></td>
-                            <td class="current-work_status"></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                {% endif %}
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <table id="completed" class="table">
-                    <thead>
-                        <tr>
-                            <th class="completed-title"><span class="table-header">Completed Jobs</span><span class="total">{{ completed.count }}</span></th>
-                            <th class="completed-pledging"><span class="table-header">Pledging</span></th>
-                            <th class="completed-paid"><span class="table-header">Paid</span></th>
-                            <th class="completed-received"><span class="table-header">Received</span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for j in completed %}
-                        <tr>
-                            <td class="completed-title"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.title }}</a></td>
-                            <td class="completed-pledging">${{ j.pledging|floatformat:2 }}</td>
-                            <td class="completed-paid">${{ j.paid|floatformat:2 }}</td>
-                            <td class="completed-received">${{ j.received|floatformat:2 }}</td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td class="completed-title">No completed jobs.</td>
-                            <td class="completed-pledging"></td>
-                            <td class="completed-paid"></td>
-                            <td class="completed-received"></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="current" class="table">
+                            <thead>
+                                <tr>
+                                    <th class="current-title"><span class="table-header">Current Jobs</span><span class="total">{{ current.count }}</span></th>
+                                    <th class="current-pledging"><span class="table-header">Pledging</span></th>
+                                    <th class="current-paid"><span class="table-header">Paid</span></th>
+                                    <th class="current-received"><span class="table-header">Received</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for j in current %}
+                                <tr>
+                                    <td class="current-title"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.title }}</a></td>
+                                    <td class="current-pledging">${{ j.pledging|floatformat:2 }}</td>
+                                    <td class="current-paid">${{ j.paid|floatformat:2 }}</td>
+                                    <td class="current-work_status">${{ j.received|floatformat:2 }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td class="current-title">No current jobs.</td>
+                                    <td class="current-pledging"></td>
+                                    <td class="current-paid"></td>
+                                    <td class="current-work_status"></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="completed" class="table">
+                            <thead>
+                                <tr>
+                                    <th class="completed-title"><span class="table-header">Completed Jobs</span><span class="total">{{ completed.count }}</span></th>
+                                    <th class="completed-pledging"><span class="table-header">Pledging</span></th>
+                                    <th class="completed-paid"><span class="table-header">Paid</span></th>
+                                    <th class="completed-received"><span class="table-header">Received</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for j in completed %}
+                                <tr>
+                                    <td class="completed-title"><a href="{% url 'job:detail' j.job.random_string %}">{{ j.job.title }}</a></td>
+                                    <td class="completed-pledging">${{ j.pledging|floatformat:2 }}</td>
+                                    <td class="completed-paid">${{ j.paid|floatformat:2 }}</td>
+                                    <td class="completed-received">${{ j.received|floatformat:2 }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td class="completed-title">No completed jobs.</td>
+                                    <td class="completed-pledging"></td>
+                                    <td class="completed-paid"></td>
+                                    <td class="completed-received"></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
