@@ -9,266 +9,270 @@
 {% block content %}
 <input id="random_string" type="hidden" value="{{ job.random_string }}" />
 <div class="row">
-    <div class="col-md-12">
-        <h3>{{ job.title }}</h3>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <span id="tags">
-            {% if job.tag_set.all.count > 0 %}
-                Tags:
-            {% for tag in job.tag_set.all %}
-                <a href="{% url 'home' %}?tag={{ tag.tag }}">{{ tag.tag }}</a>
-            {% endfor %}
-            {% endif %}
-        </span>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <span id="location">
-            {% if job.formatted_location %}
-            <a href="{% url 'home' %}?location={{ job.formatted_location }}">{{ job.formatted_location }}</a>
-            {% endif %}
-        </span>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-5">
-        {% if job.is_finished %}
-        <span id="is_finished">Completed</span>
-        {% endif %}
-    </div>
-    <div class="col-md-3">
-        {% if not job.public %}
-        <span id="private">Private</span>
-        {% endif %}
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
+    <div class="col-md-10 col-md-offset-1">
         <div class="row">
             <div class="col-md-12">
-                <table id="updates" class="table">
-                    <thead>
-                        <tr>
-                            <th class="updates-username"><span class="table-header">Updates</span><span class="total">{{ updates.count }}</span></th>
-                            <th class="updates-date"><span class="table-header">Date</span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for u in updates %}
-                        <tr>
-                            <td class="updates-username">
-                                {% if u.jobuser.user.is_active %}
-                                <a href="{% url 'user:detail' u.jobuser.user.get_username %}">
-                                    {{ u.jobuser.user.get_username }}
-                                </a>
-                                {% else %}
-                                [ Deleted User ]
-                                {% endif %}
-                            </td>
-                            <td class="updates-date">
-                                <span class="updates-date">{{ u.date|date:"m/d/Y" }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="updates-comment" colspan="3">
-                                {{ u.comment }}
-                                <br />
-                                <span class="images">
-                                {% if u.image_set.all.exists %}
-                                    <a href="{% url 'update:images' u.random_string %}">Images</a>
-                                {% endif %}
-                                </span>
-                            </td>
-                        </tr>
+                <h3>{{ job.title }}</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <span id="tags">
+                    {% if job.tag_set.all.count > 0 %}
+                        Tags:
+                    {% for tag in job.tag_set.all %}
+                        <a href="{% url 'home' %}?tag={{ tag.tag }}">{{ tag.tag }}</a>
                     {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        {% if not job.is_finished and request.user.is_authenticated %}
-        {% if jobuser.banned %}
-        <div class="row">
-            <div class="col-md-12">
-                <span id="banned">You have been banned from this job.</span>
-            </div>
-        </div>
-        {% else %}
-        {% if jobuser %}
-        <div class="row">
-            <div class="col-md-12">
-                <form action="{% url 'update:create' job.random_string %}">
-                    <input class="job-input" type="submit" value="Update" />
-                </form>
-            </div>
-        </div>
-        {% endif %} 
-        {% if jobuser.work_set.all.exists %}
-        {% if not jobuser.finish_set.all.exists %}
-        <div class="row">
-            <div class="col-md-12">
-                <form action="{% url 'finish' job.random_string %}">
-                    <input class="job-input" type="submit" value="Finish" />
-                </form>
-            </div>
-        </div>
-        {% endif %}
-        {% else %}
-        <div class="row">
-            <div class="col-md-12">
-                <form action="{% url 'work' job.random_string %}">
-                    <input class="job-input" type="submit" value="Work" />
-                </form>
-            </div>
-        </div>
-        {% endif %}
-        {% if jobuser.pledge_set.all.exists %}
-        {% if working %}
-        <div class="row">
-            <div class="col-md-12">
-                <form action="{% url 'job:misc-pay' job.random_string %}">
-                    <input class="job-input" type="submit" value="Pay" />
-                </form>
-            </div>
-        </div>
-        {% endif %}
-        {% else %}
-        <div class="row">
-            <div class="col-md-12">
-                <form action="{% url 'pledge' job.random_string %}">
-                    <input class="job-input" type="submit" value="Pledge" />
-                </form>
-            </div>
-        </div>
-        {% endif %}
-        {% if jobuser.moderator_set.exists %}
-        <div class="row">
-            <div class="col-md-12">
-                <form action="{% url 'job:moderate' job.random_string %}">
-                    <input class="job-input" type="submit" value="Moderate" />
-                </form>
-            </div>
-        </div>
-        {% endif %}
-        {% endif %}
-        {% endif %}
-    </div>
-    <div class="col-md-8">
-        <div class="row">
-            <div class="col-md-12">
-                <table id="pledging" class="table">
-                    <thead>
-                        <tr>
-                            <th class="pledging-username"><span class="table-header">Pledging</span><span class="total">
-                                {% if pledging.count %}{{ pledging.count }}{% else %}0{% endif %}
-                            </span></th>
-                            <th class="pledging-date"><span class="table-header">Date</span></th>
-                            <th class="pledging-pledging"><span class="table-header">Pledge</span></th>
-                            <th class="pledging-paid"><span class="table-header">Paid</span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for j in pledging %}
-                        <tr>
-                            <td class="pledging-username">
-                                {% if j.user.is_active %}
-                                <a href="{% url 'user:detail' j.user.get_username %}">{{ j.user.get_username }}</a>
-                                {% else %}
-                                [ Deleted User ]
-                                {% endif %}
-                            </td>
-                            <td class="pledging-date">
-                                {% with pledge=j.pledge_set.all|dictsort:"date"|first %}
-                                {{ pledge.date|date:"m/d/Y" }}
-                                {% endwith %}
-                            </td>
-                            <td class="pledging-pledging">${{ j.pledging|floatformat:2 }}</td>
-                            <td class="pledging-paid">
-                                ${{ j.misc_paid|floatformat:2 }}
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td class="pledging-username">No Pledges.</td>
-                            <td class="pledging-date"></td>
-                            <td class="pledging-pledging"></td>
-                            <td class="pledging-paid"></td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <span class="history">
-                    <a href="{% url 'pledge-history' job.random_string %}">
-                        History
-                    </a>
+                    {% endif %}
                 </span>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <table id="working" class="table">
-                    <thead>
-                        <tr>
-                            <th class="working-username"><span class="table-header">Working</span><span class="total">{{ job.working }}</span></th>
-                            <th class="working-started"><span class="table-header">Started</span></th>
-                            <th class="working-finished"><span class="table-header">Finished</span></th>
-                            <th class="working-received"><span class="table-header">Received</span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for w in working %}
-                        <tr>
-                            <td class="working-username">
-                                {% if w.user.is_active %}
-                                <a href="{% url 'user:detail' w.user.get_username %}">
-                                    {{ w.user.get_username }}
-                                </a>
-                                {% else %}
-                                <span>[ Deleted User ]</span>
-                                {% endif %}
-                            </td>
-                            <td class="working-started">
-                                {% with work=w.work_set.all|dictsort:"date"|first %}
-                                {{ work.date|date:"m/d/Y" }}
-                                {% endwith %}
-                            </td>
-                            <td class="working-finished">
-                                {% with finish=w.finish_set.all|dictsort:"date"|first %}
-                                {% if finish %}
-                                    {{ finish.date|date:"m/d/Y" }}
-                                {% else %}
-                                    N/A
-                                {% endif %}
-                                {% endwith %}
-                            </td>
-                            <td class="working-received">${{ w.misc_paid|floatformat:2 }}</td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td class="working-username">No Workers.</td>
-                            <td class="working-started"></td>
-                            <td class="working-finished"></td>
-                            <td class="working-received"></td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                <span id="location">
+                    {% if job.formatted_location %}
+                    <a href="{% url 'home' %}?location={{ job.formatted_location }}">{{ job.formatted_location }}</a>
+                    {% endif %}
+                </span>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
-                <span class="history">
-                    <a href="{% url 'work-history' job.random_string %}">
-                        History
-                    </a>
-                </span>
+            <div class="col-md-5">
+                {% if job.is_finished %}
+                <span id="is_finished">Completed</span>
+                {% endif %}
+            </div>
+            <div class="col-md-3">
+                {% if not job.public %}
+                <span id="private">Private</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="updates" class="table">
+                            <thead>
+                                <tr>
+                                    <th class="updates-username"><span class="table-header">Updates</span><span class="total">{{ updates.count }}</span></th>
+                                    <th class="updates-date"><span class="table-header">Date</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for u in updates %}
+                                <tr>
+                                    <td class="updates-username">
+                                        {% if u.jobuser.user.is_active %}
+                                        <a href="{% url 'user:detail' u.jobuser.user.get_username %}">
+                                            {{ u.jobuser.user.get_username }}
+                                        </a>
+                                        {% else %}
+                                        [ Deleted User ]
+                                        {% endif %}
+                                    </td>
+                                    <td class="updates-date">
+                                        <span class="updates-date">{{ u.date|date:"m/d/Y" }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="updates-comment" colspan="3">
+                                        {{ u.comment }}
+                                        <br />
+                                        <span class="images">
+                                        {% if u.image_set.all.exists %}
+                                            <a href="{% url 'update:images' u.random_string %}">Images</a>
+                                        {% endif %}
+                                        </span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% if not job.is_finished and request.user.is_authenticated %}
+                {% if jobuser.banned %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <span id="banned">You have been banned from this job.</span>
+                    </div>
+                </div>
+                {% else %}
+                {% if jobuser %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="{% url 'update:create' job.random_string %}">
+                            <input class="job-input" type="submit" value="Update" />
+                        </form>
+                    </div>
+                </div>
+                {% endif %} 
+                {% if jobuser.work_set.all.exists %}
+                {% if not jobuser.finish_set.all.exists %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="{% url 'finish' job.random_string %}">
+                            <input class="job-input" type="submit" value="Finish Working" />
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+                {% else %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="{% url 'work' job.random_string %}">
+                            <input class="job-input" type="submit" value="Work on Job" />
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+                {% if jobuser.pledge_set.all.exists %}
+                {% if working %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="{% url 'job:misc-pay' job.random_string %}">
+                            <input class="job-input" type="submit" value="Pay Money" />
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+                {% else %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="{% url 'pledge' job.random_string %}">
+                            <input class="job-input" type="submit" value="Pledge Money" />
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+                {% if jobuser.moderator_set.exists %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="{% url 'job:moderate' job.random_string %}">
+                            <input class="job-input" type="submit" value="Moderate" />
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+                {% endif %}
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="pledging" class="table">
+                            <thead>
+                                <tr>
+                                    <th class="pledging-username"><span class="table-header">Pledging</span><span class="total">
+                                        {% if pledging.count %}{{ pledging.count }}{% else %}0{% endif %}
+                                    </span></th>
+                                    <th class="pledging-date"><span class="table-header">Date</span></th>
+                                    <th class="pledging-pledging"><span class="table-header">Pledge</span></th>
+                                <th class="pledging-paid"><span class="table-header">Paid</span></th>
+                                </tr>   
+                            </thead>
+                            <tbody>
+                            {% for j in pledging %}
+                                <tr>
+                                    <td class="pledging-username">
+                                        {% if j.user.is_active %}
+                                        <a href="{% url 'user:detail' j.user.get_username %}">{{ j.user.get_username }}</a>
+                                        {% else %}
+                                        [ Deleted User ]
+                                        {% endif %}
+                                    </td>
+                                    <td class="pledging-date">
+                                        {% with pledge=j.pledge_set.all|dictsort:"date"|first %}
+                                        {{ pledge.date|date:"m/d/Y" }}
+                                        {% endwith %}
+                                    </td>
+                                    <td class="pledging-pledging">${{ j.pledging|floatformat:2 }}</td>
+                                    <td class="pledging-paid">
+                                        ${{ j.misc_paid|floatformat:2 }}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td class="pledging-username">No Pledges.</td>
+                                    <td class="pledging-date"></td>
+                                    <td class="pledging-pledging"></td>
+                                    <td class="pledging-paid"></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="history">
+                            <a href="{% url 'pledge-history' job.random_string %}">
+                                History
+                            </a>
+                        </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="working" class="table">
+                            <thead>
+                                <tr>
+                                    <th class="working-username"><span class="table-header">Working</span><span class="total">{{ job.working }}</span></th>
+                                    <th class="working-started"><span class="table-header">Started</span></th>
+                                    <th class="working-finished"><span class="table-header">Finished</span></th>
+                                    <th class="working-received"><span class="table-header">Received</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for w in working %}
+                                <tr>
+                                    <td class="working-username">
+                                        {% if w.user.is_active %}
+                                        <a href="{% url 'user:detail' w.user.get_username %}">
+                                            {{ w.user.get_username }}
+                                        </a>
+                                        {% else %}
+                                        <span>[ Deleted User ]</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="working-started">
+                                        {% with work=w.work_set.all|dictsort:"date"|first %}
+                                        {{ work.date|date:"m/d/Y" }}
+                                        {% endwith %}
+                                    </td>
+                                    <td class="working-finished">
+                                        {% with finish=w.finish_set.all|dictsort:"date"|first %}
+                                        {% if finish %}
+                                            {{ finish.date|date:"m/d/Y" }}
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                        {% endwith %}
+                                    </td>
+                                    <td class="working-received">${{ w.misc_paid|floatformat:2 }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td class="working-username">No Workers.</td>
+                                    <td class="working-started"></td>
+                                    <td class="working-finished"></td>
+                                    <td class="working-received"></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="history">
+                            <a href="{% url 'work-history' job.random_string %}">
+                                History
+                            </a>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

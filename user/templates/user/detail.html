@@ -52,9 +52,7 @@
         {% if request.user.get_username == detail_user.get_username %}
         <div class="row">
             <div class="col-md-12">
-                <form action="{% url 'user:edit_profile' request.user.username %}">
-                    <input id="edit_profile" type="submit" value="Edit Profile" />
-                </form>
+                <a href="{% url 'user:edit_profile' request.user.username %}">Edit Profile</a> 
             </div>
         </div>
         <!--
