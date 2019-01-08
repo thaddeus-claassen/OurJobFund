@@ -5,7 +5,7 @@ from django.conf import settings;
 from django.views.generic import TemplateView;
 from django.conf.urls.static import static;
 from django.contrib.auth import views as auth_views;
-from user.views import search_user;
+from user.views import search_user, LoginView, sign_out;
 from job.views import home;
 from user.views import stripe;
 from jobuser.views import PledgeView, WorkView, FinishView, PledgeHistoryView, WorkHistoryView, sort_pledge_history, sort_work_history;
@@ -22,6 +22,8 @@ urlpatterns = [
     url(r'' + URLS['search-user'] + '/$', search_user),
     url(r'^' + URLS['admin'] + '/', admin.site.urls),
     url(r'^' + URLS['job'] + '/', include('job.urls')),
+    url(r'^' + URLS['login'] + '/$', LoginView.as_view(), name='login'),
+    url(r'^' + URLS['logout'] + '/$', sign_out, name='logout'),
     url(r'^$', home, name='home'),
     url(r'^' + URLS['update'] + '/', include('update.urls')),
     url(r'^' + URLS['pledge'] + '/' + URLS['job_random_string_regex'] + '/$', PledgeView.as_view(), name='pledge'),
