@@ -149,7 +149,11 @@ class EditProfileView(TemplateView):
     def get(self, request, *args, **kwargs):
         if (request.user.username == kwargs['username']):
             name_form = self.name_form(initial={'first_name' : request.user.first_name, 'last_name' : request.user.last_name});
-            profile_form = self.profile_form(initial={'location': request.user.profile.location, 'description': request.user.profile.description});
+            profile_form = self.profile_form(initial={
+                'location': request.user.profile.location, 
+                'links': request.user.profile.links,
+                'description': request.user.profile.description,
+            });
             return render(request, self.template_name, self.get_context_data(name_form=name_form, profile_form=profile_form));
         else:
             return redirect('user:edit_profile', username=request.user.username);
@@ -164,6 +168,7 @@ class EditProfileView(TemplateView):
             request.user.save();
             request.user.profile.location = profile_form.cleaned_data['location'];
             request.user.profile.contact = profile_form.cleaned_data['contact'];
+            request.user.profile.links = profile_form.cleaned_data['links'];
             request.user.profile.description = profile_form.cleaned_data['description'];
             request.user.profile.save();
             return redirect('user:detail', username=request.user.username);

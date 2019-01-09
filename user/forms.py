@@ -91,13 +91,14 @@ class SignUpForm(forms.ModelForm):
 class ChangeProfileForm(forms.ModelForm):
     location = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '(City, State, etc.)'}), required=False);
     contact = forms.CharField(required=False);
+    links = forms.CharField(required=False);
     description = forms.CharField(widget=forms.Textarea, required=False);
     #This is honey pot
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
     
     class Meta:
         model = Profile;
-        fields = ['location', 'contact', 'description'];
+        fields = ['location', 'contact', 'links', 'description'];
     
     def clean_username(self):
         if (not self.cleaned_data.get('username') == ""):

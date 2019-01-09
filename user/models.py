@@ -12,6 +12,7 @@ class Profile(models.Model):
     type_of_account = models.CharField(default="personal", max_length=10);
     description = models.CharField(default='', max_length=10000, blank=True);
     location = models.CharField(default='', max_length=100, blank=True);
+    links = models.CharField(default='', max_length=1000, blank=True);
     contact = models.CharField(default='', max_length=100, blank=True);
     occupation = models.CharField(default='', max_length=100, blank=True);
     education = models.CharField(default='', max_length=100, blank=True);
