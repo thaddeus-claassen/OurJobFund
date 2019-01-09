@@ -41,10 +41,7 @@ class LoginView(TemplateView):
                     user = get_object_or_None(User, username=login_form.cleaned_data['username_or_email']);
                 user.is_active = True;
                 login(request, user);
-                if (request.GET['next'] != ''):
-                    return redirect(request.GET['next']);
-                else:
-                    return redirect('home');
+                return redirect('home');
         elif ('sign-up' in request.POST):
             sign_up_form = SignUpForm(request.POST);
             if (sign_up_form.is_valid()):
@@ -56,10 +53,8 @@ class LoginView(TemplateView):
                 user.save();
                 user = authenticate(username=user.username, password=password);
                 if (user is not None):
-                    if (request.GET['next'] != ''):
-                        return redirect(request.GET['next'])
-                    else:
-                        return redirect('user:login');
+                    login(request, user);
+                    return redirect('home');
         return render(request, self.template_name, self.get_context_data(login_form=login_form, sign_up_form=sign_up_form));
         
     def get_context_data(self, **kwargs):
