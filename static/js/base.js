@@ -4,10 +4,6 @@ $('document').ready(function() {
     if (window.top !== window.self) {
         window.top.location = window.self.location;
     }// end if
-    changeTHeadTFootWidthToAccountForScrollBar();
-    $(window).resize(function() {
-        changeTHeadTFootWidthToAccountForScrollBar();
-    });
     $('#go_to_user').submit(function(event) {
         if (canSubmit) {    
             canSubmit = false;
@@ -35,14 +31,6 @@ function check_if_user_exists(username) {
         },
     });
 }// end check_if_user_exists()
-
-function changeTHeadTFootWidthToAccountForScrollBar() {
-    var oldTableWidth = $('table').width();
-    var newTableWidth = oldTableWidth - 17;
-    var percentageTableWidth = 100 * (newTableWidth / oldTableWidth);
-    $('thead').width(percentageTableWidth.toString() + '%');
-    $('tfoot').width(percentageTableWidth.toString() + '%');
-}// end changeTHeadTFootWidthToAccountForScrollBar()
 
 function changeNumberToCurrency(number) {
     var currency = null;

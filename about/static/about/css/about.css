@@ -1,3 +1,20 @@
+
+.max-height {
+    height: 100%;
+}
+
+.display_row {
+    position: absolute;
+}
+
+.display_col {
+    display: table;
+    position: relative;
+}
+
 #about {
-    text-align: center;
+    height: 100%;
+    vertical-align: middle;
+    display: table-cell;
+    position: relative;
 }

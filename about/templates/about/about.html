@@ -2,15 +2,18 @@
 
 {% load staticfiles %}
 {% block import %}
-    <link rel="stylesheet" type="text/css" href="{% static 'CSS/about.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'about/css/about.css' %}" />
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-8 col-md-offset-2">
-        <span id="about">
-            We are a crowdfunding website dedicated to helping local citizens improve their neighborhood and community. Anyone can create a job for others to do or to pledge money to. These jobs and range from anything, including fixing a pothole in the street, cleaning up a park, or even building a website. Exceptions are that jobs cannot be illegal or conflict with the Terms of Agreement page.
-        </span>
+<div id="display_row" class="row">
+    <div id="display_col" class="col-md-8 col-md-offset-2">
+        <div id="about">
+            We are a crowdfunding website dedicated to helping local citizens improve their neighborhood and community.
+            Anyone can create a job for others to do or to pledge money to.
+            These jobs and range from anything, including fixing a pothole in the street,
+            cleaning up a park, or even building a website.
+        </div>
     </div>
 </div>
 {% endblock %}
