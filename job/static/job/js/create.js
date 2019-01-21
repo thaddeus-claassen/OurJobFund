@@ -1,21 +1,12 @@
-var canSubmit = true;
-
-$('document').ready(function() {
-    $('#create-job-form').submit(function(event) {
-        if (canSubmit) {
-            canSubmit = false;
-            if ($('#id_latitude').val() === "" || $('#id_longitude').val() === "") {
-                var loc = $('#id_location').val();
-                if (loc.length > 0) {
-                    event.preventDefault();
-                    applyLocation(loc);
-                }// end if
-            }// end if
-        } else {
+function formContent() {
+    if ($('#id_latitude').val() === "" || $('#id_longitude').val() === "") {
+        var loc = $('#id_location').val();
+        if (loc.length > 0) {
             event.preventDefault();
-        }// end if-else
-    });
-});
+            applyLocation(loc);
+        }// end if
+    }// end if
+}// formContent()
 
 function applyLocation(address) {
     var geocoder = new google.maps.Geocoder();

@@ -1,49 +1,31 @@
-{% extends 'base.html' %}
+{% extends 'form.html' %}
 
 {% load staticfiles %}
-{% block import %}
+{% block import_form_files %}
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3pteK4Epn8dFH03DGk97K7ICo_FwYht0"></script>
     <script type="text/javascript" src="{% static 'job/js/create.js' %}" ></script>
     <link rel="stylesheet" type="text/css" href="{% static 'job/css/create.css' %}" />
     {{ form.media }}
 {% endblock %}
 
-{% block content %}
-<div class="row">
-    <div class="col-md-10 col-md-offset-1">
-        <div class="row">
-            <div class="col-md-10 col-md-offset-2">
-                <h2 class="title">Create Job</h2>
-            </div>
+{% block title %}Create Job{% endblock %}
+
+{% block form_data %}
+{{ form.formatted_location }}
+{{ form.latitude }}{{ form.latitude.errors }}
+{{ form.longitude }}{{ form.longitude.errors }}
+{% for field in form %}
+    {% if field.auto_id != "id_longitude" and field.auto_id != "id_latitude" and field.auto_id != "id_formatted_location" %}
+    <div class="row">
+        <div class="col-md-2">
+            {{ field.label }}
         </div>
-        <form id="create-job-form" method="POST" action="{{ request.get_full_path }}" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.formatted_location }}
-            {{ form.latitude }}{{ form.latitude.errors }}
-            {{ form.longitude }}{{ form.longitude.errors }}
-        {% for field in form %}
-            {% if field.auto_id != "id_longitude" and field.auto_id != "id_latitude" and field.auto_id != "id_formatted_location" %}
-            <div class="row">
-                <div class="col-md-2">
-                    {{ field.label }}
-                </div>
-                <div class="col-md-10">
-                    {{ field }}{{ field.errors }}
-            </div>
-            </div>
-            {% endif %}
-        {% endfor %}
-        </form>
-        <div class="row">
-            <div class="col-md-2 col-md-offset-2">
-                <input form="create-job-form" type="submit" value="Submit" name="create-job" />
-            </div>
-            <div class="col-md-2">
-                <form action="{% url 'home' %}">
-                    <input type="submit" value="Cancel" />
-                </form>
-            </div>
+        <div class="col-md-10">
+            {{ field }}{{ field.errors }}
         </div>
     </div>
-</div>
+    {% endif %}
+{% endfor %}
 {% endblock %}
+
+{% block back_button %}{% url 'home' %}{% endblock %}

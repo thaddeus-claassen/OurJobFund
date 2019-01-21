@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% block import %}
+    <script type="text/javascript" src="{% static 'js/form.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}" />
+    {% block import_form_files %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-2">
+                <h3 id="title">{% block title %}{% endblock %}</h3>
+            </div>
+        </div>
+        <form id="form" method="POST" action="{{ request.get_full_path }}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% block form_data %}{% endblock %} 
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="row">
+            <div class="col-md-3 col-md-offset-2">
+                <input form="form" type="submit" value="Submit" name="form" />
+            </div>
+            <div class="col-md-3">
+                <form action="{% block back_button %}{% endblock %}">
+                    <input id="back-button" type="submit" value="Cancel" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

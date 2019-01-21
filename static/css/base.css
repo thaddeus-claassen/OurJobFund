@@ -7,8 +7,6 @@ html, .container, .container-fluid {
     width: 100%;
 }
 
-
-
 body {
     min-height: 100%;
     padding-bottom: 50px;
@@ -16,10 +14,6 @@ body {
 
 ul {
     list-style-type: none;
-}
-
-.title {
-    text-align: center;
 }
 
 .errorlist {
@@ -87,7 +81,6 @@ tr:after {
 tbody {
     overflow-x: auto;
     overflow-y: scroll;
-    border: 1px solid gray;
 }
 
 .footer-link, .footer-link:hover {
@@ -97,10 +90,5 @@ tbody {
 .make-this-disappear {
     display: none;
 }
-
-#content {
-    background: lightgray;
-}
-    
-    
+   
     

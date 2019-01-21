@@ -259,7 +259,6 @@ class FinishView(TemplateView):
     template_name = 'jobuser/finish.html';
     form = FinishForm;
     
-    
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);

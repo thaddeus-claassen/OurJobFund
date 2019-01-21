@@ -36,8 +36,7 @@ $(document).ready(function() {
                 }// end if-else
             }// if-else
         } else {
-            $('#amount-error-message').remove();
-            $('#id_amount').after("&nbsp;&nbsp;&nbsp;<span id='amount-error-message'>" + format + "</span>");
+            errorMessage();
             e.preventDefault();
         }// end if-else
     });
@@ -48,10 +47,11 @@ $(document).ready(function() {
 
 function correctFormat() {
     var errorMessage = "";
-    var amount = parseFloat($('#id_amount').val());
+    var amount = $('#id_amount').val();
     if (amount === "") {
         amount = 0;
     } else {
+        amount = parseFloat(amount);
         var isFloat = !isNaN(amount);
         if (isFloat) {
             if (amount != amount.toFixed(2)) {
@@ -63,3 +63,8 @@ function correctFormat() {
     }// end if-else
     return errorMessage;
 }// end pledgeErrorMessage()
+
+function errorMessage() {
+    $('#amount-error-message').remove();
+    $('#id_amount').after("&nbsp;&nbsp;&nbsp;<span id='amount-error-message'>" + format + "</span>");
+}// end errorMessage()

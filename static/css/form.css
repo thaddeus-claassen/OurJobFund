@@ -1,0 +1,12 @@
+#form input {
+    width: 100%;
+}
+
+#form textarea {
+    width: 100%;
+    resize: none;
+}
+
+input[type="submit"] {
+    width: 100%;
+}

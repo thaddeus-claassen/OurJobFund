@@ -9,8 +9,8 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-md-12">
-        <h4 class="title">
+    <div class="col-md-10 col-md-offset-2">
+        <h4 id="title">
             Payment to <a id="pay_to" href="{% url 'user:detail' receiver.get_username %}">{{ receiver.get_username }}</a>
             for <a href="{% url 'job:detail' sender_jobuser.job.random_string %}">{{ sender_jobuser.job.title }}</a>
         </h4>

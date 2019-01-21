@@ -1,44 +1,27 @@
-{% extends 'base.html' %}
+{% extends 'form.html' %}
  
 {% load staticfiles %}
-{% block import %}
+{% block import_form_files %}
     <script type="text/javascript" src="{% static 'update/js/create.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'update/css/create.css' %}" />
 {% endblock %}
  
-{% block content %}
-<form id="update-form" action="{{ request.get_full_path }}" method="POST" enctype="multipart/form-data">
-{% csrf_token %}
+{% block title %}Update <a href="{% url 'job:detail' job.random_string %}">{{ job.title }}</a>{% endblock %}
+
+{% block form_data %}
+{% for field in form %}
+<div id="{{ field.auto_id }}-wrapper">
     <div class="row">
-        <div class="col-md-12">
-            <h4 id="title">
-                Update <a href="{% url 'job:detail' job.random_string %}">{{ job.name }}</a>
-            </h4>
+        <div class="col-md-2">
+            {{ field.label }}
         </div>
-    </div>
-    {% for field in form %}
-    <div id="{{ field.auto_id }}-wrapper">
-        <div class="row">
-            <div class="col-md-2">
-                {{ field.label }}
-            </div>
-            <div class="col-md-10">
-                {{ field }}
-                {{ field.errors }}
-            </div>
+        <div class="col-md-10">
+            {{ field }}
+            {{ field.errors }}
         </div>
-    </div>
-    {% endfor %}
-</form>
-<div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-5">
-        <input form="update-form" id="submit_button" type="submit" value="Submit" name="submit_{{ type }}"/>
-    </div>
-    <div class="col-md-5">
-        <form action="{% url 'job:detail' job.random_string %}">
-            <input type="submit" value="Cancel" />
-        </form>
     </div>
 </div>
+{% endfor %}
 {% endblock %}
+
+{% block back_button %}{% url 'job:detail' job.random_string %}{% endblock %}

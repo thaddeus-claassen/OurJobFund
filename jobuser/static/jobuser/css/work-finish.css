@@ -6,7 +6,3 @@ textarea {
     width: 100%;
     resize: none;
 }
-
-#amount-error-message {
-    color: red;
-}

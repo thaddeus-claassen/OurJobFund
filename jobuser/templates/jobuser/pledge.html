@@ -1,22 +1,14 @@
-{% extends 'base.html' %}
+{% extends 'form.html' %}
  
 {% load staticfiles %}
-{% block import %}
+{% block import_form_files %}
     <script type="text/javascript" src="{% static 'jobuser/js/pledge.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'jobuser/css/pledge.css' %}" />
 {% endblock %}
  
-{% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h4 class="title">
-            Pledge to
-            <a href="{% url 'job:detail' job.random_string %}">{{ job.title }}</a>
-        </h4>
-    </div>
-</div>
-<form id="form" action="{{ request.get_full_path }}" method="POST" enctype="multipart/form-data">
-{% csrf_token %}
+{% block title %}Pledge to <a href="{% url 'job:detail' job.random_string %}">{{ job.title }}</a>{% endblock %}
+
+{% block form_data %}
 {% for field in form %}
     <div id="{{ field.auto_id }}-wrapper">
         <div class="row">
@@ -30,16 +22,6 @@
         </div>
     </div>
 {% endfor %}
-</form>
-<div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-2">
-        <input form="form" id="submit_button" type="submit" value="Submit" />
-    </div>
-    <div class="col-md-2">
-        <form action="{% url 'job:detail' job.random_string %}">
-            <input type="submit" value="Cancel" />
-        </form>
-    </div>
-</div>
 {% endblock %}
+
+{% block back_button %}{% url 'job:detail' job.random_string %}{% endblock %}
