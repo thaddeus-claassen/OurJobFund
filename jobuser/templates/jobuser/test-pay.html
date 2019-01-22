@@ -11,6 +11,15 @@
 <input id="pay_to" type="hidden" value="PaymentReceiver" />
 <input id="id_pay_through" type="hidden" value="Stripe" />
 <div class="row">
+            <div class="col-md-12">
+                <span id="must-connect-to-stripe">
+                    To receive credit card payments, sign into
+                    <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write&state={{ request.user.username }}" id="stripe_connect" class="stripe-connect">
+                        <span>Stripe</span></a>.
+                </span>
+            </div>
+        </div>
+<div class="row">
     <div class="col-md-12">
         <h4 class="title">
             Payment to <a id="pay_to" href="{% url 'user:detail' receiver.get_username %}">{{ receiver.get_username }}</a>
