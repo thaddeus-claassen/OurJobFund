@@ -1,17 +1,27 @@
 var canSubmit = true;
 
 $('document').ready(function() {
-    $('#create-job-form').submit(function(event) {
+    $('#form').submit(function(event) {
+        format = correctFormat();
+        if (format === "") {
+            if (canSubmit) {
+                canSubmit = false;
+                formContent();
+            } else {
+                event.preventDefault();
+            }// end if-else
+        } else {
+            errorMessage();
+            event.preventDefault();
+        }// end if-else
+    });
+    $('#back-button').submit(function(event) {
         if (canSubmit) {
             canSubmit = false;
-            formContent();
         } else {
             event.preventDefault();
         }// end if-else
     });
 });
 
-function formContent() {
-    alert("Form content still in form.js...shoot")
-}
-
+function correctFormat() {return ""}

@@ -4,7 +4,7 @@ import re;
 
 class UpdateForm(forms.Form):
     images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False);
-    comment = forms.CharField(widget=forms.Textarea, max_length=10000, required=False);
+    comment = forms.CharField(widget=forms.Textarea(attrs={'class' : 'form-control'}), max_length=10000, required=False);
     #This is honey pot
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
     

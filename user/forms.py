@@ -39,10 +39,10 @@ class LoginForm(forms.Form):
         return "";
         
 class SignUpForm(forms.ModelForm):
-    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder' : 'Email'}));
-    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder' : 'Username'}));
-    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'placeholder' : 'Password'}));
-    repeat_password = forms.CharField(label='Repeat Password', widget=forms.PasswordInput(attrs={'placeholder' : 'Repeat Password'}));
+    email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder' : 'Email'}));
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder' : 'Username'}));
+    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder' : 'Password'}));
+    repeat_password = forms.CharField(label='Repeat Password', widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder' : 'Repeat Password'}));
     age_checkbox = forms.BooleanField(label='Check here to verify you are at least 13 years old');
     #This is honey pot
     other_username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);\
@@ -89,10 +89,10 @@ class SignUpForm(forms.ModelForm):
         return "";
         
 class ChangeProfileForm(forms.ModelForm):
-    location = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '(City, State, etc.)'}), required=False);
-    contact = forms.CharField(required=False);
-    links = forms.CharField(required=False);
-    description = forms.CharField(widget=forms.Textarea, required=False);
+    location = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '(City, State, etc.)'}), required=False);
+    contact = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=False);
+    links = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=False);
+    description = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}), required=False);
     #This is honey pot
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
     

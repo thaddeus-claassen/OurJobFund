@@ -7,16 +7,16 @@
 {% endblock %}
 
 {% block content %}
+<input id="this_user" type="hidden" value="{{ request.user.get_username }}"/>
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
-        <input id="this_user" type="hidden" value="{{ request.user.get_username }}"/>
-        <div class="row">
-            <div class="col-md-12">
-                <h3 id="username">{{ detail_user.get_username }}</h3>
-            </div>
-        </div>
         <div class="row">
             <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 id="username">{{ detail_user.get_username }}</h3>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-12">
                         <h4>{{ detail_user.get_full_name }}</h4>
@@ -83,10 +83,15 @@
             <div class="col-md-8">
                 <div class="row">
                     <div class="col-md-12">
+                        <h4>Current Jobs</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <table id="current" class="table">
                             <thead>
                                 <tr>
-                                    <th class="current-title"><span class="table-header">Current Jobs</span><span class="total">{{ current.count }}</span></th>
+                                    <th class="current-title"><span class="table-header">Title</span><span class="total">{{ current.count }}</span></th>
                                     <th class="current-pledging"><span class="table-header">Pledging</span></th>
                                     <th class="current-paid"><span class="table-header">Paid</span></th>
                                     <th class="current-received"><span class="table-header">Received</span></th>
@@ -114,10 +119,15 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
+                        <h4>Completed Jobs</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <table id="completed" class="table">
                             <thead>
                                 <tr>
-                                    <th class="completed-title"><span class="table-header">Completed Jobs</span><span class="total">{{ completed.count }}</span></th>
+                                    <th class="completed-title"><span class="table-header">Title</span><span class="total">{{ completed.count }}</span></th>
                                     <th class="completed-pledging"><span class="table-header">Pledging</span></th>
                                     <th class="completed-paid"><span class="table-header">Paid</span></th>
                                     <th class="completed-received"><span class="table-header">Received</span></th>

@@ -11,8 +11,13 @@
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-7">
                 <h3>{{ job.title }}</h3>
+            </div>
+            <div class="col-md-5">
+                {% if job.is_finished %}
+                <h4 id="is_finished">Completed</h4>
+                {% endif %}
             </div>
         </div>
         <div class="row">
@@ -34,18 +39,6 @@
                     <a href="{% url 'home' %}?location={{ job.formatted_location }}">{{ job.formatted_location }}</a>
                     {% endif %}
                 </span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-5">
-                {% if job.is_finished %}
-                <span id="is_finished">Completed</span>
-                {% endif %}
-            </div>
-            <div class="col-md-3">
-                {% if not job.public %}
-                <span id="private">Private</span>
-                {% endif %}
             </div>
         </div>
         <div class="row">
@@ -206,15 +199,6 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <span class="history">
-                            <a href="{% url 'pledge-history' job.random_string %}">
-                                History
-                            </a>
-                        </span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
                         <table id="working" class="table">
                             <thead>
                                 <tr>
@@ -262,15 +246,6 @@
                             {% endfor %}
                             </tbody>
                         </table>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <span class="history">
-                            <a href="{% url 'work-history' job.random_string %}">
-                                History
-                            </a>
-                        </span>
                     </div>
                 </div>
             </div>

@@ -198,6 +198,7 @@ class StripePayTestView(TemplateView):
         stripe.api_key = STRIPE_TEST_SECRET_KEY;
         token = request.POST['stripeToken'];
         amount_paying_in_cents = int(kwargs['amount']) * 100;
+        print(receiver.profile.get_stripe_account_id())
         charge = stripe.Charge.create(
             amount = amount_paying_in_cents,
             currency = "usd",
