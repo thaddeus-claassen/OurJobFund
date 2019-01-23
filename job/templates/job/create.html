@@ -17,10 +17,7 @@
 {% for field in form %}
     {% if field.auto_id != "id_longitude" and field.auto_id != "id_latitude" and field.auto_id != "id_formatted_location" %}
     <div class="row">
-        <div class="col-md-2">
-            {{ field.label }}
-        </div>
-        <div class="col-md-10">
+        <div class="col-md-8 col-md-offset-2">
             {{ field }}{{ field.errors }}
         </div>
     </div>

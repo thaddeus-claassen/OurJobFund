@@ -10,17 +10,11 @@
  
 {% block form_data %}
 {% for field in form %}
-    <div id="{{ field.auto_id }}-wrapper">
-        <div class="row">
-            <div class="col-md-2">
-                {{ field.label }}
-            </div>
-            <div class="col-md-10">
-                {{ field }}
-                {{ field.errors }}
-            </div>
-        </div>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        {{ field }}{{ field.errors }}
     </div>
+</div>
 {% endfor %}
 <input id="stripe_token" type="hidden" name="stripeToken" />
 {% endblock %}

@@ -11,7 +11,7 @@
     <div class="col-md-6 col-md-offset-3">
         <div class="row">
             <div class="col-md-12">
-                <h3  id="title">
+                <h3 id="title">
                     {% if jobuser.banned %}
                     Unban
                     {% else %}
@@ -39,7 +39,10 @@
                         <tr>
                             <td class="date">{{ event.get_date|date:"m/d/Y" }}</td>
                             <td class="type">{{ event.get_type }}</td>
-                            <td class="amount">${{ event.get_amount }}</td>
+                            <td class="amount">
+                                {% if event.get_amount != 'N/A' %}${% endif %}
+                                {{ event.get_amount }}
+                            </td>
                             <td class="to">{{ event.get_to }}</td>
                         </tr>
                     {% endfor %}

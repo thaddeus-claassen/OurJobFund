@@ -6,14 +6,14 @@ import re;
 class NewJobForm(forms.ModelForm):
     #public = forms.ChoiceField(label="Type", choices=(("True", "Public"),("False", "Private")));
     #payment = forms.ChoiceField(label="Payments", choices=(('', ''), ('Outside OurJobFund', 'OurJobFund'), ('Through Stripe', 'Through Stripe')), required=True);
-    title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), max_length=100);
+    title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title'}), max_length=100);
     formatted_location = forms.CharField(label="", widget=forms.HiddenInput(), initial=None, required=False);
-    location = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), max_length=1000, required=False);
+    location = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Location'}), max_length=1000, required=False);
     latitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
     longitude = forms.FloatField(widget=forms.HiddenInput(), initial=None, required=False);
-    tags = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), max_length=1000, required=False);
+    tags = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tags'}), max_length=1000, required=False);
     image_set = forms.ImageField(label="Images", widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False);
-    comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}), max_length=10000);
+    comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description'}), max_length=10000);
     #This is honey pot
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
 

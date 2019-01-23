@@ -89,16 +89,17 @@ class SignUpForm(forms.ModelForm):
         return "";
         
 class ChangeProfileForm(forms.ModelForm):
-    location = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '(City, State, etc.)'}), required=False);
-    contact = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=False);
-    links = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=False);
-    description = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}), required=False);
+    location = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Location'}), required=False);
+    #contact = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Contact'}), required=False);
+    links = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Links'}), required=False);
+    description = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description'}), required=False);
+    
     #This is honey pot
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
     
     class Meta:
         model = Profile;
-        fields = ['location', 'contact', 'links', 'description'];
+        fields = ['location', 'links', 'description']; #contact
     
     def clean_username(self):
         if (not self.cleaned_data.get('username') == ""):
@@ -106,8 +107,8 @@ class ChangeProfileForm(forms.ModelForm):
         return "";
     
 class ChangeNameForm(forms.ModelForm):
-    first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
-    last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class' : 'info', 'size' : '12'}), required=False);
+    first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class' : 'form-control info', 'size' : '12', 'placeholder' :'First Name'}), required=False);
+    last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class' : 'form-control info', 'size' : '12', 'placeholder' : 'Last Name'}), required=False);
     
     #This is honey pot
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
@@ -139,7 +140,7 @@ class ChangeNameForm(forms.ModelForm):
 
 class ChangeUsernameForm(forms.ModelForm):
     #This is honey pot
-    other_username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
+    other_username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'form-control make-this-disappear'}), initial="", required=False);
     
     class Meta:
         model = User;
@@ -161,7 +162,7 @@ class ChangeUsernameForm(forms.ModelForm):
         return "";        
         
 class ChangeEmailForm(forms.ModelForm):
-    email_honey_pot = forms.CharField(label="", widget=forms.HiddenInput, initial="", required=False);
+    email = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-contol'}), initial="", required=False);
     #This is honey pot
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
     

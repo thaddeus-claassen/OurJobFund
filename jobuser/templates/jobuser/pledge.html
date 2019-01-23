@@ -6,21 +6,15 @@
     <link rel="stylesheet" type="text/css" href="{% static 'jobuser/css/pledge.css' %}" />
 {% endblock %}
  
-{% block title %}Pledge to <a href="{% url 'job:detail' job.random_string %}">{{ job.title }}</a>{% endblock %}
+{% block title %}Pledge for <a href="{% url 'job:detail' job.random_string %}">{{ job.title }}</a>{% endblock %}
 
 {% block form_data %}
 {% for field in form %}
-    <div id="{{ field.auto_id }}-wrapper">
-        <div class="row">
-            <div class="col-md-2">
-                {{ field.label }}
-            </div>
-            <div class="col-md-10">
-                {{ field }}
-                {{ field.errors }}
-            </div>
-        </div>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        {{ field }}{{ field.errors }}
     </div>
+</div>
 {% endfor %}
 {% endblock %}
 

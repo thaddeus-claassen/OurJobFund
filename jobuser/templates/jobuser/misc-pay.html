@@ -10,15 +10,11 @@
 
 {% block form_data %}
 {% for field in form %}
-    <div class="row">
-        <div class="col-md-2">
-            {{ field.label }}
-        </div>
-        <div class="col-md-10">
-            {{ field }}
-            {{ field.errors }}
-        </div>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        {{ field }}{{ field.errors }}
     </div>
+</div>
 {% endfor %}
 {% endblock %}
 

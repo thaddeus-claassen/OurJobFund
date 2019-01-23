@@ -66,6 +66,19 @@ thead, tbody, tfoot, tr, td, th {
     display: block;
 }
 
+tbody td {
+    border-top: none;
+}
+
+tbody tr {
+    border-top: none;
+    border-bottom: none;
+}
+
+th, thead {
+    color: black;
+}
+
 th, td {
     word-wrap: break-word;
     float: left;

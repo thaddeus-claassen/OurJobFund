@@ -7,7 +7,7 @@ from django import forms;
 
 class PledgeForm(forms.Form):
     amount = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control', 'placeholder': '$0.00'}));
-    comment = forms.CharField(widget=forms.Textarea(attrs={'class' : 'form-control'}), max_length=10000, required=False);
+    comment = forms.CharField(widget=forms.Textarea(attrs={'class' : 'form-control', 'placeholder': 'Comment'}), max_length=10000, required=False);
     #This is honey pot
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
 
@@ -31,7 +31,7 @@ class PledgeForm(forms.Form):
 
 class StripePayForm(forms.Form):
     amount = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control', 'placeholder': '$0.00'}), required=True);
-    comment = forms.CharField(widget=forms.Textarea(attrs={'class' : 'form-control'}), max_length=10000, required=False);
+    comment = forms.CharField(widget=forms.Textarea(attrs={'class' : 'form-control', 'plaheolder': 'Comment'}), max_length=10000, required=False);
     #This is honey pot
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
     
@@ -59,7 +59,7 @@ class StripePayForm(forms.Form):
 class MiscPayForm(forms.Form):
     receiver = None;
     amount = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '$0.00'}), required=True);
-    comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}), max_length=10000, required=False);
+    comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Comment'}), max_length=10000, required=False);
     #This is honey pot
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
     
@@ -95,7 +95,7 @@ class MiscPayForm(forms.Form):
         return "";
     
 class WorkForm(forms.Form):
-    comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}), max_length=10000, required=False);
+    comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Comment'}), max_length=10000, required=False);
     #This is honey pot
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
     
@@ -109,7 +109,7 @@ class WorkForm(forms.Form):
         return "";
 
 class FinishForm(forms.Form):
-    comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}), max_length=10000, required=False);
+    comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'plcaeholder': 'Comment'}), max_length=10000, required=False);
     #This is honey pot
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
     

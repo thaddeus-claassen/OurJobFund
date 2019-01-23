@@ -1,63 +1,28 @@
-{% extends 'base.html' %}
+{% extends 'form.html' %}
 
 {% load static %}
-{% block import %}
+{% block import_form_files %}
     <script type="text/javascript" src="{% static 'user/js/edit_profile.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'user/css/edit_profile.css' %}" />
 {% endblock %}
 
-{% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h4 class="title">Edit Profile for <a href="{% url 'user:detail' request.user.username %}">{{ request.user.username }}</a></h4>
-    </div>
-</div>
-<form id="form" action="{{ request.get_full_path }}" method="POST">
-{% csrf_token %}
-{% for field in name_form %}
-    <div class="row">
-        <div class="col-md-2">
-            {{ field.label }}
-        </div>
-        <div class="col-md-3">
-            {{ field }}
-        </div>
-    </div>
-    {% if field.errors %}
-    <div class="row">
-        <div class="col-md-10 col-md-offset-2">
-            {{ field.errors }}
-        </div>
-    </div>
-    {% endif %}
-{% endfor %} 
-{% for field in profile_form %}
-    <div class="row">
-        <div class="col-md-2">
-            {{ field.label }}
-        </div>
-        <div class="col-md-10">
-            {{ field }}
-        </div>
-    </div>
-    {% if field.errors %}
-    <div class="row">
-        <div class="col-md-10 col-md-offset-2">
-            {{ field.errors }}
-        </div>
-    </div>
-    {% endif %}
-{% endfor %}
-</form>
-<div class="row">
-    <div class="col-md-offset-2 col-md-2"> 
-        <input form="form" type="submit" value="Submit" />
-    </div>
-    <form action="{% url 'user:detail' request.user.username %}">
-        <div class="col-md-2">
-            <input type="submit" value="Cancel" />
-        </div>
-    </form>
-</div>
+{% block title %}Edit Profile{% endblock %}
 
+{% block form_data %}
+{% for field in name_form %}
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        {{ field }}{{ field.errors }}
+    </div>
+</div>
+{% endfor %}
+{% for field in profile_form %}
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        {{ field }}{{ field.errors }}
+    </div>
+</div>
+{% endfor %}
 {% endblock %}
+
+{% block back_button %}{% url 'user:detail' request.user.username %}{% endblock %}
