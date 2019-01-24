@@ -26,6 +26,8 @@ Payment for <a href="{% url 'job:detail' sender_jobuser.job.random_string %}">{{
     </div>
 </div>
 {% endfor %}
+<input id="stripe_token" name="stripeToken" type="hidden" />
 {% endblock %}
 
 {% block back_button %}{% url 'job:detail' sender_jobuser.job.random_string %}{% endblock %}
+
