@@ -1,4 +1,5 @@
 var handler;
+var stripe_submitted = false;
 
 $(document).ready(function() {
     handler = StripeCheckout.configure({
@@ -14,11 +15,15 @@ $(document).ready(function() {
 });
 
 function formContent(event) {
-    event.preventDefault();
-    handler.open({
-        amount: $('#id_amount').val() * 100,
-        description: "Payment to " + $('#pay_to').val(), 
-    });
+    if (!stripe_submitted) {
+        handler.open({
+            amount: $('#id_amount').val() * 100,
+            description: "Payment to " + $('#id_pay_to').val(), 
+        });
+        event.preventDefault();
+        canSubmit = true;
+        stripe_submitted = true;
+    }// end if
 }// end formContent()
 
 function correctFormat() {
