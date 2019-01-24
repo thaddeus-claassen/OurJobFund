@@ -6,7 +6,7 @@ $('document').ready(function() {
         if (format === "") {
             if (canSubmit) {
                 canSubmit = false;
-                formContent();
+                formContent(event);
             } else {
                 event.preventDefault();
             }// end if-else
@@ -23,5 +23,7 @@ $('document').ready(function() {
         }// end if-else
     });
 });
+
+function formContent() {return ""}
 
 function correctFormat() {return ""}

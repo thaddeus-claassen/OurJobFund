@@ -60,6 +60,8 @@
                         <a href="{% url 'user:edit_profile' request.user.username %}">Edit Profile</a> 
                     </div>
                 </div>
+                {% if request.user.username == detail_user.username %}
+                {% if request.user.profile.stripe_account_id == '' %}
                 <div class="row">
                     <div class="col-md-12">
                         <span id="must-connect-to-stripe">
@@ -69,6 +71,7 @@
                         </span>
                     </div>
                 </div>
+                {% else %}
                 <div class="row">
                     <div class="col-md-12">
                         <form id="remove-stripe-account-form" action="{{ request.get_full_path }}" method="POST">
@@ -76,6 +79,8 @@
                         </form>
                     </div>
                 </div>
+                {% endif %}
+                {% endif %}
                 {% endif %}
             </div>
             <div class="col-md-8">
