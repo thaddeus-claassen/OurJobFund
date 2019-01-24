@@ -15,7 +15,7 @@ urlpatterns = [
     url(r'^' + URLS['job_random_string_regex'] + '/' + URLS['sort'] + '/$', views.add_to_detail_table),
     url(r'^' + URLS['job_random_string_regex'] + '/' + URLS['moderate'] + '/$', ModerateView.as_view(), name='moderate'),
     url(r'^' + URLS['ban-user'] + '/' + URLS['jobuser_random_string_regex'] + '/$', BanUserView.as_view(), name='ban-user'),
-    url(r'^' + URLS['job_random_string_regex'] + '/' + '/' + URLS['stripe-pay'] + '/$', StripePayView.as_view(), name='stripe-pay'),
+    url(r'^' + URLS['job_random_string_regex'] + '/' + URLS['stripe-pay'] + '/$', StripePayView.as_view(), name='stripe-pay'),
     url(r'^' + URLS['job_random_string_regex'] + '/' + URLS['misc-pay'] + '/$', MiscPayView.as_view(), name='misc-pay'),
     url(r'^' + URLS['job_random_string_regex'] + '/' + URLS['confirm-pay'] + '/$', ConfirmPayView.as_view(), name='confirm-pay'),
 ];
