@@ -112,17 +112,17 @@ class StripePayView(TemplateView):
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
-        receiver = get_object_or_404(User, username=kwargs['username']);
         sender_jobuser = get_object_or_404(JobUser, user=request.user, job=job);
-        return render(request, self.template_name, self.get_context_data(receiver=receiver, sender_jobuser=sender_jobuser, form=self.form(receiver=receiver)));
+        return render(request, self.template_name, self.get_context_data(sender_jobuser=sender_jobuser, form=self.form(job=job)));
         
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
-        receiver = get_object_or_404(User, username=kwargs['username']);
-        form = self.form(data=request.POST, receiver=receiver);
+        sender_jobuser = get_object_or_404(JobUser, user=request.user, job=job);
+        form = self.form(data=request.POST, job=job);
         if (form.is_valid()):
-            receiver_jobuser = get_object_or_404(JobUser, job=job, user=receiver);
+            receiver = get_object_or_404(User, username=form.cleaned_data['pay_to']);
+            receiver_jobuser = get_object_or_404(JobUser, user=receiver, job=job);
             amount = float(form.cleaned_data['amount']);
             sender_jobuser = get_object_or_None(JobUser, user=request.user, job=job);
             self.pay(request, amount=amount, receiver=receiver);
@@ -143,12 +143,11 @@ class StripePayView(TemplateView):
                 job.save();
             return redirect('job:detail', job_random_string=job.random_string);
         else:
-            return render(request, self.template_name, self.get_context_data(receiver=receiver, sender_jobuser=sender_jobuser, form=form));
+            return render(request, self.template_name, self.get_context_data(sender_jobuser=sender_jobuser, form=form));
         
     def get_context_data(self, *args, **kwargs):
         context = super(StripePayView, self).get_context_data(**kwargs);
         context['sender_jobuser'] = kwargs['sender_jobuser'];
-        context['receiver'] = kwargs['receiver'];
         context['form'] = kwargs['form'];
         return context;
      
@@ -162,9 +161,9 @@ class StripePayView(TemplateView):
             currency = "usd",
             description = "Payment to " + receiver.get_username(),
             source = token,
-            destination = {
-                "account" : receiver.profile.get_stripe_account_id(),
-            },
+            #destination = {
+            #    "account" : receiver.profile.get_stripe_account_id(),
+            #},
         );
 
 class StripePayTestView(TemplateView):
@@ -198,7 +197,6 @@ class StripePayTestView(TemplateView):
         stripe.api_key = STRIPE_TEST_SECRET_KEY;
         token = request.POST['stripeToken'];
         amount_paying_in_cents = int(kwargs['amount']) * 100;
-        print(receiver.profile.get_stripe_account_id())
         charge = stripe.Charge.create(
             amount = amount_paying_in_cents,
             currency = "usd",

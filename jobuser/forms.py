@@ -19,7 +19,7 @@ class PledgeForm(forms.Form):
         pledge = self.cleaned_data.get('amount');
         if (checkStringIsValidMoney(pledge)):
             if (float(pledge) < 0.5):
-                raise forms.ValidationError('You cannot pledge less than $0.50.'); 
+                raise forms.ValidationError('You cannot pledge less than $0.50.');
         else:
             raise forms.ValidationError('Please enter a valid dollar amount.');
         return pledge;
@@ -30,17 +30,28 @@ class PledgeForm(forms.Form):
         return "";
 
 class StripePayForm(forms.Form):
+    pay_to = None;
     amount = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control', 'placeholder': '$0.00'}), required=True);
-    comment = forms.CharField(widget=forms.Textarea(attrs={'class' : 'form-control', 'plaheolder': 'Comment'}), max_length=10000, required=False);
+    comment = forms.CharField(widget=forms.Textarea(attrs={'class' : 'form-control', 'placeholder': 'Comment'}), max_length=10000, required=False);
     #This is honey pot
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
     
-    #def __init__(self, *args, **kwargs):
-    #    super(StripePayForm, self).__init__(*args, **kwargs);
+    def __init__(self, *args, **kwargs):
+        job = kwargs.pop('job', None);
+        super(StripePayForm, self).__init__(*args, **kwargs);
+        workers = job.jobuser_set.filter(~Q(work_status=''));
+        choices = [('', '')] + [(w.user.username, w.user.username) for w in workers];
+        self.fields['pay_to'] = forms.ChoiceField(choices = choices);
     
     class Meta:
         model = StripePay;
-        fields = ['amount', 'comment', 'username'];
+        fields = ['pay_to', 'amount', 'comment', 'username'];
+        
+    def clean_receiver(self):
+        pay_to = self.cleaned_data.get('pay_to');
+        if ((pay_to, pay_to) not in self.fields['pay_to'].choices):
+            raise forms.ValidationError('You cannot pay that person.');
+        return pay_to;
     
     def clean_amount(self):
         pay = self.cleaned_data.get('amount');

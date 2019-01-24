@@ -129,7 +129,7 @@
                 {% if working %}
                 <div class="row">
                     <div class="col-md-12">
-                        <form action="{% url 'job:misc-pay' job.random_string %}">
+                        <form action="{% url 'job:stripe-pay' job.random_string %}">
                             <input class="job-input" type="submit" value="Pay Money" />
                         </form>
                     </div>

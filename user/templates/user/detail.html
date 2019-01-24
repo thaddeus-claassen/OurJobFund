@@ -60,24 +60,22 @@
                         <a href="{% url 'user:edit_profile' request.user.username %}">Edit Profile</a> 
                     </div>
                 </div>
-        <!--
-        <div class="row">
-            <div class="col-md-12">
-                <span id="must-connect-to-stripe">
-                    To receive credit card payments, sign into
-                    <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write&state={{ request.user.username }}" id="stripe_connect" class="stripe-connect">
-                        <span>Stripe</span></a>.
-                </span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <form id="remove-stripe-account-form" action="{{ request.get_full_path }}" method="POST">
-                    <input id="delete-stripe" type="submit" value="Remove Stripe" name="delete-stripe" />
-                </form>
-            </div>
-        </div>
-        -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <span id="must-connect-to-stripe">
+                            To receive credit card payments, sign into
+                            <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write&state={{ request.user.username }}" id="stripe_connect" class="stripe-connect">
+                                <span>Stripe</span></a>.
+                        </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <form id="remove-stripe-account-form" action="{{ request.get_full_path }}" method="POST">
+                            <input id="delete-stripe" type="submit" value="Remove Stripe" name="delete-stripe" />
+                        </form>
+                    </div>
+                </div>
                 {% endif %}
             </div>
             <div class="col-md-8">

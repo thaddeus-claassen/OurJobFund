@@ -1,44 +1,31 @@
-{% extends 'base.html' %}
+{% extends 'form.html' %}
 
 {% load static %}
-{% block import %}
+{% block import_form_files %}
     <link rel="stylesheet" type="text/css" href="{% static 'jobuser/css/pay.css' %}" />
     <script type="text/javascript" src="{% static 'jobuser/js/pay.js' %}"></script>
     <script src="https://checkout.stripe.com/checkout.js"></script>
 {% endblock %}
 
-{% block content %}
+{% block title %}
+Payment for <a href="{% url 'job:detail' sender_jobuser.job.random_string %}">{{ sender_jobuser.job.title }}</a>
+{% endblock %}
+
+{% block form_data %}
 <div class="row">
-    <div class="col-md-10 col-md-offset-2">
-        <h4 id="title">
-            Payment to <a id="pay_to" href="{% url 'user:detail' receiver.get_username %}">{{ receiver.get_username }}</a>
-            for <a href="{% url 'job:detail' sender_jobuser.job.random_string %}">{{ sender_jobuser.job.title }}</a>
-        </h4>
+    <div class="col-md-8 col-md-offset-2">
+        {{ form.pay_to.label }}&nbsp;{{ form.pay_to }}{{ form.pay_to.errors }}
     </div>
 </div>
-<form id="pay-form" action="{{ request.get_full_path }}" method="POST">
-{% csrf_token %}
 {% for field in form %}
-    <div class="row">
-        <div class="col-md-2">
-            {{ field.label }}
-        </div>
-        <div class="col-md-10">
-            {{ field }}
-            {{ field.errors }}
-        </div>
-    </div>
-{% endfor %}
-</form>
 <div class="row">
-    <div class="col-md-2 col-md-offset-2">
-        <input form="pay-form" id="pay" type="submit" value="Submit" />
+    <div class="col-md-8 col-md-offset-2">
+    {% if field.auto_id != "id_pay_to" %}
+        {{ field }}{{ field.errors }}
+    {% endif %}
     </div>
-    <div class="col-md-2">
-        <form action="{% url 'job:detail' sender_jobuser.job.random_string %}">
-            <input type="submit" value="Cancel" />
-        </form>
-    </div>
-</div>   
-<input id="stripe_token" name="stripeToken" type="hidden" />
+</div>
+{% endfor %}
 {% endblock %}
+
+{% block back_button %}{% url 'job:detail' sender_jobuser.job.random_string %}{% endblock %}
