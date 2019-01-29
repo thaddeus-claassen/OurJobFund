@@ -4,8 +4,10 @@ input[type=submit], .sign-up-input, #create-account {
 
 #title {
     font-size: 72px;
+    font-style: italic;
 }
 
 #slogan {
-    font-size: 24px;
+    font-size: 32px;
+    font-style: italic;
 }
