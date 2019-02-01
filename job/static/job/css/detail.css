@@ -17,24 +17,20 @@
 }
 
 h4 {
-    top: 10px;
+    top: 0.6empx;
 }
 
 .images {
     float: right;
 }
 
-#pledging, #working {
-    margin-bottom: 0px;
-}
-
 #updates {
-    margin-bottom: 5px;
+    margin-bottom: 0.5em;
     width: 100%;
 }
 
 #updates tbody {
-    height: 300px;
+    height: 19em;
     width: 100%;
 }
 
@@ -48,11 +44,11 @@ h4 {
 }
 
 #pledging tbody, #working tbody {
-    height: 180px;
+    height: 11em;
 }
 
 #updates_title {
-    margin-top: 30px;
+    margin-top: 2em;
 }
 
 td[class=updates-username], td[class=updates-date] {

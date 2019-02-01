@@ -3,7 +3,7 @@ input[type=submit] {
 }
 
 #description {
-    max-height: 300px;
+    max-height: 19em;
     width: 100%;
     overflow-x: hidden;
     overflow-y: auto;
@@ -20,7 +20,7 @@ input[type=submit] {
 }
 
 tbody {
-    height: 180px;
+    height: 11em;
 }
 
 .current-title, .completed-title {

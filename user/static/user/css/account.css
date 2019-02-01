@@ -3,8 +3,8 @@ input {
 }
 
 #id_username, #id_email, input[type=password] {
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-top: 0.4em;
+    margin-bottom: 0.4em;
 }
 
 #change-username-note {

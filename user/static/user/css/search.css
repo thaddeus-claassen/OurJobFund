@@ -20,11 +20,11 @@ tr:after {
 }
 
 thead th {
-    height: 30px;
+    height: 2em;
 }
 
 tbody {
-    height: 300px;
+    height: 19em;
     overflow-x: auto;
     overflow-y: scroll;
 }

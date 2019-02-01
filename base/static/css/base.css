@@ -9,7 +9,7 @@ html, .container, .container-fluid {
 
 body {
     min-height: 100%;
-    padding-bottom: 50px;
+    padding-bottom: 3.5em;
 }
 
 ul {
@@ -29,7 +29,7 @@ ul {
 }
 
 #margin-before-footer {
-    height: 15px;
+    height: 1em;
 }
 
 #footer {
@@ -38,7 +38,7 @@ ul {
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 50px;
+    height: 3.5em;
     background-color: rgb(236, 236, 236);
 }
 
