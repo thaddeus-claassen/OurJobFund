@@ -86,6 +86,7 @@
                     {% else %}
                     {% if login_form == None %}
                     <ul class="nav navbar-nav navbar-right">
+                        <li class="navbar_button"><a href="{% url 'home' %}">Home</a></li>
                         <li><a href="{% url 'login' %}">Login/Sign Up</a></li>
                     </ul>
                     {% else %}
