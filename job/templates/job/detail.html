@@ -117,6 +117,15 @@
                 </div>
                 {% endif %}
                 {% else %}
+                {% if request.user.profile.stripe_account_id == "" %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <span>To work on this job, please sign into <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write&state={{ request.user.username }}" id="stripe_connect" class="stripe-connect">
+                                <span>Stripe</span></a>.
+                        </span>
+                    </div>
+                </div>
+                {% else %}
                 <div class="row">
                     <div class="col-md-12">
                         <form action="{% url 'work' job.random_string %}">
@@ -124,6 +133,7 @@
                         </form>
                     </div>
                 </div>
+                {% endif %}
                 {% endif %}
                 {% if jobuser.pledge_set.all.exists %}
                 {% if working %}

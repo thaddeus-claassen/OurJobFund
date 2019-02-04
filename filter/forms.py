@@ -13,6 +13,7 @@ class PledgeFilterForm(forms.ModelForm):
 class WorkerFilterForm(forms.ModelForm):
     not_been_active_in_the_last_n_days = forms.IntegerField(widget=forms.TextInput(attrs={'class' : 'filter', 'size' : '2'}), min_value=0);
     
+    
     class Meta: 
         model = WorkerFilter;
         exclude = ['user',];

@@ -46,8 +46,8 @@ class JobSerializer(serializers.ModelSerializer):
         expected_pledged = 0;
         for pledge in pledges:
             expected_pledged = expected_pledged + pledge.pledged;
-        return expected_pledged;    
-        
+        return expected_pledged;
+    
     def get_expected_workers(self, job):
         return job.workers;
         workers = JobUser.objects.filter(Q(job=job) & (Q(work_status='working') | Q(work_status='finished')));
