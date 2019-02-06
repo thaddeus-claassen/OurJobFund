@@ -20,15 +20,15 @@ from .forms import NewJobForm;
 import json, re, math;
 
 def home(request):
-    tag = None;
-    context = None;
+    tag = "";
+    location = "";
+    context = {};
     if ('tag' in request.GET):
         tag = request.GET['tag'];
         context = {
             'tag' : tag,
         };
     else:
-        location = None;
         if ('location' in request.GET):
             location = request.GET['location'];
             context = {
