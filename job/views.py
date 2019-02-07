@@ -25,15 +25,13 @@ def home(request):
     context = {};
     if ('tag' in request.GET):
         tag = request.GET['tag'];
-        context = {
-            'tag' : tag,
-        };
     else:
         if ('location' in request.GET):
             location = request.GET['location'];
-            context = {
-                'location' : location,
-            };
+    context = {
+        'tag' : tag,
+        'location' : location,
+    };
     return render(request, 'job/home.html', context);
     
 def get_jobs(request):
