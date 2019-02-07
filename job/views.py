@@ -34,7 +34,7 @@ def home(request):
             context = {
                 'location' : location,
             };
-    return render(request, 'job/home.html', context);
+    return render(request, 'job/home.html');
     
 def get_jobs(request):
     if (request.is_ajax()):
