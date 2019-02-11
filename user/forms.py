@@ -183,8 +183,8 @@ class ChangeEmailForm(forms.ModelForm):
             
 class ChangePasswordForm(forms.ModelForm):
     password = forms.CharField(label="Current Password", widget=forms.PasswordInput);
-    new_password = forms.CharField(widget=forms.PasswordInput);
-    repeat_new_password = forms.CharField(widget=forms.PasswordInput);
+    new_password = forms.CharField(label="New Password", widget=forms.PasswordInput);
+    repeat_new_password = forms.CharField(label="Repeat New Password", widget=forms.PasswordInput);
     #This is honey pot
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'make-this-disappear'}), initial="", required=False);
             
