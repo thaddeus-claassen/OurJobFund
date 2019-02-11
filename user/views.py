@@ -51,7 +51,7 @@ class LoginView(TemplateView):
                 password = sign_up_form.cleaned_data['password'];
                 user.set_password(password);
                 user.save();
-                user = authenticate(username=user.username, password=password);
+                user = authenticate(request, username=user.username, password=password);
                 if (user is not None):
                     login(request, user);
                     return redirect('home');
@@ -204,13 +204,13 @@ class AccountView(TemplateView):
                 self.request.user.save();
                 self.request.user.profile.last_time_username_was_changed = datetime.now();
                 self.request.user.profile.save();
-                return redirect('user:account');
+                return redirect('user:account', username=request.user.username);
         elif ('change-email' in request.POST):
             emailForm = emailForm(request.POST);
             if (emailForm.is_valid()):
                 self.request.user.email = emailForm.cleaned_data['email'];
                 self.request.user.save();
-                return redirect('user:account');
+                return redirect('user:account', username=request.user.username);
         elif ('change-password' in request.POST):
             passwordForm = passwordForm(request.POST, user=request.user);
             if (passwordForm.is_valid()):
