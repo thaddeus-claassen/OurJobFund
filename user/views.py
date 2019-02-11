@@ -205,25 +205,38 @@ class AccountView(TemplateView):
                 self.request.user.profile.last_time_username_was_changed = datetime.now();
                 self.request.user.profile.save();
                 return redirect('user:account', username=request.user.username);
+            else:
+                emailForm = emailForm(initial={'email' : request.user.email});
+                deactivateForm = deactivateForm(initial={'is_active' : True});
         elif ('change-email' in request.POST):
             emailForm = emailForm(request.POST);
             if (emailForm.is_valid()):
                 self.request.user.email = emailForm.cleaned_data['email'];
                 self.request.user.save();
                 return redirect('user:account', username=request.user.username);
+            else:
+                usernameForm = usernameForm(initial={'username' : request.user.username});
+                deactivateForm = deactivateForm(initial={'is_active' : True});
         elif ('change-password' in request.POST):
             passwordForm = passwordForm(request.POST, user=request.user);
             if (passwordForm.is_valid()):
                 self.request.user.set_password(passwordForm.cleaned_data['new_password']);
                 self.request.user.save();
                 login(self.request, request.user);
-                return redirect('user:account');
+                return redirect('user:account', username=request.user.username);
+            else:
+                usernameForm = usernameForm(initial={'username' : request.user.username});
+                emailForm = emailForm(initial={'email' : request.user.email});
+                deactivateForm = deactivateForm(initial={'is_active' : True});
         elif ('deactivate-account' in request.POST):
             deactivateForm = deactivateForm(request.POST);
             if (deactivateForm.is_valid()):
                 self.request.user.is_active = False;
                 self.request.user.save();
                 return redirect('user:sign_out');
+            else:
+                usernameForm = usernameForm(initial={'username' : request.user.username});
+                emailForm = emailForm(initial={'email' : request.user.email});
         return render(request, self.template_name, self.get_context_data(request, usernameForm=usernameForm, emailForm=emailForm, passwordForm=passwordForm, deactivateForm=deactivateForm));
         
     def get_context_data(self, request, **kwargs):
