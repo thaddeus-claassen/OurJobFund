@@ -11,3 +11,7 @@ input[type=submit], .sign-up-input, #create-account {
     font-size: 2.5em;
     font-style: italic;
 }
+
+#login-button {
+    display: none;
+}
