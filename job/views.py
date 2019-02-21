@@ -163,7 +163,7 @@ class DetailView(TemplateView):
             jobuser = get_object_or_None(JobUser, user=request.user, job=job);
             misc_payments = MiscPay.objects.none();
             if (jobuser):
-                misc_payments = MiscPay.objects.filter(receiver=jobuser, confirmed=None);
+                misc_payments = MiscPay.objects.filter(receiver=jobuser, confirmed='Unconfirmed');
             context['jobuser'] = jobuser;
             context['unconfirmed_payments'] = misc_payments.exists(); 
         return context;

@@ -113,7 +113,7 @@ class ConfirmPayView(TemplateView):
     def get(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
         receiver = get_object_or_None(JobUser, user=request.user, job=job);
-        if (MiscPay.objects.filter(receiver=receiver, confirmed=None).exists()):
+        if (MiscPay.objects.filter(receiver=receiver, confirmed='Unconfirmed').exists()):
             return render(request, self.template_name, self.get_context_data(jobuser=receiver));
         else:
             return redirect('job:detail', job_random_string=job.random_string);
@@ -122,7 +122,7 @@ class ConfirmPayView(TemplateView):
     def post(self, request, *args, **kwargs):
         job = get_object_or_404(Job, random_string=kwargs['job_random_string']);
         receiver = get_object_or_None(JobUser, user=request.user, job=job);
-        payments = MiscPay.objects.filter(receiver=receiver, confirmed=None);
+        payments = MiscPay.objects.filter(receiver=receiver, confirmed='Unconfirmed');
         confirm_or_reject = "";
         pk = "";
         for p in payments:
@@ -132,7 +132,7 @@ class ConfirmPayView(TemplateView):
         misc_pay = get_object_or_None(MiscPay, pk=pk);
         if (misc_pay):
             if (confirm_or_reject == 'Confirm'):
-                misc_pay.confirmed = True;
+                misc_pay.confirmed = 'Confirmed';
                 receiver.misc_paid = receiver.misc_paid + misc_pay.amount;
                 receiver.received = receiver.received + misc_pay.amount;
                 receiver.save();
@@ -145,7 +145,7 @@ class ConfirmPayView(TemplateView):
                 #    job.is_finished = True;
                 job.save();
             else:
-                misc_pay.confirmed = False;
+                misc_pay.confirmed = 'Rejected';
             misc_pay.save();
             sendNotifications(receiver);
             return redirect('job:confirm-pay', job_random_string=job.random_string);
@@ -157,7 +157,7 @@ class ConfirmPayView(TemplateView):
         jobuser = kwargs['jobuser'];
         context = {
             'jobuser' : jobuser,
-            'unconfirmed_payments' : MiscPay.objects.filter(Q(receiver=jobuser) & Q(confirmed=None)),
+            'unconfirmed_payments' : MiscPay.objects.filter(Q(receiver=jobuser) & Q(confirmed='Unconfirmed')),
         };
         return context;
         
