@@ -11,13 +11,13 @@
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
         <div class="row">
-            <div class="col-md-10 col-md-offset-2">
+            <div id="title-div" class="col-md-10 col-md-offset-2">
                 <h3 id="title">{% block title %}{% endblock %}</h3>
             </div>
         </div>
         <form id="form" method="POST" action="{{ request.get_full_path }}" enctype="multipart/form-data">
             {% csrf_token %}
-            {% block form_data %}{% endblock %} 
+            {% block form_data %}{% endblock %}
         </form>
     </div>
 </div>
@@ -25,7 +25,7 @@
     <div class="col-md-8 col-md-offset-2">
         <div class="row">
             <div class="col-md-3 col-md-offset-2">
-                <input form="form" type="submit" value="Submit" name="form" />
+                <input form="form" type="submit" value="Submit" />
             </div>
             <div class="col-md-3">
                 <form action="{% block back_button %}{% endblock %}">

@@ -107,6 +107,15 @@
                 </div>
                 {% endif %} 
                 {% if jobuser.work_set.all.exists %}
+                {% if unconfirmed_payments %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="{% url 'job:confirm-pay' job.random_string %}">
+                            <input class="job-input" type="submit" value="Confirm Payments" />
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
                 {% if not jobuser.finish_set.all.exists %}
                 <div class="row">
                     <div class="col-md-12">
@@ -117,15 +126,6 @@
                 </div>
                 {% endif %}
                 {% else %}
-                {% if request.user.profile.stripe_account_id == "" %}
-                <div class="row">
-                    <div class="col-md-12">
-                        <span>To work on this job, please sign into <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_B36oLqq9HCaIyv4FlXeUgqdKvEwQGSxV&scope=read_write&state={{ request.user.username }}" id="stripe_connect" class="stripe-connect">
-                                <span>Stripe</span></a>.
-                        </span>
-                    </div>
-                </div>
-                {% else %}
                 <div class="row">
                     <div class="col-md-12">
                         <form action="{% url 'work' job.random_string %}">
@@ -134,12 +134,11 @@
                     </div>
                 </div>
                 {% endif %}
-                {% endif %}
                 {% if jobuser.pledge_set.all.exists %}
                 {% if working %}
                 <div class="row">
                     <div class="col-md-12">
-                        <form action="{% url 'job:stripe-pay' job.random_string %}">
+                        <form action="{% url 'job:misc-pay' job.random_string %}">
                             <input class="job-input" type="submit" value="Pay Money" />
                         </form>
                     </div>

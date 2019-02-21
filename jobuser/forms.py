@@ -82,11 +82,13 @@ class MiscPayForm(forms.Form):
         job = kwargs.pop('job', None);
         super(MiscPayForm, self).__init__(*args, **kwargs);
         workers = job.jobuser_set.filter(~Q(work_status=''));
-        choices = [ (w.user.username, w.user.username) for w in workers ]
+        choices = [('(Pay To)', '(Pay To)')] + [ (w.user.username, w.user.username) for w in workers ]
         self.fields['receiver'] = forms.ChoiceField(choices = choices);
     
     def clean_receiver(self):
         receiver = self.cleaned_data.get('receiver');
+        if (receiver == '(Pay To)'):
+            raise forms.ValidationError('Please select someone');
         if ((receiver, receiver) not in self.fields['receiver'].choices):
             raise forms.ValidationError('You cannot pay that person.');
         return receiver;
