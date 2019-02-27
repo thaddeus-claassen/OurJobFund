@@ -7,6 +7,10 @@
     resize: none;
 }
 
+#title-div {
+    word-wrap: break-word;
+}
+
 input[type="submit"] {
     width: 100%;
 }

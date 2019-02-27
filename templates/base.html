@@ -49,7 +49,6 @@
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="navbar_button"><a href="{% url 'home' %}">Home</a></li>
                         <li class="navbar_button"><a href="{% url 'job:create' %}">Create</a></li>
                         <li class="dropdown">
                             <a href="" class="dropdown-toggle" data-toggle="dropdown">
@@ -86,10 +85,12 @@
                     {% else %}
                     {% block loginForm %}{% endblock %}
                     <ul id="login-button" class="nav navbar-nav navbar-right">
-                        <li class="navbar_button"><a href="{% url 'home' %}">Home</a></li>
                         <li><a href="{% url 'login' %}">Login/Sign Up</a></li>
                     </ul>
                     {% endif %}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="navbar_button"><a href="{% url 'home' %}">Home</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
